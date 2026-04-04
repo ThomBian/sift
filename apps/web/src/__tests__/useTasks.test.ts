@@ -1,0 +1,155 @@
+import { describe, it, expect, beforeEach } from 'vitest';
+import { renderHook, waitFor } from '@testing-library/react';
+import { db } from '../lib/db';
+import { useInboxTasks, useTodayTasks, useProjectTasks } from '../hooks/useTasks';
+import type { Space, Project, Task } from '@speedy/shared';
+
+function makeSpace(overrides?: Partial<Space>): Space {
+  const now = new Date();
+  return {
+    id: 'space-1',
+    name: 'Work',
+    color: '#5E6AD2',
+    createdAt: now,
+    updatedAt: now,
+    synced: true,
+    ...overrides,
+  };
+}
+
+function makeProject(overrides?: Partial<Project>): Project {
+  const now = new Date();
+  return {
+    id: 'project-1',
+    name: 'General',
+    spaceId: 'space-1',
+    createdAt: now,
+    updatedAt: now,
+    synced: true,
+    ...overrides,
+  };
+}
+
+function makeTask(overrides?: Partial<Task>): Task {
+  const now = new Date();
+  return {
+    id: 'task-1',
+    title: 'Test task',
+    projectId: 'project-1',
+    status: 'inbox',
+    workingDate: null,
+    dueDate: null,
+    createdAt: now,
+    updatedAt: now,
+    completedAt: null,
+    synced: true,
+    ...overrides,
+  };
+}
+
+function yesterday(): Date {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+function today(): Date {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+function tomorrow(): Date {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+beforeEach(async () => {
+  await db.tasks.clear();
+  await db.projects.clear();
+  await db.spaces.clear();
+  await db.spaces.add(makeSpace());
+  await db.projects.add(makeProject());
+});
+
+describe('useInboxTasks', () => {
+  it('returns tasks with workingDate null and non-terminal status', async () => {
+    await db.tasks.bulkAdd([
+      makeTask({ id: 't1', status: 'inbox', workingDate: null }),
+      makeTask({ id: 't2', status: 'todo', workingDate: today() }),
+      makeTask({ id: 't3', status: 'done', workingDate: null }),
+      makeTask({ id: 't4', status: 'archived', workingDate: null }),
+    ]);
+
+    const { result } = renderHook(() => useInboxTasks());
+    await waitFor(() => expect(result.current.length).toBeGreaterThan(0));
+
+    expect(result.current).toHaveLength(1);
+    expect(result.current[0].id).toBe('t1');
+  });
+
+  it('returns empty array when no inbox tasks exist', async () => {
+    const { result } = renderHook(() => useInboxTasks());
+    await waitFor(() => expect(result.current).toBeDefined());
+    expect(result.current).toHaveLength(0);
+  });
+});
+
+describe('useTodayTasks', () => {
+  it('returns tasks where workingDate <= today and status is not done/archived', async () => {
+    await db.tasks.bulkAdd([
+      makeTask({ id: 't1', status: 'todo', workingDate: today() }),
+      makeTask({ id: 't2', status: 'todo', workingDate: yesterday() }),
+      makeTask({ id: 't3', status: 'todo', workingDate: tomorrow() }),
+      makeTask({ id: 't4', status: 'done', workingDate: today() }),
+      makeTask({ id: 't5', status: 'archived', workingDate: yesterday() }),
+    ]);
+
+    const { result } = renderHook(() => useTodayTasks());
+    await waitFor(() => expect(result.current.length).toBeGreaterThan(0));
+
+    const ids = result.current.map((t) => t.id).sort();
+    expect(ids).toEqual(['t1', 't2']);
+  });
+});
+
+describe('useProjectTasks', () => {
+  it('groups tasks by space then project', async () => {
+    const space2 = makeSpace({ id: 'space-2', name: 'Personal', color: '#4ade80' });
+    const project2 = makeProject({ id: 'project-2', name: 'Errands', spaceId: 'space-2' });
+    await db.spaces.add(space2);
+    await db.projects.add(project2);
+
+    await db.tasks.bulkAdd([
+      makeTask({ id: 't1', projectId: 'project-1', status: 'todo' }),
+      makeTask({ id: 't2', projectId: 'project-2', status: 'inbox' }),
+    ]);
+
+    const { result } = renderHook(() => useProjectTasks());
+    await waitFor(() => expect(result.current.length).toBeGreaterThan(0));
+
+    expect(result.current).toHaveLength(2);
+    const workSpace = result.current.find((g) => g.space.id === 'space-1');
+    const personalSpace = result.current.find((g) => g.space.id === 'space-2');
+
+    expect(workSpace).toBeDefined();
+    expect(workSpace!.projects[0].tasks).toHaveLength(1);
+    expect(personalSpace).toBeDefined();
+    expect(personalSpace!.projects[0].tasks).toHaveLength(1);
+  });
+
+  it('includes done tasks in project groups (for progress bars)', async () => {
+    await db.tasks.bulkAdd([
+      makeTask({ id: 't1', status: 'todo' }),
+      makeTask({ id: 't2', status: 'done' }),
+    ]);
+
+    const { result } = renderHook(() => useProjectTasks());
+    await waitFor(() => expect(result.current.length).toBeGreaterThan(0));
+
+    expect(result.current[0].projects[0].tasks).toHaveLength(2);
+  });
+});

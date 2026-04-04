@@ -228,8 +228,21 @@ Delivered per [docs/superpowers/plans/2026-04-04-plan-1-foundation.md](../plans/
 
 Turbo tasks: `npm run build`, `npm run test`, `npm run dev` from repo root orchestrate packages.
 
-### Plan 2 — In progress
+### Plan 2 — Complete (2026-04-04)
 
-Web dashboard per [docs/superpowers/plans/2026-04-04-plan-2-web-app.md](../plans/2026-04-04-plan-2-web-app.md): Vite + React + Tailwind, views, keyboard nav, optional Supabase sync.
+Web dashboard per [docs/superpowers/plans/2026-04-04-plan-2-web-app.md](../plans/2026-04-04-plan-2-web-app.md):
 
-**Spec alignment:** Design §7 (*Logged-out UX*) requires the app to work without an account. Implementation must **not** gate Inbox/Today/Projects behind mandatory login (adjust Plan 2 `ProtectedRoute` accordingly when executing).
+| Item | Notes |
+|------|--------|
+| `apps/web` | Vite 5 + React 18 + Tailwind 3 + React Router 6 |
+| Data | `useLiveQuery` hooks; `db` re-exported from `@speedy/shared` |
+| Views | Inbox, Today, Projects + `TaskList` / `TaskRow` / `InputBar` (`SmartInput` + `projects` prop) |
+| Keyboard | `useKeyboardNav` — j/k, Enter, Backspace/Delete |
+| Auth | Supabase Google + magic link when `VITE_*` env vars are set; **no route gating** — matches §7 logged-out UX |
+| Sync | `SyncService` LWW push/pull + Realtime subscribe when authenticated |
+| Tests | Vitest: `useTasks`, `useKeyboardNav`, `TaskRow`, `SyncService` (mocked Supabase) |
+| Deploy | `vercel.json` uses `npx turbo build --filter=web` |
+
+**Deviations from the written Plan 2 tasks:** Removed mandatory `ProtectedRoute` around the main shell so local-first use matches this spec. `supabase.ts` does not throw when env is missing. Dexie queries use `toArray()` + in-memory sort by `name` (schema indexes do not include `name`). `@speedy/shared` exposes `./style.css` for the SmartInput bundle.
+
+**Next:** Plan 3 — Chrome extension ([docs/superpowers/plans/2026-04-04-plan-3-extension.md](../plans/2026-04-04-plan-3-extension.md)).
