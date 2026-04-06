@@ -103,9 +103,11 @@ export class SyncService {
     const syncStartedAt = new Date();
     const lastSyncedAt = getLastSyncedAt();
 
-    await this.syncSpaces(userId, lastSyncedAt);
-    await this.syncProjects(userId, lastSyncedAt);
-    await this.syncTasks(userId, lastSyncedAt);
+    await Promise.all([
+      this.syncSpaces(userId, lastSyncedAt),
+      this.syncProjects(userId, lastSyncedAt),
+      this.syncTasks(userId, lastSyncedAt),
+    ]);
 
     setLastSyncedAt(syncStartedAt);
   }
@@ -117,7 +119,7 @@ export class SyncService {
         .from('spaces')
         .upsert(unsynced.map((s) => spaceToRow(s, userId)), { onConflict: 'id' });
       if (!error) {
-        await Promise.all(unsynced.map((s) => db.spaces.update(s.id, { synced: true })));
+        await db.spaces.bulkPut(unsynced.map((s) => ({ ...s, synced: true })));
       }
     }
 
@@ -128,13 +130,14 @@ export class SyncService {
 
     if (pullError || !data) return;
 
-    for (const row of data as Record<string, unknown>[]) {
-      const remote = rowToSpace(row);
-      const local = await db.spaces.get(remote.id);
-      if (!local || remote.updatedAt > local.updatedAt) {
-        await db.spaces.put(remote);
-      }
-    }
+    const remoteSpaces = (data as Record<string, unknown>[]).map(rowToSpace);
+    const locals = await db.spaces.bulkGet(remoteSpaces.map((s) => s.id));
+    const localMap = new Map(locals.filter(Boolean).map((s) => [s!.id, s!]));
+    const toUpsert = remoteSpaces.filter((remote) => {
+      const local = localMap.get(remote.id);
+      return !local || remote.updatedAt > local.updatedAt;
+    });
+    if (toUpsert.length > 0) await db.spaces.bulkPut(toUpsert);
   }
 
   private async syncProjects(userId: string, lastSyncedAt: Date): Promise<void> {
@@ -144,7 +147,7 @@ export class SyncService {
         .from('projects')
         .upsert(unsynced.map((p) => projectToRow(p, userId)), { onConflict: 'id' });
       if (!error) {
-        await Promise.all(unsynced.map((p) => db.projects.update(p.id, { synced: true })));
+        await db.projects.bulkPut(unsynced.map((p) => ({ ...p, synced: true })));
       }
     }
 
@@ -155,13 +158,14 @@ export class SyncService {
 
     if (pullError || !data) return;
 
-    for (const row of data as Record<string, unknown>[]) {
-      const remote = rowToProject(row);
-      const local = await db.projects.get(remote.id);
-      if (!local || remote.updatedAt > local.updatedAt) {
-        await db.projects.put(remote);
-      }
-    }
+    const remoteProjects = (data as Record<string, unknown>[]).map(rowToProject);
+    const locals = await db.projects.bulkGet(remoteProjects.map((p) => p.id));
+    const localMap = new Map(locals.filter(Boolean).map((p) => [p!.id, p!]));
+    const toUpsert = remoteProjects.filter((remote) => {
+      const local = localMap.get(remote.id);
+      return !local || remote.updatedAt > local.updatedAt;
+    });
+    if (toUpsert.length > 0) await db.projects.bulkPut(toUpsert);
   }
 
   private async syncTasks(userId: string, lastSyncedAt: Date): Promise<void> {
@@ -171,7 +175,7 @@ export class SyncService {
         .from('tasks')
         .upsert(unsynced.map((t) => taskToRow(t, userId)), { onConflict: 'id' });
       if (!error) {
-        await Promise.all(unsynced.map((t) => db.tasks.update(t.id, { synced: true })));
+        await db.tasks.bulkPut(unsynced.map((t) => ({ ...t, synced: true })));
       }
     }
 
@@ -182,13 +186,14 @@ export class SyncService {
 
     if (pullError || !data) return;
 
-    for (const row of data as Record<string, unknown>[]) {
-      const remote = rowToTask(row);
-      const local = await db.tasks.get(remote.id);
-      if (!local || remote.updatedAt > local.updatedAt) {
-        await db.tasks.put(remote);
-      }
-    }
+    const remoteTasks = (data as Record<string, unknown>[]).map(rowToTask);
+    const locals = await db.tasks.bulkGet(remoteTasks.map((t) => t.id));
+    const localMap = new Map(locals.filter(Boolean).map((t) => [t!.id, t!]));
+    const toUpsert = remoteTasks.filter((remote) => {
+      const local = localMap.get(remote.id);
+      return !local || remote.updatedAt > local.updatedAt;
+    });
+    if (toUpsert.length > 0) await db.tasks.bulkPut(toUpsert);
   }
 
   subscribe(userId: string, onChange: () => void): () => void {

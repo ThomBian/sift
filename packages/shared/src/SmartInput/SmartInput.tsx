@@ -1,5 +1,5 @@
 // packages/shared/src/SmartInput/SmartInput.tsx
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useSmartInput, type ChipFocus } from './useSmartInput';
 import { Dropdown, type ProjectWithSpace } from './Dropdown';
 import type { Task } from '../types';
@@ -10,14 +10,22 @@ interface SmartInputProps {
   onTaskReady: (task: Pick<Task, 'title' | 'dueDate' | 'workingDate'> & { projectId?: string }) => void;
   placeholder?: string;
   className?: string;
+  /** Optional external ref to the underlying <input> for programmatic focus from the parent. */
+  inputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
 function formatDate(d: Date): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-export function SmartInput({ projects, onTaskReady, placeholder, className }: SmartInputProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
+export function SmartInput({ projects, onTaskReady, placeholder, className, inputRef: externalInputRef }: SmartInputProps) {
+  const localRef = useRef<HTMLInputElement>(null);
+  const inputRef = externalInputRef ?? localRef;
+
+  const isFirstRender = useRef(true);
+
+  const [query, setQuery] = useState('');
+
   const {
     values,
     focus,
@@ -26,12 +34,54 @@ export function SmartInput({ projects, onTaskReady, placeholder, className }: Sm
     handleChipKeyDown,
     handleChipClick,
     handleSelect,
+    cancelChipSelection,
   } = useSmartInput(onTaskReady);
 
-  // Return keyboard focus to the text input when focus is 'text'
+  // Reset query whenever the active chip changes
   useEffect(() => {
-    if (focus === 'text') inputRef.current?.focus();
+    setQuery('');
   }, [focus]);
+
+  // Focus the input whenever focus changes (any chip or text).
+  // Skip on initial mount so the task list can receive keyboard nav immediately.
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    inputRef.current?.focus();
+  }, [focus, inputRef]);
+
+  const handleInputKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (focus !== 'text') {
+        // Dropdown is open. ArrowDown/Up/Enter are intercepted by Dropdown's
+        // capture-phase listener and never reach here. Handle only Escape and
+        // Tab / Cmd+Enter which should still work.
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          cancelChipSelection();
+          return;
+        }
+        if (e.key === 'Tab' || (e.key === 'Enter' && (e.metaKey || e.ctrlKey))) {
+          handleTitleKeyDown(e);
+        }
+        return;
+      }
+      // focus === 'text'
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        return; // bubble to window listener for task nav
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        inputRef.current?.blur();
+        return;
+      }
+      handleTitleKeyDown(e);
+    },
+    [focus, cancelChipSelection, handleTitleKeyDown, inputRef]
+  );
 
   const projectForId = (id: string | null) => id ? projects.find(p => p.id === id) : undefined;
 
@@ -71,16 +121,26 @@ export function SmartInput({ projects, onTaskReady, placeholder, className }: Sm
     },
   ];
 
+  const activeChip = focus !== 'text' ? focus : null;
+  const inputValue = activeChip ? query : values.title;
+  const handleInputChange = activeChip
+    ? (e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)
+    : handleTitleChange;
+
+  const inputPlaceholder = activeChip
+    ? (activeChip === 'project' ? 'Filter projects…' : 'Pick a date…')
+    : (placeholder ?? 'Add a task… type @p, @w, @d or use Tab');
+
   return (
     <div className={`${styles.bar} ${className ?? ''}`}>
       <span className={styles.icon} aria-hidden>+</span>
       <input
-        ref={inputRef}
+        ref={inputRef as React.RefObject<HTMLInputElement>}
         className={styles.input}
-        value={values.title}
-        onChange={handleTitleChange}
-        onKeyDown={handleTitleKeyDown}
-        placeholder={placeholder ?? 'Add a task… type @p, @w, @d or use Tab'}
+        value={inputValue}
+        onChange={handleInputChange}
+        onKeyDown={handleInputKeyDown}
+        placeholder={inputPlaceholder}
         aria-label="Task title"
       />
       <div className={styles.chips}>
@@ -112,7 +172,7 @@ export function SmartInput({ projects, onTaskReady, placeholder, className }: Sm
               <Dropdown
                 type={chip.key}
                 projects={projects}
-                query=""
+                query={query}
                 onSelect={val => handleSelect(chip.key, val)}
               />
             )}

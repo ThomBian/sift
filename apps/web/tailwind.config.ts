@@ -5,26 +5,38 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: '#080808',
-        surface: '#0e0e0e',
-        'surface-2': '#141414',
-        border: '#1f1f1f',
-        'border-2': '#262626',
-        text: '#e2e2e2',
-        muted: '#666666',
-        dim: '#444444',
-        accent: '#5E6AD2',
-        red: '#ff4d4d',
-        green: '#4ade80',
+        bg: '#FFFFFF',
+        surface: '#FAFAFA',
+        'surface-2': '#F0F0F0',
+        border: '#E2E2E2',
+        'border-2': '#CCCCCC',
+        text: '#111111',
+        muted: '#888888',
+        dim: '#BBBBBB',
+        accent: '#FF4F00',
+        red: '#E60000',
+        green: '#16A34A',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Geist', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
       },
       height: {
         'task-row': '36px',
       },
-      boxShadow: {
-        glow: '0 0 0 1px rgba(94, 106, 210, 0.12), 0 12px 40px rgba(0, 0, 0, 0.45)',
+      animation: {
+        'task-enter': 'task-enter 180ms ease-out both',
+        'task-exit': 'task-exit 300ms ease-in forwards',
+      },
+      keyframes: {
+        'task-enter': {
+          from: { opacity: '0', transform: 'translateX(-6px)' },
+          to: { opacity: '1', transform: 'translateX(0)' },
+        },
+        'task-exit': {
+          '0%': { opacity: '1', transform: 'translateX(0)' },
+          '100%': { opacity: '0', transform: 'translateX(10px)' },
+        },
       },
     },
   },

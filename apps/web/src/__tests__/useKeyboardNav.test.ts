@@ -71,7 +71,7 @@ describe('useKeyboardNav', () => {
     expect(result.current.focusedId).toBe('b');
   });
 
-  it('j does not move past the last task', () => {
+  it('j cycles from last task to input (null)', () => {
     const { result } = renderHook(() => useKeyboardNav());
 
     act(() => {
@@ -82,10 +82,10 @@ describe('useKeyboardNav', () => {
       result.current.handleKeyDown(makeKeyEvent('j'), TASKS);
     });
 
-    expect(result.current.focusedId).toBe('c');
+    expect(result.current.focusedId).toBeNull();
   });
 
-  it('k does not move before the first task', () => {
+  it('k cycles from first task to input (null)', () => {
     const { result } = renderHook(() => useKeyboardNav());
 
     act(() => {
@@ -96,7 +96,7 @@ describe('useKeyboardNav', () => {
       result.current.handleKeyDown(makeKeyEvent('k'), TASKS);
     });
 
-    expect(result.current.focusedId).toBe('a');
+    expect(result.current.focusedId).toBeNull();
   });
 
   it('ArrowDown works like j', () => {

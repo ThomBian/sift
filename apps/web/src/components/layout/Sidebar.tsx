@@ -8,10 +8,10 @@ function SidebarLink({ to, label }: { to: string; label: string }) {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `block px-3 py-1.5 rounded-md text-sm transition-colors ${
+        `block px-3 py-1.5 font-mono text-[11px] transition-colors border-l-2 ${
           isActive
-            ? 'bg-surface-2 text-text'
-            : 'text-muted hover:text-text hover:bg-surface-2'
+            ? 'border-accent text-text bg-[#FF4F00]/5'
+            : 'border-transparent text-muted hover:text-text hover:bg-surface-2'
         }`
       }
     >
@@ -36,7 +36,10 @@ export default function Sidebar() {
 
   return (
     <aside className="w-48 shrink-0 flex flex-col border-r border-border bg-surface overflow-y-auto">
-      <div className="p-2 space-y-0.5">
+      <div className="h-[2px] bg-accent shrink-0" />
+
+      <div className="p-2 pt-3 space-y-0.5">
+        <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-dim px-3 pb-1.5">Views</p>
         <SidebarLink to="/inbox" label="Inbox" />
         <SidebarLink to="/today" label="Today" />
         <SidebarLink to="/projects" label="Projects" />
@@ -45,18 +48,19 @@ export default function Sidebar() {
       <div className="h-px bg-border mx-2 my-1" />
 
       <div className="p-2 space-y-1 flex-1">
+        <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-dim px-2 pb-1">Spaces</p>
         {spacesWithProjects.map(({ space, projects }) => (
           <div key={space.id}>
             <button
               type="button"
               onClick={() => toggleSpace(space.id)}
-              className="w-full flex items-center gap-2 px-2 py-1 rounded-md text-xs text-muted hover:text-text transition-colors"
+              className="w-full flex items-center gap-2 px-2 py-1 text-[11px] text-muted hover:text-text transition-colors font-mono"
             >
               <span
-                className="w-2 h-2 rounded-full shrink-0"
+                className="w-1.5 h-1.5 shrink-0"
                 style={{ backgroundColor: space.color }}
               />
-              <span className="font-medium uppercase tracking-wide flex-1 text-left truncate">
+              <span className="uppercase tracking-[0.1em] flex-1 text-left truncate">
                 {space.name}
               </span>
               <svg
@@ -83,7 +87,7 @@ export default function Sidebar() {
                   <NavLink
                     key={project.id}
                     to="/projects"
-                    className="block px-2 py-1 rounded-md text-xs text-muted hover:text-text transition-colors truncate"
+                    className="block px-2 py-1 text-[11px] text-muted hover:text-text transition-colors truncate font-mono"
                   >
                     {project.name}
                   </NavLink>

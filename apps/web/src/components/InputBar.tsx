@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import React from 'react';
 import {
   SmartInput,
   type ProjectWithSpace,
@@ -10,6 +11,7 @@ import { useSpacesProjects } from '../hooks/useSpacesProjects';
 
 interface InputBarProps {
   defaultProjectId: string;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
 async function handleTaskReady(
@@ -31,7 +33,7 @@ async function handleTaskReady(
   });
 }
 
-export default function InputBar({ defaultProjectId }: InputBarProps) {
+export default function InputBar({ defaultProjectId, inputRef }: InputBarProps) {
   const { spacesWithProjects } = useSpacesProjects();
 
   const projects: ProjectWithSpace[] = useMemo(
@@ -43,10 +45,11 @@ export default function InputBar({ defaultProjectId }: InputBarProps) {
   );
 
   return (
-    <div className="border-t border-border bg-surface px-4 py-3">
+    <div className="border-b border-border bg-surface px-4 py-3">
       <SmartInput
         projects={projects}
         onTaskReady={(partial) => handleTaskReady(partial, defaultProjectId)}
+        inputRef={inputRef}
       />
     </div>
   );

@@ -28,6 +28,7 @@ export interface UseSmartInputReturn {
   handleChipKeyDown: (chip: ChipFocus, e: React.KeyboardEvent) => void;
   handleChipClick: (chip: ChipFocus) => void;
   handleSelect: (chip: ChipFocus, value: string | Date | null) => void;
+  cancelChipSelection: () => void;
   reset: () => void;
 }
 
@@ -106,6 +107,8 @@ export function useSmartInput(
     setFocus('text');
   }, []);
 
+  const cancelChipSelection = useCallback(() => setFocus('text'), []);
+
   const reset = useCallback(() => {
     setValues(EMPTY);
     setFocus('text');
@@ -119,6 +122,7 @@ export function useSmartInput(
     handleChipKeyDown,
     handleChipClick,
     handleSelect,
+    cancelChipSelection,
     reset,
   };
 }

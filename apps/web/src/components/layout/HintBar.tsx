@@ -4,18 +4,16 @@ interface Hint {
 }
 
 const HINTS: Hint[] = [
-  { keys: ['j', 'k'], label: 'Move' },
+  { keys: ['⌘K'], label: 'New task' },
+  { keys: ['↑', '↓'], label: 'Navigate' },
+  { keys: ['← →'], label: 'Switch view' },
   { keys: ['Enter'], label: 'Done' },
   { keys: ['Backspace'], label: 'Archive' },
-  { keys: ['w'], label: '@working date' },
-  { keys: ['p'], label: '@project' },
-  { keys: ['d'], label: '@due date' },
-  { keys: ['⌘+Enter'], label: 'Save' },
 ];
 
 function Key({ label }: { label: string }) {
   return (
-    <kbd className="inline-flex items-center px-1.5 py-0.5 rounded border border-border-2 bg-surface-2 text-dim font-mono text-[10px] leading-none">
+    <kbd className="inline-flex items-center px-1.5 py-0.5 border border-border-2 bg-surface-2 text-muted font-mono text-[10px] leading-none">
       {label}
     </kbd>
   );

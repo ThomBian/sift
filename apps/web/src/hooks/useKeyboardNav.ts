@@ -8,7 +8,9 @@ export interface UseKeyboardNavReturn {
   handleKeyDown: (e: KeyboardEvent, tasks: Task[]) => void;
 }
 
-export function useKeyboardNav(): UseKeyboardNavReturn {
+export function useKeyboardNav(
+  onToggleDone?: (task: Task) => void
+): UseKeyboardNavReturn {
   const [focusedId, setFocusedId] = useState<string | null>(null);
 
   function handleKeyDown(e: KeyboardEvent, tasks: Task[]) {
@@ -20,7 +22,11 @@ export function useKeyboardNav(): UseKeyboardNavReturn {
       case 'j':
       case 'ArrowDown': {
         e.preventDefault();
-        if (currentIndex < tasks.length - 1) {
+        if (currentIndex === -1) {
+          setFocusedId(tasks[0].id);
+        } else if (currentIndex === tasks.length - 1) {
+          setFocusedId(null);
+        } else {
           setFocusedId(tasks[currentIndex + 1].id);
         }
         break;
@@ -29,32 +35,45 @@ export function useKeyboardNav(): UseKeyboardNavReturn {
       case 'k':
       case 'ArrowUp': {
         e.preventDefault();
-        if (currentIndex > 0) {
+        if (currentIndex === -1) {
+          setFocusedId(tasks[tasks.length - 1].id);
+        } else if (currentIndex === 0) {
+          setFocusedId(null);
+        } else {
           setFocusedId(tasks[currentIndex - 1].id);
         }
         break;
       }
 
+      case 'Escape': {
+        setFocusedId(null);
+        break;
+      }
+
       case 'Enter': {
         if (focusedId === null) break;
-        const task = tasks.find((t) => t.id === focusedId);
+        const task = currentIndex !== -1 ? tasks[currentIndex] : undefined;
         if (!task) break;
 
-        const now = new Date();
-        if (task.status === 'done') {
-          void db.tasks.update(focusedId, {
-            status: task.workingDate ? 'todo' : 'inbox',
-            completedAt: null,
-            updatedAt: now,
-            synced: false,
-          });
+        if (onToggleDone) {
+          onToggleDone(task);
         } else {
-          void db.tasks.update(focusedId, {
-            status: 'done',
-            completedAt: now,
-            updatedAt: now,
-            synced: false,
-          });
+          const now = new Date();
+          if (task.status === 'done') {
+            void db.tasks.update(focusedId, {
+              status: task.workingDate ? 'todo' : 'inbox',
+              completedAt: null,
+              updatedAt: now,
+              synced: false,
+            });
+          } else {
+            void db.tasks.update(focusedId, {
+              status: 'done',
+              completedAt: now,
+              updatedAt: now,
+              synced: false,
+            });
+          }
         }
         break;
       }

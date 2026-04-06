@@ -1,37 +1,41 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import TaskRow from './TaskRow';
 import { useSpacesProjects } from '../hooks/useSpacesProjects';
-import type { Task } from '@speedy/shared';
+import type { Task, Project, Space } from '@speedy/shared';
 
 interface TaskListProps {
   tasks: Task[];
   focusedId: string | null;
   onFocus: (id: string) => void;
+  onToggle?: (task: Task) => void;
+  exitingIds?: Set<string>;
 }
 
-export default function TaskList({ tasks, focusedId, onFocus }: TaskListProps) {
+export default function TaskList({ tasks, focusedId, onFocus, onToggle, exitingIds }: TaskListProps) {
   const [doneExpanded, setDoneExpanded] = useState(false);
   const { spacesWithProjects } = useSpacesProjects();
 
   const activeTasks = tasks.filter((t) => t.status !== 'done' && t.status !== 'archived');
   const doneTasks = tasks.filter((t) => t.status === 'done');
 
-  function getProjectAndSpace(task: Task) {
+  const projectMap = useMemo(() => {
+    const map = new Map<string, { project: Project; space: Space }>();
     for (const { space, projects } of spacesWithProjects) {
-      const project = projects.find((p) => p.id === task.projectId);
-      if (project) return { project, space };
+      for (const project of projects) {
+        map.set(project.id, { project, space });
+      }
     }
-    return null;
-  }
+    return map;
+  }, [spacesWithProjects]);
 
   return (
     <div className="flex-1">
       {activeTasks.length === 0 && doneTasks.length === 0 && (
-        <p className="text-muted text-sm px-4 py-8 text-center">No tasks here.</p>
+        <p className="font-mono text-[11px] text-dim px-4 py-8 text-center uppercase tracking-[0.1em]">No tasks.</p>
       )}
 
-      {activeTasks.map((task) => {
-        const ctx = getProjectAndSpace(task);
+      {activeTasks.map((task, i) => {
+        const ctx = projectMap.get(task.projectId);
         if (!ctx) return null;
         return (
           <TaskRow
@@ -41,6 +45,9 @@ export default function TaskList({ tasks, focusedId, onFocus }: TaskListProps) {
             space={ctx.space}
             isFocused={focusedId === task.id}
             onFocus={() => onFocus(task.id)}
+            onToggle={onToggle ? () => onToggle(task) : undefined}
+            exiting={exitingIds?.has(task.id)}
+            index={i}
           />
         );
       })}
@@ -50,7 +57,7 @@ export default function TaskList({ tasks, focusedId, onFocus }: TaskListProps) {
           <button
             type="button"
             onClick={() => setDoneExpanded((v) => !v)}
-            className="flex items-center gap-2 px-4 py-1.5 text-xs text-muted hover:text-text transition-colors w-full"
+            className="flex items-center gap-2 px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.15em] text-dim hover:text-text transition-colors w-full"
           >
             <svg
               width="10"
@@ -72,7 +79,7 @@ export default function TaskList({ tasks, focusedId, onFocus }: TaskListProps) {
 
           {doneExpanded &&
             doneTasks.map((task) => {
-              const ctx = getProjectAndSpace(task);
+              const ctx = projectMap.get(task.projectId);
               if (!ctx) return null;
               return (
                 <TaskRow

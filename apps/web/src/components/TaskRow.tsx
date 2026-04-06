@@ -6,21 +6,27 @@ export interface TaskRowProps {
   space: Space;
   isFocused: boolean;
   onFocus: () => void;
+  onToggle?: () => void;
+  exiting?: boolean;
+  index?: number;
 }
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
+const TODAY = new Date();
+TODAY.setHours(0, 0, 0, 0);
+
 function isLate(task: Task): boolean {
   if (!task.dueDate || task.status === 'done') return false;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return task.dueDate < today;
+  return task.dueDate < TODAY;
 }
 
-export default function TaskRow({ task, space, isFocused, onFocus }: TaskRowProps) {
+export default function TaskRow({ task, space, isFocused, onFocus, onToggle, exiting = false, index = 0 }: TaskRowProps) {
   const late = isLate(task);
+  // During exit animation, show the row as if it's done
+  const showDone = exiting || task.status === 'done';
 
   return (
     <div
@@ -34,29 +40,41 @@ export default function TaskRow({ task, space, isFocused, onFocus }: TaskRowProp
         }
       }}
       className={`
+        ${exiting ? 'animate-task-exit' : 'animate-task-enter'}
         flex items-center h-task-row px-3 gap-3 cursor-pointer select-none
         border-l-2 transition-colors
-        ${isFocused ? 'border-accent bg-surface-2' : 'border-transparent hover:bg-surface-2/50'}
+        ${late
+          ? 'bg-red border-red'
+          : isFocused
+            ? 'border-accent bg-[#FF4F00]/5'
+            : 'border-transparent hover:bg-surface-2'
+        }
       `}
+      style={{ animationDelay: `${index * 25}ms` }}
     >
       <span
         data-testid="space-dot"
-        className="w-2 h-2 rounded-full shrink-0"
-        style={{ backgroundColor: space.color }}
+        className="w-2 h-2 shrink-0"
+        style={{ backgroundColor: late ? '#FFFFFF' : space.color }}
       />
 
       <span
-        className={`w-4 h-4 rounded-full border shrink-0 flex items-center justify-center transition-colors ${
-          task.status === 'done'
-            ? 'border-green bg-green/20'
-            : 'border-border-2 hover:border-accent'
+        onClick={(e) => { e.stopPropagation(); onToggle?.(); }}
+        className={`w-4 h-4 border shrink-0 flex items-center justify-center transition-colors ${
+          showDone
+            ? late
+              ? 'border-white bg-white/20'
+              : 'border-green bg-green/10'
+            : late
+              ? 'border-white hover:border-white/60'
+              : 'border-border-2 hover:border-accent'
         }`}
       >
-        {task.status === 'done' && (
+        {showDone && (
           <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
             <path
               d="M1.5 4L3 5.5L6.5 2.5"
-              stroke="#4ade80"
+              stroke={late ? '#FFFFFF' : '#16A34A'}
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -67,7 +85,11 @@ export default function TaskRow({ task, space, isFocused, onFocus }: TaskRowProp
 
       <span
         className={`flex-1 text-sm truncate ${
-          task.status === 'done' ? 'text-muted line-through' : 'text-text'
+          late
+            ? 'text-white'
+            : showDone
+              ? 'text-muted line-through'
+              : 'text-text'
         }`}
       >
         {task.title}
@@ -80,7 +102,7 @@ export default function TaskRow({ task, space, isFocused, onFocus }: TaskRowProp
           rel="noopener noreferrer"
           data-testid="source-url-icon"
           onClick={(e) => e.stopPropagation()}
-          className="text-muted hover:text-accent transition-colors shrink-0"
+          className={`shrink-0 transition-colors ${late ? 'text-white/70 hover:text-white' : 'text-muted hover:text-accent'}`}
           title={task.sourceUrl}
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -98,8 +120,8 @@ export default function TaskRow({ task, space, isFocused, onFocus }: TaskRowProp
       {task.dueDate && (
         <span
           data-testid="due-date"
-          className={`text-xs shrink-0 tabular-nums ${
-            late ? 'text-red' : 'text-muted'
+          className={`text-xs shrink-0 tabular-nums font-mono ${
+            late ? 'text-white font-medium' : 'text-muted'
           }`}
         >
           {formatDate(task.dueDate)}

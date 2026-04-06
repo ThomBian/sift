@@ -28,17 +28,10 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg flex items-center justify-center px-4 relative overflow-hidden">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.07]"
-        style={{
-          backgroundImage:
-            'radial-gradient(circle at 20% 20%, #5E6AD2 0, transparent 45%), radial-gradient(circle at 80% 10%, #4ade80 0, transparent 40%)',
-        }}
-      />
-      <div className="w-full max-w-sm relative z-10">
+    <div className="min-h-screen bg-bg flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
         <div className="text-center mb-10">
-          <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border-2 bg-surface-2 shadow-glow mb-4">
+          <div className="inline-flex h-10 w-10 items-center justify-center border border-border-2 bg-surface-2 mb-4">
             <span className="text-accent text-lg font-semibold">S</span>
           </div>
           <h1 className="text-text text-2xl font-semibold tracking-tight">
@@ -49,13 +42,13 @@ export default function AuthPage() {
           </p>
         </div>
 
-        <div className="bg-surface border border-border rounded-xl p-6 space-y-4 shadow-glow">
+        <div className="bg-surface border border-border p-6 space-y-4">
           {!isSupabaseConfigured && (
-            <p className="text-muted text-xs leading-relaxed border border-border-2 rounded-lg px-3 py-2 bg-surface-2">
+            <p className="text-muted text-xs leading-relaxed border border-border-2 px-3 py-2 bg-surface-2">
               Cloud sign-in is disabled until you add{' '}
-              <code className="text-dim">VITE_SUPABASE_URL</code> and{' '}
-              <code className="text-dim">VITE_SUPABASE_ANON_KEY</code> (see{' '}
-              <code className="text-dim">.env.example</code>). Local tasks still
+              <code className="text-dim font-mono">VITE_SUPABASE_URL</code> and{' '}
+              <code className="text-dim font-mono">VITE_SUPABASE_ANON_KEY</code> (see{' '}
+              <code className="text-dim font-mono">.env.example</code>). Local tasks still
               work in the app without an account.
             </p>
           )}
@@ -64,7 +57,7 @@ export default function AuthPage() {
             <div className="text-center py-4">
               <p className="text-text text-sm">
                 Check your email — a magic link is on its way to{' '}
-                <span className="text-accent">{email}</span>.
+                <span className="text-accent font-mono">{email}</span>.
               </p>
             </div>
           ) : (
@@ -73,7 +66,7 @@ export default function AuthPage() {
                 type="button"
                 onClick={() => void signInWithGoogle()}
                 disabled={!isSupabaseConfigured}
-                className="w-full flex items-center justify-center gap-3 bg-surface-2 hover:bg-border disabled:opacity-40 disabled:cursor-not-allowed text-text text-sm font-medium px-4 py-2.5 rounded-md border border-border-2 transition-colors"
+                className="w-full flex items-center justify-center gap-3 bg-surface-2 hover:bg-border disabled:opacity-40 disabled:cursor-not-allowed text-text text-sm font-medium px-4 py-2.5 border border-border-2 transition-colors"
               >
                 <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
                   <path
@@ -110,13 +103,13 @@ export default function AuthPage() {
                   placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-surface-2 border border-border-2 rounded-md px-3 py-2 text-text text-sm placeholder:text-muted focus:outline-none focus:border-accent transition-colors disabled:opacity-40"
+                  className="w-full bg-surface-2 border border-border-2 px-3 py-2 text-text text-sm placeholder:text-muted focus:outline-none focus:border-accent transition-colors disabled:opacity-40 font-mono"
                 />
-                {error && <p className="text-red text-xs">{error}</p>}
+                {error && <p className="text-red text-xs font-mono">{error}</p>}
                 <button
                   type="submit"
                   disabled={submitting || !isSupabaseConfigured}
-                  className="w-full bg-accent hover:bg-accent/90 disabled:opacity-50 text-white text-sm font-medium px-4 py-2.5 rounded-md transition-colors"
+                  className="w-full bg-accent hover:bg-accent/90 disabled:opacity-50 text-white text-sm font-medium px-4 py-2.5 transition-colors"
                 >
                   {submitting ? 'Sending…' : 'Send magic link'}
                 </button>

@@ -4,11 +4,11 @@ import { useTasks } from '../../hooks/useTasks';
 
 function SyncBadge({ isSynced }: { isSynced: boolean }) {
   return (
-    <div className="flex items-center gap-1.5 text-xs text-muted">
+    <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
       <span
-        className={`w-1.5 h-1.5 rounded-full ${isSynced ? 'bg-green' : 'bg-muted'}`}
+        className={`w-1.5 h-1.5 shrink-0 ${isSynced ? 'bg-green' : 'bg-dim animate-pulse'}`}
       />
-      {isSynced ? 'Synced' : 'Local only'}
+      {isSynced ? 'Synced' : 'Local'}
     </div>
   );
 }
@@ -25,17 +25,18 @@ function NavTab({
   return (
     <NavLink
       to={to}
+      tabIndex={-1}
       className={({ isActive }) =>
-        `flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors ${
+        `flex items-center gap-2 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] border-b-2 transition-colors ${
           isActive
-            ? 'bg-surface-2 text-text shadow-[inset_0_0_0_1px_rgba(94,106,210,0.25)]'
-            : 'text-muted hover:text-text hover:bg-surface-2'
+            ? 'border-accent text-text'
+            : 'border-transparent text-muted hover:text-text'
         }`
       }
     >
       {label}
       {count > 0 && (
-        <span className="text-xs text-muted tabular-nums">{count}</span>
+        <span className="text-[10px] text-accent font-mono tabular-nums">{count}</span>
       )}
     </NavLink>
   );
@@ -47,12 +48,15 @@ export default function Topbar({ isSynced }: { isSynced: boolean }) {
   const todayTasks = useTasks('today');
 
   return (
-    <header className="flex items-center justify-between h-12 px-4 border-b border-border bg-surface shrink-0 backdrop-blur-sm bg-surface/90">
-      <span className="text-text text-sm font-semibold tracking-tight w-48 shrink-0">
-        Speedy Tasks
-      </span>
+    <header className="flex items-center justify-between h-12 px-4 border-b border-border bg-surface shrink-0">
+      <div className="flex items-center gap-2 w-48 shrink-0">
+        <span className="w-2 h-2 bg-accent shrink-0" />
+        <span className="font-mono text-[11px] font-medium tracking-[0.3em] uppercase text-text">
+          Sift
+        </span>
+      </div>
 
-      <nav className="flex items-center gap-1">
+      <nav className="flex items-center gap-0">
         <NavTab to="/inbox" label="Inbox" count={inboxTasks.length} />
         <NavTab to="/today" label="Today" count={todayTasks.length} />
         <NavTab to="/projects" label="Projects" count={0} />
@@ -63,8 +67,9 @@ export default function Topbar({ isSynced }: { isSynced: boolean }) {
         {user ? (
           <button
             type="button"
+            tabIndex={-1}
             onClick={() => void signOut()}
-            className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-white text-xs font-medium hover:bg-accent/80 transition-colors"
+            className="w-7 h-7 bg-accent flex items-center justify-center text-white text-[11px] font-mono font-medium hover:bg-accent/80 transition-colors"
             title="Sign out"
           >
             {(user.email ?? 'U')[0].toUpperCase()}

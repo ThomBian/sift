@@ -108,13 +108,13 @@ describe('TaskRow', () => {
     expect(dot.style.backgroundColor).toBe('rgb(94, 106, 210)');
   });
 
-  it('shows due date in red when task is late', () => {
+  it('applies Surgical Red (bg-red, white text) to the entire row when task is late', () => {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
 
     const lateTask: Task = { ...baseTask, dueDate: yesterday, status: 'todo' };
 
-    render(
+    const { container } = render(
       <TaskRow
         task={lateTask}
         project={project}
@@ -124,8 +124,11 @@ describe('TaskRow', () => {
       />
     );
 
+    const row = container.firstChild as HTMLElement;
+    expect(row.className).toMatch(/bg-red/);
+
     const dateEl = screen.getByTestId('due-date');
-    expect(dateEl.className).toMatch(/text-red/);
+    expect(dateEl.className).toMatch(/text-white/);
   });
 
   it('does not show due date in red when task is done', () => {

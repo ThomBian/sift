@@ -3,17 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --color-bg: #080808;
-  --color-surface: #0e0e0e;
-  --color-surface-2: #141414;
-  --color-border: #1f1f1f;
-  --color-border-2: #262626;
-  --color-text: #e2e2e2;
-  --color-muted: #666666;
-  --color-dim: #444444;
-  --color-accent: #5e6ad2;
-  --color-red: #ff4d4d;
-  --color-green: #4ade80;
+  --color-bg: #FFFFFF;
+  --color-surface: #FAFAFA;
+  --color-surface-2: #F0F0F0;
+  --color-border: #E2E2E2;
+  --color-border-2: #CCCCCC;
+  --color-text: #111111;
+  --color-muted: #888888;
+  --color-dim: #BBBBBB;
+  --color-accent: #FF4F00;
+  --color-red: #E60000;
+  --color-green: #16A34A;
 }
 
 * {
@@ -31,7 +31,7 @@ body,
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
-  font-family: Inter, system-ui, sans-serif;
+  font-family: 'Geist', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -43,9 +43,19 @@ body {
   background: var(--color-bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border-2);
-  border-radius: 2px;
+  background: var(--color-border);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-dim);
+  background: var(--color-border-2);
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: #ffffff;
+}
+
+/* Focus ring: orange, no radius */
+:focus-visible {
+  outline: 1px solid var(--color-accent);
+  outline-offset: -1px;
 }

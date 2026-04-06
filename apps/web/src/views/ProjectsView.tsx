@@ -1,39 +1,45 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useProjectTasks } from '../hooks/useTasks';
 import { useKeyboardNav } from '../hooks/useKeyboardNav';
 import TaskRow from '../components/TaskRow';
-import InputBar from '../components/InputBar';
+import { db } from '../lib/db';
 import type { Task } from '@speedy/shared';
 
 function ProgressBar({ done, total }: { done: number; total: number }) {
   const pct = total === 0 ? 0 : Math.round((done / total) * 100);
   return (
     <div className="flex items-center gap-2">
-      <div className="flex-1 h-1 bg-border rounded-full overflow-hidden">
+      <div className="flex-1 h-1 bg-border overflow-hidden">
         <div
-          className="h-full bg-accent rounded-full transition-all duration-300"
+          className="h-full bg-accent transition-all duration-300"
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="text-xs text-muted tabular-nums">
+      <span className="text-xs text-muted font-mono tabular-nums">
         {done}/{total}
       </span>
     </div>
   );
 }
 
-function useDefaultProjectId(): string {
-  const groups = useProjectTasks();
-  for (const { projects } of groups) {
-    if (projects.length > 0) return projects[0].project.id;
-  }
-  return '';
-}
-
 export default function ProjectsView() {
   const groups = useProjectTasks();
-  const { focusedId, setFocusedId, handleKeyDown } = useKeyboardNav();
-  const defaultProjectId = useDefaultProjectId();
+  const [exitingIds, setExitingIds] = useState(new Set<string>());
+
+  const handleToggle = useCallback((task: Task) => {
+    const now = new Date();
+    if (task.status === 'done') {
+      void db.tasks.update(task.id, { status: task.workingDate ? 'todo' : 'inbox', completedAt: null, updatedAt: now, synced: false });
+    } else {
+      setExitingIds(prev => new Set([...prev, task.id]));
+      setTimeout(() => {
+        void db.tasks.update(task.id, { status: 'done', completedAt: now, updatedAt: now, synced: false });
+        setExitingIds(prev => { const n = new Set(prev); n.delete(task.id); return n; });
+      }, 320);
+    }
+  }, []);
+
+  const { focusedId, setFocusedId, handleKeyDown } = useKeyboardNav(handleToggle);
 
   const allTasks: Task[] = groups.flatMap(({ projects }) =>
     projects.flatMap(({ tasks }) =>
@@ -41,9 +47,10 @@ export default function ProjectsView() {
     )
   );
 
+  // When the focused task leaves the list, clear selection
   useEffect(() => {
-    if (allTasks.length > 0 && focusedId === null) {
-      setFocusedId(allTasks[0].id);
+    if (focusedId !== null && !allTasks.find((t) => t.id === focusedId)) {
+      setFocusedId(null);
     }
   }, [allTasks, focusedId, setFocusedId]);
 
@@ -59,22 +66,20 @@ export default function ProjectsView() {
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      <div className="px-4 pt-6 pb-2">
-        <h2 className="text-text text-sm font-medium">Projects</h2>
-        <p className="text-muted text-xs mt-1">
-          Progress per project — done counts toward the bar.
-        </p>
+      <div className="px-4 pt-4 pb-3">
+        <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted mb-1">Projects</h2>
+        <p className="text-muted text-[11px]">Progress per project.</p>
       </div>
 
       <div className="flex-1 overflow-y-auto min-h-0">
         {groups.map(({ space, projects }) => (
           <div key={space.id} className="mb-6">
-            <div className="flex items-center gap-2 px-4 py-2">
+            <div className="flex items-center gap-2 px-4 py-2 mt-2">
               <span
-                className="w-2 h-2 rounded-full shrink-0"
+                className="w-1.5 h-1.5 shrink-0"
                 style={{ backgroundColor: space.color }}
               />
-              <span className="text-xs text-muted font-medium uppercase tracking-wide">
+              <span className="text-[9px] text-muted font-mono uppercase tracking-[0.2em]">
                 {space.name}
               </span>
             </div>
@@ -90,7 +95,7 @@ export default function ProjectsView() {
                 <div key={project.id} className="mb-4">
                   <div className="px-4 py-2 border-b border-border">
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-sm text-text font-medium">
+                      <span className="font-mono text-[11px] text-text">
                         {project.name}
                       </span>
                     </div>
@@ -98,7 +103,7 @@ export default function ProjectsView() {
                   </div>
 
                   {activeTasks.length === 0 ? (
-                    <p className="text-muted text-xs px-4 py-3">All done!</p>
+                    <p className="font-mono text-[10px] text-dim px-4 py-3 uppercase tracking-[0.1em]">All done.</p>
                   ) : (
                     activeTasks.map((task) => (
                       <TaskRow
@@ -108,6 +113,8 @@ export default function ProjectsView() {
                         space={space}
                         isFocused={focusedId === task.id}
                         onFocus={() => setFocusedId(task.id)}
+                        onToggle={() => handleToggle(task)}
+                        exiting={exitingIds.has(task.id)}
                       />
                     ))
                   )}
@@ -123,8 +130,6 @@ export default function ProjectsView() {
           </p>
         )}
       </div>
-
-      <InputBar defaultProjectId={defaultProjectId} />
     </div>
   );
 }

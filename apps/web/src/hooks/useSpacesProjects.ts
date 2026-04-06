@@ -17,9 +17,16 @@ export function useSpacesProjects(): { spacesWithProjects: SpaceWithProjects[] }
         a.name.localeCompare(b.name)
       );
 
+      const bySpace = new Map<string, Project[]>();
+      for (const p of projects) {
+        const arr = bySpace.get(p.spaceId) ?? [];
+        arr.push(p);
+        bySpace.set(p.spaceId, arr);
+      }
+
       return spaces.map((space) => ({
         space,
-        projects: projects.filter((p) => p.spaceId === space.id),
+        projects: bySpace.get(space.id) ?? [],
       }));
     }, []) ?? [];
 
