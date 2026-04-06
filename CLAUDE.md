@@ -72,9 +72,12 @@ Every record has `synced: boolean`. All writes hit IndexedDB immediately; `synce
 - **← / →** — switch views (handled in `AppLayout`, always active when not in an input)
 - **Enter** — toggle focused task done/undone
 - **Backspace / Delete** — archive focused task
-- **Escape** — deselect focused task
+- **Escape** — close edit palette if open, else deselect focused task
+- **D / W / P / E** — when a task is focused, open `TaskEditPalette` for due date / working date / project / title
 
-Each view registers its own `window.keydown` listener that skips events when `e.target` is an INPUT or TEXTAREA. `AppLayout` owns the palette and view-switching listeners. When a focused task disappears from the list (marked done, archived), the view's `useEffect` clears `focusedId`.
+`HintBar` renders two states: default (no task focused) and task-focused (shows D/W/P/E shortcuts with orange accent). It lives at the bottom of each view and is replaced by `TaskEditPalette` when editing is active.
+
+Each view registers its own `window.keydown` listener that skips events when `e.target` is an INPUT or TEXTAREA. `AppLayout` owns the palette and view-switching listeners. When a focused task disappears from the list (marked done, archived), the view's `useEffect` clears `focusedId` and `editField`.
 
 ## Environment
 
