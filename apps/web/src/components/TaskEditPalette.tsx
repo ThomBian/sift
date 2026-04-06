@@ -147,10 +147,14 @@ export default function TaskEditPalette({
   }
 
   const currentProject = projects.find((p) => p.id === projectId);
-  const inputValue = activeChip === 'project' ? search : title;
+  const inChipMode = activeChip !== 'title';
+  const inputValue = inChipMode ? search : title;
+  const inputPlaceholder = inChipMode
+    ? (activeChip === 'project' ? 'Filter projects…' : 'Pick a date…')
+    : '';
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (activeChip === 'project') {
+    if (inChipMode) {
       setSearch(e.target.value);
       setDropdownIndex(0);
     } else {
@@ -182,7 +186,7 @@ export default function TaskEditPalette({
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          placeholder={activeChip === 'project' ? 'Filter projects…' : ''}
+          placeholder={inputPlaceholder}
           className="flex-1 bg-transparent border-none outline-none text-sm text-text font-sans min-w-0"
         />
         <div className="w-px h-4 bg-border shrink-0" />

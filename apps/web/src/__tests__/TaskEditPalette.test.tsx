@@ -158,7 +158,7 @@ describe('TaskEditPalette', () => {
         onCancel={vi.fn()}
       />
     );
-    const input = screen.getByDisplayValue('Fix the bug');
+    const input = screen.getByPlaceholderText('Pick a date…');
     fireEvent.keyDown(input, { key: 'ArrowDown' });
     fireEvent.keyDown(input, { key: 'Enter' });
     // Second option is Tomorrow — value should be a non-null Date
