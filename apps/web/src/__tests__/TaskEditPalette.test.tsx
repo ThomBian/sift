@@ -147,6 +147,26 @@ describe('TaskEditPalette', () => {
     );
   });
 
+  it('arrow down then Enter selects the second date option', () => {
+    const onSave = vi.fn();
+    render(
+      <TaskEditPalette
+        task={baseTask}
+        defaultField="dueDate"
+        projects={projects}
+        onSave={onSave}
+        onCancel={vi.fn()}
+      />
+    );
+    const input = screen.getByDisplayValue('Fix the bug');
+    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    // Second option is Tomorrow — value should be a non-null Date
+    expect(onSave).toHaveBeenCalledWith(
+      expect.objectContaining({ dueDate: expect.any(Date) })
+    );
+  });
+
   it('calls onSave with null dueDate when Clear is clicked', () => {
     const onSave = vi.fn();
     render(

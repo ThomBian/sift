@@ -52,7 +52,7 @@ export default function TaskEditPalette({
   const [dropdownIndex, setDropdownIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const dateOptions = useMemo(() => getDateOptions(), []);
+  const dateOptions = getDateOptions();
 
   const filteredProjects = useMemo(
     () => projects.filter((p) => p.name.toLowerCase().includes(search.toLowerCase())),
@@ -100,7 +100,7 @@ export default function TaskEditPalette({
       activeChip === 'project' ? filteredProjects.length : dateOptions.length;
     if (e.key === 'ArrowDown' && showDropdown) {
       e.preventDefault();
-      setDropdownIndex((i) => Math.min(i + 1, itemCount - 1));
+      setDropdownIndex((i) => Math.min(i + 1, Math.max(itemCount - 1, 0)));
       return;
     }
     if (e.key === 'ArrowUp' && showDropdown) {
