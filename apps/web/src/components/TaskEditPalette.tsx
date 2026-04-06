@@ -86,6 +86,25 @@ export default function TaskEditPalette({
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const chipOrder = ['project', 'dueDate', 'workingDate'] as const;
+      const isFilled = (chip: (typeof chipOrder)[number]) => {
+        if (chip === 'dueDate') return dueDate !== null;
+        if (chip === 'workingDate') return workingDate !== null;
+        return false; // project always considered navigable
+      };
+      const currentIndex = chipOrder.indexOf(activeChip as (typeof chipOrder)[number]);
+      const startIndex = currentIndex === -1 ? 0 : currentIndex;
+      // Find next unfilled chip; if all filled, just advance one
+      let next: (typeof chipOrder)[number] | null = null;
+      for (let i = 1; i <= chipOrder.length; i++) {
+        const candidate = chipOrder[(startIndex + i) % chipOrder.length];
+        if (!isFilled(candidate)) { next = candidate; break; }
+      }
+      handleChipClick(next ?? chipOrder[(startIndex + 1) % chipOrder.length]);
+      return;
+    }
     if (e.key === 'Escape') {
       e.preventDefault();
       onCancel();
