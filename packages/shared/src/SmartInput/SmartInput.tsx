@@ -12,13 +12,17 @@ interface SmartInputProps {
   className?: string;
   /** Optional external ref to the underlying <input> for programmatic focus from the parent. */
   inputRef?: React.RefObject<HTMLInputElement | null>;
+  /** Pre-fill the input with existing values (edit mode). */
+  initialValues?: import('./useSmartInput').SmartInputValues;
+  /** Auto-open this chip's dropdown on mount (edit mode). */
+  initialFocus?: import('./useSmartInput').ChipFocus;
 }
 
 function formatDate(d: Date): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-export function SmartInput({ projects, onTaskReady, placeholder, className, inputRef: externalInputRef }: SmartInputProps) {
+export function SmartInput({ projects, onTaskReady, placeholder, className, inputRef: externalInputRef, initialValues, initialFocus }: SmartInputProps) {
   const localRef = useRef<HTMLInputElement>(null);
   const inputRef = externalInputRef ?? localRef;
 
@@ -35,7 +39,7 @@ export function SmartInput({ projects, onTaskReady, placeholder, className, inpu
     handleChipClick,
     handleSelect,
     cancelChipSelection,
-  } = useSmartInput(onTaskReady);
+  } = useSmartInput(onTaskReady, initialValues, initialFocus);
 
   // Reset query whenever the active chip changes
   useEffect(() => {

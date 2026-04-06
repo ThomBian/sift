@@ -64,10 +64,12 @@ const EMPTY: SmartInputValues = {
 };
 
 export function useSmartInput(
-  onTaskReady: (task: Pick<Task, 'title' | 'dueDate' | 'workingDate'> & { projectId?: string }) => void
+  onTaskReady: (task: Pick<Task, 'title' | 'dueDate' | 'workingDate'> & { projectId?: string }) => void,
+  initialValues: SmartInputValues = EMPTY,
+  initialFocus: FocusTarget = 'text',
 ): UseSmartInputReturn {
-  const [values, setValues] = useState<SmartInputValues>(EMPTY);
-  const [focus, setFocus] = useState<FocusTarget>('text');
+  const [values, setValues] = useState<SmartInputValues>(initialValues);
+  const [focus, setFocus] = useState<FocusTarget>(initialFocus);
 
   const handleSave = useCallback(() => {
     if (!values.title.trim()) return;

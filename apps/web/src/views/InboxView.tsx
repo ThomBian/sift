@@ -1,23 +1,18 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useInboxTasks } from '../hooks/useTasks';
 import { useKeyboardNav } from '../hooks/useKeyboardNav';
-import { useSpacesProjects } from '../hooks/useSpacesProjects';
 import TaskList from '../components/TaskList';
 import HintBar from '../components/layout/HintBar';
-import TaskEditPalette, { type EditField, type EditPatch } from '../components/TaskEditPalette';
 import { db } from '../lib/db';
-import type { Task, ProjectWithSpace } from '@speedy/shared';
+import type { Task } from '@speedy/shared';
+
+function dispatchEditTask(task: Task, chip: 'dueDate' | 'workingDate' | 'project' | null) {
+  window.dispatchEvent(new CustomEvent('sift:edit-task', { detail: { task, chip } }));
+}
 
 export default function InboxView() {
   const tasks = useInboxTasks();
   const [exitingIds, setExitingIds] = useState(new Set<string>());
-  const [editField, setEditField] = useState<EditField | null>(null);
-
-  const { spacesWithProjects } = useSpacesProjects();
-  const projects = useMemo<ProjectWithSpace[]>(
-    () => spacesWithProjects.flatMap(({ space, projects: ps }) => ps.map((p) => ({ ...p, space }))),
-    [spacesWithProjects]
-  );
 
   const handleToggle = useCallback((task: Task) => {
     if (task.status === 'done') {
@@ -33,52 +28,29 @@ export default function InboxView() {
 
   const { focusedId, setFocusedId, handleKeyDown } = useKeyboardNav(handleToggle);
 
-  const focusedTask = tasks.find((t) => t.id === focusedId) ?? null;
-
-  const handleEditSave = useCallback(
-    (patch: EditPatch) => {
-      if (!focusedId) return;
-      void db.tasks.update(focusedId, {
-        ...patch,
-        updatedAt: new Date(),
-        synced: false,
-        ...(patch.workingDate !== undefined
-          ? { status: patch.workingDate !== null ? 'todo' : 'inbox' }
-          : {}),
-      });
-      setEditField(null);
-    },
-    [focusedId]
-  );
-
-  // Clear selection and palette when focused task leaves the list
+  // Clear focus when focused task leaves the list
   useEffect(() => {
     if (focusedId !== null && !tasks.find((t) => t.id === focusedId)) {
       setFocusedId(null);
-      setEditField(null);
     }
   }, [tasks, focusedId, setFocusedId]);
-
-  // Clear palette when task is deselected
-  useEffect(() => {
-    if (focusedId === null) setEditField(null);
-  }, [focusedId]);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const tag = (e.target as HTMLElement).tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-      if (focusedId !== null && editField === null) {
-        if (e.key === 'd' || e.key === 'D') { e.preventDefault(); setEditField('dueDate'); return; }
-        if (e.key === 'w' || e.key === 'W') { e.preventDefault(); setEditField('workingDate'); return; }
-        if (e.key === 'p' || e.key === 'P') { e.preventDefault(); setEditField('project'); return; }
-        if (e.key === 'e' || e.key === 'E') { e.preventDefault(); setEditField('title'); return; }
+      const focused = focusedId !== null ? tasks.find((t) => t.id === focusedId) ?? null : null;
+      if (focused) {
+        if (e.key === 'd' || e.key === 'D') { e.preventDefault(); dispatchEditTask(focused, 'dueDate'); return; }
+        if (e.key === 'w' || e.key === 'W') { e.preventDefault(); dispatchEditTask(focused, 'workingDate'); return; }
+        if (e.key === 'p' || e.key === 'P') { e.preventDefault(); dispatchEditTask(focused, 'project'); return; }
+        if (e.key === 'e' || e.key === 'E') { e.preventDefault(); dispatchEditTask(focused, null); return; }
       }
       handleKeyDown(e, tasks);
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [tasks, handleKeyDown, focusedId, editField]);
+  }, [tasks, handleKeyDown, focusedId]);
 
   return (
     <div className="flex flex-col h-full min-h-0">
@@ -104,17 +76,7 @@ export default function InboxView() {
         />
       </div>
 
-      {editField !== null && focusedTask !== null ? (
-        <TaskEditPalette
-          task={focusedTask}
-          defaultField={editField}
-          projects={projects}
-          onSave={handleEditSave}
-          onCancel={() => setEditField(null)}
-        />
-      ) : (
-        <HintBar taskFocused={focusedId !== null} />
-      )}
+      <HintBar taskFocused={focusedId !== null} />
     </div>
   );
 }

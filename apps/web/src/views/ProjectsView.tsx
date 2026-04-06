@@ -1,12 +1,10 @@
 import { useEffect, useCallback, useState, useMemo } from 'react';
 import { useProjectTasks } from '../hooks/useTasks';
 import { useKeyboardNav } from '../hooks/useKeyboardNav';
-import { useSpacesProjects } from '../hooks/useSpacesProjects';
 import TaskRow from '../components/TaskRow';
 import HintBar from '../components/layout/HintBar';
-import TaskEditPalette, { type EditField, type EditPatch } from '../components/TaskEditPalette';
 import { db } from '../lib/db';
-import type { Task, ProjectWithSpace } from '@speedy/shared';
+import type { Task } from '@speedy/shared';
 
 function ProgressBar({ done, total }: { done: number; total: number }) {
   const pct = total === 0 ? 0 : Math.round((done / total) * 100);
@@ -20,16 +18,13 @@ function ProgressBar({ done, total }: { done: number; total: number }) {
   );
 }
 
+function dispatchEditTask(task: Task, chip: 'dueDate' | 'workingDate' | 'project' | null) {
+  window.dispatchEvent(new CustomEvent('sift:edit-task', { detail: { task, chip } }));
+}
+
 export default function ProjectsView() {
   const groups = useProjectTasks();
   const [exitingIds, setExitingIds] = useState(new Set<string>());
-  const [editField, setEditField] = useState<EditField | null>(null);
-
-  const { spacesWithProjects } = useSpacesProjects();
-  const projects = useMemo<ProjectWithSpace[]>(
-    () => spacesWithProjects.flatMap(({ space, projects: ps }) => ps.map((p) => ({ ...p, space }))),
-    [spacesWithProjects]
-  );
 
   const handleToggle = useCallback((task: Task) => {
     if (task.status === 'done') {
@@ -54,50 +49,28 @@ export default function ProjectsView() {
     [groups]
   );
 
-  const focusedTask = allTasks.find((t) => t.id === focusedId) ?? null;
-
-  const handleEditSave = useCallback(
-    (patch: EditPatch) => {
-      if (!focusedId) return;
-      void db.tasks.update(focusedId, {
-        ...patch,
-        updatedAt: new Date(),
-        synced: false,
-        ...(patch.workingDate !== undefined
-          ? { status: patch.workingDate !== null ? 'todo' : 'inbox' }
-          : {}),
-      });
-      setEditField(null);
-    },
-    [focusedId]
-  );
-
   useEffect(() => {
     if (focusedId !== null && !allTasks.find((t) => t.id === focusedId)) {
       setFocusedId(null);
-      setEditField(null);
     }
   }, [allTasks, focusedId, setFocusedId]);
-
-  useEffect(() => {
-    if (focusedId === null) setEditField(null);
-  }, [focusedId]);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const tag = (e.target as HTMLElement).tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-      if (focusedId !== null && editField === null) {
-        if (e.key === 'd' || e.key === 'D') { e.preventDefault(); setEditField('dueDate'); return; }
-        if (e.key === 'w' || e.key === 'W') { e.preventDefault(); setEditField('workingDate'); return; }
-        if (e.key === 'p' || e.key === 'P') { e.preventDefault(); setEditField('project'); return; }
-        if (e.key === 'e' || e.key === 'E') { e.preventDefault(); setEditField('title'); return; }
+      const focused = focusedId !== null ? allTasks.find((t) => t.id === focusedId) ?? null : null;
+      if (focused) {
+        if (e.key === 'd' || e.key === 'D') { e.preventDefault(); dispatchEditTask(focused, 'dueDate'); return; }
+        if (e.key === 'w' || e.key === 'W') { e.preventDefault(); dispatchEditTask(focused, 'workingDate'); return; }
+        if (e.key === 'p' || e.key === 'P') { e.preventDefault(); dispatchEditTask(focused, 'project'); return; }
+        if (e.key === 'e' || e.key === 'E') { e.preventDefault(); dispatchEditTask(focused, null); return; }
       }
       handleKeyDown(e, allTasks);
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [allTasks, handleKeyDown, focusedId, editField]);
+  }, [allTasks, handleKeyDown, focusedId]);
 
   return (
     <div className="flex flex-col h-full min-h-0">
@@ -152,17 +125,7 @@ export default function ProjectsView() {
         )}
       </div>
 
-      {editField !== null && focusedTask !== null ? (
-        <TaskEditPalette
-          task={focusedTask}
-          defaultField={editField}
-          projects={projects}
-          onSave={handleEditSave}
-          onCancel={() => setEditField(null)}
-        />
-      ) : (
-        <HintBar taskFocused={focusedId !== null} />
-      )}
+      <HintBar taskFocused={focusedId !== null} />
     </div>
   );
 }

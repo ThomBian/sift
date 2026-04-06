@@ -3,6 +3,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import Topbar from './Topbar';
 import CommandPalette from '../CommandPalette';
 import { useSpacesProjects } from '../../hooks/useSpacesProjects';
+import type { Task, ChipFocus } from '@speedy/shared';
 
 const VIEWS = ['/inbox', '/today', '/projects'];
 
@@ -20,23 +21,50 @@ interface AppLayoutProps {
 
 export default function AppLayout({ isSynced }: AppLayoutProps) {
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [editTask, setEditTask] = useState<Task | null>(null);
+  const [editChip, setEditChip] = useState<ChipFocus | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const defaultProjectId = useDefaultProjectId();
 
+  function openPalette(task?: Task | null, chip?: ChipFocus | null) {
+    setEditTask(task ?? null);
+    setEditChip(chip ?? null);
+    setPaletteOpen(true);
+  }
+
+  function closePalette() {
+    setPaletteOpen(false);
+    setEditTask(null);
+    setEditChip(null);
+  }
+
+  useEffect(() => {
+    function onEditTask(e: Event) {
+      const { task, chip } = (e as CustomEvent<{ task: Task; chip: ChipFocus | null }>).detail;
+      openPalette(task, chip);
+    }
+    window.addEventListener('sift:edit-task', onEditTask);
+    return () => window.removeEventListener('sift:edit-task', onEditTask);
+  }, []);
+
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      // Cmd+K: toggle palette
+      // Cmd+K: open new task palette
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setPaletteOpen((v) => !v);
+        if (paletteOpen) {
+          closePalette();
+        } else {
+          openPalette();
+        }
         return;
       }
 
       // Escape: close palette
       if (e.key === 'Escape' && paletteOpen) {
         e.preventDefault();
-        setPaletteOpen(false);
+        closePalette();
         return;
       }
 
@@ -69,8 +97,10 @@ export default function AppLayout({ isSynced }: AppLayoutProps) {
       </main>
       <CommandPalette
         isOpen={paletteOpen}
-        onClose={() => setPaletteOpen(false)}
+        onClose={closePalette}
         defaultProjectId={defaultProjectId}
+        editTask={editTask}
+        editChip={editChip}
       />
     </div>
   );
