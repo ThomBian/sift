@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import Topbar from './Topbar';
-import HintBar from './HintBar';
 import CommandPalette from '../CommandPalette';
 import { useSpacesProjects } from '../../hooks/useSpacesProjects';
 
@@ -67,7 +66,6 @@ export default function AppLayout({ isSynced }: AppLayoutProps) {
         <div className="flex-1 overflow-y-auto">
           <Outlet />
         </div>
-        <HintBar />
       </main>
       <CommandPalette
         isOpen={paletteOpen}
