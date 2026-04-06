@@ -32,12 +32,13 @@ export default function ProjectsView() {
   );
 
   const handleToggle = useCallback((task: Task) => {
-    const now = new Date();
     if (task.status === 'done') {
+      const now = new Date();
       void db.tasks.update(task.id, { status: task.workingDate ? 'todo' : 'inbox', completedAt: null, updatedAt: now, synced: false });
     } else {
       setExitingIds((prev) => new Set([...prev, task.id]));
       setTimeout(() => {
+        const now = new Date();
         void db.tasks.update(task.id, { status: 'done', completedAt: now, updatedAt: now, synced: false });
         setExitingIds((prev) => { const n = new Set(prev); n.delete(task.id); return n; });
       }, 320);
@@ -46,8 +47,11 @@ export default function ProjectsView() {
 
   const { focusedId, setFocusedId, handleKeyDown } = useKeyboardNav(handleToggle);
 
-  const allTasks: Task[] = groups.flatMap(({ projects: ps }) =>
-    ps.flatMap(({ tasks }) => tasks.filter((t) => t.status !== 'done' && t.status !== 'archived'))
+  const allTasks = useMemo<Task[]>(
+    () => groups.flatMap(({ projects: ps }) =>
+      ps.flatMap(({ tasks }) => tasks.filter((t) => t.status !== 'done' && t.status !== 'archived'))
+    ),
+    [groups]
   );
 
   const focusedTask = allTasks.find((t) => t.id === focusedId) ?? null;
@@ -121,7 +125,7 @@ export default function ProjectsView() {
                     <ProgressBar done={done} total={tasks.length} />
                   </div>
                   {activeTasks.length === 0 ? (
-                    <p className="font-mono text-[10px] text-dim px-4 py-3 uppercase tracking-[0.1em]">All done.</p>
+                    <p className="font-mono text-[10px] text-muted px-4 py-3 uppercase tracking-[0.1em]">All done.</p>
                   ) : (
                     activeTasks.map((task) => (
                       <TaskRow
