@@ -5,7 +5,7 @@ import type { Task } from '../types';
 export type ChipFocus = 'project' | 'dueDate' | 'workingDate';
 export type FocusTarget = 'text' | ChipFocus;
 
-const TAB_CYCLE: FocusTarget[] = ['text', 'project', 'dueDate', 'workingDate'];
+const FOCUS_CYCLE: FocusTarget[] = ['text', 'project', 'dueDate', 'workingDate'];
 
 const AT_TRIGGERS: Record<string, ChipFocus> = {
   '@p': 'project',
@@ -18,6 +18,29 @@ export interface SmartInputValues {
   projectId: string | null;
   dueDate: Date | null;
   workingDate: Date | null;
+}
+
+function isFilled(chip: ChipFocus, values: SmartInputValues): boolean {
+  if (chip === 'project') return values.projectId !== null;
+  if (chip === 'dueDate') return values.dueDate !== null;
+  return values.workingDate !== null;
+}
+
+// Forward Tab: skip already-filled chips; always stop at 'text'
+function nextUnfilled(current: FocusTarget, values: SmartInputValues): FocusTarget {
+  const startIndex = FOCUS_CYCLE.indexOf(current);
+  for (let i = 1; i <= FOCUS_CYCLE.length; i++) {
+    const next = FOCUS_CYCLE[(startIndex + i) % FOCUS_CYCLE.length];
+    if (next === 'text') return 'text';
+    if (!isFilled(next as ChipFocus, values)) return next;
+  }
+  return 'text';
+}
+
+// Backward Shift+Tab: simple one-step reverse, no skip
+function prevFocus(current: FocusTarget): FocusTarget {
+  const i = FOCUS_CYCLE.indexOf(current);
+  return FOCUS_CYCLE[(i - 1 + FOCUS_CYCLE.length) % FOCUS_CYCLE.length];
 }
 
 export interface UseSmartInputReturn {
@@ -38,11 +61,6 @@ const EMPTY: SmartInputValues = {
   dueDate: null,
   workingDate: null,
 };
-
-function rotate(current: FocusTarget, dir: 1 | -1): FocusTarget {
-  const i = TAB_CYCLE.indexOf(current);
-  return TAB_CYCLE[(i + dir + TAB_CYCLE.length) % TAB_CYCLE.length];
-}
 
 export function useSmartInput(
   onTaskReady: (task: Pick<Task, 'title' | 'dueDate' | 'workingDate'> & { projectId?: string }) => void
@@ -77,17 +95,17 @@ export function useSmartInput(
   const handleTitleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab') {
       e.preventDefault();
-      setFocus(f => rotate(f, e.shiftKey ? -1 : 1));
+      setFocus(f => e.shiftKey ? prevFocus(f) : nextUnfilled(f, values));
     } else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       handleSave();
     }
-  }, [handleSave]);
+  }, [handleSave, values]);
 
   const handleChipKeyDown = useCallback((chip: ChipFocus, e: React.KeyboardEvent) => {
     if (e.key === 'Tab') {
       e.preventDefault();
-      setFocus(f => rotate(f, e.shiftKey ? -1 : 1));
+      setFocus(f => e.shiftKey ? prevFocus(f) : nextUnfilled(f, values));
     } else if (e.key === 'Escape') {
       e.preventDefault();
       setFocus('text');
