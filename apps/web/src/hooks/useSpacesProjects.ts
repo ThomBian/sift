@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../lib/db';
-import type { Space, Project } from '@speedy/shared';
+import type { Space, Project } from '@sift/shared';
 
 export interface SpaceWithProjects {
   space: Space;

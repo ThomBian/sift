@@ -20,7 +20,7 @@ speedy-tasks/
     └── shared/       # Types, DB schema, SmartInput component, sync service
 ```
 
-- `packages/shared` exports: TypeScript types (`Space`, `Project`, `Task`), `AppDatabase` and `db` (Dexie), `SmartInput`, `useSmartInput`, and related types. **`SyncService` lives in `apps/web`** (see Plan 2) — it is not part of `@speedy/shared`.
+- `packages/shared` exports: TypeScript types (`Space`, `Project`, `Task`), `AppDatabase` and `db` (Dexie), `SmartInput`, `useSmartInput`, and related types. **`SyncService` lives in `apps/web`** (see Plan 2) — it is not part of `@sift/shared`.
 - `apps/web` is a standard Vite React app; Vercel deploys it from the monorepo root via `vercel.json`.
 - `apps/extension` uses CRXJS Vite plugin for HMR, manifest generation, and CWS packaging. The capture overlay runs in a Shadow DOM to prevent host-page CSS bleed.
 - Turborepo orchestrates builds with output caching.
@@ -220,7 +220,7 @@ Delivered per [docs/superpowers/plans/2026-04-04-plan-1-foundation.md](../plans/
 | Item | Location / notes |
 |------|------------------|
 | Monorepo | npm workspaces + Turborepo 2; root `packageManager` field for Turbo workspace resolution |
-| Shared library | `packages/shared` (`@speedy/shared`) — Vite library build, `vite-plugin-dts`, CSS Modules for SmartInput |
+| Shared library | `packages/shared` (`@sift/shared`) — Vite library build, `vite-plugin-dts`, CSS Modules for SmartInput |
 | Data | `Space`, `Project`, `Task`, `TaskStatus`; `AppDatabase` Dexie schema v1; first-launch seed (Personal + General) |
 | Smart Input | `useSmartInput`, `Dropdown`, `SmartInput`; `@p` / `@w` / `@d`, Tab rotation, ⌘/Ctrl+Enter save |
 | Tests | Vitest + Testing Library + `fake-indexeddb`; jest-dom + `cleanup` in `src/__tests__/setup.ts` |
@@ -235,7 +235,7 @@ Web dashboard per [docs/superpowers/plans/2026-04-04-plan-2-web-app.md](../plans
 | Item | Notes |
 |------|--------|
 | `apps/web` | Vite 5 + React 18 + Tailwind 3 + React Router 6 |
-| Data | `useLiveQuery` hooks; `db` re-exported from `@speedy/shared` |
+| Data | `useLiveQuery` hooks; `db` re-exported from `@sift/shared` |
 | Views | Inbox, Today, Projects + `TaskList` / `TaskRow` / `InputBar` (`SmartInput` + `projects` prop) |
 | Keyboard | `useKeyboardNav` — j/k, Enter, Backspace/Delete |
 | Auth | Supabase Google + magic link when `VITE_*` env vars are set; **no route gating** — matches §7 logged-out UX |
@@ -243,6 +243,6 @@ Web dashboard per [docs/superpowers/plans/2026-04-04-plan-2-web-app.md](../plans
 | Tests | Vitest: `useTasks`, `useKeyboardNav`, `TaskRow`, `SyncService` (mocked Supabase) |
 | Deploy | `vercel.json` uses `npx turbo build --filter=web` |
 
-**Deviations from the written Plan 2 tasks:** Removed mandatory `ProtectedRoute` around the main shell so local-first use matches this spec. `supabase.ts` does not throw when env is missing. Dexie queries use `toArray()` + in-memory sort by `name` (schema indexes do not include `name`). `@speedy/shared` exposes `./style.css` for the SmartInput bundle.
+**Deviations from the written Plan 2 tasks:** Removed mandatory `ProtectedRoute` around the main shell so local-first use matches this spec. `supabase.ts` does not throw when env is missing. Dexie queries use `toArray()` + in-memory sort by `name` (schema indexes do not include `name`). `@sift/shared` exposes `./style.css` for the SmartInput bundle.
 
 **Next:** Plan 3 — Chrome extension ([docs/superpowers/plans/2026-04-04-plan-3-extension.md](../plans/2026-04-04-plan-3-extension.md)).

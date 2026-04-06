@@ -1,5 +1,5 @@
 import { useEffect, useRef, useMemo } from "react";
-import { SmartInput, type ProjectWithSpace, type Task, type ChipFocus, type SmartInputValues } from "@speedy/shared";
+import { SmartInput, type ProjectWithSpace, type Task, type ChipFocus, type SmartInputValues } from "@sift/shared";
 import { useSpacesProjects } from "../hooks/useSpacesProjects";
 import { db } from "../lib/db";
 import { nanoid } from "nanoid";

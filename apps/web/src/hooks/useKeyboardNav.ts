@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { db } from '../lib/db';
-import type { Task } from '@speedy/shared';
+import type { Task } from '@sift/shared';
 
 export interface UseKeyboardNavReturn {
   focusedId: string | null;

@@ -1,5 +1,5 @@
 // packages/shared/src/SmartInput/useSmartInput.ts
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import type { Task } from '../types';
 
 export type ChipFocus = 'project' | 'dueDate' | 'workingDate';
@@ -26,14 +26,21 @@ function isFilled(chip: ChipFocus, values: SmartInputValues): boolean {
   return values.workingDate !== null;
 }
 
-// Forward Tab: from text → first unfilled chip; from any chip → advance one step
-function nextFocus(current: FocusTarget, values: SmartInputValues): FocusTarget {
+// Forward Tab: from text → first unfilled chip (or full cycle restart — see ref below); from chip → one step
+function nextFocus(
+  current: FocusTarget,
+  values: SmartInputValues,
+  fullCycleFromText: boolean,
+): FocusTarget {
   if (current === 'text') {
-    // First Tab hit: jump to first unfilled chip, or first chip if all filled
+    if (fullCycleFromText) {
+      // Just finished text → … → workingDate → text via Tab; continue the full ring from project
+      return FOCUS_CYCLE[1];
+    }
+    // First Tab from title (after select / escape / initial): jump to first unfilled chip, or project if all filled
     const first = (FOCUS_CYCLE.slice(1) as ChipFocus[]).find(c => !isFilled(c, values));
     return first ?? FOCUS_CYCLE[1];
   }
-  // Subsequent Tab hits: simple one-step advance
   const i = FOCUS_CYCLE.indexOf(current);
   return FOCUS_CYCLE[(i + 1) % FOCUS_CYCLE.length];
 }
@@ -70,6 +77,8 @@ export function useSmartInput(
 ): UseSmartInputReturn {
   const [values, setValues] = useState<SmartInputValues>(initialValues);
   const [focus, setFocus] = useState<FocusTarget>(initialFocus);
+  /** After Tab advances workingDate → text, next Tab from title should walk all chips, not only empty ones. */
+  const afterFullChipRingRef = useRef(false);
 
   const handleSave = useCallback(() => {
     if (!values.title.trim()) return;
@@ -80,6 +89,7 @@ export function useSmartInput(
       workingDate: values.workingDate,
     });
     setValues(EMPTY);
+    afterFullChipRingRef.current = false;
     setFocus('text');
   }, [values, onTaskReady]);
 
@@ -95,20 +105,41 @@ export function useSmartInput(
     setValues(v => ({ ...v, title: val }));
   }, []);
 
+  const moveFocusOnTab = useCallback(
+    (e: React.KeyboardEvent, f: FocusTarget): FocusTarget => {
+      if (e.shiftKey) {
+        const next = prevFocus(f);
+        if (next === 'text') afterFullChipRingRef.current = false;
+        return next;
+      }
+      let fullCycleFromText = false;
+      if (f === 'text') {
+        fullCycleFromText = afterFullChipRingRef.current;
+        afterFullChipRingRef.current = false;
+      }
+      const next = nextFocus(f, values, fullCycleFromText);
+      if (f === 'workingDate' && next === 'text') {
+        afterFullChipRingRef.current = true;
+      }
+      return next;
+    },
+    [values],
+  );
+
   const handleTitleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab') {
       e.preventDefault();
-      setFocus(f => e.shiftKey ? prevFocus(f) : nextFocus(f, values));
+      setFocus(f => moveFocusOnTab(e, f));
     } else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       handleSave();
     }
-  }, [handleSave, values]);
+  }, [handleSave, moveFocusOnTab]);
 
   const handleChipKeyDown = useCallback((chip: ChipFocus, e: React.KeyboardEvent) => {
     if (e.key === 'Tab') {
       e.preventDefault();
-      setFocus(f => e.shiftKey ? prevFocus(f) : nextFocus(f, values));
+      setFocus(f => moveFocusOnTab(e, f));
     } else if (e.key === 'Escape') {
       e.preventDefault();
       setFocus('text');
@@ -116,7 +147,7 @@ export function useSmartInput(
       e.preventDefault();
       handleSave();
     }
-  }, [handleSave]);
+  }, [handleSave, moveFocusOnTab]);
 
   const handleChipClick = useCallback((chip: ChipFocus) => {
     setFocus(chip);
@@ -125,12 +156,17 @@ export function useSmartInput(
   const handleSelect = useCallback((chip: ChipFocus, value: string | Date | null) => {
     const key = chip === 'project' ? 'projectId' : chip;
     setValues(v => ({ ...v, [key]: value }));
+    afterFullChipRingRef.current = false;
     setFocus('text');
   }, []);
 
-  const cancelChipSelection = useCallback(() => setFocus('text'), []);
+  const cancelChipSelection = useCallback(() => {
+    afterFullChipRingRef.current = false;
+    setFocus('text');
+  }, []);
 
   const reset = useCallback(() => {
+    afterFullChipRingRef.current = false;
     setValues(EMPTY);
     setFocus('text');
   }, []);

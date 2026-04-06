@@ -4,7 +4,7 @@ import { useKeyboardNav } from '../hooks/useKeyboardNav';
 import TaskRow from '../components/TaskRow';
 import HintBar from '../components/layout/HintBar';
 import { db } from '../lib/db';
-import type { Task } from '@speedy/shared';
+import type { Task } from '@sift/shared';
 
 function ProgressBar({ done, total }: { done: number; total: number }) {
   const pct = total === 0 ? 0 : Math.round((done / total) * 100);

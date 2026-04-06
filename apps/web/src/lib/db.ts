@@ -1,1 +1,1 @@
-export { db } from '@speedy/shared';
+export { db } from '@sift/shared';

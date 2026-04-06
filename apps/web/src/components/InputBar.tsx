@@ -4,7 +4,7 @@ import {
   SmartInput,
   type ProjectWithSpace,
   type Task,
-} from '@speedy/shared';
+} from '@sift/shared';
 import { db } from '../lib/db';
 import { nanoid } from 'nanoid';
 import { useSpacesProjects } from '../hooks/useSpacesProjects';

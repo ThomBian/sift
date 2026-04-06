@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import type { Task, ProjectWithSpace } from '@speedy/shared';
+import type { Task, ProjectWithSpace } from '@sift/shared';
 
 export type EditField = 'title' | 'dueDate' | 'workingDate' | 'project';
 export type EditPatch = Partial<Pick<Task, 'title' | 'dueDate' | 'workingDate' | 'projectId'>>;

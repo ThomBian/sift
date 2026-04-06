@@ -2,8 +2,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import TaskEditPalette from '../components/TaskEditPalette';
-import type { Task } from '@speedy/shared';
-import type { ProjectWithSpace } from '@speedy/shared';
+import type { Task } from '@sift/shared';
+import type { ProjectWithSpace } from '@sift/shared';
 
 const now = new Date();
 

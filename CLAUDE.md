@@ -12,14 +12,14 @@ npm run test       # run all tests
 
 # Per-package
 npm run test --workspace=web
-npm run test --workspace=@speedy/shared
+npm run test --workspace=@sift/shared
 
 # Single test file
 npx vitest run apps/web/src/__tests__/SyncService.test.ts
 npx vitest run packages/shared/src/__tests__/SmartInput.test.tsx
 ```
 
-Build order matters: `@speedy/shared` must build before `apps/web` consumes it from `dist/`. Turborepo handles this via `"dependsOn": ["^build"]`. After editing anything in `packages/shared`, run `npm run build --workspace=@speedy/shared` before testing the web app.
+Build order matters: `@sift/shared` must build before `apps/web` consumes it from `dist/`. Turborepo handles this via `"dependsOn": ["^build"]`. After editing anything in `packages/shared`, run `npm run build --workspace=@sift/shared` before testing the web app.
 
 ## Architecture
 
@@ -31,7 +31,7 @@ Turborepo + npm workspaces monorepo:
   - `src/SmartInput/` — reusable task-input component with `@p`/`@w`/`@d` inline chip triggers
 
 - **`apps/web`** — React SPA (Vite + TypeScript + Tailwind)
-  - `src/lib/db.ts` — re-exports `db` from `@speedy/shared`
+  - `src/lib/db.ts` — re-exports `db` from `@sift/shared`
   - `src/lib/supabase.ts` — nullable Supabase client; app works fully offline without env vars
   - `src/contexts/AuthContext.tsx` — Supabase auth state
   - `src/services/SyncService.ts` — bidirectional sync (see below)

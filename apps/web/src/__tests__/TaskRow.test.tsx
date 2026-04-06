@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import TaskRow from '../components/TaskRow';
-import type { Task, Project, Space } from '@speedy/shared';
+import type { Task, Project, Space } from '@sift/shared';
 
 const now = new Date();
 

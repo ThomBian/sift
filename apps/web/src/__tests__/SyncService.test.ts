@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { db } from '../lib/db';
 import { SyncService } from '../services/SyncService';
-import type { Space, Project, Task } from '@speedy/shared';
+import type { Space, Project, Task } from '@sift/shared';
 
 const mockUpsert = vi.fn().mockResolvedValue({ error: null });
 

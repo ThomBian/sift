@@ -50,8 +50,24 @@ describe('useSmartInput — Tab rotation', () => {
     act(() => hook.result.current.handleTitleKeyDown(tab as any));
     expect(hook.result.current.focus).toBe('dueDate');
     // Subsequent Tab should cycle normally (dueDate → workingDate)
-    act(() => hook.result.current.handleChipKeyDown('dueDate', tab));
+    act(() => hook.result.current.handleTitleKeyDown(tab as any));
     expect(hook.result.current.focus).toBe('workingDate');
+  });
+
+  it('after Tab completes chip ring back to title, next Tab visits project (filled chips included)', () => {
+    const { hook } = make();
+    act(() => hook.result.current.handleSelect('project', 'proj-1'));
+    act(() => hook.result.current.handleTitleKeyDown(tab as any));
+    expect(hook.result.current.focus).toBe('dueDate');
+    act(() => hook.result.current.handleTitleKeyDown(tab as any));
+    expect(hook.result.current.focus).toBe('workingDate');
+    act(() => hook.result.current.handleTitleKeyDown(tab as any));
+    expect(hook.result.current.focus).toBe('text');
+    // Was only hitting due/working before; now include project again
+    act(() => hook.result.current.handleTitleKeyDown(tab as any));
+    expect(hook.result.current.focus).toBe('project');
+    act(() => hook.result.current.handleTitleKeyDown(tab as any));
+    expect(hook.result.current.focus).toBe('dueDate');
   });
 
   it('Shift+Tab cycles in reverse (text → workingDate)', () => {

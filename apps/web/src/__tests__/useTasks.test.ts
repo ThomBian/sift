@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { db } from '../lib/db';
 import { useInboxTasks, useTodayTasks, useProjectTasks } from '../hooks/useTasks';
-import type { Space, Project, Task } from '@speedy/shared';
+import type { Space, Project, Task } from '@sift/shared';
 
 function makeSpace(overrides?: Partial<Space>): Space {
   const now = new Date();

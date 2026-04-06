@@ -4,7 +4,7 @@
 
 **Goal:** Build `apps/web` — the Vite + React + Tailwind web app for Speedy Tasks, featuring keyboard-first task management with local-first Dexie storage and optional Supabase sync.
 
-**Architecture:** Single-page React app using React Router v6 for navigation across Inbox, Today, and Projects views. All data reads go through `useLiveQuery` (Dexie) so the UI updates reactively to local changes; a `SyncService` pushes/pulls against Supabase in the background using last-write-wins semantics. The app imports types and the `db` singleton from `@speedy/shared`.
+**Architecture:** Single-page React app using React Router v6 for navigation across Inbox, Today, and Projects views. All data reads go through `useLiveQuery` (Dexie) so the UI updates reactively to local changes; a `SyncService` pushes/pulls against Supabase in the background using last-write-wins semantics. The app imports types and the `db` singleton from `@sift/shared`.
 
 **Tech Stack:** Vite 5, React 18, React Router v6, Tailwind CSS v3, Dexie 4 + dexie-react-hooks, @supabase/supabase-js, nanoid 5, Vitest 1, @testing-library/react 14, fake-indexeddb 5
 
@@ -26,7 +26,7 @@
 | `apps/web/src/App.tsx` | React Router root, ProtectedRoute, route tree |
 | `apps/web/src/index.css` | Tailwind directives + CSS custom properties |
 | `apps/web/src/lib/supabase.ts` | Supabase client singleton created from env vars |
-| `apps/web/src/lib/db.ts` | Re-exports `db` from `@speedy/shared` |
+| `apps/web/src/lib/db.ts` | Re-exports `db` from `@sift/shared` |
 | `apps/web/src/contexts/AuthContext.tsx` | Supabase auth state, session listener, provider + hook |
 | `apps/web/src/pages/AuthPage.tsx` | Google OAuth + magic-link login UI |
 | `apps/web/src/components/layout/AppLayout.tsx` | Topbar + Sidebar + `<Outlet />` content slot |
@@ -74,7 +74,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@speedy/shared": "*",
+    "@sift/shared": "*",
     "@supabase/supabase-js": "^2.43.0",
     "dexie": "^4.0.0",
     "dexie-react-hooks": "^1.1.7",
@@ -183,7 +183,7 @@ mkdir -p apps/web/src/lib \
 cd apps/web && npm install
 ```
 
-Expected: `node_modules/@speedy/shared` symlinked to `packages/shared`, `node_modules/react-router-dom` present.
+Expected: `node_modules/@sift/shared` symlinked to `packages/shared`, `node_modules/react-router-dom` present.
 
 - [ ] **Step 7: Commit**
 
@@ -357,7 +357,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 ```typescript
 // apps/web/src/lib/db.ts
 // Re-export the shared Dexie singleton so app code imports from one place.
-export { db } from '@speedy/shared';
+export { db } from '@sift/shared';
 ```
 
 - [ ] **Step 4: Commit**
@@ -910,7 +910,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { db } from '../lib/db';
 import { useInboxTasks, useTodayTasks, useProjectTasks } from '../hooks/useTasks';
-import type { Space, Project, Task } from '@speedy/shared';
+import type { Space, Project, Task } from '@sift/shared';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -1102,7 +1102,7 @@ git commit -m "test(web): add failing tests for useTasks hook"
 // apps/web/src/hooks/useSpacesProjects.ts
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../lib/db';
-import type { Space, Project } from '@speedy/shared';
+import type { Space, Project } from '@sift/shared';
 
 export interface SpaceWithProjects {
   space: Space;
@@ -1130,7 +1130,7 @@ export function useSpacesProjects(): { spacesWithProjects: SpaceWithProjects[] }
 // apps/web/src/hooks/useTasks.ts
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../lib/db';
-import type { Task, Space, Project } from '@speedy/shared';
+import type { Task, Space, Project } from '@sift/shared';
 
 const TERMINAL_STATUSES = ['done', 'archived'] as const;
 
@@ -1241,7 +1241,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { db } from '../lib/db';
 import { useKeyboardNav } from '../hooks/useKeyboardNav';
-import type { Task } from '@speedy/shared';
+import type { Task } from '@sift/shared';
 
 function makeTask(overrides?: Partial<Task>): Task {
   const now = new Date();
@@ -1470,7 +1470,7 @@ git commit -m "test(web): add failing tests for useKeyboardNav hook"
 // apps/web/src/hooks/useKeyboardNav.ts
 import { useState } from 'react';
 import { db } from '../lib/db';
-import type { Task } from '@speedy/shared';
+import type { Task } from '@sift/shared';
 
 export interface UseKeyboardNavReturn {
   focusedId: string | null;
@@ -1587,7 +1587,7 @@ git commit -m "feat(web): implement useKeyboardNav hook"
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import TaskRow from '../components/TaskRow';
-import type { Task, Project, Space } from '@speedy/shared';
+import type { Task, Project, Space } from '@sift/shared';
 
 const now = new Date();
 
@@ -1798,7 +1798,7 @@ git commit -m "test(web): add failing tests for TaskRow component"
 
 ```tsx
 // apps/web/src/components/TaskRow.tsx
-import type { Task, Project, Space } from '@speedy/shared';
+import type { Task, Project, Space } from '@sift/shared';
 
 export interface TaskRowProps {
   task: Task;
@@ -1936,7 +1936,7 @@ git commit -m "feat(web): implement TaskRow component"
 import { useState } from 'react';
 import TaskRow from './TaskRow';
 import { useSpacesProjects } from '../hooks/useSpacesProjects';
-import type { Task } from '@speedy/shared';
+import type { Task } from '@sift/shared';
 
 interface TaskListProps {
   tasks: Task[];
@@ -2045,10 +2045,10 @@ git commit -m "feat(web): implement TaskList with active and done sections"
 
 ```tsx
 // apps/web/src/components/InputBar.tsx
-import { SmartInput } from '@speedy/shared';
+import { SmartInput } from '@sift/shared';
 import { db } from '../lib/db';
 import { nanoid } from 'nanoid';
-import type { Task } from '@speedy/shared';
+import type { Task } from '@sift/shared';
 
 interface InputBarProps {
   /** Default project ID assigned when the user hasn't selected one. */
@@ -2261,7 +2261,7 @@ import { useProjectTasks } from '../hooks/useTasks';
 import { useKeyboardNav } from '../hooks/useKeyboardNav';
 import TaskRow from '../components/TaskRow';
 import InputBar from '../components/InputBar';
-import type { Task } from '@speedy/shared';
+import type { Task } from '@sift/shared';
 
 function ProgressBar({ done, total }: { done: number; total: number }) {
   const pct = total === 0 ? 0 : Math.round((done / total) * 100);
@@ -2535,7 +2535,7 @@ git commit -m "feat(web): add App.tsx with React Router, ProtectedRoute, and syn
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { db } from '../lib/db';
 import { SyncService } from '../services/SyncService';
-import type { Space, Project, Task } from '@speedy/shared';
+import type { Space, Project, Task } from '@sift/shared';
 
 // ── Supabase mock ─────────────────────────────────────────────────────────────
 
@@ -2822,7 +2822,7 @@ git commit -m "test(web): add failing tests for SyncService"
 // apps/web/src/services/SyncService.ts
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { db } from '../lib/db';
-import type { Space, Project, Task } from '@speedy/shared';
+import type { Space, Project, Task } from '@sift/shared';
 
 const LAST_SYNC_KEY = 'speedy_last_synced_at';
 
@@ -3166,7 +3166,7 @@ After completing all 21 tasks, `apps/web` will be a fully functional Vite + Reac
 | Capability | Implementation |
 |---|---|
 | Auth | Supabase Google OAuth + magic link via `AuthContext` |
-| Local-first storage | Dexie via `@speedy/shared`, reactive via `useLiveQuery` |
+| Local-first storage | Dexie via `@sift/shared`, reactive via `useLiveQuery` |
 | Views | Inbox, Today, Projects — each keyboard-navigable |
 | Keyboard shortcuts | `j`/`k` focus, `Enter` toggle done, `Backspace` archive |
 | Cloud sync | LWW SyncService: push unsynced, pull remote, Realtime sub |

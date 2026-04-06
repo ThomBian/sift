@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../lib/db';
-import type { Task, Space, Project } from '@speedy/shared';
+import type { Task, Space, Project } from '@sift/shared';
 
 const TERMINAL_STATUSES = ['done', 'archived'] as const;
 

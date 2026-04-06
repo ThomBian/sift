@@ -4,9 +4,9 @@
 
 **Goal:** Build `apps/extension` — the Manifest V3 Chrome extension that lets users capture tasks from any webpage via a keyboard-triggered Shadow DOM overlay, syncs them to the Speedy web app, and shows unsynced task count in the extension popup.
 
-**Architecture:** The extension is built with Vite + CRXJS. A content script injects a Shadow DOM overlay into every page, using `SmartInput` from `@speedy/shared`. Tasks are persisted to `chrome.storage.local` with `synced: false`. A background service worker routes messages between the content script, popup, and the Speedy web app tab. The web app tab (Plan 2) handles writing extension-captured tasks into Dexie — the extension never touches IndexedDB.
+**Architecture:** The extension is built with Vite + CRXJS. A content script injects a Shadow DOM overlay into every page, using `SmartInput` from `@sift/shared`. Tasks are persisted to `chrome.storage.local` with `synced: false`. A background service worker routes messages between the content script, popup, and the Speedy web app tab. The web app tab (Plan 2) handles writing extension-captured tasks into Dexie — the extension never touches IndexedDB.
 
-**Tech Stack:** Vite 5, CRXJS `@crxjs/vite-plugin` ^2.0.0-beta, React 18, TypeScript 5, `@speedy/shared` (Plan 1), `@types/chrome` ^0.0.260, Vitest 1, @testing-library/react 14, jsdom 24
+**Tech Stack:** Vite 5, CRXJS `@crxjs/vite-plugin` ^2.0.0-beta, React 18, TypeScript 5, `@sift/shared` (Plan 1), `@types/chrome` ^0.0.260, Vitest 1, @testing-library/react 14, jsdom 24
 
 ---
 
@@ -44,7 +44,7 @@
 
 ```json
 {
-  "name": "@speedy/extension",
+  "name": "@sift/extension",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -54,7 +54,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@speedy/shared": "*"
+    "@sift/shared": "*"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.0-beta",
@@ -1107,8 +1107,8 @@ git commit -m "feat(extension): Shadow DOM host factory for capture overlay"
 
 ```tsx
 import React, { useCallback, useEffect, useRef } from 'react';
-import { SmartInput } from '@speedy/shared';
-import type { Task } from '@speedy/shared';
+import { SmartInput } from '@sift/shared';
+import type { Task } from '@sift/shared';
 import { nanoid } from 'nanoid';
 import type { StoredTask, ExtensionMessage } from '../types/messages';
 
@@ -1239,10 +1239,10 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import '@testing-library/jest-dom';
 import { Overlay } from '../content/overlay';
 
-// Mock @speedy/shared's SmartInput with a minimal substitute.
+// Mock @sift/shared's SmartInput with a minimal substitute.
 // We test Overlay's own responsibilities (save, close, backdrop click),
 // not SmartInput internals (those are tested in packages/shared).
-vi.mock('@speedy/shared', () => ({
+vi.mock('@sift/shared', () => ({
   SmartInput: ({
     onTaskReady,
   }: {
@@ -1684,7 +1684,7 @@ git commit -m "feat(extension): complete build verification — 25 tests passing
 | Background service worker: `saveTask`, `getUnsyncedTasks`, `markSynced`, `setSession`, `getSession`, message router, badge updater | Done |
 | Content script: `makeDoubleShiftDetector` pure function + overlay lifecycle | Done |
 | Shadow DOM host factory (`createShadowHost`) | Done |
-| Capture overlay React component using `SmartInput` from `@speedy/shared` | Done |
+| Capture overlay React component using `SmartInput` from `@sift/shared` | Done |
 | Extension popup: unsynced count, "Open Speedy" button, "Capture task" button | Done |
 | 25 passing unit tests (TDD for background, overlay, double-shift) | Done |
 | Production build producing a `.zip` ready for Chrome Web Store submission | Done |

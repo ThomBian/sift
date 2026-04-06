@@ -201,8 +201,8 @@ Create `apps/web/src/__tests__/TaskEditPalette.test.tsx`:
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import TaskEditPalette from '../components/TaskEditPalette';
-import type { Task } from '@speedy/shared';
-import type { ProjectWithSpace } from '@speedy/shared';
+import type { Task } from '@sift/shared';
+import type { ProjectWithSpace } from '@sift/shared';
 
 const now = new Date();
 
@@ -379,7 +379,7 @@ Create `apps/web/src/components/TaskEditPalette.tsx`:
 
 ```tsx
 import { useState, useEffect, useRef, useMemo } from 'react';
-import type { Task, ProjectWithSpace } from '@speedy/shared';
+import type { Task, ProjectWithSpace } from '@sift/shared';
 
 export type EditField = 'title' | 'dueDate' | 'workingDate' | 'project';
 export type EditPatch = Partial<Pick<Task, 'title' | 'dueDate' | 'workingDate' | 'projectId'>>;
@@ -655,7 +655,7 @@ import TaskList from '../components/TaskList';
 import HintBar from '../components/layout/HintBar';
 import TaskEditPalette, { type EditField, type EditPatch } from '../components/TaskEditPalette';
 import { db } from '../lib/db';
-import type { Task, ProjectWithSpace } from '@speedy/shared';
+import type { Task, ProjectWithSpace } from '@sift/shared';
 
 export default function InboxView() {
   const tasks = useInboxTasks();
@@ -805,7 +805,7 @@ import TaskList from '../components/TaskList';
 import HintBar from '../components/layout/HintBar';
 import TaskEditPalette, { type EditField, type EditPatch } from '../components/TaskEditPalette';
 import { db } from '../lib/db';
-import type { Task, ProjectWithSpace } from '@speedy/shared';
+import type { Task, ProjectWithSpace } from '@sift/shared';
 
 function todayLabel(): string {
   return new Date().toLocaleDateString('en-US', {
@@ -936,7 +936,7 @@ import TaskRow from '../components/TaskRow';
 import HintBar from '../components/layout/HintBar';
 import TaskEditPalette, { type EditField, type EditPatch } from '../components/TaskEditPalette';
 import { db } from '../lib/db';
-import type { Task, ProjectWithSpace } from '@speedy/shared';
+import type { Task, ProjectWithSpace } from '@sift/shared';
 
 function ProgressBar({ done, total }: { done: number; total: number }) {
   const pct = total === 0 ? 0 : Math.round((done / total) * 100);

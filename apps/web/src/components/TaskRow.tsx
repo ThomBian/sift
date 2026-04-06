@@ -1,4 +1,4 @@
-import type { Task, Project, Space } from '@speedy/shared';
+import type { Task, Project, Space } from '@sift/shared';
 
 export interface TaskRowProps {
   task: Task;

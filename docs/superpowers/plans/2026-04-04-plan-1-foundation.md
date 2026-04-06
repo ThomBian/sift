@@ -160,7 +160,7 @@ git commit -m "chore: initialize Turborepo monorepo"
 
 ```json
 {
-  "name": "@speedy/shared",
+  "name": "@sift/shared",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -1414,6 +1414,6 @@ git commit -m "feat(shared): public exports — Plan 1 complete"
 
 ## Plan 1 Complete
 
-`packages/shared` is now a working, tested library. Plans 2 and 3 import from `@speedy/shared`.
+`packages/shared` is now a working, tested library. Plans 2 and 3 import from `@sift/shared`.
 
 **Next:** Plan 2 — `apps/web` (Vite + React + Tailwind, views, keyboard nav, auth, Supabase sync).

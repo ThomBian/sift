@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { db } from '../lib/db';
-import type { Space, Project, Task } from '@speedy/shared';
+import type { Space, Project, Task } from '@sift/shared';
 
 const LAST_SYNC_KEY = 'speedy_last_synced_at';
 

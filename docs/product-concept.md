@@ -94,7 +94,7 @@ Both the Web App and the Extension must use a shared "Smart Input" component.
 
 ## 7. Canonical implementation (repo)
 
-The monorepo implements the same product with a **normalized** data model in `@speedy/shared`: tasks reference `projectId` (FK), and each project belongs to a `Space` (name + color dot). Default seed data creates a **Personal** space and **General** project. See [docs/superpowers/specs/2026-04-04-speedy-tasks-design.md](superpowers/specs/2026-04-04-speedy-tasks-design.md) for the full schema and [docs/superpowers/plans/2026-04-04-plan-1-foundation.md](superpowers/plans/2026-04-04-plan-1-foundation.md) for what shipped in Plan 1.
+The monorepo implements the same product with a **normalized** data model in `@sift/shared`: tasks reference `projectId` (FK), and each project belongs to a `Space` (name + color dot). Default seed data creates a **Personal** space and **General** project. See [docs/superpowers/specs/2026-04-04-speedy-tasks-design.md](superpowers/specs/2026-04-04-speedy-tasks-design.md) for the full schema and [docs/superpowers/plans/2026-04-04-plan-1-foundation.md](superpowers/plans/2026-04-04-plan-1-foundation.md) for what shipped in Plan 1.
 
 ---
 

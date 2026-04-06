@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@speedy/shared/style.css': path.resolve(__dirname, '../../packages/shared/dist/style.css'),
+      '@sift/shared/style.css': path.resolve(__dirname, '../../packages/shared/dist/style.css'),
     },
   },
   test: {

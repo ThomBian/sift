@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { db } from '../lib/db';
 import { useKeyboardNav } from '../hooks/useKeyboardNav';
-import type { Task } from '@speedy/shared';
+import type { Task } from '@sift/shared';
 
 function makeTask(overrides?: Partial<Task>): Task {
   const now = new Date();

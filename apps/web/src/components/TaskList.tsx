@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import TaskRow from './TaskRow';
 import { useSpacesProjects } from '../hooks/useSpacesProjects';
-import type { Task, Project, Space } from '@speedy/shared';
+import type { Task, Project, Space } from '@sift/shared';
 
 interface TaskListProps {
   tasks: Task[];

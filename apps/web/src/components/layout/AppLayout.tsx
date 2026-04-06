@@ -3,7 +3,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import Topbar from './Topbar';
 import CommandPalette from '../CommandPalette';
 import { useSpacesProjects } from '../../hooks/useSpacesProjects';
-import type { Task, ChipFocus } from '@speedy/shared';
+import type { Task, ChipFocus } from '@sift/shared';
 
 const VIEWS = ['/inbox', '/today', '/projects'];
 

@@ -4,7 +4,7 @@ import { useKeyboardNav } from '../hooks/useKeyboardNav';
 import TaskList from '../components/TaskList';
 import HintBar from '../components/layout/HintBar';
 import { db } from '../lib/db';
-import type { Task } from '@speedy/shared';
+import type { Task } from '@sift/shared';
 
 function todayLabel(): string {
   return new Date().toLocaleDateString('en-US', {
