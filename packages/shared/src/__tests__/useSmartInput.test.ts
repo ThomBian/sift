@@ -42,6 +42,18 @@ describe('useSmartInput — Tab rotation', () => {
     expect(hook.result.current.focus).toBe('text');
   });
 
+  it('first Tab from text skips filled chips to land on first empty one', () => {
+    const { hook } = make();
+    // Fill project
+    act(() => hook.result.current.handleSelect('project', 'proj-1'));
+    // First Tab from text should skip project and land on dueDate
+    act(() => hook.result.current.handleTitleKeyDown(tab as any));
+    expect(hook.result.current.focus).toBe('dueDate');
+    // Subsequent Tab should cycle normally (dueDate → workingDate)
+    act(() => hook.result.current.handleChipKeyDown('dueDate', tab));
+    expect(hook.result.current.focus).toBe('workingDate');
+  });
+
   it('Shift+Tab cycles in reverse (text → workingDate)', () => {
     const { hook } = make();
     act(() => hook.result.current.handleTitleKeyDown(shiftTab as any));

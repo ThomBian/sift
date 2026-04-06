@@ -26,15 +26,16 @@ function isFilled(chip: ChipFocus, values: SmartInputValues): boolean {
   return values.workingDate !== null;
 }
 
-// Forward Tab: skip already-filled chips; always stop at 'text'
-function nextUnfilled(current: FocusTarget, values: SmartInputValues): FocusTarget {
-  const startIndex = FOCUS_CYCLE.indexOf(current);
-  for (let i = 1; i <= FOCUS_CYCLE.length; i++) {
-    const next = FOCUS_CYCLE[(startIndex + i) % FOCUS_CYCLE.length];
-    if (next === 'text') return 'text';
-    if (!isFilled(next as ChipFocus, values)) return next;
+// Forward Tab: from text → first unfilled chip; from any chip → advance one step
+function nextFocus(current: FocusTarget, values: SmartInputValues): FocusTarget {
+  if (current === 'text') {
+    // First Tab hit: jump to first unfilled chip, or first chip if all filled
+    const first = (FOCUS_CYCLE.slice(1) as ChipFocus[]).find(c => !isFilled(c, values));
+    return first ?? FOCUS_CYCLE[1];
   }
-  return 'text';
+  // Subsequent Tab hits: simple one-step advance
+  const i = FOCUS_CYCLE.indexOf(current);
+  return FOCUS_CYCLE[(i + 1) % FOCUS_CYCLE.length];
 }
 
 // Backward Shift+Tab: simple one-step reverse, no skip
@@ -95,7 +96,7 @@ export function useSmartInput(
   const handleTitleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab') {
       e.preventDefault();
-      setFocus(f => e.shiftKey ? prevFocus(f) : nextUnfilled(f, values));
+      setFocus(f => e.shiftKey ? prevFocus(f) : nextFocus(f, values));
     } else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       handleSave();
@@ -105,7 +106,7 @@ export function useSmartInput(
   const handleChipKeyDown = useCallback((chip: ChipFocus, e: React.KeyboardEvent) => {
     if (e.key === 'Tab') {
       e.preventDefault();
-      setFocus(f => e.shiftKey ? prevFocus(f) : nextUnfilled(f, values));
+      setFocus(f => e.shiftKey ? prevFocus(f) : nextFocus(f, values));
     } else if (e.key === 'Escape') {
       e.preventDefault();
       setFocus('text');
