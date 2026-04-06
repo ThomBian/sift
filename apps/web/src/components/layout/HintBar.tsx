@@ -22,7 +22,7 @@ const TASK_HINTS: Hint[] = [
 
 function Key({ label, hot }: { label: string; hot?: boolean }) {
   return (
-    <kbd className={`inline-flex items-center px-1.5 py-0.5 border font-mono text-[10px] leading-none ${
+    <kbd className={`inline-flex items-center px-1.5 py-0.5 border rounded-none font-mono text-[10px] leading-none ${
       hot
         ? 'border-accent text-accent bg-accent/5'
         : 'border-border-2 bg-surface-2 text-muted'
