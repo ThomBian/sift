@@ -15,6 +15,11 @@ export class AppDatabase extends Dexie {
       projects: 'id, spaceId, updatedAt, synced',
       tasks:    'id, projectId, status, workingDate, dueDate, updatedAt, synced',
     });
+
+    this.version(2).stores({
+      projects: 'id, spaceId, dueDate, updatedAt, synced',
+    });
+
     this.on('ready', () => this._seed());
   }
 
@@ -38,6 +43,7 @@ export class AppDatabase extends Dexie {
       id: nanoid(),
       name: 'General',
       spaceId,
+      dueDate: null,
       createdAt: now,
       updatedAt: now,
       synced: false,

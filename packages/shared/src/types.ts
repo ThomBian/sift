@@ -13,6 +13,7 @@ export interface Project {
   id: string;
   name: string;
   spaceId: string;    // FK → Space
+  dueDate: Date | null;
   createdAt: Date;
   updatedAt: Date;
   synced: boolean;
