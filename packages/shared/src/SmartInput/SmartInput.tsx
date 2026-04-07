@@ -16,13 +16,15 @@ interface SmartInputProps {
   initialValues?: import('./useSmartInput').SmartInputValues;
   /** Auto-open this chip's dropdown on mount (edit mode). */
   initialFocus?: import('./useSmartInput').ChipFocus;
+  /** Whether the chip dropdown floats absolutely or expands inline below the bar. Default: 'floating'. */
+  dropdownPosition?: 'floating' | 'inline';
 }
 
 function formatDate(d: Date): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-export function SmartInput({ projects, onTaskReady, placeholder, className, inputRef: externalInputRef, initialValues, initialFocus }: SmartInputProps) {
+export function SmartInput({ projects, onTaskReady, placeholder, className, inputRef: externalInputRef, initialValues, initialFocus, dropdownPosition = 'floating' }: SmartInputProps) {
   const localRef = useRef<HTMLInputElement>(null);
   const inputRef = externalInputRef ?? localRef;
 
@@ -136,53 +138,64 @@ export function SmartInput({ projects, onTaskReady, placeholder, className, inpu
     : (placeholder ?? 'Add a task… type @p, @w, @d or use Tab');
 
   return (
-    <div className={`${styles.bar} ${className ?? ''}`}>
-      <span className={styles.icon} aria-hidden>+</span>
-      <input
-        ref={inputRef as React.RefObject<HTMLInputElement>}
-        className={styles.input}
-        value={inputValue}
-        onChange={handleInputChange}
-        onKeyDown={handleInputKeyDown}
-        placeholder={inputPlaceholder}
-        aria-label="Task title"
-      />
-      <div className={styles.chips}>
-        {chips.map(chip => (
-          <div key={chip.key} className={styles.chipWrap}>
-            <button
-              className={[
-                styles.chip,
-                chip.chipClass,
-                focus === chip.key ? chip.activeClass : '',
-                chip.value ? styles.set : '',
-              ].join(' ')}
-              onClick={() => handleChipClick(chip.key)}
-              onKeyDown={e => handleChipKeyDown(chip.key, e)}
-              tabIndex={-1}
-              type="button"
-              aria-label={chip.key}
-            >
-              {chip.value ? (
-                <>
-                  {chip.dotColor && <span className={styles.chipDot} style={{ background: chip.dotColor }} />}
-                  {chip.value}
-                </>
-              ) : (
-                <><span className={styles.chipLabel}>{chip.label}</span>&nbsp;{chip.sublabel}</>
+    <div className={`${styles.wrapper} ${className ?? ''}`}>
+      <div className={styles.bar}>
+        <span className={styles.icon} aria-hidden>+</span>
+        <input
+          ref={inputRef as React.RefObject<HTMLInputElement>}
+          className={styles.input}
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleInputKeyDown}
+          placeholder={inputPlaceholder}
+          aria-label="Task title"
+        />
+        <div className={styles.chips}>
+          {chips.map(chip => (
+            <div key={chip.key} className={styles.chipWrap}>
+              <button
+                className={[
+                  styles.chip,
+                  chip.chipClass,
+                  focus === chip.key ? chip.activeClass : '',
+                  chip.value ? styles.set : '',
+                ].join(' ')}
+                onClick={() => handleChipClick(chip.key)}
+                onKeyDown={e => handleChipKeyDown(chip.key, e)}
+                tabIndex={-1}
+                type="button"
+                aria-label={chip.key}
+              >
+                {chip.value ? (
+                  <>
+                    {chip.dotColor && <span className={styles.chipDot} style={{ background: chip.dotColor }} />}
+                    {chip.value}
+                  </>
+                ) : (
+                  <><span className={styles.chipLabel}>{chip.label}</span>&nbsp;{chip.sublabel}</>
+                )}
+              </button>
+              {dropdownPosition === 'floating' && focus === chip.key && (
+                <Dropdown
+                  type={chip.key}
+                  projects={projects}
+                  query={query}
+                  onSelect={val => handleSelect(chip.key, val)}
+                />
               )}
-            </button>
-            {focus === chip.key && (
-              <Dropdown
-                type={chip.key}
-                projects={projects}
-                query={query}
-                onSelect={val => handleSelect(chip.key, val)}
-              />
-            )}
-          </div>
-        ))}
+            </div>
+          ))}
+        </div>
       </div>
+      {dropdownPosition === 'inline' && focus !== 'text' && (
+        <Dropdown
+          type={focus as ChipFocus}
+          projects={projects}
+          query={query}
+          onSelect={val => handleSelect(focus as ChipFocus, val)}
+          mode="inline"
+        />
+      )}
     </div>
   );
 }

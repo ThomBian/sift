@@ -74,7 +74,17 @@ export function useProjectTasks(): SpaceGroup[] {
           space,
           projects: spaceProjects.map((project) => ({
             project,
-            tasks: tasks.filter((t) => t.projectId === project.id),
+            tasks: tasks
+              .filter((t) => t.projectId === project.id)
+              .sort((a, b) => {
+                const aDone = a.status === 'done' ? 1 : 0;
+                const bDone = b.status === 'done' ? 1 : 0;
+                if (aDone !== bDone) return aDone - bDone;
+                if (!a.dueDate && !b.dueDate) return 0;
+                if (!a.dueDate) return 1;
+                if (!b.dueDate) return -1;
+                return a.dueDate.getTime() - b.dueDate.getTime();
+              }),
           })),
         };
       });

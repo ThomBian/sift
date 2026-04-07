@@ -27,10 +27,10 @@ function NavTab({
       to={to}
       tabIndex={-1}
       className={({ isActive }) =>
-        `flex items-center gap-2 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] border-b-2 transition-colors ${
+        `flex items-center gap-2 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] border-b-2 transition-all duration-150 ${
           isActive
             ? 'border-accent text-text'
-            : 'border-transparent text-muted hover:text-text'
+            : 'border-transparent text-muted hover:text-text hover:border-border-2'
         }`
       }
     >
@@ -48,10 +48,13 @@ export default function Topbar({ isSynced }: { isSynced: boolean }) {
   const todayTasks = useTasks('today');
 
   return (
-    <header className="flex items-center justify-between h-12 px-4 border-b border-border bg-surface shrink-0">
-      <div className="flex items-center gap-2 w-48 shrink-0">
-        <span className="w-2 h-2 bg-accent shrink-0" />
-        <span className="font-mono text-[11px] font-medium tracking-[0.3em] uppercase text-text">
+    <header className="flex items-center justify-between h-12 px-4 border-b border-[0.5px] border-border bg-surface shrink-0">
+      <div className="flex items-center gap-2.5 w-48 shrink-0">
+        <span
+          className="w-2 h-2 bg-accent shrink-0"
+          style={{ boxShadow: '0 0 8px rgba(255, 79, 0, 0.4)' }}
+        />
+        <span className="font-mono text-[11px] font-semibold tracking-[0.35em] uppercase text-text">
           Sift
         </span>
       </div>

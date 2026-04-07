@@ -12,6 +12,12 @@
   min-width: 180px;
 }
 
+/* Inline variant: expands the palette panel downward */
+.dropdownInline {
+  background: #FFFFFF;
+  border-top: 0.5px solid #E2E2E2;
+}
+
 .groupLabel {
   font-size: 10px;
   font-weight: 600;
@@ -40,7 +46,7 @@
 
 .item:hover,
 .itemFocused {
-  background: #F0F0F0;
+  background: rgba(255, 79, 0, 0.05);
   color: #111111;
 }
 
@@ -84,7 +90,6 @@
 
 .quickPick:hover,
 .quickPickFocused {
-  background: #FFF5F2;
-  color: #FF4F00;
-  border-color: #FF4F00;
+  background: rgba(255, 79, 0, 0.05);
+  color: #111111;
 }

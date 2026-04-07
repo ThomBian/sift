@@ -8,7 +8,7 @@ function SidebarLink({ to, label }: { to: string; label: string }) {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `block px-3 py-1.5 font-mono text-[11px] transition-colors border-l-2 ${
+        `block px-3 py-1.5 font-mono text-[11px] transition-all duration-150 border-l-2 ${
           isActive
             ? 'border-accent text-text bg-[#FF4F00]/5'
             : 'border-transparent text-muted hover:text-text hover:bg-surface-2'
@@ -35,7 +35,7 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="w-48 shrink-0 flex flex-col border-r border-border bg-surface overflow-y-auto">
+    <aside className="w-48 shrink-0 flex flex-col border-r border-[0.5px] border-border bg-surface overflow-y-auto">
       <div className="h-[2px] bg-accent shrink-0" />
 
       <div className="p-2 pt-3 space-y-0.5">

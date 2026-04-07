@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import type { Task, Project, Space } from '@sift/shared';
 
 export interface TaskRowProps {
@@ -24,12 +25,17 @@ function isLate(task: Task): boolean {
 }
 
 export default function TaskRow({ task, space, isFocused, onFocus, onToggle, exiting = false, index = 0 }: TaskRowProps) {
+  const rowRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (isFocused) rowRef.current?.scrollIntoView({ block: 'nearest' });
+  }, [isFocused]);
   const late = isLate(task);
   // During exit animation, show the row as if it's done
   const showDone = exiting || task.status === 'done';
 
   return (
     <div
+      ref={rowRef}
       role="button"
       tabIndex={0}
       onClick={onFocus}
@@ -41,16 +47,17 @@ export default function TaskRow({ task, space, isFocused, onFocus, onToggle, exi
       }}
       className={`
         ${exiting ? 'animate-task-exit' : 'animate-task-enter'}
+        ${late ? 'animate-late-breathe' : ''}
         flex items-center h-task-row px-3 gap-3 cursor-pointer select-none
-        border-l-2 transition-colors
+        border-l-2 transition-colors duration-150
         ${late
           ? 'bg-red border-red'
           : isFocused
-            ? 'border-accent bg-[#FF4F00]/5'
+            ? 'border-accent bg-[#FF4F00]/5 laser-focus'
             : 'border-transparent hover:bg-surface-2'
         }
       `}
-      style={{ animationDelay: `${index * 25}ms` }}
+      style={{ animationDelay: exiting || late ? undefined : `${index * 25}ms` }}
     >
       <span
         data-testid="space-dot"
@@ -84,7 +91,7 @@ export default function TaskRow({ task, space, isFocused, onFocus, onToggle, exi
       </span>
 
       <span
-        className={`flex-1 text-sm truncate ${
+        className={`flex-1 text-sm font-medium tracking-[-0.02em] truncate ${
           late
             ? 'text-white'
             : showDone

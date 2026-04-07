@@ -163,14 +163,14 @@ export default function TaskEditPalette({
   }
 
   const chipBase =
-    'inline-flex items-center gap-1 px-2 py-0.5 border text-[11px] font-mono cursor-pointer';
+    'inline-flex items-center gap-1 px-2 py-0.5 border-[0.5px] text-[11px] font-mono cursor-pointer transition-all duration-150';
   const chipIdle = 'border-border-2 text-muted hover:border-accent hover:text-accent';
   const chipActive = 'border-accent text-accent bg-accent/5';
 
   return (
-    <div className="border-t border-border bg-surface shrink-0">
+    <div className="border-t border-[0.5px] border-border bg-surface shrink-0">
       {/* Context row */}
-      <div className="flex items-center px-4 py-1 border-b border-border bg-surface-2">
+      <div className="flex items-center px-4 py-1 border-b border-[0.5px] border-border bg-surface-2">
         <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-dim">
           Editing · {task.title}
         </span>
@@ -227,7 +227,7 @@ export default function TaskEditPalette({
 
       {/* Dropdown */}
       {showDropdown && (
-        <div className="border-t border-border">
+        <div className="border-t border-[0.5px] border-border">
           {activeChip === 'project'
             ? filteredProjects.map((p, i) => (
                 <button

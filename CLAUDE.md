@@ -37,7 +37,8 @@ Turborepo + npm workspaces monorepo:
   - `src/services/SyncService.ts` — bidirectional sync (see below)
   - `src/views/` — InboxView, TodayView, ProjectsView (each owns its keyboard nav)
   - `src/hooks/useKeyboardNav.ts` — shared arrow-key + Enter/Backspace/Escape logic
-  - `src/components/CommandPalette.tsx` — Cmd+K overlay for task creation
+  - `src/components/CommandPalette.tsx` — Cmd+K overlay for task creation and editing (D/W/P/E shortcuts open it pre-focused on a chip)
+  - `src/components/ProjectEditPalette.tsx` — same-style overlay for project creation/editing (name + due date only)
 
 - **`apps/extension`** — Chromium MV3 extension (planned, not yet implemented)
 
@@ -73,11 +74,11 @@ Every record has `synced: boolean`. All writes hit IndexedDB immediately; `synce
 - **Enter** — toggle focused task done/undone
 - **Backspace / Delete** — archive focused task
 - **Escape** — close edit palette if open, else deselect focused task
-- **D / W / P / E** — when a task is focused, open `TaskEditPalette` for due date / working date / project / title
+- **D / W / P / E** — when a task is focused, open `CommandPalette` pre-focused on that chip (due date / working date / project / title)
 
-`HintBar` renders two states: default (no task focused) and task-focused (shows D/W/P/E shortcuts with orange accent). It lives at the bottom of each view and is replaced by `TaskEditPalette` when editing is active.
+`HintBar` renders two states: default (no task focused) and task-focused (shows D/W/P/E shortcuts with orange accent). It lives at the bottom of each view.
 
-Each view registers its own `window.keydown` listener that skips events when `e.target` is an INPUT or TEXTAREA. `AppLayout` owns the palette and view-switching listeners. When a focused task disappears from the list (marked done, archived), the view's `useEffect` clears `focusedId` and `editField`.
+Each view registers its own `window.keydown` listener that skips events when `e.target` is an INPUT or TEXTAREA. `AppLayout` owns the palette and view-switching listeners. When a focused task disappears from the list (marked done, archived), the view's `useEffect` clears `focusedId`.
 
 ## Environment
 
@@ -92,11 +93,14 @@ Vitest injects stub values automatically via `vite.config.ts`.
 
 Vitest + Testing Library + jsdom + `fake-indexeddb`. Each package has `src/__tests__/setup.ts` which configures `fake-indexeddb` so Dexie runs in Node. Clear db tables in `beforeEach` when tests write to the db.
 
-## Design Rules
 
-- **No border-radius.** All corners 0px.
-- **No box-shadow.** Use `1px solid #E2E2E2` borders for depth.
-- **Colors:** `#FFFFFF` (bg), `#111111` (text), `#FF4F00` (accent/focus), `#E60000` (Surgical Red — late tasks only), `#E2E2E2` (borders).
-- **Surgical Red:** if `dueDate < today` and status ≠ done, the entire task row becomes `#E60000` with white text. Non-negotiable.
-- **Typography:** Geist Sans for UI text, JetBrains Mono for dates, counts, shortcuts, and metadata.
-- **Performance:** all data writes must be optimistic (IndexedDB first, sync after).
+# Design rules
+
+1. **Retina Borders:** Use 0.5px borders (`border-[0.5px]`) with color `#E2E2E2`.
+2. **Spring Motion:** Every UI change (focus shift, modal open) must have a 150ms spring transition. Use Framer Motion or CSS transitions.
+3. **The Laser Focus:** The #FF4F00 indicator must have a subtle `box-shadow: 0 0 8px rgba(255, 79, 0, 0.4)`.
+4. **Typographic Hierarchy:** - Titles: `Geist Sans`, Weight 500, Tracking -0.02em.
+   - Metadata: `JetBrains Mono`, Weight 400, Size 10px, Color #888888.
+5. **Backdrop Blurs:** Any floating element (Modals/Overlays) must use `backdrop-filter: blur(12px)`.
+6. **Zero-Radius Constraint:** NEVER use `border-radius`. Use sharpness to communicate professional precision.
+7. **The Late Tax Glow:** Late tasks (#E60000 background) should have a very slow, subtle "breathing" opacity animation (90% to 100%) to indicate urgency without being annoying.

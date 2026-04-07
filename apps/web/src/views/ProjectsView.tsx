@@ -100,6 +100,34 @@ export default function ProjectsView() {
           if (e.key === 'p' || e.key === 'P') { e.preventDefault(); dispatchEditTask(focused, 'project'); return; }
           if (e.key === 'e' || e.key === 'E') { e.preventDefault(); dispatchEditTask(focused, null); return; }
         }
+        // Boundary: ArrowDown past last task → switch to project mode, advance to next project
+        if (e.key === 'ArrowDown') {
+          const currentIndex = expandedTasks.findIndex((t) => t.id === focusedId);
+          if (currentIndex === expandedTasks.length - 1) {
+            e.preventDefault();
+            setFocusedId(null);
+            setExpandedProjectId(null);
+            setNavMode('project');
+            const projIndex = allProjects.findIndex((p) => p.id === expandedProjectId);
+            if (projIndex !== -1 && projIndex < allProjects.length - 1) {
+              setFocusedProjectId(allProjects[projIndex + 1].id);
+            } else {
+              setFocusedProjectId(null);
+            }
+            return;
+          }
+        }
+        // Boundary: ArrowUp past first task → switch back to project mode, keep project focused
+        if (e.key === 'ArrowUp') {
+          const currentIndex = expandedTasks.findIndex((t) => t.id === focusedId);
+          if (currentIndex === 0) {
+            e.preventDefault();
+            setFocusedId(null);
+            setNavMode('project');
+            // focusedProjectId is already expandedProjectId (set when O was pressed)
+            return;
+          }
+        }
         handleKeyDown(e, expandedTasks);
       } else {
         // Project nav mode

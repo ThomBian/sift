@@ -88,12 +88,12 @@ export default function CommandPalette({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-[18vh] bg-black/40"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-[18vh] bg-black/30 backdrop-blur-[2px]"
       onPointerDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="w-full max-w-[820px] border border-border bg-bg">
+      <div className="animate-palette-in w-full max-w-[820px] border-[0.5px] border-border bg-bg/95 floating-panel shadow-2xl">
         <div className="flex items-center px-3 py-1.5 border-b border-border">
           <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-dim">
             {isEditing ? `Editing · ${editTask.title}` : "New task"}
@@ -116,6 +116,7 @@ export default function CommandPalette({
           inputRef={inputRef}
           initialValues={initialValues}
           initialFocus={editChip ?? undefined}
+          dropdownPosition="inline"
         />
       </div>
     </div>

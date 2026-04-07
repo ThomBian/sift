@@ -13,6 +13,7 @@ interface DropdownProps {
   projects: ProjectWithSpace[];
   query: string;
   onSelect: (value: string | Date | null) => void;
+  mode?: 'floating' | 'inline';
 }
 
 const DATE_QUICK_PICKS = ['Today', 'Tomorrow', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -37,7 +38,7 @@ type FlatItem =
   | { kind: 'new' }
   | { kind: 'date'; label: string; date?: Date };
 
-export function Dropdown({ type, projects, query, onSelect }: DropdownProps) {
+export function Dropdown({ type, projects, query, onSelect, mode = 'floating' }: DropdownProps) {
   const [focusedIndex, setFocusedIndex] = useState(-1);
 
   // Reset focused item when query changes
@@ -116,9 +117,11 @@ export function Dropdown({ type, projects, query, onSelect }: DropdownProps) {
     return () => window.removeEventListener('keydown', onKey, true);
   }, []);
 
+  const dropdownClass = mode === 'inline' ? styles.dropdownInline : styles.dropdown;
+
   if (type === 'project') {
     return (
-      <div className={styles.dropdown} role="listbox">
+      <div className={dropdownClass} role="listbox">
         {flatItems.map((item, idx) => {
           if (item.kind === 'new') {
             return (
@@ -158,7 +161,7 @@ export function Dropdown({ type, projects, query, onSelect }: DropdownProps) {
 
   // Date picker (dueDate or workingDate)
   return (
-    <div className={styles.dropdown} role="listbox">
+    <div className={dropdownClass} role="listbox">
       <div className={styles.quickPicks}>
         {flatItems.map((item, idx) => {
           if (item.kind !== 'date') return null;
