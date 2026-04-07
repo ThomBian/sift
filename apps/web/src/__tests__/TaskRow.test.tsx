@@ -18,6 +18,7 @@ const project: Project = {
   id: 'project-1',
   name: 'General',
   spaceId: 'space-1',
+  dueDate: null,
   createdAt: now,
   updatedAt: now,
   synced: true,
