@@ -81,7 +81,7 @@ export default function TodayView() {
         />
       </div>
 
-      <HintBar taskFocused={focusedId !== null} />
+      <HintBar focusState={focusedId !== null ? 'task' : 'none'} />
     </div>
   );
 }
