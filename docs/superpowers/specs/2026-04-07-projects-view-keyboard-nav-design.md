@@ -56,10 +56,11 @@ export function useProjectNav(): {
 ```
 
 **Behaviour:**
-- `↑ / k` — move focus to previous project; at first → deselect (null)
-- `↓ / j` — move focus to next project; at last → deselect (null)
+- `↑` — move focus to previous project; at first → deselect (null)
+- `↓` — move focus to next project; at last → deselect (null)
 - `Escape` — deselect (set to null)
 - All other keys are ignored (handled upstream in ProjectsView's key listener)
+- Arrow keys only — `j / k` are not supported
 - Skips modifier combos (metaKey / ctrlKey / altKey)
 
 ---
@@ -241,7 +242,13 @@ const TASK_HINTS   = [Enter Done, D Due, W Today, P Project, E Edit, ⌫ Archive
 
 ---
 
-## 7. Cascading Change — `HintBar` callers
+## 7. Remove `j / k` Navigation
+
+`useKeyboardNav` currently handles `j` and `k` as aliases for `↑` / `↓`. Remove those cases from the switch statement. Arrow keys are the only navigation keys going forward. This affects `InboxView`, `TodayView`, and `ProjectsView` (via `useKeyboardNav` and the new `useProjectNav`).
+
+---
+
+## 8. Cascading Change — `HintBar` callers
 
 `InboxView` and `TodayView` currently pass `taskFocused={focusedId !== null}`. After the `HintBar` prop is renamed to `focusState`, both views must be updated:
 
@@ -251,7 +258,7 @@ const TASK_HINTS   = [Enter Done, D Due, W Today, P Project, E Edit, ⌫ Archive
 
 ---
 
-## 8. Out of Scope
+## 9. Out of Scope
 
 - Deleting projects (not requested; destructive action warrants separate treatment)
 - Reordering projects
