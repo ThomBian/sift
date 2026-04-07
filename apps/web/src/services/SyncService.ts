@@ -53,6 +53,7 @@ function rowToProject(row: Record<string, unknown>): Project {
     id: row.id as string,
     name: row.name as string,
     spaceId: row.space_id as string,
+    dueDate: row.due_date ? new Date(row.due_date as string) : null,
     createdAt: new Date(row.created_at as string),
     updatedAt: new Date(row.updated_at as string),
     synced: true,
