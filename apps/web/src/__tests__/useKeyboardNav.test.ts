@@ -43,63 +43,7 @@ describe('useKeyboardNav', () => {
     expect(result.current.focusedId).toBeNull();
   });
 
-  it('j / ArrowDown moves focus to next task', () => {
-    const { result } = renderHook(() => useKeyboardNav());
-
-    act(() => {
-      result.current.setFocusedId('a');
-    });
-
-    act(() => {
-      result.current.handleKeyDown(makeKeyEvent('j'), TASKS);
-    });
-
-    expect(result.current.focusedId).toBe('b');
-  });
-
-  it('k / ArrowUp moves focus to previous task', () => {
-    const { result } = renderHook(() => useKeyboardNav());
-
-    act(() => {
-      result.current.setFocusedId('c');
-    });
-
-    act(() => {
-      result.current.handleKeyDown(makeKeyEvent('k'), TASKS);
-    });
-
-    expect(result.current.focusedId).toBe('b');
-  });
-
-  it('j cycles from last task to input (null)', () => {
-    const { result } = renderHook(() => useKeyboardNav());
-
-    act(() => {
-      result.current.setFocusedId('c');
-    });
-
-    act(() => {
-      result.current.handleKeyDown(makeKeyEvent('j'), TASKS);
-    });
-
-    expect(result.current.focusedId).toBeNull();
-  });
-
-  it('k cycles from first task to input (null)', () => {
-    const { result } = renderHook(() => useKeyboardNav());
-
-    act(() => {
-      result.current.setFocusedId('a');
-    });
-
-    act(() => {
-      result.current.handleKeyDown(makeKeyEvent('k'), TASKS);
-    });
-
-    expect(result.current.focusedId).toBeNull();
-  });
-
-  it('ArrowDown works like j', () => {
+  it('ArrowDown moves focus to next task', () => {
     const { result } = renderHook(() => useKeyboardNav());
 
     act(() => {
@@ -113,18 +57,46 @@ describe('useKeyboardNav', () => {
     expect(result.current.focusedId).toBe('b');
   });
 
-  it('ArrowUp works like k', () => {
+  it('ArrowUp moves focus to previous task', () => {
     const { result } = renderHook(() => useKeyboardNav());
 
     act(() => {
-      result.current.setFocusedId('b');
+      result.current.setFocusedId('c');
     });
 
     act(() => {
       result.current.handleKeyDown(makeKeyEvent('ArrowUp'), TASKS);
     });
 
-    expect(result.current.focusedId).toBe('a');
+    expect(result.current.focusedId).toBe('b');
+  });
+
+  it('ArrowDown from last task deselects (null)', () => {
+    const { result } = renderHook(() => useKeyboardNav());
+
+    act(() => {
+      result.current.setFocusedId('c');
+    });
+
+    act(() => {
+      result.current.handleKeyDown(makeKeyEvent('ArrowDown'), TASKS);
+    });
+
+    expect(result.current.focusedId).toBeNull();
+  });
+
+  it('ArrowUp from first task deselects (null)', () => {
+    const { result } = renderHook(() => useKeyboardNav());
+
+    act(() => {
+      result.current.setFocusedId('a');
+    });
+
+    act(() => {
+      result.current.handleKeyDown(makeKeyEvent('ArrowUp'), TASKS);
+    });
+
+    expect(result.current.focusedId).toBeNull();
   });
 
   it('Enter toggles focused task from inbox to done', async () => {

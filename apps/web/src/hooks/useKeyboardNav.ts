@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { db } from '../lib/db';
 import type { Task } from '@sift/shared';
 
@@ -13,13 +13,14 @@ export function useKeyboardNav(
 ): UseKeyboardNavReturn {
   const [focusedId, setFocusedId] = useState<string | null>(null);
 
-  function handleKeyDown(e: KeyboardEvent, tasks: Task[]) {
+  const handleKeyDown = useCallback((e: KeyboardEvent, tasks: Task[]) => {
     if (!tasks.length) return;
+    // Don't intercept Cmd/Ctrl/Alt combos (e.g. Cmd+K should open palette, not navigate)
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
 
     const currentIndex = tasks.findIndex((t) => t.id === focusedId);
 
     switch (e.key) {
-      case 'j':
       case 'ArrowDown': {
         e.preventDefault();
         if (currentIndex === -1) {
@@ -32,7 +33,6 @@ export function useKeyboardNav(
         break;
       }
 
-      case 'k':
       case 'ArrowUp': {
         e.preventDefault();
         if (currentIndex === -1) {
@@ -100,7 +100,7 @@ export function useKeyboardNav(
       default:
         break;
     }
-  }
+  }, [focusedId, onToggleDone]);
 
   return { focusedId, setFocusedId, handleKeyDown };
 }
