@@ -51,13 +51,13 @@ export default function ProjectsView() {
     [groups]
   );
 
-  // Tasks for the currently expanded project (active tasks only)
+  // Tasks for the currently expanded project (all non-archived)
   const expandedTasks = useMemo<Task[]>(() => {
     if (!expandedProjectId) return [];
     for (const { projects: ps } of groups) {
       for (const { project, tasks } of ps) {
         if (project.id === expandedProjectId) {
-          return tasks.filter((t) => t.status !== 'done' && t.status !== 'archived');
+          return tasks.filter((t) => t.status !== 'archived');
         }
       }
     }
@@ -84,11 +84,12 @@ export default function ProjectsView() {
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
 
       if (navMode === 'task') {
-        // Esc exits task mode back to project mode
+        // Esc exits task mode and collapses the task list
         if (e.key === 'Escape') {
           e.preventDefault();
           setNavMode('project');
           setFocusedId(null);
+          setExpandedProjectId(null);
           return;
         }
         // D/W/P/E on focused task
@@ -122,8 +123,13 @@ export default function ProjectsView() {
             }
             if (e.key === 'o' || e.key === 'O') {
               e.preventDefault();
-              setExpandedProjectId(focusedProjectId);
-              setNavMode('task');
+              if (expandedProjectId === focusedProjectId) {
+                setExpandedProjectId(null);
+                setNavMode('project');
+              } else {
+                setExpandedProjectId(focusedProjectId);
+                setNavMode('task');
+              }
               return;
             }
           }
@@ -143,12 +149,9 @@ export default function ProjectsView() {
 
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [navMode, focusedProjectId, focusedId, allProjects, expandedTasks, handleKeyDown, handleProjectKeyDown, groups]);
+  }, [navMode, focusedProjectId, focusedId, expandedProjectId, allProjects, expandedTasks, handleKeyDown, handleProjectKeyDown, groups]);
 
-  const focusState =
-    navMode === 'task' && focusedId !== null ? 'task'
-    : focusedProjectId !== null ? 'project'
-    : 'none';
+  const focusState = navMode === 'task' && focusedId !== null ? 'task' : 'project';
 
   return (
     <div className="flex flex-col h-full min-h-0">
@@ -167,7 +170,7 @@ export default function ProjectsView() {
 
             {ps.map(({ project, tasks }) => {
               const done = tasks.filter((t) => t.status === 'done').length;
-              const activeTasks = tasks.filter((t) => t.status !== 'done' && t.status !== 'archived');
+              const activeTasks = tasks.filter((t) => t.status !== 'archived');
               const isFocusedProject = focusedProjectId === project.id;
               const isExpanded = expandedProjectId === project.id;
 
@@ -196,7 +199,7 @@ export default function ProjectsView() {
 
                   {isExpanded && (
                     activeTasks.length === 0 ? (
-                      <p className="font-mono text-[10px] text-muted px-4 py-3 uppercase tracking-[0.1em]">All done.</p>
+                      <p className="font-mono text-[10px] text-muted px-4 py-3 uppercase tracking-[0.1em]">No tasks.</p>
                     ) : (
                       activeTasks.map((task) => (
                         <TaskRow
@@ -205,7 +208,7 @@ export default function ProjectsView() {
                           project={project}
                           space={space}
                           isFocused={navMode === 'task' && focusedId === task.id}
-                          onFocus={() => setFocusedId(task.id)}
+                          onFocus={() => { setNavMode('task'); setFocusedId(task.id); }}
                           onToggle={() => handleToggle(task)}
                           exiting={exitingIds.has(task.id)}
                         />

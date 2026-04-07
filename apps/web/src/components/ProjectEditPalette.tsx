@@ -113,8 +113,8 @@ export default function ProjectEditPalette({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Project name"
-          className="w-full bg-transparent border-b border-[0.5px] border-border pb-2 mb-3 font-sans text-sm text-text outline-none focus:border-accent"
-          style={{ fontWeight: 500, letterSpacing: '-0.02em' }}
+          className="w-full bg-transparent pb-2 mb-3 font-sans text-[13px] text-text outline-none placeholder:text-muted"
+          style={{ fontWeight: 500, letterSpacing: '-0.02em', borderBottom: '0.5px solid #E2E2E2' }}
         />
 
         <div className="flex items-center gap-2 mb-2">
