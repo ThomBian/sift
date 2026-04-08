@@ -12,3 +12,4 @@ export type {
 } from './SmartInput/useSmartInput';
 export type { ProjectWithSpace } from './SmartInput/Dropdown';
 export { Dropdown } from './SmartInput/Dropdown';
+export { EmojiPicker } from './EmojiPicker/EmojiPicker';

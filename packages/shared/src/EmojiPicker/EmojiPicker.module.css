@@ -1,0 +1,58 @@
+.picker {
+  border-top: 0.5px solid #E2E2E2;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.categoryHeader {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  padding: 8px 4px 4px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 2px;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 0;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.1s;
+}
+
+.cell:hover {
+  background: rgba(255, 79, 0, 0.05);
+  border-color: #E2E2E2;
+}
+
+.cellFocused {
+  border-color: #FF4F00;
+  background: rgba(255, 79, 0, 0.05);
+  box-shadow: 0 0 8px rgba(255, 79, 0, 0.4);
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #888888;
+}
