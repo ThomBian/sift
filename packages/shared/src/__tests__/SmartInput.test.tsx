@@ -9,6 +9,7 @@ const mockProjects: ProjectWithSpace[] = [
   {
     id: 'proj-1',
     name: 'General',
+    emoji: '📚',
     spaceId: 'space-1',
     dueDate: null,
     createdAt: new Date(),
@@ -19,6 +20,7 @@ const mockProjects: ProjectWithSpace[] = [
   {
     id: 'proj-2',
     name: 'Auth PR',
+    emoji: '📚',
     spaceId: 'space-2',
     dueDate: null,
     createdAt: new Date(),

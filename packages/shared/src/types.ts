@@ -12,6 +12,7 @@ export interface Space {
 export interface Project {
   id: string;
   name: string;
+  emoji: string | null;   // single emoji character
   spaceId: string;    // FK → Space
   dueDate: Date | null;
   createdAt: Date;

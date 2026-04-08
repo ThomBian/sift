@@ -111,6 +111,7 @@ describe('useKeyboardNav', () => {
     await db.projects.add({
       id: 'project-1',
       name: 'General',
+      emoji: '📚',
       spaceId: 'space-1',
       dueDate: null,
       createdAt: new Date(),
@@ -147,6 +148,7 @@ describe('useKeyboardNav', () => {
     await db.projects.add({
       id: 'project-1',
       name: 'General',
+      emoji: '📚',
       spaceId: 'space-1',
       dueDate: null,
       createdAt: new Date(),
@@ -181,6 +183,7 @@ describe('useKeyboardNav', () => {
     await db.projects.add({
       id: 'project-1',
       name: 'General',
+      emoji: '📚',
       spaceId: 'space-1',
       dueDate: null,
       createdAt: new Date(),
@@ -213,6 +216,7 @@ describe('useKeyboardNav', () => {
     await db.projects.add({
       id: 'project-1',
       name: 'General',
+      emoji: '📚',
       spaceId: 'space-1',
       dueDate: null,
       createdAt: new Date(),

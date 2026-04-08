@@ -42,31 +42,30 @@ describe('useSmartInput — Tab rotation', () => {
     expect(hook.result.current.focus).toBe('text');
   });
 
-  it('first Tab from text skips filled chips to land on first empty one', () => {
+  it('handleSelect on project advances focus to next unfilled chip (dueDate)', () => {
     const { hook } = make();
-    // Fill project
+    // Selecting project should auto-advance focus to next unfilled chip (dueDate)
     act(() => hook.result.current.handleSelect('project', 'proj-1'));
-    // First Tab from text should skip project and land on dueDate
-    act(() => hook.result.current.handleTitleKeyDown(tab as any));
     expect(hook.result.current.focus).toBe('dueDate');
-    // Subsequent Tab should cycle normally (dueDate → workingDate)
-    act(() => hook.result.current.handleTitleKeyDown(tab as any));
+    // Tab from dueDate should cycle normally to workingDate
+    act(() => hook.result.current.handleChipKeyDown('dueDate', tab));
     expect(hook.result.current.focus).toBe('workingDate');
   });
 
-  it('after Tab completes chip ring back to title, next Tab visits project (filled chips included)', () => {
+  it('after full chip ring completes back to title, next Tab from title visits first unfilled chip', () => {
     const { hook } = make();
+    // Select project — auto-advances to dueDate
     act(() => hook.result.current.handleSelect('project', 'proj-1'));
-    act(() => hook.result.current.handleTitleKeyDown(tab as any));
     expect(hook.result.current.focus).toBe('dueDate');
-    act(() => hook.result.current.handleTitleKeyDown(tab as any));
+    // Tab through dueDate → workingDate → text (completes chip ring)
+    act(() => hook.result.current.handleChipKeyDown('dueDate', tab));
     expect(hook.result.current.focus).toBe('workingDate');
-    act(() => hook.result.current.handleTitleKeyDown(tab as any));
+    act(() => hook.result.current.handleChipKeyDown('workingDate', tab));
     expect(hook.result.current.focus).toBe('text');
-    // Was only hitting due/working before; now include project again
+    // First Tab from text after full ring: skip project (filled), land on first unfilled
     act(() => hook.result.current.handleTitleKeyDown(tab as any));
     expect(hook.result.current.focus).toBe('project');
-    act(() => hook.result.current.handleTitleKeyDown(tab as any));
+    act(() => hook.result.current.handleChipKeyDown('project', tab));
     expect(hook.result.current.focus).toBe('dueDate');
   });
 
@@ -113,12 +112,13 @@ describe('useSmartInput — chip interaction', () => {
     expect(hook.result.current.focus).toBe('dueDate');
   });
 
-  it('handleSelect sets value and returns focus to text', () => {
+  it('handleSelect sets value and advances focus to next unfilled chip', () => {
     const { hook } = make();
     act(() => hook.result.current.handleChipClick('project'));
     act(() => hook.result.current.handleSelect('project', 'proj-123'));
     expect(hook.result.current.values.projectId).toBe('proj-123');
-    expect(hook.result.current.focus).toBe('text');
+    // project is the first chip; next unfilled chip is dueDate
+    expect(hook.result.current.focus).toBe('dueDate');
   });
 
   it('Escape on chip returns focus to text without clearing value', () => {

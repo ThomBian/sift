@@ -2,6 +2,7 @@
 import Dexie, { type Table } from 'dexie';
 import { nanoid } from 'nanoid';
 import type { Space, Project, Task } from './types';
+import { getRandomEmoji } from './emojiPool';
 
 export class AppDatabase extends Dexie {
   spaces!: Table<Space>;
@@ -18,6 +19,14 @@ export class AppDatabase extends Dexie {
 
     this.version(2).stores({
       projects: 'id, spaceId, dueDate, updatedAt, synced',
+    });
+
+    this.version(3).stores({
+      projects: 'id, spaceId, dueDate, updatedAt, synced',
+    }).upgrade(tx => {
+      return tx.table('projects').toCollection().modify((project: any) => {
+        project.emoji = getRandomEmoji();
+      });
     });
 
     this.on('ready', () => this._seed());
@@ -42,6 +51,7 @@ export class AppDatabase extends Dexie {
     await this.projects.add({
       id: nanoid(),
       name: 'General',
+      emoji: getRandomEmoji(),
       spaceId,
       dueDate: null,
       createdAt: now,

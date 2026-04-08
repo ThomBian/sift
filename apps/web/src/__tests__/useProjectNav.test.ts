@@ -8,6 +8,7 @@ function makeProject(overrides?: Partial<Project>): Project {
   return {
     id: 'p-1',
     name: 'Test Project',
+    emoji: '📚',
     spaceId: 'space-1',
     dueDate: null,
     createdAt: now,

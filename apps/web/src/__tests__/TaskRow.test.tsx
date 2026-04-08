@@ -17,6 +17,7 @@ const space: Space = {
 const project: Project = {
   id: 'project-1',
   name: 'General',
+  emoji: '📚',
   spaceId: 'space-1',
   dueDate: null,
   createdAt: now,

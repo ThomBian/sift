@@ -23,8 +23,8 @@ const baseTask: Task = {
 const space = { id: 's1', name: 'Work', color: '#5E6AD2', createdAt: now, updatedAt: now, synced: true };
 
 const projects: ProjectWithSpace[] = [
-  { id: 'p1', name: 'General', spaceId: 's1', dueDate: null, createdAt: now, updatedAt: now, synced: true, space },
-  { id: 'p2', name: 'Growth', spaceId: 's1', dueDate: null, createdAt: now, updatedAt: now, synced: true, space },
+  { id: 'p1', name: 'General', emoji: '📚', spaceId: 's1', dueDate: null, createdAt: now, updatedAt: now, synced: true, space },
+  { id: 'p2', name: 'Growth', emoji: '📚', spaceId: 's1', dueDate: null, createdAt: now, updatedAt: now, synced: true, space },
 ];
 
 describe('TaskEditPalette', () => {
