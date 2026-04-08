@@ -55,16 +55,17 @@ Exports:
 New component: `packages/shared/src/EmojiPicker/EmojiPicker.tsx`
 
 **Layout:**
-- Search input at top — filters emojis by name/keyword as you type
-- Grid of emoji cells below — ~8 columns, each cell a square button (~32px)
+- No dedicated search input — the palette's main input field acts as the filter when `@c` is active (same pattern as date chips showing "Pick a date…")
+- Grid of emoji cells — ~8 columns, each cell a square button (~32px)
 - Category headers (mono, 9px, uppercase, muted) separating groups
 - Scrollable if content exceeds max height
+- **Empty state:** when the query matches no emojis, show a centered muted message (e.g. "No emojis found") in the grid area
 
 **Keyboard navigation:**
 - Arrow keys move focus through the grid (left/right/up/down, wrapping at row boundaries)
 - Enter selects the focused emoji
 - Escape cancels, returns focus to previous chip
-- Typing in the search input filters the grid in real-time
+- The main input filters the grid in real-time via the `query` prop
 
 **Styling (per design rules):**
 - No border-radius (zero-radius constraint)
