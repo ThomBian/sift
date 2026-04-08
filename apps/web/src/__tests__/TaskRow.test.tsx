@@ -63,7 +63,8 @@ describe('TaskRow', () => {
       />
     );
     const row = container.firstChild as HTMLElement;
-    expect(row.className).toMatch(/border-accent/);
+    expect(row.className).toMatch(/laser-focus/);
+    expect(row.className).toMatch(/FF4F00/);
   });
 
   it('does not apply focused styles when isFocused is false', () => {
@@ -77,7 +78,7 @@ describe('TaskRow', () => {
       />
     );
     const row = container.firstChild as HTMLElement;
-    expect(row.className).not.toMatch(/border-accent/);
+    expect(row.className).not.toMatch(/laser-focus/);
   });
 
   it('calls onFocus when the row is clicked', () => {
@@ -110,7 +111,7 @@ describe('TaskRow', () => {
     expect(dot.style.backgroundColor).toBe('rgb(94, 106, 210)');
   });
 
-  it('applies Surgical Red (bg-red, white text) to the entire row when task is late', () => {
+  it('shows Late Tax on due date only when task is late (no row bg-red)', () => {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
 
@@ -127,10 +128,11 @@ describe('TaskRow', () => {
     );
 
     const row = container.firstChild as HTMLElement;
-    expect(row.className).toMatch(/bg-red/);
+    expect(row.className).not.toMatch(/bg-red/);
 
     const dateEl = screen.getByTestId('due-date');
-    expect(dateEl.className).toMatch(/text-white/);
+    expect(dateEl.className).toMatch(/text-red/);
+    expect(dateEl.querySelector('svg')).toBeTruthy();
   });
 
   it('does not show due date in red when task is done', () => {
@@ -186,5 +188,40 @@ describe('TaskRow', () => {
     );
 
     expect(screen.queryByTestId('source-url-icon')).toBeNull();
+  });
+
+  it('renders project label with emoji and italic project name when showProject is true', () => {
+    render(
+      <TaskRow
+        task={baseTask}
+        project={project}
+        space={space}
+        isFocused={false}
+        onFocus={vi.fn()}
+      />
+    );
+
+    const label = screen.getByTestId('project-label');
+    expect(label).toHaveTextContent('📚');
+    expect(label).toHaveTextContent('General');
+    const em = label.querySelector('em');
+    expect(em).toBeTruthy();
+    expect(em?.textContent).toBe('General');
+    expect(em?.className).toMatch(/italic/);
+  });
+
+  it('hides project label when showProject is false', () => {
+    render(
+      <TaskRow
+        task={baseTask}
+        project={project}
+        space={space}
+        isFocused={false}
+        onFocus={vi.fn()}
+        showProject={false}
+      />
+    );
+
+    expect(screen.queryByTestId('project-label')).toBeNull();
   });
 });

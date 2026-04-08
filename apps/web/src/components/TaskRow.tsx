@@ -10,6 +10,7 @@ export interface TaskRowProps {
   onToggle?: () => void;
   exiting?: boolean;
   index?: number;
+  showProject?: boolean;
 }
 
 function formatDate(date: Date): string {
@@ -24,10 +25,20 @@ function isLate(task: Task): boolean {
   return task.dueDate < TODAY;
 }
 
-export default function TaskRow({ task, space, isFocused, onFocus, onToggle, exiting = false, index = 0 }: TaskRowProps) {
+export default function TaskRow({
+  task,
+  project,
+  space,
+  isFocused,
+  onFocus,
+  onToggle,
+  exiting = false,
+  index = 0,
+  showProject = true,
+}: TaskRowProps) {
   const rowRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (isFocused) rowRef.current?.scrollIntoView({ block: 'nearest' });
+    if (isFocused) rowRef.current?.scrollIntoView?.({ block: 'nearest' });
   }, [isFocused]);
   const late = isLate(task);
   // During exit animation, show the row as if it's done
@@ -47,14 +58,11 @@ export default function TaskRow({ task, space, isFocused, onFocus, onToggle, exi
       }}
       className={`
         ${exiting ? 'animate-task-exit' : 'animate-task-enter'}
-        ${late ? 'animate-late-breathe' : ''}
         flex items-center h-task-row px-3 gap-3 cursor-pointer select-none
-        border-l-2 transition-colors duration-150
-        ${late
-          ? 'bg-red border-red'
-          : isFocused
-            ? 'border-accent bg-[#FF4F00]/5 laser-focus'
-            : 'border-transparent hover:bg-surface-2'
+        transition-colors duration-150
+        ${isFocused
+          ? 'bg-[#FF4F00]/5 laser-focus'
+          : 'hover:bg-surface-2'
         }
       `}
       style={{ animationDelay: exiting || late ? undefined : `${index * 25}ms` }}
@@ -62,26 +70,22 @@ export default function TaskRow({ task, space, isFocused, onFocus, onToggle, exi
       <span
         data-testid="space-dot"
         className="w-2 h-2 shrink-0"
-        style={{ backgroundColor: late ? '#FFFFFF' : space.color }}
+        style={{ backgroundColor: space.color }}
       />
 
       <span
         onClick={(e) => { e.stopPropagation(); onToggle?.(); }}
         className={`w-4 h-4 border shrink-0 flex items-center justify-center transition-colors ${
           showDone
-            ? late
-              ? 'border-white bg-white/20'
-              : 'border-green bg-green/10'
-            : late
-              ? 'border-white hover:border-white/60'
-              : 'border-border-2 hover:border-accent'
+            ? 'border-green bg-green/10'
+            : 'border-border-2 hover:border-accent'
         }`}
       >
         {showDone && (
           <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
             <path
               d="M1.5 4L3 5.5L6.5 2.5"
-              stroke={late ? '#FFFFFF' : '#16A34A'}
+              stroke="#16A34A"
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -92,11 +96,9 @@ export default function TaskRow({ task, space, isFocused, onFocus, onToggle, exi
 
       <span
         className={`flex-1 text-sm font-medium tracking-[-0.02em] truncate ${
-          late
-            ? 'text-white'
-            : showDone
-              ? 'text-muted line-through'
-              : 'text-text'
+          showDone
+            ? 'text-muted line-through'
+            : 'text-text'
         }`}
       >
         {task.title}
@@ -109,7 +111,7 @@ export default function TaskRow({ task, space, isFocused, onFocus, onToggle, exi
           rel="noopener noreferrer"
           data-testid="source-url-icon"
           onClick={(e) => e.stopPropagation()}
-          className={`shrink-0 transition-colors ${late ? 'text-white/70 hover:text-white' : 'text-muted hover:text-accent'}`}
+          className="shrink-0 transition-colors text-muted hover:text-accent"
           title={task.sourceUrl}
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -124,13 +126,34 @@ export default function TaskRow({ task, space, isFocused, onFocus, onToggle, exi
         </a>
       )}
 
+      {showProject && (
+        <span
+          data-testid="project-label"
+          className="shrink-0 flex items-center gap-1 max-w-[10rem] min-w-0 text-muted"
+        >
+          {project.emoji ? (
+            <span className="shrink-0 text-sm leading-none" aria-hidden="true">
+              {project.emoji}
+            </span>
+          ) : null}
+          <em className="font-sans text-sm font-medium tracking-[-0.02em] italic truncate">{project.name}</em>
+        </span>
+      )}
+
       {task.dueDate && (
         <span
           data-testid="due-date"
-          className={`text-xs shrink-0 tabular-nums font-mono ${
-            late ? 'text-white font-medium' : 'text-muted'
+          className={`text-xs shrink-0 tabular-nums font-mono inline-flex items-center gap-1 ${
+            late ? 'text-red font-medium' : 'text-muted'
           }`}
         >
+          {late && (
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+              <path d="M5 1L9.33 8.5H0.67L5 1Z" stroke="#E60000" strokeWidth="1.2" strokeLinejoin="round" />
+              <path d="M5 4.5V6" stroke="#E60000" strokeWidth="1.2" strokeLinecap="round" />
+              <circle cx="5" cy="7.25" r="0.5" fill="#E60000" />
+            </svg>
+          )}
           {formatDate(task.dueDate)}
         </span>
       )}

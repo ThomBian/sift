@@ -16,6 +16,7 @@ const PROJECT_HINTS: Hint[] = [
   { keys: ['N'], label: 'New', hot: true },
   { keys: ['E'], label: 'Edit', hot: true },
   { keys: ['D'], label: 'Due date', hot: true },
+  { keys: ['C'], label: 'Icon', hot: true },
   { keys: ['O'], label: 'Open', hot: true },
   { keys: ['Esc'], label: 'Deselect' },
 ];

@@ -149,6 +149,11 @@ export default function ProjectsView() {
               window.dispatchEvent(new CustomEvent('sift:edit-project', { detail: { project: focusedProject, field: 'dueDate' } }));
               return;
             }
+            if (e.key === 'c' || e.key === 'C') {
+              e.preventDefault();
+              window.dispatchEvent(new CustomEvent('sift:edit-project', { detail: { project: focusedProject, field: 'emoji' } }));
+              return;
+            }
             if (e.key === 'o' || e.key === 'O') {
               e.preventDefault();
               if (expandedProjectId === focusedProjectId) {
@@ -205,16 +210,19 @@ export default function ProjectsView() {
               return (
                 <div
                   key={project.id}
-                  className={`mb-4 border-l-2 transition-colors duration-150 ${
-                    isFocusedProject ? 'border-accent' : 'border-transparent'
-                  }`}
-                  style={isFocusedProject ? { boxShadow: '-2px 0 8px rgba(255, 79, 0, 0.2)' } : undefined}
+                  className={`mb-4 transition-colors duration-150`}
+                  style={isFocusedProject ? { boxShadow: '0 0 8px rgba(255, 79, 0, 0.2)' } : undefined}
                   onClick={() => setFocusedProjectId(project.id)}
                 >
                   <div className="px-4 py-2 border-b border-border">
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className={`font-mono text-[11px] ${isFocusedProject ? 'text-accent' : 'text-text'}`}>
-                        {project.name}
+                      <span className={`font-mono text-[11px] flex items-center gap-1.5 min-w-0 ${isFocusedProject ? 'text-accent' : 'text-text'}`}>
+                        {project.emoji ? (
+                          <span className="shrink-0 text-sm leading-none" aria-hidden="true">
+                            {project.emoji}
+                          </span>
+                        ) : null}
+                        <span className="truncate">{project.name}</span>
                       </span>
                       {project.dueDate && (
                         <span className="font-mono text-[10px] text-muted">
@@ -239,6 +247,7 @@ export default function ProjectsView() {
                           onFocus={() => { setNavMode('task'); setFocusedId(task.id); }}
                           onToggle={() => handleToggle(task)}
                           exiting={exitingIds.has(task.id)}
+                          showProject={false}
                         />
                       ))
                     )

@@ -109,7 +109,7 @@ describe('SyncService', () => {
       expect(mockSupabase.from).toHaveBeenCalledWith('projects');
       expect(mockUpsert).toHaveBeenCalledWith(
         expect.arrayContaining([
-          expect.objectContaining({ id: 'project-1', user_id: 'user-1' }),
+          expect.objectContaining({ id: 'project-1', user_id: 'user-1', emoji: '📚' }),
         ]),
         expect.objectContaining({ onConflict: 'id' })
       );

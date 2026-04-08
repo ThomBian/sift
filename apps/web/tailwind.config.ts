@@ -27,7 +27,6 @@ const config: Config = {
       animation: {
         'task-enter': 'task-enter 180ms cubic-bezier(0.34, 1.56, 0.64, 1) both',
         'task-exit': 'task-exit 250ms ease-in forwards',
-        'late-breathe': 'late-breathe 3s ease-in-out infinite',
         'palette-in': 'palette-in 150ms cubic-bezier(0.34, 1.56, 0.64, 1) both',
       },
       keyframes: {
@@ -38,10 +37,6 @@ const config: Config = {
         'task-exit': {
           '0%': { opacity: '1', transform: 'translateX(0)' },
           '100%': { opacity: '0', transform: 'translateX(10px)' },
-        },
-        'late-breathe': {
-          '0%, 100%': { opacity: '0.9' },
-          '50%': { opacity: '1' },
         },
         'palette-in': {
           from: { opacity: '0', transform: 'translateY(-8px) scale(0.98)' },

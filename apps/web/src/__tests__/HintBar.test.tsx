@@ -34,6 +34,7 @@ describe('HintBar', () => {
     expect(screen.getByText('New')).toBeInTheDocument();
     expect(screen.getByText('Edit')).toBeInTheDocument();
     expect(screen.getByText('Due date')).toBeInTheDocument();
+    expect(screen.getByText('Icon')).toBeInTheDocument();
     expect(screen.getByText('Open')).toBeInTheDocument();
     expect(screen.getByText('Deselect')).toBeInTheDocument();
     expect(screen.queryByText('New task')).toBeNull();

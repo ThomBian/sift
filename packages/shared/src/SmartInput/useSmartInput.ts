@@ -155,9 +155,15 @@ export function useSmartInput(
 
   const handleSelect = useCallback((chip: ChipFocus, value: string | Date | null) => {
     const key = chip === 'project' ? 'projectId' : chip;
-    setValues(v => ({ ...v, [key]: value }));
-    afterFullChipRingRef.current = false;
-    setFocus('text');
+    setValues(v => {
+      const updated = { ...v, [key]: value };
+      // Advance to next unfilled chip, or back to text if this was the last one
+      const chipIndex = FOCUS_CYCLE.indexOf(chip);
+      const remaining = (FOCUS_CYCLE.slice(chipIndex + 1) as ChipFocus[]).filter(c => !isFilled(c, updated));
+      afterFullChipRingRef.current = false;
+      setFocus(remaining.length > 0 ? remaining[0] : 'text');
+      return updated;
+    });
   }, []);
 
   const cancelChipSelection = useCallback(() => {

@@ -75,6 +75,16 @@ export function useKeyboardNav(
             });
           }
         }
+        // Advance selection when marking done (task will leave the active list)
+        if (task.status !== 'done') {
+          if (currentIndex < tasks.length - 1) {
+            setFocusedId(tasks[currentIndex + 1].id);
+          } else if (currentIndex > 0) {
+            setFocusedId(tasks[currentIndex - 1].id);
+          } else {
+            setFocusedId(null);
+          }
+        }
         break;
       }
 

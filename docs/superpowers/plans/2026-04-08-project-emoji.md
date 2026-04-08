@@ -8,26 +8,32 @@
 
 **Tech Stack:** React, TypeScript, Dexie.js, Vitest, Testing Library, CSS Modules
 
+## Execution status
+
+**Completed:** 2026-04-08. All tasks implemented; `npm run build` and `npm run test` pass (shared 39, web 61). Additional fix: `SyncService` maps `emoji` for Supabase upsert/pull (not in original file table). HintBar shows **C** / Icon in Projects (project-focused) hints. TaskRow late-task tests align with CLAUDE.md Late Tax (red due date + triangle, no full-row red background).
+
 ---
 
 ## File Structure
 
 | File | Status | Responsibility |
 |------|--------|----------------|
-| `packages/shared/src/types.ts` | Modify | Add `emoji` field to `Project` |
-| `packages/shared/src/db.ts` | Modify | Dexie v3 migration, seed update |
-| `packages/shared/src/emojiPool.ts` | Create | Curated emoji data, random picker, keyword map |
-| `packages/shared/src/EmojiPicker/EmojiPicker.tsx` | Create | Grid-based emoji picker component |
-| `packages/shared/src/EmojiPicker/EmojiPicker.module.css` | Create | Styles for emoji picker grid |
-| `packages/shared/src/index.ts` | Modify | Export new modules |
-| `apps/web/src/components/ProjectEditPalette.tsx` | Modify | Add `@c` chip + EmojiPicker integration |
-| `apps/web/src/components/TaskRow.tsx` | Modify | Show emoji + italic project name |
-| `apps/web/src/components/TaskList.tsx` | Modify | Pass `showProject` prop through |
-| `apps/web/src/views/ProjectsView.tsx` | Modify | `C` shortcut, emoji in header, `showProject={false}` |
-| `apps/web/src/components/layout/AppLayout.tsx` | Modify | Widen `initialField` type to include `'emoji'` |
-| `packages/shared/src/__tests__/emojiPool.test.ts` | Create | Tests for emoji pool + random picker |
-| `packages/shared/src/__tests__/EmojiPicker.test.tsx` | Create | Tests for emoji picker component |
-| `apps/web/src/__tests__/TaskRow.test.tsx` | Modify | Add tests for project name display |
+| `packages/shared/src/types.ts` | Done | Add `emoji` field to `Project` |
+| `packages/shared/src/db.ts` | Done | Dexie v3 migration, seed update |
+| `packages/shared/src/emojiPool.ts` | Done | Curated emoji data, random picker, keyword map |
+| `packages/shared/src/EmojiPicker/EmojiPicker.tsx` | Done | Grid-based emoji picker component |
+| `packages/shared/src/EmojiPicker/EmojiPicker.module.css` | Done | Styles for emoji picker grid |
+| `packages/shared/src/index.ts` | Done | Export new modules |
+| `apps/web/src/components/ProjectEditPalette.tsx` | Done | Add `@c` chip + EmojiPicker integration |
+| `apps/web/src/components/TaskRow.tsx` | Done | Show emoji + italic project name |
+| `apps/web/src/components/TaskList.tsx` | Done | Default `showProject` on TaskRow (flat lists) |
+| `apps/web/src/views/ProjectsView.tsx` | Done | `C` shortcut, emoji in header, `showProject={false}` |
+| `apps/web/src/components/layout/AppLayout.tsx` | Done | Widen `initialField` type to include `'emoji'` |
+| `apps/web/src/components/layout/HintBar.tsx` | Done | **C** / Icon hint when project-focused |
+| `apps/web/src/services/SyncService.ts` | Done | `emoji` in `projectToRow` / `rowToProject` |
+| `packages/shared/src/__tests__/emojiPool.test.ts` | Done | Tests for emoji pool + random picker |
+| `packages/shared/src/__tests__/EmojiPicker.test.tsx` | Done | Tests for emoji picker component |
+| `apps/web/src/__tests__/TaskRow.test.tsx` | Done | Add tests for project name display |
 
 ---
 
@@ -37,7 +43,7 @@
 - Create: `packages/shared/src/emojiPool.ts`
 - Create: `packages/shared/src/__tests__/emojiPool.test.ts`
 
-- [ ] **Step 1: Write failing tests for emoji pool**
+- [x] **Step 1: Write failing tests for emoji pool**
 
 Create `packages/shared/src/__tests__/emojiPool.test.ts`:
 
@@ -85,12 +91,12 @@ describe('emojiPool', () => {
 });
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `npx vitest run packages/shared/src/__tests__/emojiPool.test.ts`
 Expected: FAIL — module not found
 
-- [ ] **Step 3: Implement emoji pool module**
+- [x] **Step 3: Implement emoji pool module**
 
 Create `packages/shared/src/emojiPool.ts`:
 
@@ -198,12 +204,12 @@ export function searchEmojis(query: string): string[] {
 }
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `npx vitest run packages/shared/src/__tests__/emojiPool.test.ts`
 Expected: All 7 tests PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add packages/shared/src/emojiPool.ts packages/shared/src/__tests__/emojiPool.test.ts
@@ -220,7 +226,7 @@ git commit -m "feat(shared): add curated emoji pool with search"
 - Modify: `packages/shared/src/index.ts`
 - Modify: `apps/web/src/__tests__/TaskRow.test.tsx:17-25`
 
-- [ ] **Step 1: Add `emoji` field to Project type**
+- [x] **Step 1: Add `emoji` field to Project type**
 
 In `packages/shared/src/types.ts`, add `emoji` after `name`:
 
@@ -237,7 +243,7 @@ export interface Project {
 }
 ```
 
-- [ ] **Step 2: Add Dexie v3 migration and update seed**
+- [x] **Step 2: Add Dexie v3 migration and update seed**
 
 In `packages/shared/src/db.ts`, add the import and version 3 migration:
 
@@ -271,7 +277,7 @@ In the `_seed()` method, add `emoji` to the project creation:
     });
 ```
 
-- [ ] **Step 3: Export new modules from index**
+- [x] **Step 3: Export new modules from index**
 
 In `packages/shared/src/index.ts`, add:
 
@@ -280,7 +286,7 @@ export { EMOJI_POOL, ALL_EMOJIS, getRandomEmoji, searchEmojis } from './emojiPoo
 export type { EmojiCategory } from './emojiPool';
 ```
 
-- [ ] **Step 4: Update test fixtures**
+- [x] **Step 4: Update test fixtures**
 
 In `apps/web/src/__tests__/TaskRow.test.tsx`, add `emoji` to the project fixture (line 18):
 
@@ -306,12 +312,12 @@ Search for any other test files that create `Project` objects and add `emoji` to
 
 For each file, find every `Project` object literal and add `emoji: '📚',` (or any emoji from the pool).
 
-- [ ] **Step 5: Build shared package and run all tests**
+- [x] **Step 5: Build shared package and run all tests**
 
 Run: `npm run build --workspace=@sift/shared && npm run test`
 Expected: All tests PASS. Build succeeds.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add packages/shared/src/types.ts packages/shared/src/db.ts packages/shared/src/index.ts apps/web/src/__tests__/ packages/shared/src/__tests__/
@@ -328,7 +334,7 @@ git commit -m "feat(shared): add emoji field to Project type with Dexie v3 migra
 - Create: `packages/shared/src/__tests__/EmojiPicker.test.tsx`
 - Modify: `packages/shared/src/index.ts`
 
-- [ ] **Step 1: Write failing tests for EmojiPicker**
+- [x] **Step 1: Write failing tests for EmojiPicker**
 
 Create `packages/shared/src/__tests__/EmojiPicker.test.tsx`:
 
@@ -379,12 +385,12 @@ describe('EmojiPicker', () => {
 });
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `npx vitest run packages/shared/src/__tests__/EmojiPicker.test.tsx`
 Expected: FAIL — module not found
 
-- [ ] **Step 3: Create EmojiPicker CSS module**
+- [x] **Step 3: Create EmojiPicker CSS module**
 
 Create `packages/shared/src/EmojiPicker/EmojiPicker.module.css`:
 
@@ -450,7 +456,7 @@ Create `packages/shared/src/EmojiPicker/EmojiPicker.module.css`:
 }
 ```
 
-- [ ] **Step 4: Implement EmojiPicker component**
+- [x] **Step 4: Implement EmojiPicker component**
 
 Create `packages/shared/src/EmojiPicker/EmojiPicker.tsx`:
 
@@ -576,7 +582,7 @@ export function EmojiPicker({ query, onSelect }: EmojiPickerProps) {
 }
 ```
 
-- [ ] **Step 5: Export EmojiPicker from shared index**
+- [x] **Step 5: Export EmojiPicker from shared index**
 
 In `packages/shared/src/index.ts`, add:
 
@@ -584,12 +590,12 @@ In `packages/shared/src/index.ts`, add:
 export { EmojiPicker } from './EmojiPicker/EmojiPicker';
 ```
 
-- [ ] **Step 6: Run tests to verify they pass**
+- [x] **Step 6: Run tests to verify they pass**
 
 Run: `npm run build --workspace=@sift/shared && npx vitest run packages/shared/src/__tests__/EmojiPicker.test.tsx`
 Expected: All 5 tests PASS
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add packages/shared/src/EmojiPicker/ packages/shared/src/__tests__/EmojiPicker.test.tsx packages/shared/src/index.ts
@@ -604,7 +610,7 @@ git commit -m "feat(shared): add EmojiPicker grid component"
 - Modify: `apps/web/src/components/ProjectEditPalette.tsx`
 - Modify: `apps/web/src/components/layout/AppLayout.tsx:14, 66`
 
-- [ ] **Step 1: Widen `initialField` type in AppLayout**
+- [x] **Step 1: Widen `initialField` type in AppLayout**
 
 In `apps/web/src/components/layout/AppLayout.tsx`, change line 14:
 
@@ -628,7 +634,7 @@ To:
       const { project, field } = (e as CustomEvent<{ project: Project; field: 'name' | 'emoji' | 'dueDate' }>).detail;
 ```
 
-- [ ] **Step 2: Update ProjectEditPalette with emoji chip**
+- [x] **Step 2: Update ProjectEditPalette with emoji chip**
 
 Replace the full content of `apps/web/src/components/ProjectEditPalette.tsx`:
 
@@ -957,12 +963,12 @@ export default function ProjectEditPalette({
 }
 ```
 
-- [ ] **Step 3: Build and verify manually**
+- [x] **Step 3: Build and verify manually**
 
 Run: `npm run build --workspace=@sift/shared && npm run build --workspace=web`
 Expected: Build succeeds with no type errors.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add apps/web/src/components/ProjectEditPalette.tsx apps/web/src/components/layout/AppLayout.tsx
@@ -977,7 +983,7 @@ git commit -m "feat(web): add @c emoji chip to ProjectEditPalette"
 - Modify: `apps/web/src/components/TaskRow.tsx:4, 27, 86-95`
 - Modify: `apps/web/src/__tests__/TaskRow.test.tsx`
 
-- [ ] **Step 1: Write failing tests for project display in TaskRow**
+- [x] **Step 1: Write failing tests for project display in TaskRow**
 
 Add these tests to `apps/web/src/__tests__/TaskRow.test.tsx`:
 
@@ -1016,12 +1022,12 @@ Add these tests to `apps/web/src/__tests__/TaskRow.test.tsx`:
   });
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `npx vitest run apps/web/src/__tests__/TaskRow.test.tsx`
 Expected: FAIL — `project-label` not found, `showProject` prop unknown
 
-- [ ] **Step 3: Add showProject prop and project label to TaskRow**
+- [x] **Step 3: Add showProject prop and project label to TaskRow**
 
 In `apps/web/src/components/TaskRow.tsx`:
 
@@ -1059,12 +1065,12 @@ Add the project label JSX, right before the `{task.dueDate && (` block (around l
       )}
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `npx vitest run apps/web/src/__tests__/TaskRow.test.tsx`
 Expected: All tests PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add apps/web/src/components/TaskRow.tsx apps/web/src/__tests__/TaskRow.test.tsx
@@ -1078,7 +1084,7 @@ git commit -m "feat(web): show emoji + italic project name in TaskRow"
 **Files:**
 - Modify: `apps/web/src/views/ProjectsView.tsx:144-150, 199-215, 230-240`
 
-- [ ] **Step 1: Add `C` shortcut for emoji editing**
+- [x] **Step 1: Add `C` shortcut for emoji editing**
 
 In `apps/web/src/views/ProjectsView.tsx`, in the project-mode keydown handler, after the `D` shortcut block (around line 150), add:
 
@@ -1090,7 +1096,7 @@ In `apps/web/src/views/ProjectsView.tsx`, in the project-mode keydown handler, a
             }
 ```
 
-- [ ] **Step 2: Show emoji in project header**
+- [x] **Step 2: Show emoji in project header**
 
 In the project header JSX (around line 214), update the project name span to include the emoji:
 
@@ -1108,7 +1114,7 @@ To:
                       </span>
 ```
 
-- [ ] **Step 3: Pass showProject={false} to TaskRow in ProjectsView**
+- [x] **Step 3: Pass showProject={false} to TaskRow in ProjectsView**
 
 In the expanded tasks section (around line 232), update the TaskRow call to add `showProject={false}`:
 
@@ -1126,12 +1132,12 @@ In the expanded tasks section (around line 232), update the TaskRow call to add 
                         />
 ```
 
-- [ ] **Step 4: Build and run all tests**
+- [x] **Step 4: Build and run all tests**
 
 Run: `npm run build --workspace=@sift/shared && npm run test`
 Expected: All tests PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add apps/web/src/views/ProjectsView.tsx
@@ -1142,17 +1148,17 @@ git commit -m "feat(web): add C shortcut for emoji, show emoji in project header
 
 ### Task 7: Final Integration Test
 
-- [ ] **Step 1: Run the full build**
+- [x] **Step 1: Run the full build**
 
 Run: `npm run build`
 Expected: All packages build successfully
 
-- [ ] **Step 2: Run all tests**
+- [x] **Step 2: Run all tests**
 
 Run: `npm run test`
 Expected: All tests PASS
 
-- [ ] **Step 3: Manual smoke test**
+- [x] **Step 3: Manual smoke test**
 
 Run: `npm run dev`
 
@@ -1166,7 +1172,7 @@ Verify:
 7. Type `@c` in the project name field — switches to emoji picker
 8. Tab cycles through name → emoji → due date
 
-- [ ] **Step 4: Final commit if any fixes were needed**
+- [x] **Step 4: Final commit if any fixes were needed**
 
 ```bash
 git add -A

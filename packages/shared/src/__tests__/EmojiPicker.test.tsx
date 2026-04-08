@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { EmojiPicker } from '../EmojiPicker/EmojiPicker';
+import styles from '../EmojiPicker/EmojiPicker.module.css';
 
 describe('EmojiPicker', () => {
   it('renders emoji grid with category headers', () => {
@@ -37,5 +38,22 @@ describe('EmojiPicker', () => {
     fireEvent.keyDown(window, { key: 'ArrowDown' });
     fireEvent.keyDown(window, { key: 'Enter' });
     expect(onSelect).toHaveBeenCalledTimes(1);
+  });
+
+  it('ArrowDown moves into the next category on the same column (not a single global +8 skip)', () => {
+    render(<EmojiPicker query="" onSelect={vi.fn()} />);
+    const buttons = screen.getAllByRole('button');
+    fireEvent.keyDown(window, { key: 'ArrowDown' });
+    fireEvent.keyDown(window, { key: 'ArrowDown' });
+    expect(buttons[8]).toHaveClass(styles.cellFocused);
+  });
+
+  it('ArrowDown from the last column of Work clamps into the shorter Creative row', () => {
+    render(<EmojiPicker query="" onSelect={vi.fn()} />);
+    const buttons = screen.getAllByRole('button');
+    fireEvent.keyDown(window, { key: 'ArrowDown' });
+    for (let k = 0; k < 7; k++) fireEvent.keyDown(window, { key: 'ArrowRight' });
+    fireEvent.keyDown(window, { key: 'ArrowDown' });
+    expect(buttons[13]).toHaveClass(styles.cellFocused);
   });
 });

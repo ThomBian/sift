@@ -5,9 +5,9 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: {
-      '@sift/shared/style.css': path.resolve(__dirname, '../../packages/shared/dist/style.css'),
-    },
+    alias: [
+      { find: /^@sift\/shared$/, replacement: path.resolve(__dirname, '../../packages/shared/src/index.ts') },
+    ],
   },
   test: {
     environment: 'jsdom',

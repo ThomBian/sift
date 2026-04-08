@@ -1,5 +1,7 @@
 # Project Emoji — Design Spec
 
+**Status:** Implemented (2026-04-08). See plan `docs/superpowers/plans/2026-04-08-project-emoji.md` for execution checklist.
+
 ## Goal
 
 Make it easier for users to visually identify which project a task belongs to, especially in flat views (Today, Inbox) where tasks from different projects are interleaved.
@@ -151,8 +153,11 @@ Existing projects get a random emoji during migration. New projects get one at c
 | `packages/shared/src/EmojiPicker/EmojiPicker.tsx` | **New** — grid picker component |
 | `packages/shared/src/index.ts` | Export new modules |
 | `apps/web/src/components/ProjectEditPalette.tsx` | Add `@c` chip, EmojiPicker integration |
+| `apps/web/src/components/layout/AppLayout.tsx` | `initialField` includes `'emoji'` |
+| `apps/web/src/components/layout/HintBar.tsx` | Project-focused hints include **C** (Icon / emoji) |
 | `apps/web/src/components/TaskRow.tsx` | Add `showProject` prop, render emoji + italic name |
 | `apps/web/src/views/ProjectsView.tsx` | `C` shortcut, emoji in project header, pass `showProject={false}` |
+| `apps/web/src/services/SyncService.ts` | Map `emoji` on project upsert and pull |
 | `apps/web/src/views/TodayView.tsx` | No change (TaskRow default shows project) |
 | `apps/web/src/views/InboxView.tsx` | No change (TaskRow default shows project) |
 | Test fixtures | Add `emoji` field to Project fixtures |

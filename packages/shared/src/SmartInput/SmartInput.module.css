@@ -38,6 +38,10 @@
   min-width: 0;
 }
 
+.input:focus-visible {
+  outline: none;
+}
+
 .input::placeholder {
   color: #BBBBBB;
 }

@@ -1,5 +1,6 @@
 // packages/shared/src/SmartInput/Dropdown.tsx
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { parseLooseDateQuery } from '../parseLooseDate';
 import type { Project, Space } from '../types';
 import type { ChipFocus } from './useSmartInput';
 import styles from './Dropdown.module.css';
@@ -71,11 +72,10 @@ export function Dropdown({ type, projects, query, onSelect, mode = 'floating' }:
       ? DATE_QUICK_PICKS.filter(l => l.toLowerCase().includes(query.toLowerCase()))
       : DATE_QUICK_PICKS;
     const items: FlatItem[] = filtered.map(label => ({ kind: 'date', label }));
-    // Try to parse query as a raw date (e.g. "Apr 10", "4/15")
+    // Try to parse query as a raw date (e.g. "Apr 10", "4/15") — year defaults to current when omitted
     if (query && items.length === 0) {
-      const d = new Date(query);
-      if (!isNaN(d.getTime())) {
-        d.setHours(0, 0, 0, 0);
+      const d = parseLooseDateQuery(query);
+      if (d) {
         const formatted = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         items.push({ kind: 'date', label: formatted, date: d });
       }

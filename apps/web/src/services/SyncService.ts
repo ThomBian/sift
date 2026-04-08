@@ -41,6 +41,7 @@ function projectToRow(project: Project, userId: string) {
     id: project.id,
     user_id: userId,
     name: project.name,
+    emoji: project.emoji,
     space_id: project.spaceId,
     created_at: project.createdAt.toISOString(),
     updated_at: project.updatedAt.toISOString(),
@@ -52,6 +53,7 @@ function rowToProject(row: Record<string, unknown>): Project {
   return {
     id: row.id as string,
     name: row.name as string,
+    emoji: (row.emoji as string | null | undefined) ?? null,
     spaceId: row.space_id as string,
     dueDate: row.due_date ? new Date(row.due_date as string) : null,
     createdAt: new Date(row.created_at as string),

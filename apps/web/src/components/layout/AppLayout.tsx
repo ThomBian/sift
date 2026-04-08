@@ -11,7 +11,7 @@ const VIEWS = ['/inbox', '/today', '/projects'];
 interface ProjectPaletteState {
   spaceId?: string;
   project?: Project;
-  initialField?: 'name' | 'dueDate';
+  initialField?: 'name' | 'emoji' | 'dueDate';
 }
 
 interface AppLayoutProps {
@@ -63,7 +63,7 @@ export default function AppLayout({ isSynced }: AppLayoutProps) {
       setProjectPaletteOpen(true);
     }
     function onEditProject(e: Event) {
-      const { project, field } = (e as CustomEvent<{ project: Project; field: 'name' | 'dueDate' }>).detail;
+      const { project, field } = (e as CustomEvent<{ project: Project; field: 'name' | 'emoji' | 'dueDate' }>).detail;
       setProjectPaletteState({ project, initialField: field });
       setProjectPaletteOpen(true);
     }

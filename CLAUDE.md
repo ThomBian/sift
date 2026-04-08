@@ -26,9 +26,13 @@ Build order matters: `@sift/shared` must build before `apps/web` consumes it fro
 Turborepo + npm workspaces monorepo:
 
 - **`packages/shared`** — consumed by all apps; publishes from `dist/`
-  - `src/types.ts` — canonical types: `Space`, `Project`, `Task`, `TaskStatus`
-  - `src/db.ts` — Dexie.js `AppDatabase` singleton (`db`); auto-seeds a "Personal" space + "General" project on first run
-  - `src/SmartInput/` — reusable task-input component with `@p`/`@w`/`@d` inline chip triggers
+  - `src/types.ts` — canonical types: `Space`, `Project` (includes `emoji: string | null`), `Task`, `TaskStatus`
+  - `src/db.ts` — Dexie.js `AppDatabase` singleton (`db`); auto-seeds a "Personal" space + "General" project on first run; schema v3 adds per-project emoji
+  - `src/emojiPool.ts` — curated emoji list, `getRandomEmoji`, keyword `searchEmojis`
+  - `src/EmojiPicker/` — grid picker (used from `ProjectEditPalette`)
+  - `src/SmartInput/` — reusable task-input component with `@p`/`@w`/`@d` inline chip triggers; `Dropdown` uses `parseLooseDateQuery` for freeform date text
+  - `src/parseLooseDate.ts` — `parseLooseDateQuery`: when the user types a date **without** an explicit year (e.g. `Apr 10`, `4/15`), the year is set to the **current calendar year** (JS `Date` alone would use 2001). If the string includes a 4-digit year or `m/d/y` with a year segment, that year is kept.
+  - `src/EmojiPicker/gridNav.ts` — keyboard arrows move in an **8-column grid per category** (not one global `index+8`); focused cell scrolls into view inside the picker
 
 - **`apps/web`** — React SPA (Vite + TypeScript + Tailwind)
   - `src/lib/db.ts` — re-exports `db` from `@sift/shared`
@@ -38,7 +42,7 @@ Turborepo + npm workspaces monorepo:
   - `src/views/` — InboxView, TodayView, ProjectsView (each owns its keyboard nav)
   - `src/hooks/useKeyboardNav.ts` — shared arrow-key + Enter/Backspace/Escape logic
   - `src/components/CommandPalette.tsx` — Cmd+K overlay for task creation and editing (D/W/P/E shortcuts open it pre-focused on a chip)
-  - `src/components/ProjectEditPalette.tsx` — same-style overlay for project creation/editing (name + due date only)
+  - `src/components/ProjectEditPalette.tsx` — same-style overlay for project creation/editing (name, `@c` emoji via `EmojiPicker`, `@d` due date)
 
 - **`apps/extension`** — Chromium MV3 extension (planned, not yet implemented)
 
@@ -46,7 +50,7 @@ Turborepo + npm workspaces monorepo:
 
 ```
 Space (id, name, color)
-  └─ Project (id, name, spaceId)
+  └─ Project (id, name, emoji, spaceId, dueDate, …)
        └─ Task (id, title, projectId, status, workingDate, dueDate, sourceUrl?, ...)
 ```
 
@@ -61,10 +65,12 @@ Every record has `synced: boolean`. All writes hit IndexedDB immediately; `synce
 **IndexedDB (Dexie) is the source of truth.** All writes are optimistic — UI updates before any network call.
 
 `SyncService`:
-1. Pushes `synced: false` records to Supabase via upsert
+1. Pushes `synced: false` records to Supabase via upsert (projects include `emoji`)
 2. Pulls records with `updated_at > speedy_last_synced_at` (stored in `localStorage`)
 3. Conflict resolution: last-write-wins on `updatedAt`
 4. Subscribes to Supabase Realtime for live updates
+
+Supabase `projects` table must expose an `emoji` column (text, nullable) for sync to round-trip; offline-only use needs no migration there.
 
 ## Keyboard Interaction Model
 
@@ -75,8 +81,11 @@ Every record has `synced: boolean`. All writes hit IndexedDB immediately; `synce
 - **Backspace / Delete** — archive focused task
 - **Escape** — close edit palette if open, else deselect focused task
 - **D / W / P / E** — when a task is focused, open `CommandPalette` pre-focused on that chip (due date / working date / project / title)
+- **Projects view (project row focused):** **N** new project, **E** edit name, **D** edit due date, **C** edit emoji (opens `ProjectEditPalette` on emoji), **O** expand/collapse tasks
 
-`HintBar` renders two states: default (no task focused) and task-focused (shows D/W/P/E shortcuts with orange accent). It lives at the bottom of each view.
+`HintBar` uses `focusState`: `none` (inbox/today default), `project` (Projects view — N/E/D/C/O), or `task` (D/W/P/E with orange accent). It lives at the bottom of each view.
+
+Flat task lists (`TaskRow`): optional `showProject` (default `true`) shows emoji + italic project name before the due date; `ProjectsView` passes `showProject={false}` under the project header.
 
 Each view registers its own `window.keydown` listener that skips events when `e.target` is an INPUT or TEXTAREA. `AppLayout` owns the palette and view-switching listeners. When a focused task disappears from the list (marked done, archived), the view's `useEffect` clears `focusedId`.
 
@@ -103,4 +112,4 @@ Vitest + Testing Library + jsdom + `fake-indexeddb`. Each package has `src/__tes
    - Metadata: `JetBrains Mono`, Weight 400, Size 10px, Color #888888.
 5. **Backdrop Blurs:** Any floating element (Modals/Overlays) must use `backdrop-filter: blur(12px)`.
 6. **Zero-Radius Constraint:** NEVER use `border-radius`. Use sharpness to communicate professional precision.
-7. **The Late Tax Glow:** Late tasks (#E60000 background) should have a very slow, subtle "breathing" opacity animation (90% to 100%) to indicate urgency without being annoying.
+7. **The Late Tax:** Late tasks show a small red warning triangle icon next to the due date, with the date text in red. No background or border change — the focus accent style remains unaffected.

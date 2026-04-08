@@ -21,7 +21,7 @@ interface SmartInputProps {
 }
 
 function formatDate(d: Date): string {
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return d.toLocaleDateString('fr-FR');
 }
 
 export function SmartInput({ projects, onTaskReady, placeholder, className, inputRef: externalInputRef, initialValues, initialFocus, dropdownPosition = 'floating' }: SmartInputProps) {
