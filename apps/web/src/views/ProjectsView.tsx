@@ -8,13 +8,15 @@ import {
 } from "react";
 import { archiveProject, unarchiveProject, deleteProject } from "@sift/shared";
 import { useProjectTasks } from "../hooks/useTasks";
+import { useTrackedTimeouts } from "../hooks/useTrackedTimeouts";
 import { useKeyboardNav } from "../hooks/useKeyboardNav";
 import { useProjectNav, SHOW_ARCHIVED_TOGGLE_ID } from "../hooks/useProjectNav";
 import TaskRow from "../components/TaskRow";
+import TaskEditPalette, { type EditPatch } from "../components/TaskEditPalette";
 import HintBar from "../components/layout/HintBar";
 import ConfirmModal from "../components/ConfirmModal";
 import { db } from "../lib/db";
-import type { Task, Project, Space } from "@sift/shared";
+import type { Task, Project, Space, ProjectWithSpace } from "@sift/shared";
 import type { SpaceGroup } from "../hooks/useTasks";
 
 function ProgressBar({ done, total }: { done: number; total: number }) {
@@ -99,6 +101,15 @@ export default function ProjectsView() {
     useState<Project | null>(null);
   const deleteConfirmRef = useRef<Project | null>(null);
   deleteConfirmRef.current = deleteConfirmProject;
+  const [urlEditTask, setUrlEditTask] = useState<Task | null>(null);
+
+  const allProjects = useMemo<ProjectWithSpace[]>(
+    () =>
+      groups.flatMap(({ space, projects: ps }) =>
+        ps.map(({ project }) => ({ ...project, space })),
+      ),
+    [groups],
+  );
 
   const { focusedProjectId, setFocusedProjectId, handleProjectKeyDown } =
     useProjectNav();
@@ -130,6 +141,13 @@ export default function ProjectsView() {
 
   const orderedProjectIdsRef = useRef(orderedProjectIdsOnly);
   orderedProjectIdsRef.current = orderedProjectIdsOnly;
+
+  const orderedNavIdSet = useMemo(
+    () => new Set(orderedNavIds),
+    [orderedNavIds],
+  );
+
+  const scheduleExit = useTrackedTimeouts();
 
   const archivedPrefixBySpace = useMemo(() => {
     const prefixes = new Map<string, number>();
@@ -166,10 +184,10 @@ export default function ProjectsView() {
       if (archivedCount === 0) setFocusedProjectId(null);
       return;
     }
-    if (!orderedNavIds.includes(focusedProjectId)) {
+    if (!orderedNavIdSet.has(focusedProjectId)) {
       setFocusedProjectId(null);
     }
-  }, [archivedCount, focusedProjectId, orderedNavIds, setFocusedProjectId]);
+  }, [archivedCount, focusedProjectId, orderedNavIdSet, setFocusedProjectId]);
 
   const handleToggle = useCallback((task: Task) => {
     if (task.status === "archived") return;
@@ -183,7 +201,7 @@ export default function ProjectsView() {
       });
     } else {
       setExitingIds((prev) => new Set([...prev, task.id]));
-      setTimeout(() => {
+      scheduleExit(() => {
         const now = new Date();
         void db.tasks.update(task.id, {
           status: "done",
@@ -198,7 +216,7 @@ export default function ProjectsView() {
         });
       }, 160);
     }
-  }, []);
+  }, [scheduleExit]);
   const { focusedId, setFocusedId, handleKeyDown } =
     useKeyboardNav(handleToggle);
 
@@ -231,7 +249,7 @@ export default function ProjectsView() {
     const id = p.id;
     const idsSnapshot = [...orderedProjectIdsRef.current];
     setExitingProjectIds((prev) => new Set(prev).add(id));
-    window.setTimeout(() => {
+    scheduleExit(() => {
       void archiveProject(id);
       setExitingProjectIds((prev) => {
         const n = new Set(prev);
@@ -241,7 +259,7 @@ export default function ProjectsView() {
       const next = nextFocusAfterRemove(idsSnapshot, id);
       setFocusedProjectId(next);
     }, ARCHIVE_EXIT_MS);
-  }, [setFocusedProjectId]);
+  }, [setFocusedProjectId, scheduleExit]);
 
   const handleDeleteConfirm = useCallback(() => {
     const p = deleteConfirmRef.current;
@@ -252,6 +270,16 @@ export default function ProjectsView() {
     const next = nextFocusAfterRemove(idsSnapshot, p.id);
     setFocusedProjectId(next);
   }, [setFocusedProjectId]);
+
+  async function handleUrlSave(patch: EditPatch) {
+    if (!urlEditTask) return;
+    await db.tasks.update(urlEditTask.id, {
+      url: patch.url ?? null,
+      updatedAt: new Date(),
+      synced: false,
+    });
+    setUrlEditTask(null);
+  }
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -290,6 +318,17 @@ export default function ProjectsView() {
           if (e.key === "e" || e.key === "E") {
             e.preventDefault();
             dispatchEditTask(focused, null);
+            return;
+          }
+          if (e.key === "u" || e.key === "U") {
+            e.preventDefault();
+            setUrlEditTask(focused);
+            return;
+          }
+          if (e.metaKey && e.key === "o") {
+            e.preventDefault();
+            if (focused.url)
+              window.open(focused.url, "_blank", "noopener,noreferrer");
             return;
           }
         }
@@ -365,6 +404,25 @@ export default function ProjectsView() {
                   detail: { project: focusedProject, field: "emoji" },
                 }),
               );
+              return;
+            }
+            if (e.key === "u" || e.key === "U") {
+              e.preventDefault();
+              window.dispatchEvent(
+                new CustomEvent("sift:edit-project", {
+                  detail: { project: focusedProject, field: "url" },
+                }),
+              );
+              return;
+            }
+            if (e.metaKey && e.key === "o") {
+              e.preventDefault();
+              if (focusedProject.url)
+                window.open(
+                  focusedProject.url,
+                  "_blank",
+                  "noopener,noreferrer",
+                );
               return;
             }
             if (e.key === " ") {
@@ -523,14 +581,37 @@ export default function ProjectsView() {
               ) : null}
               <span className="truncate">{project.name}</span>
             </span>
-            {project.dueDate && (
-              <span className="font-mono text-[10px] text-muted">
-                {project.dueDate.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })}
-              </span>
-            )}
+            <div className="flex items-center gap-2 shrink-0">
+              {project.url && (
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="text-dim hover:text-accent transition-colors"
+                  title={project.url}
+                  aria-label="Visit project link"
+                >
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path
+                      d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M7 1h4m0 0v4m0-4L5 7"
+                      stroke="currentColor"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </a>
+              )}
+              {project.dueDate && (
+                <span className="font-mono text-[10px] text-muted">
+                  {project.dueDate.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </span>
+              )}
+            </div>
           </div>
           <ProgressBar done={done} total={tasks.length} />
         </div>
@@ -692,6 +773,15 @@ export default function ProjectsView() {
         )}
       </div>
 
+      {urlEditTask && (
+        <TaskEditPalette
+          task={urlEditTask}
+          defaultField="url"
+          projects={allProjects}
+          onSave={handleUrlSave}
+          onCancel={() => setUrlEditTask(null)}
+        />
+      )}
       <HintBar
         focusState={focusState as "none" | "project" | "task"}
         archiveHint={archiveHint}
