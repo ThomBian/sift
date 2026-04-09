@@ -8,10 +8,10 @@ function SidebarLink({ to, label }: { to: string; label: string }) {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `block px-3 py-1.5 font-mono text-[11px] transition-colors duration-150 border-l-2 ${
+        `block px-3 py-1.5 font-mono text-[11px] transition-colors duration-150 ${
           isActive
-            ? 'border-accent text-text bg-[#FF4F00]/5'
-            : 'border-transparent text-muted hover:text-text hover:bg-surface-2'
+            ? 'text-text bg-accent/5'
+            : 'text-muted hover:text-text hover:bg-surface-2'
         }`
       }
     >
