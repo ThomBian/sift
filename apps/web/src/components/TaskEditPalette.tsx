@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import type { Task, ProjectWithSpace } from '@sift/shared';
 
-export type EditField = 'title' | 'dueDate' | 'workingDate' | 'project';
-export type EditPatch = Partial<Pick<Task, 'title' | 'dueDate' | 'workingDate' | 'projectId'>>;
+export type EditField = 'title' | 'dueDate' | 'workingDate' | 'project' | 'url';
+export type EditPatch = Partial<Pick<Task, 'title' | 'dueDate' | 'workingDate' | 'projectId' | 'url'>>;
 
 interface TaskEditPaletteProps {
   task: Task;
@@ -19,6 +19,11 @@ interface DateOption {
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function truncateUrl(url: string): string {
+  const bare = url.replace(/^https?:\/\//, '');
+  return bare.length > 18 ? bare.slice(0, 18) + '…' : bare;
 }
 
 function getDateOptions(): DateOption[] {
@@ -47,6 +52,7 @@ export default function TaskEditPalette({
   const [projectId, setProjectId] = useState(task.projectId);
   const [dueDate, setDueDate] = useState<Date | null>(task.dueDate);
   const [workingDate, setWorkingDate] = useState<Date | null>(task.workingDate);
+  const [url, setUrl] = useState<string | null>(task.url ?? null);
   const [activeChip, setActiveChip] = useState<EditField>(defaultField);
   const [search, setSearch] = useState('');
   const [dropdownIndex, setDropdownIndex] = useState(0);
@@ -63,11 +69,12 @@ export default function TaskEditPalette({
     inputRef.current?.focus();
   }, []);
 
-  const showDropdown =
-    activeChip === 'dueDate' || activeChip === 'workingDate' || activeChip === 'project';
+  // url chip acts like title: direct value input, no dropdown
+  const inChipMode = activeChip !== 'title' && activeChip !== 'url';
+  const showDropdown = activeChip === 'dueDate' || activeChip === 'workingDate' || activeChip === 'project';
 
   function buildPatch(): EditPatch {
-    return { title, projectId, dueDate, workingDate };
+    return { title, projectId, dueDate, workingDate, url };
   }
 
   function selectDateOption(option: DateOption) {
@@ -88,15 +95,15 @@ export default function TaskEditPalette({
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Tab') {
       e.preventDefault();
-      const chipOrder = ['project', 'dueDate', 'workingDate'] as const;
+      const chipOrder = ['project', 'dueDate', 'workingDate', 'url'] as const;
       const isFilled = (chip: (typeof chipOrder)[number]) => {
         if (chip === 'dueDate') return dueDate !== null;
         if (chip === 'workingDate') return workingDate !== null;
-        return false; // project always considered navigable
+        if (chip === 'url') return url !== null;
+        return false;
       };
       const currentIndex = chipOrder.indexOf(activeChip as (typeof chipOrder)[number]);
       const startIndex = currentIndex === -1 ? 0 : currentIndex;
-      // Find next unfilled chip; if all filled, just advance one
       let next: (typeof chipOrder)[number] | null = null;
       for (let i = 1; i <= chipOrder.length; i++) {
         const candidate = chipOrder[(startIndex + i) % chipOrder.length];
@@ -108,6 +115,12 @@ export default function TaskEditPalette({
     if (e.key === 'Escape') {
       e.preventDefault();
       onCancel();
+      return;
+    }
+    // URL mode: Enter saves immediately
+    if (e.key === 'Enter' && activeChip === 'url') {
+      e.preventDefault();
+      onSave({ ...buildPatch(), url });
       return;
     }
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
@@ -147,14 +160,17 @@ export default function TaskEditPalette({
   }
 
   const currentProject = projects.find((p) => p.id === projectId);
-  const inChipMode = activeChip !== 'title';
-  const inputValue = inChipMode ? search : title;
-  const inputPlaceholder = inChipMode
-    ? (activeChip === 'project' ? 'Filter projects…' : 'Pick a date…')
-    : '';
+  const inputValue = activeChip === 'url' ? (url ?? '') : inChipMode ? search : title;
+  const inputPlaceholder = activeChip === 'url'
+    ? 'Add a link…'
+    : inChipMode
+      ? (activeChip === 'project' ? 'Filter projects…' : 'Pick a date…')
+      : '';
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (inChipMode) {
+    if (activeChip === 'url') {
+      setUrl(e.target.value || null);
+    } else if (inChipMode) {
       setSearch(e.target.value);
       setDropdownIndex(0);
     } else {
@@ -192,6 +208,7 @@ export default function TaskEditPalette({
         <div className="w-[0.5px] min-w-[0.5px] h-4 bg-border shrink-0" />
         <button
           type="button"
+          aria-label="@p project"
           onClick={() => handleChipClick('project')}
           className={`${chipBase} ${activeChip === 'project' ? chipActive : chipIdle}`}
         >
@@ -211,6 +228,7 @@ export default function TaskEditPalette({
         </button>
         <button
           type="button"
+          aria-label="@d due date"
           onClick={() => handleChipClick('dueDate')}
           className={`${chipBase} ${activeChip === 'dueDate' ? chipActive : chipIdle}`}
         >
@@ -218,10 +236,19 @@ export default function TaskEditPalette({
         </button>
         <button
           type="button"
+          aria-label="@w working date"
           onClick={() => handleChipClick('workingDate')}
           className={`${chipBase} ${activeChip === 'workingDate' ? chipActive : chipIdle}`}
         >
           @w {workingDate ? formatDate(workingDate) : '—'}
+        </button>
+        <button
+          type="button"
+          aria-label="@u url"
+          onClick={() => handleChipClick('url')}
+          className={`${chipBase} ${activeChip === 'url' ? chipActive : chipIdle}`}
+        >
+          @u {url ? truncateUrl(url) : '—'}
         </button>
       </div>
 

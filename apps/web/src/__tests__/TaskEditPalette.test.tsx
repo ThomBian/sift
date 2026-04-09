@@ -17,14 +17,15 @@ const baseTask: Task = {
   createdAt: now,
   updatedAt: now,
   completedAt: null,
+  url: null,
   synced: true,
 };
 
 const space = { id: 's1', name: 'Work', color: '#5E6AD2', createdAt: now, updatedAt: now, synced: true };
 
 const projects: ProjectWithSpace[] = [
-  { id: 'p1', name: 'General', emoji: '📚', spaceId: 's1', dueDate: null, archived: false, createdAt: now, updatedAt: now, synced: true, space },
-  { id: 'p2', name: 'Growth', emoji: '📚', spaceId: 's1', dueDate: null, archived: false, createdAt: now, updatedAt: now, synced: true, space },
+  { id: 'p1', name: 'General', emoji: '📚', spaceId: 's1', dueDate: null, archived: false, url: null, createdAt: now, updatedAt: now, synced: true, space },
+  { id: 'p2', name: 'Growth', emoji: '📚', spaceId: 's1', dueDate: null, archived: false, url: null, createdAt: now, updatedAt: now, synced: true, space },
 ];
 
 describe('TaskEditPalette', () => {
@@ -181,6 +182,38 @@ describe('TaskEditPalette', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Clear' }));
     expect(onSave).toHaveBeenCalledWith(
       expect.objectContaining({ dueDate: null })
+    );
+  });
+
+  it('renders the @u chip', () => {
+    render(
+      <TaskEditPalette
+        task={baseTask}
+        defaultField="title"
+        projects={projects}
+        onSave={vi.fn()}
+        onCancel={vi.fn()}
+      />
+    );
+    expect(screen.getByRole('button', { name: /@u/i })).toBeInTheDocument();
+  });
+
+  it('calls onSave with url when Enter is pressed in url mode', () => {
+    const onSave = vi.fn();
+    render(
+      <TaskEditPalette
+        task={baseTask}
+        defaultField="url"
+        projects={projects}
+        onSave={onSave}
+        onCancel={vi.fn()}
+      />
+    );
+    const input = screen.getByRole('textbox');
+    fireEvent.change(input, { target: { value: 'https://example.com' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(onSave).toHaveBeenCalledWith(
+      expect.objectContaining({ url: 'https://example.com' })
     );
   });
 });
