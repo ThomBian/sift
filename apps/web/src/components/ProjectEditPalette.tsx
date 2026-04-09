@@ -9,16 +9,16 @@ interface ProjectEditPaletteProps {
   onClose: () => void;
   spaceId?: string;
   project?: Project;
-  initialField?: 'name' | 'emoji' | 'dueDate';
+  initialField?: 'name' | 'emoji' | 'dueDate' | 'url';
 }
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString('fr-FR');
 }
 
-type ActiveChip = 'name' | 'emoji' | 'dueDate';
+type ActiveChip = 'name' | 'emoji' | 'dueDate' | 'url';
 
-const TAB_ORDER: ActiveChip[] = ['name', 'emoji', 'dueDate'];
+const TAB_ORDER: ActiveChip[] = ['name', 'emoji', 'dueDate', 'url'];
 
 const CHIP_BASE =
   'inline-flex items-center gap-1 px-[9px] py-[3px] border-[0.5px] font-mono text-[11.5px] font-medium cursor-pointer whitespace-nowrap transition-colors duration-150';
@@ -26,6 +26,11 @@ const CHIP_BASE =
 function chipClass(chip: ActiveChip, activeChip: ActiveChip, isSet: boolean): string {
   const isActive = activeChip === chip;
   if (chip === 'emoji') {
+    if (isActive) return `${CHIP_BASE} border-accent text-accent bg-accent/5`;
+    if (isSet)    return `${CHIP_BASE} border-accent/30 text-accent bg-accent/5`;
+    return              `${CHIP_BASE} border-border text-muted bg-surface`;
+  }
+  if (chip === 'url') {
     if (isActive) return `${CHIP_BASE} border-accent text-accent bg-accent/5`;
     if (isSet)    return `${CHIP_BASE} border-accent/30 text-accent bg-accent/5`;
     return              `${CHIP_BASE} border-border text-muted bg-surface`;
@@ -46,6 +51,7 @@ export default function ProjectEditPalette({
   const [name, setName] = useState('');
   const [emoji, setEmoji] = useState<string | null>(null);
   const [dueDate, setDueDate] = useState<Date | null>(null);
+  const [url, setUrl] = useState<string | null>(null);
   const [activeChip, setActiveChip] = useState<ActiveChip>(initialField);
   const [query, setQuery] = useState('');
   const [isClosing, setIsClosing] = useState(false);
@@ -68,6 +74,7 @@ export default function ProjectEditPalette({
     setName(project?.name ?? '');
     setEmoji(project?.emoji ?? null);
     setDueDate(project?.dueDate ?? null);
+    setUrl(project?.url ?? null);
     setActiveChip(initialField);
     setQuery('');
   }, [isOpen, project, initialField]);
@@ -85,6 +92,7 @@ export default function ProjectEditPalette({
         name: trimmed,
         emoji,
         dueDate,
+        url,
         updatedAt: now,
         synced: false,
       });
@@ -95,6 +103,7 @@ export default function ProjectEditPalette({
         emoji: emoji ?? getRandomEmoji(),
         spaceId: spaceId!,
         dueDate,
+        url: null,
         archived: false,
         createdAt: now,
         updatedAt: now,
@@ -133,6 +142,8 @@ export default function ProjectEditPalette({
   function handleClear() {
     if (activeChip === 'emoji') {
       setEmoji(null);
+    } else if (activeChip === 'url') {
+      setUrl(null);
     } else {
       setDueDate(null);
     }
@@ -152,7 +163,7 @@ export default function ProjectEditPalette({
       handleTabNext();
       return;
     }
-    if (e.key === 'Enter' && activeChip === 'name') {
+    if (e.key === 'Enter' && (activeChip === 'name' || activeChip === 'url')) {
       e.preventDefault();
       void handleConfirm();
     }
@@ -160,29 +171,36 @@ export default function ProjectEditPalette({
 
   if (!isOpen && !isClosing) return null;
 
-  const inNameMode = activeChip === 'name';
-
-  const inputValue = inNameMode ? name : query;
+  const inputValue = activeChip === 'name' ? name : activeChip === 'url' ? (url ?? '') : query;
   const inputPlaceholder = activeChip === 'emoji'
     ? 'Search emojis…'
     : activeChip === 'dueDate'
       ? 'Pick a date…'
-      : 'Project name…';
+      : activeChip === 'url'
+        ? 'Add a link…'
+        : 'Project name…';
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
-    if (inNameMode) {
-      const val = e.target.value;
-      if (val.endsWith('@c')) {
-        setName(val.slice(0, -2));
-        handleChipClick('emoji');
-      } else if (val.endsWith('@d')) {
-        setName(val.slice(0, -2));
-        handleChipClick('dueDate');
-      } else {
-        setName(val);
-      }
-    } else {
+    if (activeChip === 'url') {
+      setUrl(e.target.value || null);
+      return;
+    }
+    if (activeChip !== 'name') {
       setQuery(e.target.value);
+      return;
+    }
+    const val = e.target.value;
+    if (val.endsWith('@c')) {
+      setName(val.slice(0, -2));
+      handleChipClick('emoji');
+    } else if (val.endsWith('@d')) {
+      setName(val.slice(0, -2));
+      handleChipClick('dueDate');
+    } else if (val.endsWith('@u')) {
+      setName(val.slice(0, -2));
+      handleChipClick('url');
+    } else {
+      setName(val);
     }
   }
 
@@ -241,6 +259,21 @@ export default function ProjectEditPalette({
               <><span className="text-[10px] opacity-55">@d</span>&nbsp;due</>
             )}
           </button>
+          <button
+            type="button"
+            onClick={() => handleChipClick('url')}
+            className={chipClass('url', activeChip, url !== null)}
+          >
+            {url ? (
+              <>
+                <span className="text-[10px] opacity-55">@u</span>&nbsp;
+                {url.replace(/^https?:\/\//, '').slice(0, 15)}
+                {url.replace(/^https?:\/\//, '').length > 15 ? '…' : ''}
+              </>
+            ) : (
+              <><span className="text-[10px] opacity-55">@u</span>&nbsp;link</>
+            )}
+          </button>
         </div>
 
         {/* Emoji picker — inline below input */}
@@ -275,6 +308,16 @@ export default function ProjectEditPalette({
               Clear
             </button>
           </>
+        )}
+
+        {activeChip === 'url' && url && (
+          <button
+            type="button"
+            onClick={handleClear}
+            className="flex items-center w-full px-4 py-1.5 border-t border-[0.5px] border-border bg-transparent text-muted font-mono text-[12px] cursor-pointer hover:text-text transition-colors duration-150"
+          >
+            Clear
+          </button>
         )}
       </div>
     </div>
