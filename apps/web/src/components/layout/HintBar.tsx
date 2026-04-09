@@ -21,6 +21,8 @@ function buildProjectHints(
     { keys: ["E"], label: "Edit", hot: true },
     { keys: ["D"], label: "Due date", hot: true },
     { keys: ["C"], label: "Icon", hot: true },
+    { keys: ["U"], label: "Link", hot: true },
+    { keys: ["⌘O"], label: "Open link", hot: true },
     { keys: ["Space"], label: projectExpanded ? "Close" : "Open", hot: true },
   ];
   if (archiveHint) {
@@ -30,7 +32,8 @@ function buildProjectHints(
       hot: true,
     });
   }
-  base.push({ keys: ["X"], label: "Delete", hot: true });
+  base.push({ keys: ["X"], label: "delete", hot: true });
+  base.push({ keys: ["Esc"], label: "Deselect" });
   return base;
 }
 
@@ -40,8 +43,10 @@ const TASK_HINTS: Hint[] = [
   { keys: ["W"], label: "Today", hot: true },
   { keys: ["P"], label: "Project", hot: true },
   { keys: ["E"], label: "Edit", hot: true },
+  { keys: ["U"], label: "Link", hot: true },
+  { keys: ["⌘O"], label: "Open link", hot: true },
   { keys: ["⌫"], label: "Archive" },
-  { keys: ["Space"], label: "Close", hot: true },
+  { keys: ["Esc"], label: "Back" },
 ];
 
 function Key({ label, hot }: { label: string; hot?: boolean }) {
