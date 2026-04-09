@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useState, useCallback } from "react";
 import { SmartInput, type ProjectWithSpace, type Task, type ChipFocus, type SmartInputValues } from "@sift/shared";
 import { useSpacesProjects } from "../hooks/useSpacesProjects";
 import { db } from "../lib/db";
@@ -58,6 +58,7 @@ export default function CommandPalette({
 }: CommandPaletteProps) {
   const { spacesWithProjects } = useSpacesProjects();
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isClosing, setIsClosing] = useState(false);
 
   const projects: ProjectWithSpace[] = useMemo(
     () =>
@@ -67,13 +68,22 @@ export default function CommandPalette({
     [spacesWithProjects],
   );
 
+  const handleClose = useCallback(() => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsClosing(false);
+      onClose();
+    }, 100);
+  }, [onClose]);
+
   useEffect(() => {
     if (isOpen) {
+      setIsClosing(false);
       requestAnimationFrame(() => inputRef.current?.focus());
     }
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen && !isClosing) return null;
 
   const isEditing = editTask != null;
 
@@ -90,10 +100,10 @@ export default function CommandPalette({
     <div
       className="fixed inset-0 z-50 flex items-start justify-center pt-[18vh] bg-black/30 backdrop-blur-[2px]"
       onPointerDown={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget) handleClose();
       }}
     >
-      <div className="animate-palette-in w-full max-w-[820px] border-[0.5px] border-border bg-bg/95 floating-panel shadow-2xl">
+      <div className={`${isClosing ? 'animate-palette-out' : 'animate-palette-in'} w-full max-w-[820px] border-[0.5px] border-border bg-bg/95 floating-panel shadow-2xl`}>
         <div className="flex items-center px-3 py-1.5 border-b border-border">
           <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-dim">
             {isEditing ? `Editing · ${editTask.title}` : "New task"}

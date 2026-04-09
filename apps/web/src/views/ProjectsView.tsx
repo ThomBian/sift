@@ -12,7 +12,7 @@ function ProgressBar({ done, total }: { done: number; total: number }) {
   return (
     <div className="flex items-center gap-2">
       <div className="flex-1 h-1 bg-border overflow-hidden">
-        <div className="h-full bg-accent transition-all duration-300" style={{ width: `${pct}%` }} />
+        <div className="h-full bg-accent transition-[width] duration-200" style={{ width: `${pct}%` }} />
       </div>
       <span className="text-xs text-muted font-mono tabular-nums">{done}/{total}</span>
     </div>
@@ -40,7 +40,7 @@ export default function ProjectsView() {
         const now = new Date();
         void db.tasks.update(task.id, { status: 'done', completedAt: now, updatedAt: now, synced: false });
         setExitingIds((prev) => { const n = new Set(prev); n.delete(task.id); return n; });
-      }, 320);
+      }, 160);
     }
   }, []);
   const { focusedId, setFocusedId, handleKeyDown } = useKeyboardNav(handleToggle);
