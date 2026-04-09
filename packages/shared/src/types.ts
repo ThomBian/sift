@@ -15,6 +15,7 @@ export interface Project {
   emoji: string | null;   // single emoji character
   spaceId: string;    // FK → Space
   dueDate: Date | null;
+  archived: boolean;
   createdAt: Date;
   updatedAt: Date;
   synced: boolean;

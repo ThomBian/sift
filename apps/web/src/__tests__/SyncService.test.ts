@@ -43,6 +43,7 @@ function makeProject(overrides?: Partial<Project>): Project {
     emoji: '📚',
     spaceId: 'space-1',
     dueDate: null,
+    archived: false,
     createdAt: now,
     updatedAt: now,
     synced: false,

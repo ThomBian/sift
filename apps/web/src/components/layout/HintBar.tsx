@@ -12,14 +12,20 @@ const NONE_HINTS: Hint[] = [
   { keys: ['← →'], label: 'Switch view' },
 ];
 
-const PROJECT_HINTS: Hint[] = [
-  { keys: ['N'], label: 'New', hot: true },
-  { keys: ['E'], label: 'Edit', hot: true },
-  { keys: ['D'], label: 'Due date', hot: true },
-  { keys: ['C'], label: 'Icon', hot: true },
-  { keys: ['O'], label: 'Open', hot: true },
-  { keys: ['Esc'], label: 'Deselect' },
-];
+function buildProjectHints(archiveHint?: 'archive' | 'unarchive'): Hint[] {
+  const base: Hint[] = [
+    { keys: ['N'], label: 'New', hot: true },
+    { keys: ['E'], label: 'Edit', hot: true },
+    { keys: ['D'], label: 'Due date', hot: true },
+    { keys: ['C'], label: 'Icon', hot: true },
+    { keys: ['O'], label: 'Open', hot: true },
+  ];
+  if (archiveHint) {
+    base.push({ keys: ['A'], label: archiveHint, hot: true });
+  }
+  base.push({ keys: ['Esc'], label: 'Deselect' });
+  return base;
+}
 
 const TASK_HINTS: Hint[] = [
   { keys: ['Enter'], label: 'Done', hot: true },
@@ -46,11 +52,19 @@ function Key({ label, hot }: { label: string; hot?: boolean }) {
   );
 }
 
-export default function HintBar({ focusState = 'none' }: { focusState?: FocusState }) {
+export default function HintBar({
+  focusState = 'none',
+  archiveHint,
+}: {
+  focusState?: FocusState;
+  archiveHint?: 'archive' | 'unarchive';
+}) {
   const hints =
-    focusState === 'task' ? TASK_HINTS
-    : focusState === 'project' ? PROJECT_HINTS
-    : NONE_HINTS;
+    focusState === 'task'
+      ? TASK_HINTS
+      : focusState === 'project'
+        ? buildProjectHints(archiveHint)
+        : NONE_HINTS;
 
   return (
     <div className="flex items-center gap-6 px-4 py-2 border-t border-[0.5px] border-border bg-surface shrink-0 overflow-x-auto">

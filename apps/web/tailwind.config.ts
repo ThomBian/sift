@@ -29,6 +29,8 @@ const config: Config = {
         'task-exit': 'task-exit 150ms cubic-bezier(0.23, 1, 0.32, 1) forwards',
         'palette-in': 'palette-in 150ms cubic-bezier(0.34, 1.56, 0.64, 1) both',
         'palette-out': 'palette-out 100ms cubic-bezier(0.23, 1, 0.32, 1) forwards',
+        'modal-in': 'modal-in 150ms cubic-bezier(0.34, 1.56, 0.64, 1) both',
+        'modal-out': 'modal-out 120ms ease-in forwards',
       },
       keyframes: {
         'task-enter': {
@@ -46,6 +48,14 @@ const config: Config = {
         'palette-out': {
           from: { opacity: '1', transform: 'translateY(0) scale(1)' },
           to: { opacity: '0', transform: 'translateY(-4px) scale(0.98)' },
+        },
+        'modal-in': {
+          from: { opacity: '0', transform: 'scale(0.96) translateY(6px)' },
+          to: { opacity: '1', transform: 'scale(1) translateY(0)' },
+        },
+        'modal-out': {
+          from: { opacity: '1', transform: 'scale(1) translateY(0)' },
+          to: { opacity: '0', transform: 'scale(0.96) translateY(6px)' },
         },
       },
       transitionTimingFunction: {

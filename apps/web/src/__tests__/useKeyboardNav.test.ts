@@ -114,6 +114,7 @@ describe('useKeyboardNav', () => {
       emoji: '📚',
       spaceId: 'space-1',
       dueDate: null,
+      archived: false,
       createdAt: new Date(),
       updatedAt: new Date(),
       synced: true,
@@ -151,6 +152,7 @@ describe('useKeyboardNav', () => {
       emoji: '📚',
       spaceId: 'space-1',
       dueDate: null,
+      archived: false,
       createdAt: new Date(),
       updatedAt: new Date(),
       synced: true,
@@ -186,6 +188,7 @@ describe('useKeyboardNav', () => {
       emoji: '📚',
       spaceId: 'space-1',
       dueDate: null,
+      archived: false,
       createdAt: new Date(),
       updatedAt: new Date(),
       synced: true,
@@ -204,6 +207,41 @@ describe('useKeyboardNav', () => {
     expect(updated!.status).toBe('archived');
   });
 
+  it('Enter does not change archived task or move focus', async () => {
+    await db.spaces.add({
+      id: 'space-1',
+      name: 'Work',
+      color: '#5E6AD2',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      synced: true,
+    });
+    await db.projects.add({
+      id: 'project-1',
+      name: 'General',
+      emoji: '📚',
+      spaceId: 'space-1',
+      dueDate: null,
+      archived: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      synced: true,
+    });
+    const archivedTask = { ...TASKS[0], status: 'archived' as const, completedAt: new Date() };
+    await db.tasks.add(archivedTask);
+
+    const { result } = renderHook(() => useKeyboardNav());
+    act(() => result.current.setFocusedId('a'));
+
+    await act(async () => {
+      result.current.handleKeyDown(makeKeyEvent('Enter'), [archivedTask]);
+    });
+
+    const updated = await db.tasks.get('a');
+    expect(updated!.status).toBe('archived');
+    expect(result.current.focusedId).toBe('a');
+  });
+
   it('Delete works like Backspace for archiving', async () => {
     await db.spaces.add({
       id: 'space-1',
@@ -219,6 +257,7 @@ describe('useKeyboardNav', () => {
       emoji: '📚',
       spaceId: 'space-1',
       dueDate: null,
+      archived: false,
       createdAt: new Date(),
       updatedAt: new Date(),
       synced: true,

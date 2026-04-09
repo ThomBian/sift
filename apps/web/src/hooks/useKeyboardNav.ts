@@ -54,6 +54,10 @@ export function useKeyboardNav(
         if (focusedId === null) break;
         const task = currentIndex !== -1 ? tasks[currentIndex] : undefined;
         if (!task) break;
+        if (task.status === 'archived') {
+          e.preventDefault();
+          break;
+        }
 
         if (onToggleDone) {
           onToggleDone(task);
@@ -91,6 +95,8 @@ export function useKeyboardNav(
       case 'Backspace':
       case 'Delete': {
         if (focusedId === null) break;
+        const task = currentIndex !== -1 ? tasks[currentIndex] : undefined;
+        if (task?.status === 'archived') break;
         const now = new Date();
         void db.tasks.update(focusedId, {
           status: 'archived',

@@ -29,6 +29,14 @@ export class AppDatabase extends Dexie {
       });
     });
 
+    this.version(4).stores({
+      projects: 'id, spaceId, dueDate, archived, updatedAt, synced',
+    }).upgrade(tx => {
+      return tx.table('projects').toCollection().modify((project: any) => {
+        project.archived = false;
+      });
+    });
+
     this.on('ready', () => this._seed());
   }
 
@@ -54,6 +62,7 @@ export class AppDatabase extends Dexie {
       emoji: getRandomEmoji(),
       spaceId,
       dueDate: null,
+      archived: false,
       createdAt: now,
       updatedAt: now,
       synced: false,
@@ -63,3 +72,50 @@ export class AppDatabase extends Dexie {
 
 // Singleton for the web app (extension uses its own instance)
 export const db = new AppDatabase();
+
+export async function archiveProject(projectId: string): Promise<void> {
+  const now = new Date();
+  await db.transaction('rw', db.projects, db.tasks, async () => {
+    const project = await db.projects.get(projectId);
+    if (!project) return;
+    await db.projects.update(projectId, {
+      archived: true,
+      updatedAt: now,
+      synced: false,
+    });
+    await db.tasks.where('projectId').equals(projectId).modify({
+      status: 'archived',
+      updatedAt: now,
+      synced: false,
+    });
+  });
+}
+
+export async function unarchiveProject(projectId: string): Promise<void> {
+  const now = new Date();
+  await db.transaction('rw', db.projects, db.tasks, async () => {
+    const project = await db.projects.get(projectId);
+    if (!project) return;
+    await db.projects.update(projectId, {
+      archived: false,
+      updatedAt: now,
+      synced: false,
+    });
+    const tasks = await db.tasks.where('projectId').equals(projectId).toArray();
+    await Promise.all(
+      tasks.map((task) => {
+        const status =
+          task.completedAt != null
+            ? ('done' as const)
+            : task.workingDate
+              ? ('todo' as const)
+              : ('inbox' as const);
+        return db.tasks.update(task.id, {
+          status,
+          updatedAt: now,
+          synced: false,
+        });
+      })
+    );
+  });
+}

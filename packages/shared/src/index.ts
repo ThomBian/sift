@@ -1,5 +1,5 @@
 export type { Space, Project, Task, TaskStatus } from './types';
-export { AppDatabase, db } from './db';
+export { AppDatabase, db, archiveProject, unarchiveProject } from './db';
 export { EMOJI_POOL, ALL_EMOJIS, getRandomEmoji, searchEmojis } from './emojiPool';
 export type { EmojiCategory } from './emojiPool';
 export { SmartInput } from './SmartInput/SmartInput';

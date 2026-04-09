@@ -54,42 +54,67 @@ export interface ProjectGroup {
 export interface SpaceGroup {
   space: Space;
   projects: ProjectGroup[];
+  archivedProjects: ProjectGroup[];
 }
 
-/** Projects: all tasks (including done) grouped by space → project */
-export function useProjectTasks(): SpaceGroup[] {
-  return (
-    useLiveQuery(async () => {
-      const [spacesRaw, projectsRaw, tasks] = await Promise.all([
+function taskCountsAsDone(t: Task): boolean {
+  return t.status === 'done' || (t.status === 'archived' && t.completedAt != null);
+}
+
+function tasksForProject(tasks: Task[], project: Project): Task[] {
+  return tasks
+    .filter((t) => {
+      if (t.projectId !== project.id) return false;
+      if (project.archived) return true;
+      return t.status !== 'archived';
+    })
+    .sort((a, b) => {
+      const aDone = taskCountsAsDone(a) ? 1 : 0;
+      const bDone = taskCountsAsDone(b) ? 1 : 0;
+      if (aDone !== bDone) return aDone - bDone;
+      if (!a.dueDate && !b.dueDate) return 0;
+      if (!a.dueDate) return 1;
+      if (!b.dueDate) return -1;
+      return a.dueDate.getTime() - b.dueDate.getTime();
+    });
+}
+
+type ProjectTasksLive = { groups: SpaceGroup[]; archivedCount: number };
+
+/** Projects: tasks grouped by space → active / archived project lists (archived projects include archived-status tasks) */
+export function useProjectTasks(): readonly [SpaceGroup[], number] {
+  const data =
+    useLiveQuery(async (): Promise<ProjectTasksLive> => {
+      const [spacesRaw, projectsRaw, allTasks] = await Promise.all([
         db.spaces.toArray(),
         db.projects.toArray(),
-        db.tasks.where('status').notEqual('archived').toArray(),
+        db.tasks.toArray(),
       ]);
       const spaces = spacesRaw.sort((a, b) => a.name.localeCompare(b.name));
       const projects = projectsRaw.sort((a, b) => a.name.localeCompare(b.name));
 
-      return spaces.map((space) => {
+      let archivedCount = 0;
+      const groups = spaces.map((space) => {
         const spaceProjects = projects.filter((p) => p.spaceId === space.id);
+        const active = spaceProjects.filter((p) => !p.archived);
+        const archived = spaceProjects.filter((p) => p.archived);
+        archivedCount += archived.length;
         return {
           space,
-          projects: spaceProjects.map((project) => ({
+          projects: active.map((project) => ({
             project,
-            tasks: tasks
-              .filter((t) => t.projectId === project.id)
-              .sort((a, b) => {
-                const aDone = a.status === 'done' ? 1 : 0;
-                const bDone = b.status === 'done' ? 1 : 0;
-                if (aDone !== bDone) return aDone - bDone;
-                if (!a.dueDate && !b.dueDate) return 0;
-                if (!a.dueDate) return 1;
-                if (!b.dueDate) return -1;
-                return a.dueDate.getTime() - b.dueDate.getTime();
-              }),
+            tasks: tasksForProject(allTasks, project),
+          })),
+          archivedProjects: archived.map((project) => ({
+            project,
+            tasks: tasksForProject(allTasks, project),
           })),
         };
       });
-    }, []) ?? []
-  );
+      return { groups, archivedCount };
+    }, []) ?? { groups: [], archivedCount: 0 };
+
+  return [data.groups, data.archivedCount] as const;
 }
 
 export function useTasks(view: 'inbox' | 'today'): Task[] {

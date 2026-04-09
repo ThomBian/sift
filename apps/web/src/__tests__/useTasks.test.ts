@@ -25,6 +25,7 @@ function makeProject(overrides?: Partial<Project>): Project {
     emoji: '📚',
     spaceId: 'space-1',
     dueDate: null,
+    archived: false,
     createdAt: now,
     updatedAt: now,
     synced: true,
@@ -131,16 +132,19 @@ describe('useProjectTasks', () => {
     ]);
 
     const { result } = renderHook(() => useProjectTasks());
-    await waitFor(() => expect(result.current.length).toBeGreaterThan(0));
+    await waitFor(() => expect(result.current[0].length).toBeGreaterThan(0));
 
-    expect(result.current).toHaveLength(2);
-    const workSpace = result.current.find((g) => g.space.id === 'space-1');
-    const personalSpace = result.current.find((g) => g.space.id === 'space-2');
+    const [groups] = result.current;
+    expect(groups).toHaveLength(2);
+    const workSpace = groups.find((g) => g.space.id === 'space-1');
+    const personalSpace = groups.find((g) => g.space.id === 'space-2');
 
     expect(workSpace).toBeDefined();
     expect(workSpace!.projects[0].tasks).toHaveLength(1);
+    expect(workSpace!.archivedProjects).toHaveLength(0);
     expect(personalSpace).toBeDefined();
     expect(personalSpace!.projects[0].tasks).toHaveLength(1);
+    expect(personalSpace!.archivedProjects).toHaveLength(0);
   });
 
   it('includes done tasks in project groups (for progress bars)', async () => {
@@ -150,8 +154,56 @@ describe('useProjectTasks', () => {
     ]);
 
     const { result } = renderHook(() => useProjectTasks());
-    await waitFor(() => expect(result.current.length).toBeGreaterThan(0));
+    await waitFor(() => expect(result.current[0].length).toBeGreaterThan(0));
 
-    expect(result.current[0].projects[0].tasks).toHaveLength(2);
+    expect(result.current[0][0].projects[0].tasks).toHaveLength(2);
+  });
+
+  it('splits active vs archived projects and returns archivedCount', async () => {
+    await db.projects.add(
+      makeProject({ id: 'project-arch', name: 'Old', spaceId: 'space-1', archived: true })
+    );
+    await db.tasks.bulkAdd([
+      makeTask({ id: 't1', status: 'todo' }),
+      makeTask({ id: 't-arch', projectId: 'project-arch', status: 'todo' }),
+    ]);
+
+    const { result } = renderHook(() => useProjectTasks());
+    await waitFor(() => expect(result.current[1]).toBe(1));
+
+    const [groups, archivedCount] = result.current;
+    expect(archivedCount).toBe(1);
+    const work = groups.find((g) => g.space.id === 'space-1');
+    expect(work!.projects).toHaveLength(1);
+    expect(work!.projects[0].project.id).toBe('project-1');
+    expect(work!.archivedProjects).toHaveLength(1);
+    expect(work!.archivedProjects[0].project.id).toBe('project-arch');
+    expect(work!.archivedProjects[0].tasks).toHaveLength(1);
+  });
+
+  it('includes archived-status tasks under archived projects (e.g. after project archive)', async () => {
+    await db.projects.add(
+      makeProject({ id: 'project-arch', name: 'Old', spaceId: 'space-1', archived: true })
+    );
+    const completedAt = new Date();
+    await db.tasks.bulkAdd([
+      makeTask({ id: 't1', status: 'todo' }),
+      makeTask({
+        id: 't-done-arch',
+        projectId: 'project-arch',
+        status: 'archived',
+        completedAt,
+      }),
+    ]);
+
+    const { result } = renderHook(() => useProjectTasks());
+    await waitFor(() => expect(result.current[1]).toBe(1));
+
+    const [groups] = result.current;
+    const work = groups.find((g) => g.space.id === 'space-1');
+    const archGroup = work!.archivedProjects.find((g) => g.project.id === 'project-arch');
+    expect(archGroup?.tasks).toHaveLength(1);
+    expect(archGroup?.tasks[0].status).toBe('archived');
+    expect(archGroup?.tasks[0].completedAt).toEqual(completedAt);
   });
 });

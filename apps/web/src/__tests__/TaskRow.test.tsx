@@ -20,6 +20,7 @@ const project: Project = {
   emoji: '📚',
   spaceId: 'space-1',
   dueDate: null,
+  archived: false,
   createdAt: now,
   updatedAt: now,
   synced: true,
@@ -133,6 +134,27 @@ describe('TaskRow', () => {
     const dateEl = screen.getByTestId('due-date');
     expect(dateEl.className).toMatch(/text-red/);
     expect(dateEl.querySelector('svg')).toBeTruthy();
+  });
+
+  it('shows done styling when archived but completedAt is set (project archive)', () => {
+    const archivedDone: Task = {
+      ...baseTask,
+      status: 'archived',
+      completedAt: new Date(),
+    };
+
+    render(
+      <TaskRow
+        task={archivedDone}
+        project={project}
+        space={space}
+        isFocused={false}
+        onFocus={vi.fn()}
+      />
+    );
+
+    const checkbox = screen.getByRole('button').querySelector('.border-green');
+    expect(checkbox).toBeTruthy();
   });
 
   it('does not show due date in red when task is done', () => {

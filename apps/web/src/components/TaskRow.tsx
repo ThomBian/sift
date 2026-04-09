@@ -17,12 +17,12 @@ function formatDate(date: Date): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-const TODAY = new Date();
-TODAY.setHours(0, 0, 0, 0);
-
 function isLate(task: Task): boolean {
   if (!task.dueDate || task.status === 'done') return false;
-  return task.dueDate < TODAY;
+  if (task.completedAt != null) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return task.dueDate < today;
 }
 
 export default function TaskRow({
@@ -41,8 +41,9 @@ export default function TaskRow({
     if (isFocused) rowRef.current?.scrollIntoView?.({ block: 'nearest' });
   }, [isFocused]);
   const late = isLate(task);
-  // During exit animation, show the row as if it's done
-  const showDone = exiting || task.status === 'done';
+  // During exit animation, show the row as if it's done; archived tasks keep done visuals via completedAt
+  const showDone =
+    exiting || task.status === 'done' || (task.status === 'archived' && task.completedAt != null);
 
   return (
     <div
@@ -113,6 +114,7 @@ export default function TaskRow({
           onClick={(e) => e.stopPropagation()}
           className="shrink-0 transition-colors text-muted hover:text-accent"
           title={task.sourceUrl}
+          aria-label="Open source"
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
             <path

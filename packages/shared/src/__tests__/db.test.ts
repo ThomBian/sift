@@ -25,6 +25,7 @@ describe('AppDatabase', () => {
     expect(projects).toHaveLength(1);
     expect(projects[0].name).toBe('General');
     expect(projects[0].spaceId).toBe(spaces[0].id);
+    expect(projects[0].archived).toBe(false);
     expect(projects[0].synced).toBe(false);
   });
 

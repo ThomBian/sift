@@ -34,17 +34,20 @@ export default function ProjectEditPalette({
   const [query, setQuery] = useState('');
   const [isClosing, setIsClosing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<Element | null>(null);
 
   const handleClose = useCallback(() => {
     setIsClosing(true);
     setTimeout(() => {
       setIsClosing(false);
       onClose();
+      (triggerRef.current as HTMLElement | null)?.focus();
     }, 100);
   }, [onClose]);
 
   useEffect(() => {
     if (!isOpen) return;
+    triggerRef.current = document.activeElement;
     setIsClosing(false);
     setName(project?.name ?? '');
     setEmoji(project?.emoji ?? null);
@@ -76,6 +79,7 @@ export default function ProjectEditPalette({
         emoji: emoji ?? getRandomEmoji(),
         spaceId: spaceId!,
         dueDate,
+        archived: false,
         createdAt: now,
         updatedAt: now,
         synced: false,
@@ -240,6 +244,7 @@ export default function ProjectEditPalette({
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             placeholder={inputPlaceholder}
+            aria-label={inputPlaceholder}
             className="flex-1 bg-transparent border-none text-[13.5px] text-text font-sans min-w-0"
             style={{ outline: 'none', letterSpacing: '-0.1px' }}
           />
