@@ -37,6 +37,21 @@ export class AppDatabase extends Dexie {
       });
     });
 
+    this.version(5).stores({
+      tasks:    'id, projectId, status, workingDate, dueDate, updatedAt, synced',
+      projects: 'id, spaceId, dueDate, archived, updatedAt, synced',
+    }).upgrade(tx => {
+      return Promise.all([
+        tx.table('tasks').toCollection().modify((task: any) => {
+          task.url = task.sourceUrl ?? null;
+          delete task.sourceUrl;
+        }),
+        tx.table('projects').toCollection().modify((project: any) => {
+          project.url = null;
+        }),
+      ]);
+    });
+
     this.on('ready', () => this._seed());
   }
 
@@ -63,6 +78,7 @@ export class AppDatabase extends Dexie {
       spaceId,
       dueDate: null,
       archived: false,
+      url: null,
       createdAt: now,
       updatedAt: now,
       synced: false,

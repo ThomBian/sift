@@ -49,6 +49,7 @@ describe('AppDatabase', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
       completedAt: null,
+      url: null,
       synced: false,
     };
     await db.tasks.add(task);

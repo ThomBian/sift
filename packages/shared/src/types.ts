@@ -16,6 +16,7 @@ export interface Project {
   spaceId: string;    // FK → Space
   dueDate: Date | null;
   archived: boolean;
+  url: string | null;
   createdAt: Date;
   updatedAt: Date;
   synced: boolean;
@@ -35,6 +36,6 @@ export interface Task {
   createdAt: Date;
   updatedAt: Date;            // last-write-wins sync key
   completedAt: Date | null;
-  sourceUrl?: string;         // URL captured by extension
+  url: string | null;
   synced: boolean;
 }
