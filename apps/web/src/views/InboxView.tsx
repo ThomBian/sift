@@ -73,6 +73,14 @@ export default function InboxView() {
           onFocus={setFocusedId}
           onToggle={handleToggle}
           exitingIds={exitingIds}
+          emptyState={
+            <div className="flex flex-col items-center justify-center gap-1.5 px-4 py-16 text-center">
+              <p className="font-mono text-[11px] text-muted uppercase tracking-[0.15em]">Inbox clear.</p>
+              <p className="font-mono text-[10px] text-dim max-w-[260px] leading-relaxed">
+                Press ⌘K to capture a task, then assign a date to move it to Today.
+              </p>
+            </div>
+          }
         />
       </div>
 

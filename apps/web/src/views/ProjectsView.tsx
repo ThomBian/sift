@@ -14,10 +14,19 @@ function ProgressBar({ done, total }: { done: number; total: number }) {
   const pct = total === 0 ? 0 : Math.round((done / total) * 100);
   return (
     <div className="flex items-center gap-2">
-      <div className="flex-1 h-1 bg-border overflow-hidden">
-        <div className="h-full bg-accent transition-[width] duration-200" style={{ width: `${pct}%` }} />
+      <div
+        className="flex-1 h-1 bg-border overflow-hidden"
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={pct}
+        aria-label={`${done} of ${total} tasks done`}
+      >
+        <div className="h-full bg-accent transition-[width] duration-150" style={{ width: `${pct}%` }} />
       </div>
-      <span className="text-xs text-muted font-mono tabular-nums">{done}/{total}</span>
+      <span className="text-xs text-muted font-mono tabular-nums" aria-hidden="true">
+        {done}/{total}
+      </span>
     </div>
   );
 }
@@ -387,10 +396,14 @@ export default function ProjectsView() {
     const isExpanded = expandedProjectId === project.id;
     const exiting = exitingProjectIds.has(project.id);
 
-    const focusGlow =
-      !archived && isFocusedProject ? { boxShadow: '0 0 8px rgba(255, 79, 0, 0.2)' } : undefined;
+    const focusShadowClass = isFocusedProject
+      ? archived
+        ? 'shadow-laser-archive'
+        : 'shadow-laser-soft'
+      : '';
+    // When focused, raise opacity so the glow and accent text are clearly visible
     const archivedRowClass = archived
-      ? `opacity-40 ${isFocusedProject ? 'outline-none border-l-2 border-accent/50' : ''}`
+      ? isFocusedProject ? 'opacity-70' : 'opacity-40'
       : '';
     const enterDelay =
       archived && staggerIndex !== undefined && !exiting
@@ -402,13 +415,10 @@ export default function ProjectsView() {
         key={project.id}
         role="button"
         tabIndex={archived ? -1 : 0}
-        className={`mb-4 transition-all duration-150 ${archivedRowClass} ${
+        className={`mb-4 transition-[opacity,box-shadow] duration-150 ease-spring ${focusShadowClass} ${archivedRowClass} ${
           exiting ? 'animate-task-exit' : archived ? 'animate-task-enter' : ''
         }`}
-        style={{
-          ...focusGlow,
-          ...enterDelay,
-        }}
+        style={enterDelay}
         onClick={() => setFocusedProjectId(project.id)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -421,7 +431,7 @@ export default function ProjectsView() {
           <div className="flex items-center justify-between mb-1.5">
             <span
               className={`font-mono text-[11px] flex items-center gap-1.5 min-w-0 ${
-                isFocusedProject && !archived ? 'text-accent' : 'text-text'
+                isFocusedProject ? 'text-accent' : 'text-text'
               }`}
             >
               {project.emoji ? (
@@ -446,22 +456,24 @@ export default function ProjectsView() {
               No tasks.
             </p>
           ) : (
-            activeTasks.map((task) => (
-              <TaskRow
-                key={task.id}
-                task={task}
-                project={project}
-                space={space}
-                isFocused={navMode === 'task' && focusedId === task.id}
-                onFocus={() => {
-                  setNavMode('task');
-                  setFocusedId(task.id);
-                }}
-                onToggle={() => handleToggle(task)}
-                exiting={exitingIds.has(task.id)}
-                showProject={false}
-              />
-            ))
+            <div role="list">
+              {activeTasks.map((task) => (
+                <TaskRow
+                  key={task.id}
+                  task={task}
+                  project={project}
+                  space={space}
+                  isFocused={navMode === 'task' && focusedId === task.id}
+                  onFocus={() => {
+                    setNavMode('task');
+                    setFocusedId(task.id);
+                  }}
+                  onToggle={() => handleToggle(task)}
+                  exiting={exitingIds.has(task.id)}
+                  showProject={false}
+                />
+              ))}
+            </div>
           )
         )}
       </div>
@@ -501,16 +513,9 @@ export default function ProjectsView() {
           <button
             type="button"
             aria-expanded={showArchived}
-            className={`w-full text-left px-4 py-3 font-mono text-[11px] border-t border-[0.5px] border-border transition-all duration-150 outline-none ${
-              focusedProjectId === SHOW_ARCHIVED_TOGGLE_ID
-                ? 'border-l-2 border-accent'
-                : 'border-l-2 border-transparent'
+            className={`w-full text-left px-4 py-3 font-mono text-[11px] border-t border-[0.5px] border-border transition-[background-color,box-shadow] duration-150 ease-spring outline-none ${
+              focusedProjectId === SHOW_ARCHIVED_TOGGLE_ID ? 'bg-accent/5 shadow-laser' : ''
             }`}
-            style={
-              focusedProjectId === SHOW_ARCHIVED_TOGGLE_ID
-                ? { boxShadow: '0 0 8px rgba(255, 79, 0, 0.4)' }
-                : undefined
-            }
             onClick={() => setShowArchived((v) => !v)}
           >
             <span className="flex items-center gap-2">
@@ -560,9 +565,12 @@ export default function ProjectsView() {
           : null}
 
         {groups.length === 0 && (
-          <p className="text-muted text-sm px-4 py-8 text-center">
-            No projects yet. Press N to create one.
-          </p>
+          <div className="flex flex-col items-center justify-center gap-1.5 px-4 py-16 text-center">
+            <p className="font-mono text-[11px] text-muted uppercase tracking-[0.15em]">No projects.</p>
+            <p className="font-mono text-[10px] text-dim max-w-[260px] leading-relaxed">
+              Press N to create your first project.
+            </p>
+          </div>
         )}
       </div>
 

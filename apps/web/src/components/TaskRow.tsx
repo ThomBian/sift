@@ -45,13 +45,30 @@ export default function TaskRow({
   const showDone =
     exiting || task.status === 'done' || (task.status === 'archived' && task.completedAt != null);
 
+  const rowLabel =
+    task.status === 'archived'
+      ? showDone
+        ? `${task.title}, completed, archived`
+        : `${task.title}, archived`
+      : showDone
+        ? `${task.title}, completed`
+        : `${task.title}, task`;
+
+  const completeToggleVisual = `border-[0.5px] shrink-0 flex items-center justify-center transition-colors ${
+    showDone
+      ? 'border-green bg-green/10 text-green'
+      : 'border-border-2 hover:border-accent'
+  }`;
+
   return (
     <div
       ref={rowRef}
-      role="button"
+      role="listitem"
       tabIndex={0}
+      aria-label={rowLabel}
       onClick={onFocus}
       onKeyDown={(e) => {
+        if (e.target !== e.currentTarget) return;
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           onFocus();
@@ -59,10 +76,10 @@ export default function TaskRow({
       }}
       className={`
         ${exiting ? 'animate-task-exit' : 'animate-task-enter'}
-        flex items-center h-task-row px-3 gap-3 cursor-pointer select-none
+        flex items-center min-h-11 h-auto md:h-task-row md:min-h-0 px-3 gap-3 cursor-pointer select-none min-w-0
         transition-colors duration-150
         ${isFocused
-          ? 'bg-[#FF4F00]/5 laser-focus'
+          ? 'bg-accent/5 laser-focus'
           : 'hover:bg-surface-2'
         }
       `}
@@ -72,28 +89,47 @@ export default function TaskRow({
         data-testid="space-dot"
         className="w-2 h-2 shrink-0"
         style={{ backgroundColor: space.color }}
+        aria-hidden="true"
       />
 
-      <span
-        onClick={(e) => { e.stopPropagation(); onToggle?.(); }}
-        className={`w-4 h-4 border shrink-0 flex items-center justify-center transition-colors ${
-          showDone
-            ? 'border-green bg-green/10'
-            : 'border-border-2 hover:border-accent'
-        }`}
-      >
-        {showDone && (
-          <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
-            <path
-              d="M1.5 4L3 5.5L6.5 2.5"
-              stroke="#16A34A"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        )}
-      </span>
+      {onToggle ? (
+        <button
+          type="button"
+          aria-pressed={showDone}
+          aria-label={showDone ? 'Mark as not done' : 'Mark complete'}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggle();
+          }}
+          className={`${completeToggleVisual} min-w-11 min-h-11 md:min-w-0 md:min-h-0 md:w-4 md:h-4`}
+        >
+          {showDone && (
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+              <path
+                d="M1.5 4L3 5.5L6.5 2.5"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          )}
+        </button>
+      ) : (
+        <span className={`${completeToggleVisual} w-4 h-4`} aria-hidden="true">
+          {showDone && (
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+              <path
+                d="M1.5 4L3 5.5L6.5 2.5"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          )}
+        </span>
+      )}
 
       <span
         className={`flex-1 text-sm font-medium tracking-[-0.02em] truncate ${
@@ -114,7 +150,7 @@ export default function TaskRow({
           onClick={(e) => e.stopPropagation()}
           className="shrink-0 transition-colors text-muted hover:text-accent"
           title={task.sourceUrl}
-          aria-label="Open source"
+          aria-label="Visit source"
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
             <path
@@ -151,9 +187,9 @@ export default function TaskRow({
         >
           {late && (
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-              <path d="M5 1L9.33 8.5H0.67L5 1Z" stroke="#E60000" strokeWidth="1.2" strokeLinejoin="round" />
-              <path d="M5 4.5V6" stroke="#E60000" strokeWidth="1.2" strokeLinecap="round" />
-              <circle cx="5" cy="7.25" r="0.5" fill="#E60000" />
+              <path d="M5 1L9.33 8.5H0.67L5 1Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+              <path d="M5 4.5V6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+              <circle cx="5" cy="7.25" r="0.5" fill="currentColor" />
             </svg>
           )}
           {formatDate(task.dueDate)}

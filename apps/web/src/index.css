@@ -2,18 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Canonical palette — keep apps/web/tailwind.config.ts `theme.extend.colors` in sync */
 :root {
-  --color-bg: #FFFFFF;
-  --color-surface: #FAFAFA;
-  --color-surface-2: #F0F0F0;
-  --color-border: #E2E2E2;
-  --color-border-2: #CCCCCC;
+  --color-bg: #ffffff;
+  --color-surface: #fafafa;
+  --color-surface-2: #f0f0f0;
+  --color-border: #e2e2e2;
+  --color-border-2: #cccccc;
   --color-text: #111111;
   --color-muted: #888888;
-  --color-dim: #BBBBBB;
-  --color-accent: #FF4F00;
-  --color-red: #E60000;
-  --color-green: #16A34A;
+  --color-dim: #bbbbbb;
+  --color-accent: #ff4f00;
+  --color-red: #e60000;
+  --color-green: #16a34a;
+
+  --shadow-panel: 0 8px 32px rgba(17, 17, 17, 0.12);
+  --shadow-laser: 0 0 8px rgba(255, 79, 0, 0.4);
+  --shadow-laser-soft: 0 0 8px rgba(255, 79, 0, 0.2);
+  --shadow-laser-archive: 0 0 8px rgba(255, 79, 0, 0.15);
+  --shadow-hotkey: 0 0 4px rgba(255, 79, 0, 0.2);
 }
 
 * {
@@ -51,7 +58,7 @@ body {
 
 ::selection {
   background-color: var(--color-accent);
-  color: #ffffff;
+  color: var(--color-bg);
 }
 
 /* Focus ring: orange, no radius */
@@ -62,7 +69,7 @@ body {
 
 /* Laser focus glow — applied to focused task rows */
 .laser-focus {
-  box-shadow: 0 0 8px rgba(255, 79, 0, 0.4);
+  box-shadow: var(--shadow-laser);
 }
 
 /* Strong ease-out for all interactive elements — no overshoot on colors */

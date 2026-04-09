@@ -101,13 +101,15 @@ export default function CommandPalette({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-[18vh] bg-black/30 backdrop-blur-[2px]"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-[10vh] sm:pt-[14vh] md:pt-[18vh] px-3 sm:px-4 bg-text/30 backdrop-blur-scrim"
       onPointerDown={(e) => {
         if (e.target === e.currentTarget) handleClose();
       }}
     >
-      <div className={`${isClosing ? 'animate-palette-out' : 'animate-palette-in'} w-full max-w-[820px] border-[0.5px] border-border bg-bg/95 floating-panel shadow-2xl`}>
-        <div className="flex items-center px-3 py-1.5 border-b border-border">
+      <div
+        className={`${isClosing ? 'animate-palette-out' : 'animate-palette-in'} w-full max-w-[min(820px,calc(100vw-1.5rem))] border-[0.5px] border-border bg-bg/95 floating-panel shadow-panel`}
+      >
+        <div className="flex items-center px-3 py-1.5 border-b border-[0.5px] border-border">
           <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-dim">
             {isEditing ? `Editing · ${editTask.title}` : "New task"}
           </span>

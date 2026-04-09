@@ -1,21 +1,22 @@
 import type { Config } from 'tailwindcss';
 
+/** Palette hex values mirror `src/index.css` :root — update both when tokens change. */
 const config: Config = {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        bg: '#FFFFFF',
-        surface: '#FAFAFA',
-        'surface-2': '#F0F0F0',
-        border: '#E2E2E2',
-        'border-2': '#CCCCCC',
+        bg: '#ffffff',
+        surface: '#fafafa',
+        'surface-2': '#f0f0f0',
+        border: '#e2e2e2',
+        'border-2': '#cccccc',
         text: '#111111',
         muted: '#888888',
-        dim: '#BBBBBB',
-        accent: '#FF4F00',
-        red: '#E60000',
-        green: '#16A34A',
+        dim: '#bbbbbb',
+        accent: '#ff4f00',
+        red: '#e60000',
+        green: '#16a34a',
       },
       fontFamily: {
         sans: ['Geist', 'system-ui', 'sans-serif'],
@@ -57,6 +58,17 @@ const config: Config = {
           from: { opacity: '1', transform: 'scale(1) translateY(0)' },
           to: { opacity: '0', transform: 'scale(0.96) translateY(6px)' },
         },
+      },
+      boxShadow: {
+        panel: 'var(--shadow-panel)',
+        laser: 'var(--shadow-laser)',
+        'laser-soft': 'var(--shadow-laser-soft)',
+        'laser-archive': 'var(--shadow-laser-archive)',
+        hotkey: 'var(--shadow-hotkey)',
+      },
+      backdropBlur: {
+        scrim: '2px',
+        panel: '12px',
       },
       transitionTimingFunction: {
         spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',

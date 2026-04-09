@@ -78,6 +78,14 @@ export default function TodayView() {
           onFocus={setFocusedId}
           onToggle={handleToggle}
           exitingIds={exitingIds}
+          emptyState={
+            <div className="flex flex-col items-center justify-center gap-1.5 px-4 py-16 text-center">
+              <p className="font-mono text-[11px] text-muted uppercase tracking-[0.15em]">Nothing scheduled.</p>
+              <p className="font-mono text-[10px] text-dim max-w-[260px] leading-relaxed">
+                Go to Inbox, select a task, and press W to move it here.
+              </p>
+            </div>
+          }
         />
       </div>
 

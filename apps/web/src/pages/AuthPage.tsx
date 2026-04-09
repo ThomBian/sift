@@ -31,7 +31,7 @@ export default function AuthPage() {
     <div className="min-h-screen bg-bg flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-10">
-          <div className="inline-flex h-10 w-10 items-center justify-center border border-border-2 bg-surface-2 mb-4">
+          <div className="inline-flex h-10 w-10 items-center justify-center border-[0.5px] border-border-2 bg-surface-2 mb-4">
             <span className="text-accent text-lg font-semibold">S</span>
           </div>
           <h1 className="text-text text-2xl font-semibold tracking-tight">
@@ -42,9 +42,9 @@ export default function AuthPage() {
           </p>
         </div>
 
-        <div className="bg-surface border border-border p-6 space-y-4">
+        <div className="bg-surface border-[0.5px] border-border p-6 space-y-4">
           {!isSupabaseConfigured && (
-            <p className="text-muted text-xs leading-relaxed border border-border-2 px-3 py-2 bg-surface-2">
+            <p className="text-muted text-xs leading-relaxed border-[0.5px] border-border-2 px-3 py-2 bg-surface-2">
               Cloud sign-in is disabled until you add{' '}
               <code className="text-dim font-mono">VITE_SUPABASE_URL</code> and{' '}
               <code className="text-dim font-mono">VITE_SUPABASE_ANON_KEY</code> (see{' '}
@@ -66,7 +66,7 @@ export default function AuthPage() {
                 type="button"
                 onClick={() => void signInWithGoogle()}
                 disabled={!isSupabaseConfigured}
-                className="w-full flex items-center justify-center gap-3 bg-surface-2 hover:bg-border disabled:opacity-40 disabled:cursor-not-allowed text-text text-sm font-medium px-4 py-2.5 border border-border-2 transition-colors"
+                className="w-full flex items-center justify-center gap-3 bg-surface-2 hover:bg-border disabled:opacity-40 disabled:cursor-not-allowed text-text text-sm font-medium px-4 py-2.5 border-[0.5px] border-border-2 transition-colors duration-150"
               >
                 <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
                   <path
@@ -90,9 +90,9 @@ export default function AuthPage() {
               </button>
 
               <div className="relative flex items-center gap-3">
-                <div className="flex-1 h-px bg-border" />
+                <div className="flex-1 h-[0.5px] min-h-[0.5px] bg-border" />
                 <span className="text-muted text-xs">or</span>
-                <div className="flex-1 h-px bg-border" />
+                <div className="flex-1 h-[0.5px] min-h-[0.5px] bg-border" />
               </div>
 
               <form onSubmit={handleMagicLink} className="space-y-3">
@@ -103,13 +103,13 @@ export default function AuthPage() {
                   placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-surface-2 border border-border-2 px-3 py-2 text-text text-sm placeholder:text-muted focus:outline-none focus:border-accent transition-colors disabled:opacity-40 font-mono"
+                  className="w-full bg-surface-2 border-[0.5px] border-border-2 px-3 py-2 text-text text-sm placeholder:text-muted focus:outline-none focus:border-accent transition-colors duration-150 disabled:opacity-40 font-mono"
                 />
                 {error && <p className="text-red text-xs font-mono">{error}</p>}
                 <button
                   type="submit"
                   disabled={submitting || !isSupabaseConfigured}
-                  className="w-full bg-accent hover:bg-accent/90 disabled:opacity-50 text-white text-sm font-medium px-4 py-2.5 transition-colors"
+                  className="w-full bg-accent hover:bg-accent/90 disabled:opacity-50 text-bg text-sm font-medium px-4 py-2.5 transition-colors duration-150"
                 >
                   {submitting ? 'Sending…' : 'Send magic link'}
                 </button>

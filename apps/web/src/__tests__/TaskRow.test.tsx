@@ -65,7 +65,6 @@ describe('TaskRow', () => {
     );
     const row = container.firstChild as HTMLElement;
     expect(row.className).toMatch(/laser-focus/);
-    expect(row.className).toMatch(/FF4F00/);
   });
 
   it('does not apply focused styles when isFocused is false', () => {
@@ -150,11 +149,12 @@ describe('TaskRow', () => {
         space={space}
         isFocused={false}
         onFocus={vi.fn()}
+        onToggle={vi.fn()}
       />
     );
 
-    const checkbox = screen.getByRole('button').querySelector('.border-green');
-    expect(checkbox).toBeTruthy();
+    const toggle = screen.getByRole('button', { name: /mark as not done/i });
+    expect(toggle.className).toMatch(/border-green/);
   });
 
   it('does not show due date in red when task is done', () => {

@@ -45,7 +45,7 @@ export default function InputBar({ defaultProjectId, inputRef }: InputBarProps) 
   );
 
   return (
-    <div className="border-b border-border bg-surface px-4 py-3">
+    <div className="border-b border-[0.5px] border-border bg-surface px-4 py-3">
       <SmartInput
         projects={projects}
         onTaskReady={(partial) => handleTaskReady(partial, defaultProjectId)}

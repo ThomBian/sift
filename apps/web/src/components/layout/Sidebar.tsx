@@ -3,12 +3,21 @@ import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSpacesProjects } from '../../hooks/useSpacesProjects';
 
-function SidebarLink({ to, label }: { to: string; label: string }) {
+function SidebarLink({
+  to,
+  label,
+  onNavigate,
+}: {
+  to: string;
+  label: string;
+  onNavigate?: () => void;
+}) {
   return (
     <NavLink
       to={to}
+      onClick={() => onNavigate?.()}
       className={({ isActive }) =>
-        `block px-3 py-1.5 font-mono text-[11px] transition-colors duration-150 ${
+        `flex items-center px-3 py-2.5 md:py-1.5 font-mono text-[11px] transition-colors duration-150 min-h-11 md:min-h-0 ${
           isActive
             ? 'text-text bg-accent/5'
             : 'text-muted hover:text-text hover:bg-surface-2'
@@ -20,7 +29,12 @@ function SidebarLink({ to, label }: { to: string; label: string }) {
   );
 }
 
-export default function Sidebar() {
+export interface SidebarProps {
+  className?: string;
+  onNavigate?: () => void;
+}
+
+export default function Sidebar({ className = '', onNavigate }: SidebarProps) {
   const { spacesWithProjects } = useSpacesProjects();
   const { user } = useAuth();
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
@@ -35,17 +49,19 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="w-48 shrink-0 flex flex-col border-r border-[0.5px] border-border bg-surface overflow-y-auto">
+    <aside
+      className={`w-48 shrink-0 flex flex-col border-r border-[0.5px] border-border bg-surface overflow-y-auto min-h-0 ${className}`}
+    >
       <div className="h-[2px] bg-accent shrink-0" />
 
       <div className="p-2 pt-3 space-y-0.5">
         <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-dim px-3 pb-1.5">Views</p>
-        <SidebarLink to="/inbox" label="Inbox" />
-        <SidebarLink to="/today" label="Today" />
-        <SidebarLink to="/projects" label="Projects" />
+        <SidebarLink to="/inbox" label="Inbox" onNavigate={onNavigate} />
+        <SidebarLink to="/today" label="Today" onNavigate={onNavigate} />
+        <SidebarLink to="/projects" label="Projects" onNavigate={onNavigate} />
       </div>
 
-      <div className="h-px bg-border mx-2 my-1" />
+      <div className="h-[0.5px] min-h-[0.5px] bg-border mx-2 my-1" />
 
       <div className="p-2 space-y-1 flex-1">
         <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-dim px-2 pb-1">Spaces</p>
@@ -55,7 +71,8 @@ export default function Sidebar() {
               type="button"
               onClick={() => toggleSpace(space.id)}
               aria-expanded={!collapsed.has(space.id)}
-              className="w-full flex items-center gap-2 px-2 py-1 text-[11px] text-muted hover:text-text transition-colors font-mono"
+              aria-controls={`space-projects-${space.id}`}
+              className="w-full flex items-center gap-2 px-2 py-2.5 md:py-1 min-h-11 md:min-h-0 text-[11px] text-muted hover:text-text transition-colors font-mono"
             >
               <span
                 className="w-1.5 h-1.5 shrink-0"
@@ -82,28 +99,31 @@ export default function Sidebar() {
               </svg>
             </button>
 
-            {!collapsed.has(space.id) && (
-              <div className="ml-4 space-y-0.5 mt-0.5">
-                {projects.map((project) => (
-                  <NavLink
-                    key={project.id}
-                    to="/projects"
-                    className="block px-2 py-1 text-[11px] text-muted hover:text-text transition-colors truncate font-mono"
-                  >
-                    {project.name}
-                  </NavLink>
-                ))}
-              </div>
-            )}
+            <div
+              id={`space-projects-${space.id}`}
+              className={`ml-4 space-y-0.5 mt-0.5 ${collapsed.has(space.id) ? 'hidden' : ''}`}
+            >
+              {projects.map((project) => (
+                <NavLink
+                  key={project.id}
+                  to="/projects"
+                  onClick={() => onNavigate?.()}
+                  className="flex items-center px-2 py-2.5 md:py-1 min-h-11 md:min-h-0 min-w-0 text-[11px] text-muted hover:text-text transition-colors truncate font-mono"
+                >
+                  {project.name}
+                </NavLink>
+              ))}
+            </div>
           </div>
         ))}
       </div>
 
       {!user && (
-        <div className="p-3 border-t border-border">
+        <div className="p-3 border-t border-[0.5px] border-border">
           <NavLink
             to="/auth"
-            className="block text-xs text-muted hover:text-accent transition-colors text-center"
+            onClick={() => onNavigate?.()}
+            className="flex items-center justify-center text-xs text-muted hover:text-accent transition-colors text-center py-3 md:py-0 min-h-11 md:min-h-0"
           >
             Sign in to sync across devices
           </NavLink>

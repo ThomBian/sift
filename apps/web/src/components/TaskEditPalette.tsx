@@ -189,7 +189,7 @@ export default function TaskEditPalette({
           placeholder={inputPlaceholder}
           className="flex-1 bg-transparent border-none outline-none text-sm text-text font-sans min-w-0"
         />
-        <div className="w-px h-4 bg-border shrink-0" />
+        <div className="w-[0.5px] min-w-[0.5px] h-4 bg-border shrink-0" />
         <button
           type="button"
           onClick={() => handleChipClick('project')}

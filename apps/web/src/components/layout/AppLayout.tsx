@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import Topbar from './Topbar';
+import Sidebar from './Sidebar';
 import CommandPalette from '../CommandPalette';
 import ProjectEditPalette from '../ProjectEditPalette';
 import { useSpacesProjects } from '../../hooks/useSpacesProjects';
@@ -26,6 +27,7 @@ export default function AppLayout({ isSynced }: AppLayoutProps) {
   const [projectPaletteOpen, setProjectPaletteOpen] = useState(false);
   const [projectPaletteState, setProjectPaletteState] = useState<ProjectPaletteState>({});
   const [focusedProjectId, setFocusedProjectId] = useState<string | null>(null);
+  const [navDrawerOpen, setNavDrawerOpen] = useState(false);
 
   const { spacesWithProjects } = useSpacesProjects();
   const navigate = useNavigate();
@@ -86,6 +88,31 @@ export default function AppLayout({ isSynced }: AppLayoutProps) {
   }, []);
 
   useEffect(() => {
+    setNavDrawerOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!navDrawerOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [navDrawerOpen]);
+
+  useEffect(() => {
+    if (!navDrawerOpen) return;
+    function onEsc(e: KeyboardEvent) {
+      if (e.key !== 'Escape') return;
+      e.preventDefault();
+      e.stopPropagation();
+      setNavDrawerOpen(false);
+    }
+    window.addEventListener('keydown', onEsc, true);
+    return () => window.removeEventListener('keydown', onEsc, true);
+  }, [navDrawerOpen]);
+
+  useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
@@ -128,10 +155,35 @@ export default function AppLayout({ isSynced }: AppLayoutProps) {
   }, [paletteOpen, projectPaletteOpen, navigate, location.pathname]);
 
   return (
-    <div className="flex flex-col h-full bg-bg">
-      <Topbar isSynced={isSynced} />
-      <main className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <div className="flex-1 overflow-y-auto">
+    <div className="flex flex-col h-full bg-bg min-h-0">
+      <Topbar
+        isSynced={isSynced}
+        onMenuClick={() => setNavDrawerOpen((o) => !o)}
+        menuOpen={navDrawerOpen}
+      />
+
+      <div
+        className={`fixed inset-x-0 top-12 bottom-0 z-40 bg-text/30 backdrop-blur-scrim transition-opacity duration-150 md:hidden ${
+          navDrawerOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={() => setNavDrawerOpen(false)}
+        aria-hidden
+      />
+
+      <div
+        id="mobile-spaces-nav"
+        className={`fixed left-0 top-12 bottom-0 z-40 w-[min(18rem,calc(100vw-1rem))] border-r border-[0.5px] border-border bg-surface shadow-panel transition-transform duration-150 ease-spring md:hidden overflow-hidden flex flex-col ${
+          navDrawerOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <Sidebar
+          onNavigate={() => setNavDrawerOpen(false)}
+          className="w-full flex-1 min-h-0 border-r-0 shadow-none"
+        />
+      </div>
+
+      <main className="flex-1 flex flex-col overflow-hidden min-w-0 min-h-0">
+        <div className="flex-1 overflow-y-auto min-h-0">
           <Outlet />
         </div>
       </main>

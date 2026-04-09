@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, type ChangeEvent } from 'react';
 import { nanoid } from 'nanoid';
 import { db } from '../lib/db';
 import { Dropdown, EmojiPicker, getRandomEmoji } from '@sift/shared';
@@ -19,6 +19,22 @@ function formatDate(date: Date): string {
 type ActiveChip = 'name' | 'emoji' | 'dueDate';
 
 const TAB_ORDER: ActiveChip[] = ['name', 'emoji', 'dueDate'];
+
+const CHIP_BASE =
+  'inline-flex items-center gap-1 px-[9px] py-[3px] border-[0.5px] font-mono text-[11.5px] font-medium cursor-pointer whitespace-nowrap transition-colors duration-150';
+
+function chipClass(chip: ActiveChip, activeChip: ActiveChip, isSet: boolean): string {
+  const isActive = activeChip === chip;
+  if (chip === 'emoji') {
+    if (isActive) return `${CHIP_BASE} border-accent text-accent bg-accent/5`;
+    if (isSet)    return `${CHIP_BASE} border-accent/30 text-accent bg-accent/5`;
+    return              `${CHIP_BASE} border-border text-muted bg-surface`;
+  }
+  // dueDate
+  if (isActive) return `${CHIP_BASE} border-red text-red bg-red/5`;
+  if (isSet)    return `${CHIP_BASE} border-red/30 text-red bg-red/5`;
+  return              `${CHIP_BASE} border-border text-muted bg-surface`;
+}
 
 export default function ProjectEditPalette({
   isOpen,
@@ -146,53 +162,6 @@ export default function ProjectEditPalette({
 
   const inNameMode = activeChip === 'name';
 
-  const makeChipStyle = (chip: ActiveChip, isSet: boolean): React.CSSProperties => {
-    const isActive = activeChip === chip;
-    if (chip === 'emoji') {
-      return {
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '4px',
-        padding: '3px 9px',
-        border: '1px solid',
-        borderRadius: 0,
-        fontFamily: '"JetBrains Mono", monospace',
-        fontSize: '11.5px',
-        fontWeight: 500,
-        cursor: 'pointer',
-        whiteSpace: 'nowrap',
-        transition: 'all 0.1s',
-        ...(isActive
-          ? { background: '#FFF7ED', color: '#FF4F00', borderColor: '#FF4F00' }
-          : isSet
-            ? { background: '#FFF7ED', color: '#FF4F00', borderColor: '#FFD4B0' }
-            : { background: '#FAFAFA', color: '#888888', borderColor: '#E2E2E2' }
-        ),
-      };
-    }
-    // dueDate chip
-    return {
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '4px',
-      padding: '3px 9px',
-      border: '1px solid',
-      borderRadius: 0,
-      fontFamily: '"JetBrains Mono", monospace',
-      fontSize: '11.5px',
-      fontWeight: 500,
-      cursor: 'pointer',
-      whiteSpace: 'nowrap',
-      transition: 'all 0.1s',
-      ...(isActive
-        ? { background: '#FFF0F0', color: '#E60000', borderColor: '#E60000' }
-        : isSet
-          ? { background: '#FFF0F0', color: '#E60000', borderColor: '#FFBDBD' }
-          : { background: '#FAFAFA', color: '#888888', borderColor: '#E2E2E2' }
-      ),
-    };
-  };
-
   const inputValue = inNameMode ? name : query;
   const inputPlaceholder = activeChip === 'emoji'
     ? 'Search emojis…'
@@ -200,7 +169,7 @@ export default function ProjectEditPalette({
       ? 'Pick a date…'
       : 'Project name…';
 
-  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     if (inNameMode) {
       const val = e.target.value;
       if (val.endsWith('@c')) {
@@ -219,14 +188,16 @@ export default function ProjectEditPalette({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-[18vh] bg-black/30 backdrop-blur-[2px]"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-[10vh] sm:pt-[14vh] md:pt-[18vh] px-3 sm:px-4 bg-text/30 backdrop-blur-scrim"
       onPointerDown={(e) => {
         if (e.target === e.currentTarget) handleClose();
       }}
     >
-      <div className={`${isClosing ? 'animate-palette-out' : 'animate-palette-in'} w-full max-w-[820px] border-[0.5px] border-border bg-bg/95 floating-panel shadow-2xl`}>
+      <div
+        className={`${isClosing ? 'animate-palette-out' : 'animate-palette-in'} w-full max-w-[min(820px,calc(100vw-1.5rem))] border-[0.5px] border-border bg-bg/95 floating-panel shadow-panel`}
+      >
         {/* Context row */}
-        <div className="flex items-center px-3 py-1.5 border-b border-border">
+        <div className="flex items-center px-3 py-1.5 border-b border-[0.5px] border-border">
           <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-dim">
             {project ? `Editing · ${project.name}` : 'New Project'}
           </span>
@@ -236,7 +207,7 @@ export default function ProjectEditPalette({
         </div>
 
         {/* Input row */}
-        <div className="flex items-center h-11 px-3 gap-2 border border-transparent focus-within:border-accent transition-colors duration-150">
+        <div className="flex items-center h-11 px-3 gap-2 border-[0.5px] border-transparent focus-within:border-accent transition-colors duration-150">
           <span className="text-dim text-[15px] shrink-0 select-none">+</span>
           <input
             ref={inputRef}
@@ -251,23 +222,23 @@ export default function ProjectEditPalette({
           <button
             type="button"
             onClick={() => handleChipClick('emoji')}
-            style={makeChipStyle('emoji', emoji !== null)}
+            className={chipClass('emoji', activeChip, emoji !== null)}
           >
             {emoji ? (
               <>{emoji}</>
             ) : (
-              <><span style={{ fontSize: '10px', opacity: 0.55 }}>@c</span>&nbsp;icon</>
+              <><span className="text-[10px] opacity-55">@c</span>&nbsp;icon</>
             )}
           </button>
           <button
             type="button"
             onClick={() => handleChipClick('dueDate')}
-            style={makeChipStyle('dueDate', dueDate !== null)}
+            className={chipClass('dueDate', activeChip, dueDate !== null)}
           >
             {dueDate ? (
-              <><span style={{ fontSize: '10px', opacity: 0.55 }}>@d</span>&nbsp;{formatDate(dueDate)}</>
+              <><span className="text-[10px] opacity-55">@d</span>&nbsp;{formatDate(dueDate)}</>
             ) : (
-              <><span style={{ fontSize: '10px', opacity: 0.55 }}>@d</span>&nbsp;due</>
+              <><span className="text-[10px] opacity-55">@d</span>&nbsp;due</>
             )}
           </button>
         </div>
@@ -279,20 +250,7 @@ export default function ProjectEditPalette({
             <button
               type="button"
               onClick={handleClear}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                width: '100%',
-                padding: '6px 16px',
-                border: 'none',
-                borderTop: '0.5px solid #E2E2E2',
-                background: 'transparent',
-                color: '#888888',
-                fontFamily: '"JetBrains Mono", monospace',
-                fontSize: '12px',
-                cursor: 'pointer',
-                textAlign: 'left',
-              }}
+              className="flex items-center w-full px-4 py-1.5 border-t border-[0.5px] border-border bg-transparent text-muted font-mono text-[12px] cursor-pointer hover:text-text transition-colors duration-150"
             >
               Clear
             </button>
@@ -312,20 +270,7 @@ export default function ProjectEditPalette({
             <button
               type="button"
               onClick={handleClear}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                width: '100%',
-                padding: '6px 16px',
-                border: 'none',
-                borderTop: '0.5px solid #E2E2E2',
-                background: 'transparent',
-                color: '#888888',
-                fontFamily: '"JetBrains Mono", monospace',
-                fontSize: '12px',
-                cursor: 'pointer',
-                textAlign: 'left',
-              }}
+              className="flex items-center w-full px-4 py-1.5 border-t border-[0.5px] border-border bg-transparent text-muted font-mono text-[12px] cursor-pointer hover:text-text transition-colors duration-150"
             >
               Clear
             </button>

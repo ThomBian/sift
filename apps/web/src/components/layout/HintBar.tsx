@@ -40,12 +40,11 @@ const TASK_HINTS: Hint[] = [
 function Key({ label, hot }: { label: string; hot?: boolean }) {
   return (
     <kbd
-      className={`inline-flex items-center px-1.5 py-0.5 border-[0.5px] font-mono text-[10px] leading-none ${
+      className={`inline-flex items-center justify-center min-h-9 min-w-[2.25rem] px-2 py-1 md:min-h-0 md:min-w-0 md:px-1.5 md:py-0.5 border-[0.5px] font-mono text-[10px] leading-none ${
         hot
-          ? 'border-accent text-accent bg-accent/5'
+          ? 'border-accent text-accent bg-accent/5 shadow-hotkey'
           : 'border-border-2 bg-surface-2 text-muted'
       }`}
-      style={hot ? { boxShadow: '0 0 4px rgba(255, 79, 0, 0.2)' } : undefined}
     >
       {label}
     </kbd>
@@ -67,7 +66,7 @@ export default function HintBar({
         : NONE_HINTS;
 
   return (
-    <div className="flex items-center gap-6 px-4 py-2 border-t border-[0.5px] border-border bg-surface shrink-0 overflow-x-auto">
+    <div className="flex items-center gap-4 sm:gap-6 px-4 py-2.5 md:py-2 border-t border-[0.5px] border-border bg-surface shrink-0 overflow-x-auto pb-[max(0.5rem,env(safe-area-inset-bottom,0px))]">
       {hints.map((hint) => (
         <div key={hint.label} className="flex items-center gap-1.5 shrink-0">
           <div className="flex items-center gap-1">

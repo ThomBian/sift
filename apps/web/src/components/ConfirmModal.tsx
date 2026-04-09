@@ -24,6 +24,7 @@ export interface ConfirmModalProps {
 
 export default function ConfirmModal({ message, onConfirm, onCancel }: ConfirmModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
+  const confirmButtonRef = useRef<HTMLButtonElement>(null);
   const exitTimeoutRef = useRef<number | null>(null);
   const [backdropOpaque, setBackdropOpaque] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
@@ -53,20 +54,15 @@ export default function ConfirmModal({ message, onConfirm, onCancel }: ConfirmMo
   }, []);
 
   useEffect(() => {
-    const panel = panelRef.current;
-    if (!panel) return;
-    panel.focus({ preventScroll: true });
+    requestAnimationFrame(() => {
+      confirmButtonRef.current?.focus({ preventScroll: true });
+    });
   }, []);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (exitingRef.current) return;
 
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        runExit(onConfirm);
-        return;
-      }
       if (e.key === 'Escape') {
         e.preventDefault();
         runExit(onCancel);
@@ -124,7 +120,7 @@ export default function ConfirmModal({ message, onConfirm, onCancel }: ConfirmMo
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/20 transition-opacity duration-150 ${
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-text/20 transition-opacity duration-150 ${
         backdropOpaque ? 'opacity-100' : 'opacity-0'
       }`}
     >
@@ -133,18 +129,36 @@ export default function ConfirmModal({ message, onConfirm, onCancel }: ConfirmMo
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-modal-message"
-        tabIndex={0}
-        className={`w-[320px] border-[0.5px] border-border bg-bg/95 shadow-2xl backdrop-blur-[12px] outline-none ${
+        aria-describedby="confirm-modal-hint"
+        className={`w-[320px] max-w-[calc(100vw-2rem)] border-[0.5px] border-border bg-bg/95 shadow-panel backdrop-blur-panel outline-none floating-panel ${
           isExiting ? 'animate-modal-out' : 'animate-modal-in'
-        } floating-panel`}
+        }`}
       >
         <div className="px-4 pt-4 pb-3">
-          <div id="confirm-modal-message" className="font-sans text-[13.5px] font-medium tracking-[-0.02em] text-text">{message}</div>
+          <div id="confirm-modal-message" className="font-sans text-[13.5px] font-medium tracking-[-0.02em] text-text break-words">
+            {message}
+          </div>
         </div>
-        <div className="flex items-center gap-3 border-t border-[0.5px] border-border px-4 py-2 font-mono text-[10px]">
-          <span className="text-accent">↵ confirm</span>
-          <span className="text-muted">esc cancel</span>
+        <div className="flex flex-wrap items-center justify-end gap-2 border-t border-[0.5px] border-border px-4 py-2">
+          <button
+            type="button"
+            className="px-3 py-1.5 font-mono text-[10px] text-muted border-[0.5px] border-border bg-surface hover:bg-surface-2 hover:text-text transition-colors duration-150"
+            onClick={() => runExit(onCancel)}
+          >
+            Cancel
+          </button>
+          <button
+            ref={confirmButtonRef}
+            type="button"
+            className="px-3 py-1.5 font-mono text-[10px] text-bg bg-accent hover:opacity-90 transition-opacity duration-150"
+            onClick={() => runExit(onConfirm)}
+          >
+            Confirm
+          </button>
         </div>
+        <p id="confirm-modal-hint" className="px-4 pb-3 font-mono text-[10px] text-muted">
+          <span className="text-accent">↵</span> on Confirm · <span className="text-muted">esc</span> cancel
+        </p>
       </div>
     </div>
   );
