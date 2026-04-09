@@ -58,6 +58,7 @@ export default function CommandPalette({
 }: CommandPaletteProps) {
   const { spacesWithProjects } = useSpacesProjects();
   const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<Element | null>(null);
   const [isClosing, setIsClosing] = useState(false);
 
   const projects: ProjectWithSpace[] = useMemo(
@@ -73,11 +74,13 @@ export default function CommandPalette({
     setTimeout(() => {
       setIsClosing(false);
       onClose();
+      (triggerRef.current as HTMLElement | null)?.focus();
     }, 100);
   }, [onClose]);
 
   useEffect(() => {
     if (isOpen) {
+      triggerRef.current = document.activeElement;
       setIsClosing(false);
       requestAnimationFrame(() => inputRef.current?.focus());
     }

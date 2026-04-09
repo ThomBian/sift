@@ -54,6 +54,7 @@ export default function Sidebar() {
             <button
               type="button"
               onClick={() => toggleSpace(space.id)}
+              aria-expanded={!collapsed.has(space.id)}
               className="w-full flex items-center gap-2 px-2 py-1 text-[11px] text-muted hover:text-text transition-colors font-mono"
             >
               <span

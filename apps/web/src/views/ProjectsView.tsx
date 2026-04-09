@@ -400,6 +400,8 @@ export default function ProjectsView() {
     return (
       <div
         key={project.id}
+        role="button"
+        tabIndex={archived ? -1 : 0}
         className={`mb-4 transition-all duration-150 ${archivedRowClass} ${
           exiting ? 'animate-task-exit' : archived ? 'animate-task-enter' : ''
         }`}
@@ -408,6 +410,12 @@ export default function ProjectsView() {
           ...enterDelay,
         }}
         onClick={() => setFocusedProjectId(project.id)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setFocusedProjectId(project.id);
+          }
+        }}
       >
         <div className="px-4 py-2 border-b border-[0.5px] border-border">
           <div className="flex items-center justify-between mb-1.5">
@@ -492,6 +500,7 @@ export default function ProjectsView() {
         {archivedCount > 0 ? (
           <button
             type="button"
+            aria-expanded={showArchived}
             className={`w-full text-left px-4 py-3 font-mono text-[11px] border-t border-[0.5px] border-border transition-all duration-150 outline-none ${
               focusedProjectId === SHOW_ARCHIVED_TOGGLE_ID
                 ? 'border-l-2 border-accent'
