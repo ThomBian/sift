@@ -1,10 +1,12 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useTodayTasks } from '../hooks/useTasks';
 import { useKeyboardNav } from '../hooks/useKeyboardNav';
+import { useSpacesProjects } from '../hooks/useSpacesProjects';
 import TaskList from '../components/TaskList';
+import TaskEditPalette, { type EditPatch } from '../components/TaskEditPalette';
 import HintBar from '../components/layout/HintBar';
 import { db } from '../lib/db';
-import type { Task } from '@sift/shared';
+import type { Task, ProjectWithSpace } from '@sift/shared';
 
 function todayLabel(): string {
   return new Date().toLocaleDateString('en-US', {
@@ -21,6 +23,15 @@ function dispatchEditTask(task: Task, chip: 'dueDate' | 'workingDate' | 'project
 export default function TodayView() {
   const tasks = useTodayTasks();
   const [exitingIds, setExitingIds] = useState(new Set<string>());
+  const [urlEditTask, setUrlEditTask] = useState<Task | null>(null);
+  const { spacesWithProjects } = useSpacesProjects();
+
+  const allProjects = useMemo<ProjectWithSpace[]>(
+    () => spacesWithProjects.flatMap(({ space, projects }) =>
+      projects.map(p => ({ ...p, space }))
+    ),
+    [spacesWithProjects]
+  );
 
   const handleToggle = useCallback((task: Task) => {
     if (task.status === 'done') {
@@ -52,12 +63,24 @@ export default function TodayView() {
         if (e.key === 'w' || e.key === 'W') { e.preventDefault(); dispatchEditTask(focused, 'workingDate'); return; }
         if (e.key === 'p' || e.key === 'P') { e.preventDefault(); dispatchEditTask(focused, 'project'); return; }
         if (e.key === 'e' || e.key === 'E') { e.preventDefault(); dispatchEditTask(focused, null); return; }
+        if (e.key === 'u' || e.key === 'U') { e.preventDefault(); setUrlEditTask(focused); return; }
+        if (e.metaKey && e.key === 'o') {
+          e.preventDefault();
+          if (focused.url) window.open(focused.url, '_blank', 'noopener,noreferrer');
+          return;
+        }
       }
       handleKeyDown(e, tasks);
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [tasks, handleKeyDown, focusedId]);
+
+  async function handleUrlSave(patch: EditPatch) {
+    if (!urlEditTask) return;
+    await db.tasks.update(urlEditTask.id, { url: patch.url ?? null, updatedAt: new Date(), synced: false });
+    setUrlEditTask(null);
+  }
 
   return (
     <div className="flex flex-col h-full min-h-0">
@@ -89,6 +112,15 @@ export default function TodayView() {
         />
       </div>
 
+      {urlEditTask && (
+        <TaskEditPalette
+          task={urlEditTask}
+          defaultField="url"
+          projects={allProjects}
+          onSave={handleUrlSave}
+          onCancel={() => setUrlEditTask(null)}
+        />
+      )}
       <HintBar focusState={focusedId !== null ? 'task' : 'none'} />
     </div>
   );
