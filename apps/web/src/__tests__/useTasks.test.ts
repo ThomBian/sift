@@ -26,6 +26,7 @@ function makeProject(overrides?: Partial<Project>): Project {
     spaceId: 'space-1',
     dueDate: null,
     archived: false,
+    url: null,
     createdAt: now,
     updatedAt: now,
     synced: true,
@@ -45,6 +46,7 @@ function makeTask(overrides?: Partial<Task>): Task {
     createdAt: now,
     updatedAt: now,
     completedAt: null,
+    url: null,
     synced: true,
     ...overrides,
   };

@@ -25,6 +25,7 @@ async function createTask(
     status: partial.workingDate ? "todo" : "inbox",
     workingDate: partial.workingDate ?? null,
     dueDate: partial.dueDate ?? null,
+    url: null,
     createdAt: now,
     updatedAt: now,
     completedAt: null,

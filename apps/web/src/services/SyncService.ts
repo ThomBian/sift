@@ -44,6 +44,7 @@ function projectToRow(project: Project, userId: string) {
     emoji: project.emoji,
     space_id: project.spaceId,
     archived: project.archived,
+    url: project.url,
     created_at: project.createdAt.toISOString(),
     updated_at: project.updatedAt.toISOString(),
     synced: true,
@@ -58,6 +59,7 @@ function rowToProject(row: Record<string, unknown>): Project {
     spaceId: row.space_id as string,
     dueDate: row.due_date ? new Date(row.due_date as string) : null,
     archived: (row.archived as boolean | undefined) ?? false,
+    url: (row.url as string | null | undefined) ?? null,
     createdAt: new Date(row.created_at as string),
     updatedAt: new Date(row.updated_at as string),
     synced: true,
@@ -76,7 +78,7 @@ function taskToRow(task: Task, userId: string) {
     created_at: task.createdAt.toISOString(),
     updated_at: task.updatedAt.toISOString(),
     completed_at: task.completedAt?.toISOString() ?? null,
-    source_url: task.sourceUrl ?? null,
+    url: task.url ?? null,
     synced: true,
   };
 }
@@ -92,7 +94,7 @@ function rowToTask(row: Record<string, unknown>): Task {
     createdAt: new Date(row.created_at as string),
     updatedAt: new Date(row.updated_at as string),
     completedAt: row.completed_at ? new Date(row.completed_at as string) : null,
-    sourceUrl: (row.source_url as string | undefined) ?? undefined,
+    url: (row.url as string | null | undefined) ?? null,
     synced: true,
   };
 }
