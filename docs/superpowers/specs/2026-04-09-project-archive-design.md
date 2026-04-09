@@ -39,13 +39,36 @@ The `projects` table needs an `archived boolean default false` column for sync r
 
 ---
 
+## ConfirmModal component
+
+**`apps/web/src/components/ConfirmModal.tsx`** — reusable confirmation overlay for destructive actions.
+
+Props:
+```ts
+interface ConfirmModalProps {
+  message: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+```
+
+- Style matches existing palettes: `backdrop-filter: blur(12px)`, sharp edges, no border-radius, 0.5px border `#E2E2E2`
+- Spring entrance animation (150ms), consistent with design rules
+- Traps keyboard focus while open — no other interaction possible
+- `Enter` → calls `onConfirm`, modal closes
+- `Esc` → calls `onCancel`, modal closes
+
+---
+
 ## Keyboard & UI
 
 ### `A` key in ProjectsView
 
 When a project is focused:
-- Active project → `archiveProject(id)`. Project leaves the visible list; focus advances to the next project (or clears if none).
-- Archived project (when visible via toggle) → `unarchiveProject(id)`. Project returns to normal.
+- Active project → opens `ConfirmModal` with message `Archive "Project Name"? Tasks will be archived too.`
+  - `Enter` → `archiveProject(id)`, modal closes, focus advances to next project (or clears if none)
+  - `Esc` → modal closes, nothing changes
+- Archived project (when visible via toggle) → `unarchiveProject(id)` directly, no confirmation needed (recovery action, not destructive)
 
 No dedicated keyboard shortcut for the show/hide toggle.
 
