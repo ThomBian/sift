@@ -52,22 +52,60 @@ interface ConfirmModalProps {
 }
 ```
 
-- Style matches existing palettes: `backdrop-filter: blur(12px)`, sharp edges, no border-radius, 0.5px border `#E2E2E2`
-- Spring entrance animation (150ms), consistent with design rules
+### Visual design
+
+Matches the existing palette family exactly:
+- `backdrop-filter: blur(12px)` on the modal panel
+- Full-screen semi-transparent backdrop: `bg-black/20` behind the panel to dim surroundings
+- Sharp edges, zero border-radius, `border-[0.5px] border-border`
+- Centered on screen, fixed width (~320px), compact height
+- Message text: Geist Sans, weight 500, tracking -0.02em
+- Project name rendered in `text-accent` (#FF4F00) inside the message so user knows exactly what's being archived
+- Keyboard hint row at the bottom: `↵ confirm` in accent, `esc cancel` in muted — JetBrains Mono 10px
+
+### Animations
+
+Add to `tailwind.config.ts`:
+```js
+'modal-in':  'modal-in 150ms cubic-bezier(0.34, 1.56, 0.64, 1) both',
+'modal-out': 'modal-out 120ms ease-in forwards',
+
+keyframes: {
+  'modal-in':  { from: { opacity: '0', transform: 'scale(0.96) translateY(6px)' },
+                   to: { opacity: '1', transform: 'scale(1) translateY(0)' } },
+  'modal-out': { from: { opacity: '1', transform: 'scale(1) translateY(0)' },
+                   to: { opacity: '0', transform: 'scale(0.96) translateY(6px)' } },
+}
+```
+
+- Entrance: `animate-modal-in` — spring scale + slide up (mirrors `palette-in` but slides from below for a different feel)
+- Exit: `animate-modal-out` plays for 120ms before `onCancel`/`onConfirm` actually fires (use `setTimeout` + CSS class swap)
+- Backdrop fades in/out with `transition-opacity duration-150`
+
+### Behaviour
+
 - Traps keyboard focus while open — no other interaction possible
-- `Enter` → calls `onConfirm`, modal closes
-- `Esc` → calls `onCancel`, modal closes
+- `Enter` → plays exit animation → calls `onConfirm`
+- `Esc` → plays exit animation → calls `onCancel`
 
 ---
 
 ## Keyboard & UI
 
+### Project row exit animation
+
+When a project is archived and confirmed:
+- Add the project ID to an `exitingProjectIds` Set (same pattern as `exitingIds` for tasks)
+- Apply `animate-task-exit` to the row immediately — slides right + fades out (250ms)
+- After 250ms, call `archiveProject(id)` to write to DB (row is now gone from DOM via Dexie reactivity)
+- Focus advances to the next visible project, or clears if none
+
 ### `A` key in ProjectsView
 
 When a project is focused:
 - Active project → opens `ConfirmModal` with message `Archive "Project Name"? Tasks will be archived too.`
-  - `Enter` → `archiveProject(id)`, modal closes, focus advances to next project (or clears if none)
-  - `Esc` → modal closes, nothing changes
+  - `Enter` → plays project row exit animation (250ms) → `archiveProject(id)`, modal closes, focus advances
+  - `Esc` → plays modal-out → modal closes, nothing changes
 - Archived project (when visible via toggle) → `unarchiveProject(id)` directly, no confirmation needed (recovery action, not destructive)
 
 No dedicated keyboard shortcut for the show/hide toggle.
@@ -82,8 +120,12 @@ A focusable element rendered at the bottom of the scrollable project list, below
 
 **Display when `showArchived = true`:**
 - Archived projects appear at the bottom of their respective space group, below active projects.
-- Rendered at `opacity-50`, dimmed name, no focus accent glow.
+- Rendered at `opacity-40`, dimmed name, no focus accent glow.
+- Animate in with `animate-task-enter` (reuse existing keyframe) staggered at 25ms per item — same pattern as task rows.
 - Still arrow-navigable and focusable so `A` can unarchive them.
+
+**"Show archived" toggle focus style:**
+When keyboard-focused (arrow nav lands on it), show the laser focus treatment: `outline: none`, left border `border-l-2 border-accent` (2px solid #FF4F00) with `box-shadow: 0 0 8px rgba(255, 79, 0, 0.4)` — consistent with the project row focus accent.
 
 ### HintBar
 
