@@ -141,16 +141,16 @@ export default function TaskRow({
         {task.title}
       </span>
 
-      {task.sourceUrl && (
+      {task.url && (
         <a
-          href={task.sourceUrl}
+          href={task.url}
           target="_blank"
           rel="noopener noreferrer"
-          data-testid="source-url-icon"
+          data-testid="url-icon"
           onClick={(e) => e.stopPropagation()}
           className="shrink-0 transition-colors text-muted hover:text-accent"
-          title={task.sourceUrl}
-          aria-label="Visit source"
+          title={task.url}
+          aria-label="Visit link"
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
             <path

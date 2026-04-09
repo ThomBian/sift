@@ -21,6 +21,7 @@ const project: Project = {
   spaceId: 'space-1',
   dueDate: null,
   archived: false,
+  url: null,
   createdAt: now,
   updatedAt: now,
   synced: true,
@@ -36,6 +37,7 @@ const baseTask: Task = {
   createdAt: now,
   updatedAt: now,
   completedAt: null,
+  url: null,
   synced: true,
 };
 
@@ -182,8 +184,8 @@ describe('TaskRow', () => {
     expect(dateEl.className).not.toMatch(/text-red/);
   });
 
-  it('shows a link icon when task has sourceUrl', () => {
-    const taskWithUrl: Task = { ...baseTask, sourceUrl: 'https://example.com' };
+  it('shows a link icon when task has url', () => {
+    const taskWithUrl: Task = { ...baseTask, url: 'https://example.com' };
 
     render(
       <TaskRow
@@ -195,10 +197,10 @@ describe('TaskRow', () => {
       />
     );
 
-    expect(screen.getByTestId('source-url-icon')).toBeInTheDocument();
+    expect(screen.getByTestId('url-icon')).toBeInTheDocument();
   });
 
-  it('does not show link icon when task has no sourceUrl', () => {
+  it('does not show link icon when task has no url', () => {
     render(
       <TaskRow
         task={baseTask}
@@ -209,7 +211,7 @@ describe('TaskRow', () => {
       />
     );
 
-    expect(screen.queryByTestId('source-url-icon')).toBeNull();
+    expect(screen.queryByTestId('url-icon')).toBeNull();
   });
 
   it('renders project label with emoji and italic project name when showProject is true', () => {
