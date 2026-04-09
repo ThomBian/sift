@@ -91,6 +91,13 @@ export async function archiveProject(projectId: string): Promise<void> {
   });
 }
 
+export async function deleteProject(projectId: string): Promise<void> {
+  await db.transaction('rw', db.projects, db.tasks, async () => {
+    await db.tasks.where('projectId').equals(projectId).delete();
+    await db.projects.delete(projectId);
+  });
+}
+
 export async function unarchiveProject(projectId: string): Promise<void> {
   const now = new Date();
   await db.transaction('rw', db.projects, db.tasks, async () => {

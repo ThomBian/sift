@@ -8,6 +8,7 @@ interface CommandPaletteProps {
   isOpen: boolean;
   onClose: () => void;
   defaultProjectId: string;
+  prefillProjectId?: string | null;
   editTask?: Task | null;
   editChip?: ChipFocus | null;
 }
@@ -53,6 +54,7 @@ export default function CommandPalette({
   isOpen,
   onClose,
   defaultProjectId,
+  prefillProjectId,
   editTask,
   editChip,
 }: CommandPaletteProps) {
@@ -97,7 +99,9 @@ export default function CommandPalette({
         dueDate: editTask.dueDate,
         workingDate: editTask.workingDate,
       }
-    : undefined;
+    : prefillProjectId
+      ? { projectId: prefillProjectId }
+      : undefined;
 
   return (
     <div

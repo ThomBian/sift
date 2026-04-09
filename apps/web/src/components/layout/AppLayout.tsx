@@ -191,6 +191,7 @@ export default function AppLayout({ isSynced }: AppLayoutProps) {
         isOpen={paletteOpen}
         onClose={closePalette}
         defaultProjectId={defaultProjectId}
+        prefillProjectId={focusedProjectId}
         editTask={editTask}
         editChip={editChip}
       />

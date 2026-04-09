@@ -1,4 +1,4 @@
-type FocusState = 'none' | 'project' | 'task';
+type FocusState = "none" | "project" | "task";
 
 interface Hint {
   keys: string[];
@@ -7,34 +7,41 @@ interface Hint {
 }
 
 const NONE_HINTS: Hint[] = [
-  { keys: ['⌘K'], label: 'New task' },
-  { keys: ['↑', '↓'], label: 'Navigate' },
-  { keys: ['← →'], label: 'Switch view' },
+  { keys: ["⌘K"], label: "New task" },
+  { keys: ["↑", "↓"], label: "Navigate" },
+  { keys: ["← →"], label: "Switch view" },
 ];
 
-function buildProjectHints(archiveHint?: 'archive' | 'unarchive'): Hint[] {
+function buildProjectHints(
+  archiveHint?: "archive" | "unarchive",
+  projectExpanded?: boolean,
+): Hint[] {
   const base: Hint[] = [
-    { keys: ['N'], label: 'New', hot: true },
-    { keys: ['E'], label: 'Edit', hot: true },
-    { keys: ['D'], label: 'Due date', hot: true },
-    { keys: ['C'], label: 'Icon', hot: true },
-    { keys: ['O'], label: 'Open', hot: true },
+    { keys: ["N"], label: "New", hot: true },
+    { keys: ["E"], label: "Edit", hot: true },
+    { keys: ["D"], label: "Due date", hot: true },
+    { keys: ["C"], label: "Icon", hot: true },
+    { keys: ["Space"], label: projectExpanded ? "Close" : "Open", hot: true },
   ];
   if (archiveHint) {
-    base.push({ keys: ['A'], label: archiveHint, hot: true });
+    base.push({
+      keys: ["A"],
+      label: archiveHint === "archive" ? "Archive" : "Unarchive",
+      hot: true,
+    });
   }
-  base.push({ keys: ['Esc'], label: 'Deselect' });
+  base.push({ keys: ["X"], label: "Delete", hot: true });
   return base;
 }
 
 const TASK_HINTS: Hint[] = [
-  { keys: ['Enter'], label: 'Done', hot: true },
-  { keys: ['D'], label: 'Due date', hot: true },
-  { keys: ['W'], label: 'Today', hot: true },
-  { keys: ['P'], label: 'Project', hot: true },
-  { keys: ['E'], label: 'Edit', hot: true },
-  { keys: ['⌫'], label: 'Archive' },
-  { keys: ['Esc'], label: 'Back' },
+  { keys: ["Enter"], label: "Done", hot: true },
+  { keys: ["D"], label: "Due date", hot: true },
+  { keys: ["W"], label: "Today", hot: true },
+  { keys: ["P"], label: "Project", hot: true },
+  { keys: ["E"], label: "Edit", hot: true },
+  { keys: ["⌫"], label: "Archive" },
+  { keys: ["Space"], label: "Close", hot: true },
 ];
 
 function Key({ label, hot }: { label: string; hot?: boolean }) {
@@ -42,8 +49,8 @@ function Key({ label, hot }: { label: string; hot?: boolean }) {
     <kbd
       className={`inline-flex items-center justify-center min-h-9 min-w-[2.25rem] px-2 py-1 md:min-h-0 md:min-w-0 md:px-1.5 md:py-0.5 border-[0.5px] font-mono text-[10px] leading-none ${
         hot
-          ? 'border-accent text-accent bg-accent/5 shadow-hotkey'
-          : 'border-border-2 bg-surface-2 text-muted'
+          ? "border-accent text-accent bg-accent/5 shadow-hotkey"
+          : "border-border-2 bg-surface-2 text-muted"
       }`}
     >
       {label}
@@ -52,17 +59,19 @@ function Key({ label, hot }: { label: string; hot?: boolean }) {
 }
 
 export default function HintBar({
-  focusState = 'none',
+  focusState = "none",
   archiveHint,
+  projectExpanded,
 }: {
   focusState?: FocusState;
-  archiveHint?: 'archive' | 'unarchive';
+  archiveHint?: "archive" | "unarchive";
+  projectExpanded?: boolean;
 }) {
   const hints =
-    focusState === 'task'
+    focusState === "task"
       ? TASK_HINTS
-      : focusState === 'project'
-        ? buildProjectHints(archiveHint)
+      : focusState === "project"
+        ? buildProjectHints(archiveHint, projectExpanded)
         : NONE_HINTS;
 
   return (
