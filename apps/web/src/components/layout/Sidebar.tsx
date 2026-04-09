@@ -104,14 +104,37 @@ export default function Sidebar({ className = '', onNavigate }: SidebarProps) {
               className={`ml-4 space-y-0.5 mt-0.5 ${collapsed.has(space.id) ? 'hidden' : ''}`}
             >
               {projects.map((project) => (
-                <NavLink
-                  key={project.id}
-                  to="/projects"
-                  onClick={() => onNavigate?.()}
-                  className="flex items-center px-2 py-2.5 md:py-1 min-h-11 md:min-h-0 min-w-0 text-[11px] text-muted hover:text-text transition-colors truncate font-mono"
-                >
-                  {project.name}
-                </NavLink>
+                <div key={project.id} className="flex items-center min-w-0">
+                  <NavLink
+                    to="/projects"
+                    onClick={() => onNavigate?.()}
+                    className="flex-1 flex items-center px-2 py-2.5 md:py-1 min-h-11 md:min-h-0 min-w-0 text-[11px] text-muted hover:text-text transition-colors truncate font-mono"
+                  >
+                    <span className="truncate">{project.name}</span>
+                  </NavLink>
+                  {project.url && (
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      className="shrink-0 px-1 text-dim hover:text-accent transition-colors"
+                      aria-label={`Visit ${project.name} link`}
+                    >
+                      <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                        <path
+                          d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M7 1h4m0 0v4m0-4L5 7"
+                          stroke="currentColor"
+                          strokeWidth="1.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </a>
+                  )}
+                </div>
               ))}
             </div>
           </div>
