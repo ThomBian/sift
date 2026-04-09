@@ -27,7 +27,7 @@ function NavTab({
       to={to}
       tabIndex={-1}
       className={({ isActive }) =>
-        `flex items-center gap-2 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] border-b-2 transition-all duration-150 ${
+        `flex items-center gap-2 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] border-b-2 transition-colors duration-150 ${
           isActive
             ? 'border-accent text-text'
             : 'border-transparent text-muted hover:text-text hover:border-border-2'

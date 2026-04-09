@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { nanoid } from 'nanoid';
 import { db } from '../lib/db';
 import { Dropdown, EmojiPicker, getRandomEmoji } from '@sift/shared';
@@ -32,10 +32,20 @@ export default function ProjectEditPalette({
   const [dueDate, setDueDate] = useState<Date | null>(null);
   const [activeChip, setActiveChip] = useState<ActiveChip>(initialField);
   const [query, setQuery] = useState('');
+  const [isClosing, setIsClosing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleClose = useCallback(() => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsClosing(false);
+      onClose();
+    }, 100);
+  }, [onClose]);
 
   useEffect(() => {
     if (!isOpen) return;
+    setIsClosing(false);
     setName(project?.name ?? '');
     setEmoji(project?.emoji ?? null);
     setDueDate(project?.dueDate ?? null);
@@ -114,7 +124,7 @@ export default function ProjectEditPalette({
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Escape') {
       e.preventDefault();
-      onClose();
+      handleClose();
       return;
     }
     if (e.key === 'Tab') {
@@ -128,7 +138,7 @@ export default function ProjectEditPalette({
     }
   }
 
-  if (!isOpen) return null;
+  if (!isOpen && !isClosing) return null;
 
   const inNameMode = activeChip === 'name';
 
@@ -207,10 +217,10 @@ export default function ProjectEditPalette({
     <div
       className="fixed inset-0 z-50 flex items-start justify-center pt-[18vh] bg-black/30 backdrop-blur-[2px]"
       onPointerDown={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget) handleClose();
       }}
     >
-      <div className="animate-palette-in w-full max-w-[820px] border-[0.5px] border-border bg-bg/95 floating-panel shadow-2xl">
+      <div className={`${isClosing ? 'animate-palette-out' : 'animate-palette-in'} w-full max-w-[820px] border-[0.5px] border-border bg-bg/95 floating-panel shadow-2xl`}>
         {/* Context row */}
         <div className="flex items-center px-3 py-1.5 border-b border-border">
           <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-dim">

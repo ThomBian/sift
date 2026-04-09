@@ -30,7 +30,7 @@ export default function TodayView() {
       setTimeout(() => {
         void db.tasks.update(task.id, { status: 'done', completedAt: new Date(), updatedAt: new Date(), synced: false });
         setExitingIds((prev) => { const n = new Set(prev); n.delete(task.id); return n; });
-      }, 320);
+      }, 160);
     }
   }, []);
 

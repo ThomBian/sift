@@ -65,7 +65,7 @@ export default function TaskRow({
           : 'hover:bg-surface-2'
         }
       `}
-      style={{ animationDelay: exiting || late ? undefined : `${index * 25}ms` }}
+      style={{ animationDelay: exiting || late ? undefined : `${Math.min(index * 25, 150)}ms` }}
     >
       <span
         data-testid="space-dot"
