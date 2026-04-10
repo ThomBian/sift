@@ -22,11 +22,12 @@ describe('useSmartInput — initial state', () => {
     expect(hook.result.current.values.projectId).toBeNull();
     expect(hook.result.current.values.dueDate).toBeNull();
     expect(hook.result.current.values.workingDate).toBeNull();
+    expect(hook.result.current.values.url).toBeNull();
   });
 });
 
 describe('useSmartInput — Tab rotation', () => {
-  it('Tab cycles text → project → dueDate → workingDate → text', () => {
+  it('Tab cycles text → project → dueDate → workingDate → url → text', () => {
     const { hook } = make();
 
     act(() => hook.result.current.handleTitleKeyDown(tab as any));
@@ -39,6 +40,9 @@ describe('useSmartInput — Tab rotation', () => {
     expect(hook.result.current.focus).toBe('workingDate');
 
     act(() => hook.result.current.handleChipKeyDown('workingDate', tab));
+    expect(hook.result.current.focus).toBe('url');
+
+    act(() => hook.result.current.handleChipKeyDown('url', tab));
     expect(hook.result.current.focus).toBe('text');
   });
 
@@ -57,10 +61,12 @@ describe('useSmartInput — Tab rotation', () => {
     // Select project — auto-advances to dueDate
     act(() => hook.result.current.handleSelect('project', 'proj-1'));
     expect(hook.result.current.focus).toBe('dueDate');
-    // Tab through dueDate → workingDate → text (completes chip ring)
+    // Tab through dueDate → workingDate → url → text (completes chip ring)
     act(() => hook.result.current.handleChipKeyDown('dueDate', tab));
     expect(hook.result.current.focus).toBe('workingDate');
     act(() => hook.result.current.handleChipKeyDown('workingDate', tab));
+    expect(hook.result.current.focus).toBe('url');
+    act(() => hook.result.current.handleChipKeyDown('url', tab));
     expect(hook.result.current.focus).toBe('text');
     // First Tab from text after full ring: skip project (filled), land on first unfilled
     act(() => hook.result.current.handleTitleKeyDown(tab as any));
@@ -69,10 +75,10 @@ describe('useSmartInput — Tab rotation', () => {
     expect(hook.result.current.focus).toBe('dueDate');
   });
 
-  it('Shift+Tab cycles in reverse (text → workingDate)', () => {
+  it('Shift+Tab cycles in reverse (text → url)', () => {
     const { hook } = make();
     act(() => hook.result.current.handleTitleKeyDown(shiftTab as any));
-    expect(hook.result.current.focus).toBe('workingDate');
+    expect(hook.result.current.focus).toBe('url');
   });
 });
 
@@ -95,6 +101,13 @@ describe('useSmartInput — @x trigger detection', () => {
     const { hook } = make();
     act(() => hook.result.current.handleTitleChange({ target: { value: 'Task @w' } } as any));
     expect(hook.result.current.focus).toBe('workingDate');
+  });
+
+  it('typing @u jumps focus to url', () => {
+    const { hook } = make();
+    act(() => hook.result.current.handleTitleChange({ target: { value: 'Task @u' } } as any));
+    expect(hook.result.current.focus).toBe('url');
+    expect(hook.result.current.values.title).toBe('Task ');
   });
 
   it('normal text change updates title without changing focus', () => {
@@ -143,6 +156,7 @@ describe('useSmartInput — save', () => {
       projectId: 'proj-abc',
       dueDate: null,
       workingDate: null,
+      url: null,
     });
     expect(hook.result.current.values.title).toBe('');
     expect(hook.result.current.values.projectId).toBeNull();

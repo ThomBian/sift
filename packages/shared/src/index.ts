@@ -10,6 +10,6 @@ export type {
   ChipFocus,
   FocusTarget,
 } from './SmartInput/useSmartInput';
-export type { ProjectWithSpace } from './SmartInput/Dropdown';
+export type { ProjectWithSpace, DropdownChip } from './SmartInput/Dropdown';
 export { Dropdown } from './SmartInput/Dropdown';
 export { EmojiPicker } from './EmojiPicker/EmojiPicker';

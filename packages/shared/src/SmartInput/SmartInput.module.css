@@ -83,6 +83,10 @@
   opacity: 0.55;
 }
 
+/* Paired with .chipProject / .chipDue / .chipWorking / .chipUrl on the same element */
+.set {
+}
+
 /* @p — project: orange accent when active */
 .chipProject         { background: #FAFAFA; color: #888888; border-color: #E2E2E2; }
 .chipProject.active  { background: #FFF5F2; color: #FF4F00; border-color: #FF4F00; }
@@ -113,6 +117,16 @@
   background: #F0FFF4;
   color: #16A34A;
   border-color: #16A34A;
+}
+
+/* @u — link: accent when active / set */
+.chipUrl              { background: #FAFAFA; color: #888888; border-color: #E2E2E2; }
+.chipUrl.active       { background: #FFF5F2; color: #FF4F00; border-color: #FF4F00; }
+.chipUrl.set          { background: #FFF5F2; color: #FF4F00; border-color: #FFCDB8; }
+.chipUrlActive {
+  background: #FFF5F2;
+  color: #FF4F00;
+  border-color: #FF4F00;
 }
 
 .chipDot {

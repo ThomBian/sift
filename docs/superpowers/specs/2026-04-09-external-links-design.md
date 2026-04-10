@@ -33,7 +33,7 @@ Allow users to attach a single external URL to any Task or Project. Links are ed
 
 ### Editing
 
-- `TaskEditPalette` gains a `@u` chip
+- `CommandPalette` gains a `@u` chip
 - Chip mode: free-text input (no dropdown), user types or pastes a URL
 - `Enter` saves; `Esc` cancels
 - `EditField` type gains `'url'`; `EditPatch` gains `url: string | null`
@@ -42,7 +42,7 @@ Allow users to attach a single external URL to any Task or Project. Links are ed
 
 | Key | Action |
 |-----|--------|
-| `U` | Open `TaskEditPalette` pre-focused on `@u` chip |
+| `U` | Open `CommandPalette` pre-focused on `@u` chip |
 | `Cmd+O` | Open task's `url` in new tab (no-op if no URL set) |
 
 ### Display

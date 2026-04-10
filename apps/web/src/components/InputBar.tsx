@@ -15,7 +15,7 @@ interface InputBarProps {
 }
 
 async function handleTaskReady(
-  partial: Pick<Task, 'title' | 'dueDate' | 'workingDate'> & { projectId?: string },
+  partial: Pick<Task, 'title' | 'dueDate' | 'workingDate' | 'url'> & { projectId?: string },
   defaultProjectId: string
 ): Promise<void> {
   const now = new Date();
@@ -26,7 +26,7 @@ async function handleTaskReady(
     status: partial.workingDate ? 'todo' : 'inbox',
     workingDate: partial.workingDate ?? null,
     dueDate: partial.dueDate ?? null,
-    url: null,
+    url: partial.url ?? null,
     createdAt: now,
     updatedAt: now,
     completedAt: null,

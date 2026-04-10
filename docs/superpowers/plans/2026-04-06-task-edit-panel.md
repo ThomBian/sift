@@ -4,7 +4,7 @@
 
 **Goal:** When a task is focused via keyboard nav, pressing D/W/P/E opens a full-width editing palette anchored at the bottom of the view; the HintBar switches to context-aware shortcuts.
 
-**Architecture:** `TaskEditPalette` is a new component that renders in place of `HintBar` at the bottom of each view. Views track an `editField` state; the existing keydown listener is extended with D/W/P/E handlers. HintBar gains a `taskFocused` prop and renders two distinct hint sets.
+**Architecture:** D/W/P/E shortcuts open the existing `CommandPalette` pre-populated with the focused task and pre-focused on the relevant chip — no new component. Views track an `editField` state; the existing keydown listener is extended with D/W/P/E handlers. `CommandPalette` gains `editTask` and `editChip` props. HintBar gains a `taskFocused` prop and renders two distinct hint sets.
 
 **Tech Stack:** React, TypeScript, Tailwind CSS, Dexie.js (for task updates), Vitest + Testing Library
 
@@ -14,14 +14,14 @@
 
 | Action | File |
 |--------|------|
-| **Create** | `apps/web/src/components/TaskEditPalette.tsx` |
+| **Modify** | `apps/web/src/components/CommandPalette.tsx` (add `editTask` / `editChip` props) |
 | **Modify** | `apps/web/src/components/layout/HintBar.tsx` |
 | **Modify** | `apps/web/src/components/layout/AppLayout.tsx` (remove HintBar) |
 | **Modify** | `apps/web/src/views/InboxView.tsx` |
 | **Modify** | `apps/web/src/views/TodayView.tsx` |
 | **Modify** | `apps/web/src/views/ProjectsView.tsx` |
 | **Create** | `apps/web/src/__tests__/HintBar.test.tsx` |
-| **Create** | `apps/web/src/__tests__/TaskEditPalette.test.tsx` |
+| **Modify** | `apps/web/src/__tests__/CommandPalette.test.tsx` (add edit-mode tests) |
 
 ---
 
@@ -187,20 +187,20 @@ git commit -m "feat(web): context-aware HintBar with task-focused hints"
 
 ---
 
-## Task 2: TaskEditPalette component
+## Task 2: CommandPalette edit mode
 
 **Files:**
-- Create: `apps/web/src/components/TaskEditPalette.tsx`
-- Create: `apps/web/src/__tests__/TaskEditPalette.test.tsx`
+- Modify: `apps/web/src/components/CommandPalette.tsx`
+- Modify: `apps/web/src/__tests__/CommandPalette.test.tsx`
 
 - [ ] **Step 1: Write failing tests**
 
-Create `apps/web/src/__tests__/TaskEditPalette.test.tsx`:
+Create `apps/web/src/__tests__/CommandPalette.test.tsx`:
 
 ```tsx
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import TaskEditPalette from '../components/TaskEditPalette';
+import CommandPalette from '../components/CommandPalette';
 import type { Task } from '@sift/shared';
 import type { ProjectWithSpace } from '@sift/shared';
 
@@ -226,10 +226,10 @@ const projects: ProjectWithSpace[] = [
   { id: 'p2', name: 'Growth', spaceId: 's1', createdAt: now, updatedAt: now, synced: true, space },
 ];
 
-describe('TaskEditPalette', () => {
+describe('CommandPalette', () => {
   it('displays the task title in the input when defaultField is title', () => {
     render(
-      <TaskEditPalette
+      <CommandPalette
         task={baseTask}
         defaultField="title"
         projects={projects}
@@ -242,7 +242,7 @@ describe('TaskEditPalette', () => {
 
   it('shows task title in context row', () => {
     render(
-      <TaskEditPalette
+      <CommandPalette
         task={baseTask}
         defaultField="title"
         projects={projects}
@@ -255,7 +255,7 @@ describe('TaskEditPalette', () => {
 
   it('shows project list in dropdown when defaultField is project', () => {
     render(
-      <TaskEditPalette
+      <CommandPalette
         task={baseTask}
         defaultField="project"
         projects={projects}
@@ -269,7 +269,7 @@ describe('TaskEditPalette', () => {
 
   it('shows date options in dropdown when defaultField is dueDate', () => {
     render(
-      <TaskEditPalette
+      <CommandPalette
         task={baseTask}
         defaultField="dueDate"
         projects={projects}
@@ -284,7 +284,7 @@ describe('TaskEditPalette', () => {
 
   it('shows date options when defaultField is workingDate', () => {
     render(
-      <TaskEditPalette
+      <CommandPalette
         task={baseTask}
         defaultField="workingDate"
         projects={projects}
@@ -298,7 +298,7 @@ describe('TaskEditPalette', () => {
   it('calls onCancel when Escape is pressed', () => {
     const onCancel = vi.fn();
     render(
-      <TaskEditPalette
+      <CommandPalette
         task={baseTask}
         defaultField="title"
         projects={projects}
@@ -313,7 +313,7 @@ describe('TaskEditPalette', () => {
   it('calls onSave with updated title when ⌘↩ is pressed', () => {
     const onSave = vi.fn();
     render(
-      <TaskEditPalette
+      <CommandPalette
         task={baseTask}
         defaultField="title"
         projects={projects}
@@ -332,7 +332,7 @@ describe('TaskEditPalette', () => {
   it('calls onSave with selected project when project button is clicked', () => {
     const onSave = vi.fn();
     render(
-      <TaskEditPalette
+      <CommandPalette
         task={baseTask}
         defaultField="project"
         projects={projects}
@@ -349,7 +349,7 @@ describe('TaskEditPalette', () => {
   it('calls onSave with null dueDate when Clear is clicked', () => {
     const onSave = vi.fn();
     render(
-      <TaskEditPalette
+      <CommandPalette
         task={{ ...baseTask, dueDate: new Date() }}
         defaultField="dueDate"
         projects={projects}
@@ -368,14 +368,14 @@ describe('TaskEditPalette', () => {
 - [ ] **Step 2: Run tests — verify they fail**
 
 ```bash
-npx vitest run apps/web/src/__tests__/TaskEditPalette.test.tsx
+npx vitest run apps/web/src/__tests__/CommandPalette.test.tsx
 ```
 
 Expected: FAIL (component doesn't exist)
 
-- [ ] **Step 3: Create TaskEditPalette**
+- [ ] **Step 3: Create CommandPalette**
 
-Create `apps/web/src/components/TaskEditPalette.tsx`:
+Create `apps/web/src/components/CommandPalette.tsx`:
 
 ```tsx
 import { useState, useEffect, useRef, useMemo } from 'react';
@@ -384,7 +384,7 @@ import type { Task, ProjectWithSpace } from '@sift/shared';
 export type EditField = 'title' | 'dueDate' | 'workingDate' | 'project';
 export type EditPatch = Partial<Pick<Task, 'title' | 'dueDate' | 'workingDate' | 'projectId'>>;
 
-interface TaskEditPaletteProps {
+interface CommandPaletteProps {
   task: Task;
   defaultField: EditField;
   projects: ProjectWithSpace[];
@@ -416,13 +416,13 @@ function getDateOptions(): DateOption[] {
   ];
 }
 
-export default function TaskEditPalette({
+export default function CommandPalette({
   task,
   defaultField,
   projects,
   onSave,
   onCancel,
-}: TaskEditPaletteProps) {
+}: CommandPaletteProps) {
   const [title, setTitle] = useState(task.title);
   const [projectId, setProjectId] = useState(task.projectId);
   const [dueDate, setDueDate] = useState<Date | null>(task.dueDate);
@@ -622,7 +622,7 @@ export default function TaskEditPalette({
 - [ ] **Step 4: Run tests — verify they pass**
 
 ```bash
-npx vitest run apps/web/src/__tests__/TaskEditPalette.test.tsx
+npx vitest run apps/web/src/__tests__/CommandPalette.test.tsx
 ```
 
 Expected: PASS (9 tests)
@@ -630,9 +630,9 @@ Expected: PASS (9 tests)
 - [ ] **Step 5: Commit**
 
 ```bash
-git add apps/web/src/components/TaskEditPalette.tsx \
-        apps/web/src/__tests__/TaskEditPalette.test.tsx
-git commit -m "feat(web): TaskEditPalette component"
+git add apps/web/src/components/CommandPalette.tsx \
+        apps/web/src/__tests__/CommandPalette.test.tsx
+git commit -m "feat(web): CommandPalette component"
 ```
 
 ---
@@ -653,7 +653,7 @@ import { useKeyboardNav } from '../hooks/useKeyboardNav';
 import { useSpacesProjects } from '../hooks/useSpacesProjects';
 import TaskList from '../components/TaskList';
 import HintBar from '../components/layout/HintBar';
-import TaskEditPalette, { type EditField, type EditPatch } from '../components/TaskEditPalette';
+import CommandPalette, { type EditField, type EditPatch } from '../components/CommandPalette';
 import { db } from '../lib/db';
 import type { Task, ProjectWithSpace } from '@sift/shared';
 
@@ -754,7 +754,7 @@ export default function InboxView() {
       </div>
 
       {editField !== null && focusedTask !== null ? (
-        <TaskEditPalette
+        <CommandPalette
           task={focusedTask}
           defaultField={editField}
           projects={projects}
@@ -803,7 +803,7 @@ import { useKeyboardNav } from '../hooks/useKeyboardNav';
 import { useSpacesProjects } from '../hooks/useSpacesProjects';
 import TaskList from '../components/TaskList';
 import HintBar from '../components/layout/HintBar';
-import TaskEditPalette, { type EditField, type EditPatch } from '../components/TaskEditPalette';
+import CommandPalette, { type EditField, type EditPatch } from '../components/CommandPalette';
 import { db } from '../lib/db';
 import type { Task, ProjectWithSpace } from '@sift/shared';
 
@@ -908,7 +908,7 @@ export default function TodayView() {
       </div>
 
       {editField !== null && focusedTask !== null ? (
-        <TaskEditPalette
+        <CommandPalette
           task={focusedTask}
           defaultField={editField}
           projects={projects}
@@ -934,7 +934,7 @@ import { useKeyboardNav } from '../hooks/useKeyboardNav';
 import { useSpacesProjects } from '../hooks/useSpacesProjects';
 import TaskRow from '../components/TaskRow';
 import HintBar from '../components/layout/HintBar';
-import TaskEditPalette, { type EditField, type EditPatch } from '../components/TaskEditPalette';
+import CommandPalette, { type EditField, type EditPatch } from '../components/CommandPalette';
 import { db } from '../lib/db';
 import type { Task, ProjectWithSpace } from '@sift/shared';
 
@@ -1079,7 +1079,7 @@ export default function ProjectsView() {
       </div>
 
       {editField !== null && focusedTask !== null ? (
-        <TaskEditPalette
+        <CommandPalette
           task={focusedTask}
           defaultField={editField}
           projects={projects}
@@ -1138,9 +1138,9 @@ In `CLAUDE.md`, update the Keyboard Interaction Model section to add the new sho
 - **Enter** — toggle focused task done/undone
 - **Backspace / Delete** — archive focused task
 - **Escape** — close edit palette if open, else deselect focused task
-- **D / W / P / E** — when a task is focused, open `TaskEditPalette` for due date / working date / project / title
+- **D / W / P / E** — when a task is focused, open `CommandPalette` for due date / working date / project / title
 
-`HintBar` renders two states: default (no task focused) and task-focused (shows D/W/P/E shortcuts with orange accent). It lives at the bottom of each view and is replaced by `TaskEditPalette` when editing is active.
+`HintBar` renders two states: default (no task focused) and task-focused (shows D/W/P/E shortcuts with orange accent). It lives at the bottom of each view. When D/W/P/E is pressed, `CommandPalette` opens as an overlay (same as ⌘K) pre-populated with the task and pre-focused on the relevant chip.
 
 Each view registers its own `window.keydown` listener that skips events when `e.target` is an INPUT or TEXTAREA. `AppLayout` owns the palette and view-switching listeners. When a focused task disappears from the list (marked done, archived), the view's `useEffect` clears `focusedId` and `editField`.
 ```

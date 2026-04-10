@@ -1,29 +1,18 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useInboxTasks } from '../hooks/useTasks';
 import { useKeyboardNav } from '../hooks/useKeyboardNav';
-import { useSpacesProjects } from '../hooks/useSpacesProjects';
 import TaskList from '../components/TaskList';
-import TaskEditPalette, { type EditPatch } from '../components/TaskEditPalette';
 import HintBar from '../components/layout/HintBar';
 import { db } from '../lib/db';
-import type { Task, ProjectWithSpace } from '@sift/shared';
+import type { Task, ChipFocus } from '@sift/shared';
 
-function dispatchEditTask(task: Task, chip: 'dueDate' | 'workingDate' | 'project' | null) {
+function dispatchEditTask(task: Task, chip: ChipFocus | null) {
   window.dispatchEvent(new CustomEvent('sift:edit-task', { detail: { task, chip } }));
 }
 
 export default function InboxView() {
   const tasks = useInboxTasks();
   const [exitingIds, setExitingIds] = useState(new Set<string>());
-  const [urlEditTask, setUrlEditTask] = useState<Task | null>(null);
-  const { spacesWithProjects } = useSpacesProjects();
-
-  const allProjects = useMemo<ProjectWithSpace[]>(
-    () => spacesWithProjects.flatMap(({ space, projects }) =>
-      projects.map(p => ({ ...p, space }))
-    ),
-    [spacesWithProjects]
-  );
 
   const handleToggle = useCallback((task: Task) => {
     if (task.status === 'done') {
@@ -55,7 +44,7 @@ export default function InboxView() {
         if (e.key === 'w' || e.key === 'W') { e.preventDefault(); dispatchEditTask(focused, 'workingDate'); return; }
         if (e.key === 'p' || e.key === 'P') { e.preventDefault(); dispatchEditTask(focused, 'project'); return; }
         if (e.key === 'e' || e.key === 'E') { e.preventDefault(); dispatchEditTask(focused, null); return; }
-        if (e.key === 'u' || e.key === 'U') { e.preventDefault(); setUrlEditTask(focused); return; }
+        if (e.key === 'u' || e.key === 'U') { e.preventDefault(); dispatchEditTask(focused, 'url'); return; }
         if (e.metaKey && e.key === 'o') {
           e.preventDefault();
           if (focused.url) window.open(focused.url, '_blank', 'noopener,noreferrer');
@@ -68,25 +57,13 @@ export default function InboxView() {
     return () => window.removeEventListener('keydown', onKey);
   }, [tasks, handleKeyDown, focusedId]);
 
-  async function handleUrlSave(patch: EditPatch) {
-    if (!urlEditTask) return;
-    await db.tasks.update(urlEditTask.id, { url: patch.url ?? null, updatedAt: new Date(), synced: false });
-    setUrlEditTask(null);
-  }
-
   return (
     <div className="flex flex-col h-full min-h-0">
-      <div className="px-4 pt-4 pb-3">
-        <div className="flex items-baseline gap-3 mb-1">
-          <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">Inbox</h2>
-          {tasks.length > 0 && (
-            <span className="font-mono text-[10px] text-accent tabular-nums">{tasks.length}</span>
-          )}
+      {tasks.length > 0 && (
+        <div className="px-4 py-2 flex items-baseline justify-end border-b border-[0.5px] border-border">
+          <span className="font-mono text-[10px] text-accent tabular-nums">{tasks.length}</span>
         </div>
-        <p className="text-muted text-[11px]">
-          Triage — assign a date or project, then move to Today.
-        </p>
-      </div>
+      )}
 
       <div className="flex-1 overflow-y-auto min-h-0">
         <TaskList
@@ -106,15 +83,6 @@ export default function InboxView() {
         />
       </div>
 
-      {urlEditTask && (
-        <TaskEditPalette
-          task={urlEditTask}
-          defaultField="url"
-          projects={allProjects}
-          onSave={handleUrlSave}
-          onCancel={() => setUrlEditTask(null)}
-        />
-      )}
       <HintBar focusState={focusedId !== null ? 'task' : 'none'} />
     </div>
   );

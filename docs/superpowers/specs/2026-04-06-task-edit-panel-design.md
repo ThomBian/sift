@@ -5,41 +5,47 @@
 
 ## Overview
 
-When a task is focused via keyboard navigation, the user can trigger contextual editing actions via single keystrokes. An editing palette opens anchored to the bottom of the view — full width, no overlay/backdrop — showing the task's current values and a dropdown for the triggered field. The task list remains visible with the focused row still highlighted.
+When a task is focused via keyboard navigation, the user can trigger contextual editing actions via single keystrokes. Both task **creation** (⌘K) and task **editing** (D/W/P/E) go through the same `CommandPalette` component — editing pre-populates the fields and pre-focuses the relevant chip.
 
 ## Keyboard Shortcuts (task focused)
 
-| Key | Action |
-|-----|--------|
-| `D` | Open edit palette, focus due date chip |
-| `W` | Open edit palette, focus working date chip |
-| `P` | Open edit palette, focus project chip |
-| `E` | Open edit palette, focus title input |
-| `Enter` | Toggle done (existing) |
-| `Backspace` | Archive (existing) |
-| `Esc` | Close palette if open, else deselect task |
+
+| Key         | Action                                     |
+| ----------- | ------------------------------------------ |
+| `D`         | Open edit palette, focus due date chip     |
+| `W`         | Open edit palette, focus working date chip |
+| `P`         | Open edit palette, focus project chip      |
+| `E`         | Open edit palette, focus title input       |
+| `Enter`     | Toggle done (existing)                     |
+| `Backspace` | Archive (existing)                         |
+| `Esc`       | Close palette if open, else deselect task  |
+
 
 ## Edit Palette
 
-The palette **replaces the HintBar** when open. It consists of two rows anchored at the bottom of the view:
+The edit palette opens like the new palette.
 
 **Context row** (thin, muted):
+
 - Left: `EDITING · <task title>` (monospace, uppercase, muted)
 - Right: `esc to cancel · ⌘↩ to save`
 
 **Input row** (full-width, 44px tall):
+
 - Title input (pre-populated, always editable)
 - Vertical 1px divider
 - Chips: `@p <project>`, `@d <due date>`, `@w <working date>` — same chip UI as SmartInput
 - The chip matching the triggered key is auto-focused (orange border)
 
 **Dropdown row** (below input row, full width):
+
 - Appears only for `D`, `W`, `P` (not `E`)
 - For `D`/`W`: quick-select list — Today, Tomorrow, Next week, Clear
 - For `P`: project list with space color dots, filterable by typing in the input
 - Arrow keys navigate the dropdown; Enter selects and saves; Esc cancels
 
 **Save behaviour:**
+
 - Selecting a dropdown item immediately saves that field and closes the palette
 - `⌘↩` saves all edited fields at once
 - `Esc` discards all changes and closes
@@ -49,11 +55,13 @@ The palette **replaces the HintBar** when open. It consists of two rows anchored
 The HintBar renders two distinct hint sets based on whether a task is focused:
 
 **Default state** (no task focused):
+
 ```
 ⌘K New task   ↑↓ Navigate   ←→ Switch view
 ```
 
 **Task focused state:**
+
 ```
 Enter Done   D Due date   W Today   P Project   E Edit   ⌫ Archive   Esc Deselect
 ```
@@ -62,23 +70,28 @@ Enter Done   D Due date   W Today   P Project   E Edit   ⌫ Archive   Esc Desel
 
 ## Component Architecture
 
-### New: `TaskEditPalette`
-- Props: `task: Task`, `defaultField: 'title' | 'dueDate' | 'workingDate' | 'project'`, `onSave(patch)`, `onCancel()`
-- Renders context row + input row + conditional dropdown
-- Internally reuses the chip UI from `SmartInput` for visual consistency
-- Manages its own local state (edits are not committed until save)
+### Modified: `CommandPalette`
+
+- Accepts `editTask?: Task | null` and `editChip?: ChipFocus | null` props alongside existing `isOpen` / `onClose`
+- When `editTask` is set: pre-populates all fields (title, dueDate, workingDate, projectId, url) and shows "EDITING · <title>" context row
+- When `editChip` is set: auto-focuses that chip (orange border)
+- On save: calls `db.tasks.update()` (optimistic, `synced: false`) then closes
+- Same component handles both creation (⌘K) and editing (D/W/P/E)
 
 ### Modified: `HintBar`
+
 - Accept an optional `taskFocused: boolean` prop
 - Render the task-focused hint set when true
 
 ### Modified: views (`InboxView`, `TodayView`, `ProjectsView`)
+
 - Listen for `D`, `W`, `P`, `E` keydown when `focusedId !== null` and palette is not already open
 - Track `editField: 'title' | 'dueDate' | 'workingDate' | 'project' | null` in local state
-- When `editField !== null`, render `<TaskEditPalette>` in place of the bottom bar
+- When `editField !== null`, open `<CommandPalette isOpen editTask={focusedTask} editChip={...} />`
 - Pass `taskFocused={focusedId !== null && editField === null}` to HintBar
 
 ### Modified: `AppLayout`
+
 - Listen for `sift:task-focused` (dispatched by views when `focusedId` changes) and pass the boolean to `HintBar`
 - Views dispatch `window.dispatchEvent(new CustomEvent('sift:task-focused', { detail: { focused: true/false } }))` alongside setting `focusedId`
 
@@ -87,9 +100,9 @@ Enter Done   D Due date   W Today   P Project   E Edit   ⌫ Archive   Esc Desel
 ```
 keydown (D/W/P/E)
   → view sets editField
-    → TaskEditPalette renders at bottom
+    → CommandPalette opens (editTask + editChip props)
       → user selects/types
-        → onSave(patch) → db.tasks.update() [optimistic, synced: false]
+        → save → db.tasks.update() [optimistic, synced: false]
           → palette closes, focusedId retained
 ```
 
@@ -100,3 +113,4 @@ Escape at any point: `editField → null` (palette closes, task stays focused).
 - Mouse/click interaction to open the edit palette (keyboard-only for now)
 - Bulk editing multiple tasks
 - Reordering fields in the chip row
+

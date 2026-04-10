@@ -2,15 +2,16 @@
 import { useState, useCallback, useRef } from 'react';
 import type { Task } from '../types';
 
-export type ChipFocus = 'project' | 'dueDate' | 'workingDate';
+export type ChipFocus = 'project' | 'dueDate' | 'workingDate' | 'url';
 export type FocusTarget = 'text' | ChipFocus;
 
-const FOCUS_CYCLE: FocusTarget[] = ['text', 'project', 'dueDate', 'workingDate'];
+const FOCUS_CYCLE: FocusTarget[] = ['text', 'project', 'dueDate', 'workingDate', 'url'];
 
 const AT_TRIGGERS: Record<string, ChipFocus> = {
   '@p': 'project',
   '@d': 'dueDate',
   '@w': 'workingDate',
+  '@u': 'url',
 };
 
 export interface SmartInputValues {
@@ -18,12 +19,14 @@ export interface SmartInputValues {
   projectId: string | null;
   dueDate: Date | null;
   workingDate: Date | null;
+  url: string | null;
 }
 
 function isFilled(chip: ChipFocus, values: SmartInputValues): boolean {
   if (chip === 'project') return values.projectId !== null;
   if (chip === 'dueDate') return values.dueDate !== null;
-  return values.workingDate !== null;
+  if (chip === 'workingDate') return values.workingDate !== null;
+  return values.url != null && values.url.trim() !== '';
 }
 
 // Forward Tab: from text → first unfilled chip (or full cycle restart — see ref below); from chip → one step
@@ -56,6 +59,8 @@ export interface UseSmartInputReturn {
   focus: FocusTarget;
   handleTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleTitleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  handleUrlChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleUrlKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   handleChipKeyDown: (chip: ChipFocus, e: React.KeyboardEvent) => void;
   handleChipClick: (chip: ChipFocus) => void;
   handleSelect: (chip: ChipFocus, value: string | Date | null) => void;
@@ -68,25 +73,28 @@ const EMPTY: SmartInputValues = {
   projectId: null,
   dueDate: null,
   workingDate: null,
+  url: null,
 };
 
 export function useSmartInput(
-  onTaskReady: (task: Pick<Task, 'title' | 'dueDate' | 'workingDate'> & { projectId?: string }) => void,
-  initialValues: SmartInputValues = EMPTY,
+  onTaskReady: (task: Pick<Task, 'title' | 'dueDate' | 'workingDate' | 'url'> & { projectId?: string }) => void,
+  initialValues: Partial<SmartInputValues> = {},
   initialFocus: FocusTarget = 'text',
 ): UseSmartInputReturn {
-  const [values, setValues] = useState<SmartInputValues>(initialValues);
+  const [values, setValues] = useState<SmartInputValues>(() => ({ ...EMPTY, ...initialValues }));
   const [focus, setFocus] = useState<FocusTarget>(initialFocus);
   /** After Tab advances workingDate → text, next Tab from title should walk all chips, not only empty ones. */
   const afterFullChipRingRef = useRef(false);
 
   const handleSave = useCallback(() => {
     if (!values.title.trim()) return;
+    const trimmedUrl = values.url?.trim();
     onTaskReady({
       title: values.title.trim(),
       ...(values.projectId ? { projectId: values.projectId } : {}),
       dueDate: values.dueDate,
       workingDate: values.workingDate,
+      url: trimmedUrl ? trimmedUrl : null,
     });
     setValues(EMPTY);
     afterFullChipRingRef.current = false;
@@ -118,7 +126,7 @@ export function useSmartInput(
         afterFullChipRingRef.current = false;
       }
       const next = nextFocus(f, values, fullCycleFromText);
-      if (f === 'workingDate' && next === 'text') {
+      if (f === 'url' && next === 'text') {
         afterFullChipRingRef.current = true;
       }
       return next;
@@ -146,6 +154,27 @@ export function useSmartInput(
     } else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       handleSave();
+    }
+  }, [handleSave, moveFocusOnTab]);
+
+  const handleUrlChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const v = e.target.value;
+    setValues(prev => ({ ...prev, url: v || null }));
+  }, []);
+
+  const handleUrlKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      setFocus(f => moveFocusOnTab(e, f));
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      setFocus('text');
+    } else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      handleSave();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      setFocus('text');
     }
   }, [handleSave, moveFocusOnTab]);
 
@@ -182,6 +211,8 @@ export function useSmartInput(
     focus,
     handleTitleChange,
     handleTitleKeyDown,
+    handleUrlChange,
+    handleUrlKeyDown,
     handleChipKeyDown,
     handleChipClick,
     handleSelect,

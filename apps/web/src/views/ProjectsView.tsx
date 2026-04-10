@@ -12,11 +12,10 @@ import { useTrackedTimeouts } from "../hooks/useTrackedTimeouts";
 import { useKeyboardNav } from "../hooks/useKeyboardNav";
 import { useProjectNav, SHOW_ARCHIVED_TOGGLE_ID } from "../hooks/useProjectNav";
 import TaskRow from "../components/TaskRow";
-import TaskEditPalette, { type EditPatch } from "../components/TaskEditPalette";
 import HintBar from "../components/layout/HintBar";
 import ConfirmModal from "../components/ConfirmModal";
 import { db } from "../lib/db";
-import type { Task, Project, Space, ProjectWithSpace } from "@sift/shared";
+import type { Task, Project, Space, ChipFocus } from "@sift/shared";
 import type { SpaceGroup } from "../hooks/useTasks";
 
 function ProgressBar({ done, total }: { done: number; total: number }) {
@@ -46,10 +45,7 @@ function ProgressBar({ done, total }: { done: number; total: number }) {
   );
 }
 
-function dispatchEditTask(
-  task: Task,
-  chip: "dueDate" | "workingDate" | "project" | null,
-) {
+function dispatchEditTask(task: Task, chip: ChipFocus | null) {
   window.dispatchEvent(
     new CustomEvent("sift:edit-task", { detail: { task, chip } }),
   );
@@ -101,16 +97,6 @@ export default function ProjectsView() {
     useState<Project | null>(null);
   const deleteConfirmRef = useRef<Project | null>(null);
   deleteConfirmRef.current = deleteConfirmProject;
-  const [urlEditTask, setUrlEditTask] = useState<Task | null>(null);
-
-  const allProjects = useMemo<ProjectWithSpace[]>(
-    () =>
-      groups.flatMap(({ space, projects: ps }) =>
-        ps.map(({ project }) => ({ ...project, space })),
-      ),
-    [groups],
-  );
-
   const { focusedProjectId, setFocusedProjectId, handleProjectKeyDown } =
     useProjectNav();
 
@@ -271,16 +257,6 @@ export default function ProjectsView() {
     setFocusedProjectId(next);
   }, [setFocusedProjectId]);
 
-  async function handleUrlSave(patch: EditPatch) {
-    if (!urlEditTask) return;
-    await db.tasks.update(urlEditTask.id, {
-      url: patch.url ?? null,
-      updatedAt: new Date(),
-      synced: false,
-    });
-    setUrlEditTask(null);
-  }
-
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const tag = (e.target as HTMLElement).tagName;
@@ -322,7 +298,7 @@ export default function ProjectsView() {
           }
           if (e.key === "u" || e.key === "U") {
             e.preventDefault();
-            setUrlEditTask(focused);
+            dispatchEditTask(focused, "url");
             return;
           }
           if (e.metaKey && e.key === "o") {
@@ -668,13 +644,6 @@ export default function ProjectsView() {
         />
       ) : null}
 
-      <div className="px-4 pt-4 pb-3">
-        <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted mb-1">
-          Projects
-        </h2>
-        <p className="text-muted text-[11px]">Progress per project.</p>
-      </div>
-
       <div className="flex-1 overflow-y-auto min-h-0">
         {groups.map(({ space, projects: ps }) => (
           <div key={space.id} className="mb-6">
@@ -773,15 +742,6 @@ export default function ProjectsView() {
         )}
       </div>
 
-      {urlEditTask && (
-        <TaskEditPalette
-          task={urlEditTask}
-          defaultField="url"
-          projects={allProjects}
-          onSave={handleUrlSave}
-          onCancel={() => setUrlEditTask(null)}
-        />
-      )}
       <HintBar
         focusState={focusState as "none" | "project" | "task"}
         archiveHint={archiveHint}

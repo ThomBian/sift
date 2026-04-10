@@ -4,7 +4,7 @@
 
 **Goal:** Allow users to attach a single URL to any Task or Project, editable via an `@u` chip and openable with `Cmd+O`.
 
-**Architecture:** Rename `Task.sourceUrl` → `Task.url` and add `Project.url` via a Dexie v5 migration. Each view renders `TaskEditPalette` conditionally when `urlEditTask` is set. Project URL editing goes through the existing `sift:edit-project` event pipeline into `ProjectEditPalette`.
+**Architecture:** Rename `Task.sourceUrl` → `Task.url` and add `Project.url` via a Dexie v5 migration. Each view renders `CommandPalette` conditionally when `urlEditTask` is set. Project URL editing goes through the existing `sift:edit-project` event pipeline into `ProjectEditPalette`.
 
 **Tech Stack:** Dexie.js (IndexedDB), React, TypeScript, Vitest + Testing Library
 
@@ -19,11 +19,11 @@
 | `apps/web/src/services/SyncService.ts` | Update task/project serializers |
 | `apps/web/src/components/TaskRow.tsx` | Swap `sourceUrl` → `url`, rename testid |
 | `apps/web/src/__tests__/TaskRow.test.tsx` | Update baseTask + url tests |
-| `apps/web/src/components/TaskEditPalette.tsx` | Add `'url'` to EditField/EditPatch + `@u` chip |
-| `apps/web/src/__tests__/TaskEditPalette.test.tsx` | Update baseTask + add @u chip tests |
+| `apps/web/src/components/CommandPalette.tsx` | Add `'url'` to EditField/EditPatch + `@u` chip |
+| `apps/web/src/__tests__/CommandPalette.test.tsx` | Update baseTask + add @u chip tests |
 | `apps/web/src/components/CommandPalette.tsx` | Add `url: null` to createTask |
-| `apps/web/src/views/InboxView.tsx` | U hotkey, Cmd+O, render TaskEditPalette |
-| `apps/web/src/views/TodayView.tsx` | U hotkey, Cmd+O, render TaskEditPalette |
+| `apps/web/src/views/InboxView.tsx` | U hotkey, Cmd+O, render CommandPalette |
+| `apps/web/src/views/TodayView.tsx` | U hotkey, Cmd+O, render CommandPalette |
 | `apps/web/src/views/ProjectsView.tsx` | U/Cmd+O for tasks + projects; link icon on project row |
 | `apps/web/src/components/ProjectEditPalette.tsx` | Add `@u` chip |
 | `apps/web/src/components/layout/AppLayout.tsx` | Extend `sift:edit-project` event type to include `'url'` |
@@ -340,15 +340,15 @@ git commit -m "feat: swap Task.sourceUrl→url in TaskRow and tests"
 
 ---
 
-## Task 4: TaskEditPalette — Add @u Chip
+## Task 4: CommandPalette — Add @u Chip
 
 **Files:**
-- Modify: `apps/web/src/__tests__/TaskEditPalette.test.tsx`
-- Modify: `apps/web/src/components/TaskEditPalette.tsx`
+- Modify: `apps/web/src/__tests__/CommandPalette.test.tsx`
+- Modify: `apps/web/src/components/CommandPalette.tsx`
 
 - [ ] **Step 1: Write failing tests**
 
-In `apps/web/src/__tests__/TaskEditPalette.test.tsx`:
+In `apps/web/src/__tests__/CommandPalette.test.tsx`:
 
 1. Add `url: null` to `baseTask`:
 ```typescript
@@ -371,7 +371,7 @@ const baseTask: Task = {
 ```typescript
 it('renders the @u chip', () => {
   render(
-    <TaskEditPalette
+    <CommandPalette
       task={baseTask}
       defaultField="title"
       projects={projects}
@@ -385,7 +385,7 @@ it('renders the @u chip', () => {
 it('calls onSave with url when Enter is pressed in url mode', () => {
   const onSave = vi.fn();
   render(
-    <TaskEditPalette
+    <CommandPalette
       task={baseTask}
       defaultField="url"
       projects={projects}
@@ -405,14 +405,14 @@ it('calls onSave with url when Enter is pressed in url mode', () => {
 - [ ] **Step 2: Run tests — expect FAIL**
 
 ```bash
-npx vitest run apps/web/src/__tests__/TaskEditPalette.test.tsx
+npx vitest run apps/web/src/__tests__/CommandPalette.test.tsx
 ```
 
 Expected: FAIL — `@u` chip not found, url field not in EditField.
 
-- [ ] **Step 3: Update TaskEditPalette.tsx**
+- [ ] **Step 3: Update CommandPalette.tsx**
 
-Replace the full file content of `apps/web/src/components/TaskEditPalette.tsx`:
+Replace the full file content of `apps/web/src/components/CommandPalette.tsx`:
 
 ```typescript
 import { useState, useEffect, useRef, useMemo } from 'react';
@@ -421,7 +421,7 @@ import type { Task, ProjectWithSpace } from '@sift/shared';
 export type EditField = 'title' | 'dueDate' | 'workingDate' | 'project' | 'url';
 export type EditPatch = Partial<Pick<Task, 'title' | 'dueDate' | 'workingDate' | 'projectId' | 'url'>>;
 
-interface TaskEditPaletteProps {
+interface CommandPaletteProps {
   task: Task;
   defaultField: EditField;
   projects: ProjectWithSpace[];
@@ -458,13 +458,13 @@ function getDateOptions(): DateOption[] {
   ];
 }
 
-export default function TaskEditPalette({
+export default function CommandPalette({
   task,
   defaultField,
   projects,
   onSave,
   onCancel,
-}: TaskEditPaletteProps) {
+}: CommandPaletteProps) {
   const [title, setTitle] = useState(task.title);
   const [projectId, setProjectId] = useState(task.projectId);
   const [dueDate, setDueDate] = useState<Date | null>(task.dueDate);
@@ -711,7 +711,7 @@ export default function TaskEditPalette({
 - [ ] **Step 4: Run tests — expect PASS**
 
 ```bash
-npx vitest run apps/web/src/__tests__/TaskEditPalette.test.tsx
+npx vitest run apps/web/src/__tests__/CommandPalette.test.tsx
 ```
 
 Expected: all tests PASS.
@@ -719,13 +719,13 @@ Expected: all tests PASS.
 - [ ] **Step 5: Commit**
 
 ```bash
-git add apps/web/src/components/TaskEditPalette.tsx apps/web/src/__tests__/TaskEditPalette.test.tsx
-git commit -m "feat: add @u chip to TaskEditPalette"
+git add apps/web/src/components/CommandPalette.tsx apps/web/src/__tests__/CommandPalette.test.tsx
+git commit -m "feat: add @u chip to CommandPalette"
 ```
 
 ---
 
-## Task 5: InboxView + TodayView — U Hotkey, Cmd+O, TaskEditPalette
+## Task 5: InboxView + TodayView — U Hotkey, Cmd+O, CommandPalette
 
 **Files:**
 - Modify: `apps/web/src/views/InboxView.tsx`
@@ -743,7 +743,7 @@ import { useInboxTasks } from '../hooks/useTasks';
 import { useKeyboardNav } from '../hooks/useKeyboardNav';
 import { useSpacesProjects } from '../hooks/useSpacesProjects';
 import TaskList from '../components/TaskList';
-import TaskEditPalette, { type EditPatch } from '../components/TaskEditPalette';
+import CommandPalette, { type EditPatch } from '../components/CommandPalette';
 import HintBar from '../components/layout/HintBar';
 import { db } from '../lib/db';
 import type { Task, ProjectWithSpace } from '@sift/shared';
@@ -847,7 +847,7 @@ export default function InboxView() {
       </div>
 
       {urlEditTask && (
-        <TaskEditPalette
+        <CommandPalette
           task={urlEditTask}
           defaultField="url"
           projects={allProjects}
@@ -866,12 +866,12 @@ export default function InboxView() {
 - [ ] **Step 2: Update TodayView.tsx**
 
 Read the full current TodayView.tsx (to capture the rest of the component after the cut-off), then replace its content with the same pattern. The changes are:
-1. Import `useMemo`, `useSpacesProjects`, `TaskEditPalette`, `type EditPatch`, `type ProjectWithSpace`
+1. Import `useMemo`, `useSpacesProjects`, `CommandPalette`, `type EditPatch`, `type ProjectWithSpace`
 2. Add `urlEditTask` state
 3. Compute `allProjects` from `spacesWithProjects`
 4. Add `U` and `Cmd+O` handlers in `onKey`
 5. Add `handleUrlSave` function
-6. Render `<TaskEditPalette>` above `<HintBar>` when `urlEditTask` is set
+6. Render `<CommandPalette>` above `<HintBar>` when `urlEditTask` is set
 
 Apply the same additions from InboxView. The `todayLabel()` helper and task completion logic (uses `'todo'` status instead of `'inbox'`) must be preserved exactly.
 
@@ -1109,7 +1109,7 @@ git commit -m "feat: add @u chip to ProjectEditPalette"
 At the top of `ProjectsView`, add imports and state:
 
 ```typescript
-import TaskEditPalette, { type EditPatch } from '../components/TaskEditPalette';
+import CommandPalette, { type EditPatch } from '../components/CommandPalette';
 import type { ProjectWithSpace } from '@sift/shared';
 // (add to existing imports, useMemo is already imported)
 ```
@@ -1165,7 +1165,7 @@ if (e.metaKey && e.key === 'o') {
 }
 ```
 
-- [ ] **Step 3: Add handleUrlSave and render TaskEditPalette**
+- [ ] **Step 3: Add handleUrlSave and render CommandPalette**
 
 After the `handleDeleteConfirm` callback, add:
 
@@ -1177,11 +1177,11 @@ async function handleUrlSave(patch: EditPatch) {
 }
 ```
 
-In the return JSX, add `<TaskEditPalette>` above `<HintBar>`:
+In the return JSX, add `<CommandPalette>` above `<HintBar>`:
 
 ```typescript
 {urlEditTask && (
-  <TaskEditPalette
+  <CommandPalette
     task={urlEditTask}
     defaultField="url"
     projects={allProjects}
@@ -1374,7 +1374,7 @@ git commit -m "feat: add U and ⌘O hints to HintBar for task and project focus 
 
 ## Self-Review Checklist (completed inline)
 
-- [x] **Spec coverage:** All spec requirements have corresponding tasks: url on Task, url on Project, @u chip in TaskEditPalette, U hotkey for tasks, U hotkey for projects, Cmd+O for both, link icon on project rows (ProjectsView + Sidebar), HintBar updates
+- [x] **Spec coverage:** All spec requirements have corresponding tasks: url on Task, url on Project, @u chip in CommandPalette, U hotkey for tasks, U hotkey for projects, Cmd+O for both, link icon on project rows (ProjectsView + Sidebar), HintBar updates
 - [x] **No placeholders:** All code blocks are complete
 - [x] **Type consistency:** `EditField` includes `'url'` in Task 4 step 3; `EditPatch` includes `url` throughout; `ProjectPaletteState.initialField` extended in Task 6 step 2; `handleUrlSave` receives `EditPatch` and writes `patch.url` everywhere
 - [x] **db.projects.add** in ProjectEditPalette includes `url: null` (Task 6 step 1e)

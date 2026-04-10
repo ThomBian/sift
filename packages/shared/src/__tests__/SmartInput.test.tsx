@@ -41,12 +41,20 @@ describe('SmartInput', () => {
     onTaskReady = vi.fn();
   });
 
-  it('renders the input and three chip buttons', () => {
+  it('renders the input and four chip buttons', () => {
     render(<SmartInput projects={mockProjects} onTaskReady={onTaskReady} />);
     expect(screen.getByRole('textbox', { name: /task title/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'project' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'dueDate' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'workingDate' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'url' })).toBeInTheDocument();
+  });
+
+  it('clicking the @u chip shows link placeholder (no project/date dropdown)', async () => {
+    render(<SmartInput projects={mockProjects} onTaskReady={onTaskReady} dropdownPosition="inline" />);
+    await userEvent.click(screen.getByRole('button', { name: 'url' }));
+    expect(screen.getByPlaceholderText('Add a link…')).toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: /General/ })).toBeNull();
   });
 
   it('clicking the @p chip opens the project dropdown', async () => {

@@ -1,19 +1,19 @@
 // packages/shared/src/SmartInput/SmartInput.tsx
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useSmartInput, type ChipFocus } from './useSmartInput';
-import { Dropdown, type ProjectWithSpace } from './Dropdown';
+import { Dropdown, type DropdownChip, type ProjectWithSpace } from './Dropdown';
 import type { Task } from '../types';
 import styles from './SmartInput.module.css';
 
 interface SmartInputProps {
   projects: ProjectWithSpace[];
-  onTaskReady: (task: Pick<Task, 'title' | 'dueDate' | 'workingDate'> & { projectId?: string }) => void;
+  onTaskReady: (task: Pick<Task, 'title' | 'dueDate' | 'workingDate' | 'url'> & { projectId?: string }) => void;
   placeholder?: string;
   className?: string;
   /** Optional external ref to the underlying <input> for programmatic focus from the parent. */
   inputRef?: React.RefObject<HTMLInputElement | null>;
   /** Pre-fill the input with existing values (edit mode). */
-  initialValues?: import('./useSmartInput').SmartInputValues;
+  initialValues?: Partial<import('./useSmartInput').SmartInputValues>;
   /** Auto-open this chip's dropdown on mount (edit mode). */
   initialFocus?: import('./useSmartInput').ChipFocus;
   /** Whether the chip dropdown floats absolutely or expands inline below the bar. Default: 'floating'. */
@@ -37,11 +37,13 @@ export function SmartInput({ projects, onTaskReady, placeholder, className, inpu
     focus,
     handleTitleChange,
     handleTitleKeyDown,
+    handleUrlChange,
+    handleUrlKeyDown,
     handleChipKeyDown,
     handleChipClick,
     handleSelect,
     cancelChipSelection,
-  } = useSmartInput(onTaskReady, initialValues, initialFocus);
+  } = useSmartInput(onTaskReady, initialValues ?? {}, initialFocus ?? 'text');
 
   // Reset query whenever the active chip changes
   useEffect(() => {
@@ -60,6 +62,10 @@ export function SmartInput({ projects, onTaskReady, placeholder, className, inpu
 
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (focus === 'url') {
+        handleUrlKeyDown(e);
+        return;
+      }
       if (focus !== 'text') {
         // Dropdown is open. ArrowDown/Up/Enter are intercepted by Dropdown's
         // capture-phase listener and never reach here. Handle only Escape and
@@ -86,7 +92,7 @@ export function SmartInput({ projects, onTaskReady, placeholder, className, inpu
       }
       handleTitleKeyDown(e);
     },
-    [focus, cancelChipSelection, handleTitleKeyDown, inputRef]
+    [focus, cancelChipSelection, handleTitleKeyDown, handleUrlKeyDown, inputRef]
   );
 
   const projectForId = (id: string | null) => id ? projects.find(p => p.id === id) : undefined;
@@ -125,17 +131,40 @@ export function SmartInput({ projects, onTaskReady, placeholder, className, inpu
       sublabel: 'working',
       value: values.workingDate ? formatDate(values.workingDate) : null,
     },
+    {
+      key: 'url',
+      chipClass: styles.chipUrl,
+      activeClass: styles.chipUrlActive,
+      label: '@u',
+      sublabel: 'link',
+      value: values.url
+        ? (() => {
+            const bare = values.url.replace(/^https?:\/\//, '');
+            return bare.length > 18 ? bare.slice(0, 18) + '…' : bare;
+          })()
+        : null,
+    },
   ];
 
   const activeChip = focus !== 'text' ? focus : null;
-  const inputValue = activeChip ? query : values.title;
+  const inputValue = activeChip
+    ? activeChip === 'url'
+      ? (values.url ?? '')
+      : query
+    : values.title;
   const handleInputChange = activeChip
-    ? (e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)
+    ? activeChip === 'url'
+      ? handleUrlChange
+      : (e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)
     : handleTitleChange;
 
   const inputPlaceholder = activeChip
-    ? (activeChip === 'project' ? 'Filter projects…' : 'Pick a date…')
-    : (placeholder ?? 'Add a task… type @p, @w, @d or use Tab');
+    ? activeChip === 'project'
+      ? 'Filter projects…'
+      : activeChip === 'url'
+        ? 'Add a link…'
+        : 'Pick a date…'
+    : (placeholder ?? 'Add a task… type @p, @w, @d, @u or use Tab');
 
   return (
     <div className={`${styles.wrapper} ${className ?? ''}`}>
@@ -175,9 +204,9 @@ export function SmartInput({ projects, onTaskReady, placeholder, className, inpu
                   <><span className={styles.chipLabel}>{chip.label}</span>&nbsp;{chip.sublabel}</>
                 )}
               </button>
-              {dropdownPosition === 'floating' && focus === chip.key && (
+              {dropdownPosition === 'floating' && focus === chip.key && chip.key !== 'url' && (
                 <Dropdown
-                  type={chip.key}
+                  type={chip.key as DropdownChip}
                   projects={projects}
                   query={query}
                   onSelect={val => handleSelect(chip.key, val)}
@@ -187,9 +216,9 @@ export function SmartInput({ projects, onTaskReady, placeholder, className, inpu
           ))}
         </div>
       </div>
-      {dropdownPosition === 'inline' && focus !== 'text' && (
+      {dropdownPosition === 'inline' && focus !== 'text' && focus !== 'url' && (
         <Dropdown
-          type={focus as ChipFocus}
+          type={focus as DropdownChip}
           projects={projects}
           query={query}
           onSelect={val => handleSelect(focus as ChipFocus, val)}

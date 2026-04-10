@@ -14,7 +14,7 @@ interface CommandPaletteProps {
 }
 
 async function createTask(
-  partial: Pick<Task, "title" | "dueDate" | "workingDate"> & { projectId?: string },
+  partial: Pick<Task, "title" | "dueDate" | "workingDate" | "url"> & { projectId?: string },
   defaultProjectId: string,
 ): Promise<void> {
   const now = new Date();
@@ -25,7 +25,7 @@ async function createTask(
     status: partial.workingDate ? "todo" : "inbox",
     workingDate: partial.workingDate ?? null,
     dueDate: partial.dueDate ?? null,
-    url: null,
+    url: partial.url ?? null,
     createdAt: now,
     updatedAt: now,
     completedAt: null,
@@ -35,12 +35,13 @@ async function createTask(
 
 async function updateTask(
   taskId: string,
-  partial: Pick<Task, "title" | "dueDate" | "workingDate"> & { projectId?: string },
+  partial: Pick<Task, "title" | "dueDate" | "workingDate" | "url"> & { projectId?: string },
 ): Promise<void> {
   const patch: Partial<Task> = {
     title: partial.title,
     dueDate: partial.dueDate,
     workingDate: partial.workingDate,
+    url: partial.url ?? null,
     updatedAt: new Date(),
     synced: false,
   };
@@ -93,12 +94,13 @@ export default function CommandPalette({
 
   const isEditing = editTask != null;
 
-  const initialValues: SmartInputValues | undefined = isEditing
+  const initialValues: Partial<SmartInputValues> | undefined = isEditing
     ? {
         title: editTask.title,
         projectId: editTask.projectId,
         dueDate: editTask.dueDate,
         workingDate: editTask.workingDate,
+        url: editTask.url ?? null,
       }
     : prefillProjectId
       ? { projectId: prefillProjectId }

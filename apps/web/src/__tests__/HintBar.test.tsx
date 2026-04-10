@@ -25,6 +25,8 @@ describe('HintBar', () => {
     expect(screen.getByText('Today')).toBeInTheDocument();
     expect(screen.getByText('Project')).toBeInTheDocument();
     expect(screen.getByText('Edit')).toBeInTheDocument();
+    expect(screen.getByText('Link')).toBeInTheDocument();
+    expect(screen.getByText('Open link')).toBeInTheDocument();
     expect(screen.getByText('Back')).toBeInTheDocument();
     expect(screen.queryByText('New task')).toBeNull();
   });
@@ -35,10 +37,19 @@ describe('HintBar', () => {
     expect(screen.getByText('Edit')).toBeInTheDocument();
     expect(screen.getByText('Due date')).toBeInTheDocument();
     expect(screen.getByText('Icon')).toBeInTheDocument();
-    expect(screen.getByText('Open')).toBeInTheDocument();
+    expect(screen.getByText('Link')).toBeInTheDocument();
+    expect(screen.getByText('Open link')).toBeInTheDocument();
+    expect(screen.getByText('Open', { exact: true })).toBeInTheDocument();
+    expect(screen.getByText('Delete')).toBeInTheDocument();
     expect(screen.getByText('Deselect')).toBeInTheDocument();
     expect(screen.queryByText('New task')).toBeNull();
     expect(screen.queryByText('Done')).toBeNull();
+  });
+
+  it('shows Close for Space when project is expanded', () => {
+    render(<HintBar focusState="project" projectExpanded />);
+    expect(screen.getByText('Close')).toBeInTheDocument();
+    expect(screen.queryByText('Open', { exact: true })).toBeNull();
   });
 
   it('defaults to none hints when no prop given', () => {

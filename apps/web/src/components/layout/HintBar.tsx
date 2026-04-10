@@ -32,7 +32,7 @@ function buildProjectHints(
       hot: true,
     });
   }
-  base.push({ keys: ["X"], label: "delete", hot: true });
+  base.push({ keys: ["X"], label: "Delete", hot: true });
   base.push({ keys: ["Esc"], label: "Deselect" });
   return base;
 }
@@ -52,7 +52,7 @@ const TASK_HINTS: Hint[] = [
 function Key({ label, hot }: { label: string; hot?: boolean }) {
   return (
     <kbd
-      className={`inline-flex items-center justify-center min-h-9 min-w-[2.25rem] px-2 py-1 md:min-h-0 md:min-w-0 md:px-1.5 md:py-0.5 border-[0.5px] font-mono text-[10px] leading-none ${
+      className={`inline-flex items-center justify-center min-h-9 min-w-[2.25rem] px-2 py-1 md:min-h-0 md:min-w-0 md:px-1.5 md:py-0.5 border-[0.5px] font-mono text-[10px] leading-none transition-colors duration-150 ${
         hot
           ? "border-accent text-accent bg-accent/5 shadow-hotkey"
           : "border-border-2 bg-surface-2 text-muted"

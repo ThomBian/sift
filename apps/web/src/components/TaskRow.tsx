@@ -148,9 +148,9 @@ export default function TaskRow({
           rel="noopener noreferrer"
           data-testid="url-icon"
           onClick={(e) => e.stopPropagation()}
-          className="shrink-0 transition-colors text-muted hover:text-accent"
+          className="shrink-0 flex items-center justify-center min-w-11 min-h-11 md:min-w-0 md:min-h-0 text-muted hover:text-accent transition-colors duration-150"
           title={task.url}
-          aria-label="Visit link"
+          aria-label="Open link in new tab"
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
             <path

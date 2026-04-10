@@ -5,12 +5,14 @@ import type { Project, Space } from '../types';
 import type { ChipFocus } from './useSmartInput';
 import styles from './Dropdown.module.css';
 
+export type DropdownChip = Exclude<ChipFocus, 'url'>;
+
 export interface ProjectWithSpace extends Project {
   space: Space;
 }
 
 interface DropdownProps {
-  type: ChipFocus;
+  type: DropdownChip;
   projects: ProjectWithSpace[];
   query: string;
   onSelect: (value: string | Date | null) => void;
