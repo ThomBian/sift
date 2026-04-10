@@ -14,7 +14,7 @@ export function numRows(sectionLen: number): number {
 
 export function globalToSectionLocal(
   sections: EmojiGridSection[],
-  g: number
+  g: number,
 ): { si: number; local: number } | null {
   let off = 0;
   for (let si = 0; si < sections.length; si++) {
@@ -25,13 +25,21 @@ export function globalToSectionLocal(
   return null;
 }
 
-export function sectionLocalToGlobal(sections: EmojiGridSection[], si: number, local: number): number {
+export function sectionLocalToGlobal(
+  sections: EmojiGridSection[],
+  si: number,
+  local: number,
+): number {
   let g = 0;
   for (let i = 0; i < si; i++) g += sections[i].emojis.length;
   return g + local;
 }
 
-export function moveDown(sections: EmojiGridSection[], si: number, local: number): { si: number; local: number } {
+export function moveDown(
+  sections: EmojiGridSection[],
+  si: number,
+  local: number,
+): { si: number; local: number } {
   const L = sections[si].emojis.length;
   const row = Math.floor(local / EMOJI_GRID_COLS);
   const col = local % EMOJI_GRID_COLS;
@@ -52,7 +60,11 @@ export function moveDown(sections: EmojiGridSection[], si: number, local: number
   return { si, local };
 }
 
-export function moveUp(sections: EmojiGridSection[], si: number, local: number): { si: number; local: number } {
+export function moveUp(
+  sections: EmojiGridSection[],
+  si: number,
+  local: number,
+): { si: number; local: number } {
   const L = sections[si].emojis.length;
   const row = Math.floor(local / EMOJI_GRID_COLS);
   const col = local % EMOJI_GRID_COLS;
@@ -72,7 +84,11 @@ export function moveUp(sections: EmojiGridSection[], si: number, local: number):
   return { si, local };
 }
 
-export function moveRight(sections: EmojiGridSection[], si: number, local: number): { si: number; local: number } {
+export function moveRight(
+  sections: EmojiGridSection[],
+  si: number,
+  local: number,
+): { si: number; local: number } {
   const L = sections[si].emojis.length;
   const row = Math.floor(local / EMOJI_GRID_COLS);
   const col = local % EMOJI_GRID_COLS;
@@ -84,7 +100,11 @@ export function moveRight(sections: EmojiGridSection[], si: number, local: numbe
   return { si, local };
 }
 
-export function moveLeft(sections: EmojiGridSection[], si: number, local: number): { si: number; local: number } {
+export function moveLeft(
+  sections: EmojiGridSection[],
+  si: number,
+  local: number,
+): { si: number; local: number } {
   const L = sections[si].emojis.length;
   const row = Math.floor(local / EMOJI_GRID_COLS);
   const col = local % EMOJI_GRID_COLS;

@@ -10,7 +10,9 @@ allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*), Bash(git
 ## Workflow
 
 ### 1. Analyze Changes
+
 Run in parallel:
+
 - `git status` - Show modified/added/deleted/untracked files
 - `git diff --stat` - Show change statistics
 - `git log -1 --oneline` - Show recent commit for message style
@@ -18,6 +20,7 @@ Run in parallel:
 ### 2. Safety Checks
 
 **❌ STOP and WARN if detected:**
+
 - Secrets: `.env*`, `*.key`, `*.pem`, `credentials.json`, `secrets.yaml`, `id_rsa`, `*.p12`, `*.pfx`, `*.cer`
 - API Keys: Any `*_API_KEY`, `*_SECRET`, `*_TOKEN` variables with real values (not placeholders like `your-api-key`, `xxx`, `placeholder`)
 - Large files: `>10MB` without Git LFS
@@ -26,6 +29,7 @@ Run in parallel:
 
 **API Key Validation:**
 Check modified files for patterns like:
+
 ```bash
 OPENAI_API_KEY=sk-proj-xxxxx  # ❌ Real key detected!
 AWS_SECRET_KEY=AKIA...         # ❌ Real key detected!
@@ -40,6 +44,7 @@ SECRET=${YOUR_SECRET}
 ```
 
 **✅ Verify:**
+
 - `.gitignore` properly configured
 - No merge conflicts
 - Correct branch (warn if main/master)
@@ -48,6 +53,7 @@ SECRET=${YOUR_SECRET}
 ### 3. Request Confirmation
 
 Present summary:
+
 ```
 📊 Changes Summary:
 - X files modified, Y added, Z deleted
@@ -66,6 +72,7 @@ Type 'yes' to proceed or 'no' to cancel.
 ### 4. Execute (After Confirmation)
 
 Run sequentially:
+
 ```bash
 git add .
 git status  # Verify staging
@@ -76,6 +83,7 @@ git status  # Verify staging
 Analyze changes and create conventional commit:
 
 **Format:**
+
 ```
 [type]: Brief summary (max 72 characters)
 
@@ -87,6 +95,7 @@ Analyze changes and create conventional commit:
 **Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`, `build`, `ci`
 
 **Example:**
+
 ```
 docs: Update concept README files with comprehensive documentation
 
@@ -128,6 +137,7 @@ Files changed: X (+insertions, -deletions)
 ## When to Use
 
 ✅ **Good:**
+
 - Multi-file documentation updates
 - Feature with tests and docs
 - Bug fixes across files
@@ -135,6 +145,7 @@ Files changed: X (+insertions, -deletions)
 - Configuration changes
 
 ❌ **Avoid:**
+
 - Uncertain what's being committed
 - Contains secrets/sensitive data
 - Protected branches without review
@@ -145,6 +156,7 @@ Files changed: X (+insertions, -deletions)
 ## Alternatives
 
 If user wants control, suggest:
+
 1. **Selective staging**: Review/stage specific files
 2. **Interactive staging**: `git add -p` for patch selection
 3. **PR workflow**: Create branch → push → PR (use `/pr` command)

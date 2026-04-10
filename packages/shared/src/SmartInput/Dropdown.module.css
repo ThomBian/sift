@@ -1,31 +1,59 @@
 /* packages/shared/src/SmartInput/Dropdown.module.css */
+
+/* ── Entrance animations ────────────────────────────────────────────────── */
+@keyframes dropdown-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dropdown-enter-inline {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Floating dropdown ──────────────────────────────────────────────────── */
 .dropdown {
   position: absolute;
   top: calc(100% + 4px);
   right: 0;
   left: auto;
   z-index: 100;
-  background: #FFFFFF;
-  border: 1px solid #E2E2E2;
+  background: #ffffff;
+  border: 0.5px solid #e2e2e2;
   border-radius: 0;
   padding: 4px;
   min-width: 180px;
+  animation: dropdown-enter 150ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
-/* Inline variant: expands the palette panel downward */
+/* ── Inline variant: expands the palette panel downward ─────────────────── */
 .dropdownInline {
-  background: #FFFFFF;
-  border-top: 0.5px solid #E2E2E2;
+  background: #ffffff;
+  border-top: 0.5px solid #e2e2e2;
+  animation: dropdown-enter-inline 120ms cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 
+/* ── Project list items ─────────────────────────────────────────────────── */
 .groupLabel {
   font-size: 10px;
   font-weight: 600;
-  color: #BBBBBB;
+  color: #bbbbbb;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   padding: 6px 10px 3px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
 }
 
 .item {
@@ -39,9 +67,12 @@
   border: none;
   color: #888888;
   font-size: 12px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   cursor: pointer;
   text-align: left;
+  transition:
+    background-color 100ms cubic-bezier(0.23, 1, 0.32, 1),
+    color 100ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .item:hover,
@@ -51,14 +82,14 @@
 }
 
 .itemFocused.newItem {
-  color: #FF4F00;
+  color: #ff4f00;
 }
 
 .newItem {
-  color: #BBBBBB;
+  color: #bbbbbb;
   font-style: italic;
   margin-top: 2px;
-  border-top: 1px solid #E2E2E2;
+  border-top: 0.5px solid #e2e2e2;
 }
 
 .dot {
@@ -68,28 +99,14 @@
   flex-shrink: 0;
 }
 
-.quickPicks {
-  display: flex;
-  flex-direction: column;
-  padding: 4px;
-}
+/* ── Reduced motion ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .dropdown,
+  .dropdownInline {
+    animation: none;
+  }
 
-.quickPick {
-  display: flex;
-  width: 100%;
-  padding: 6px 10px;
-  border-radius: 0;
-  background: none;
-  border: none;
-  color: #888888;
-  font-size: 12px;
-  font-family: 'JetBrains Mono', monospace;
-  cursor: pointer;
-  text-align: left;
-}
-
-.quickPick:hover,
-.quickPickFocused {
-  background: rgba(255, 79, 0, 0.05);
-  color: #111111;
+  .item {
+    transition: none;
+  }
 }

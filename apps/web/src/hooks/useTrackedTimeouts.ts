@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from "react";
 
 /** Schedules timeouts that are cleared on unmount (avoids setState after teardown). */
 export function useTrackedTimeouts(): (fn: () => void, ms: number) => void {

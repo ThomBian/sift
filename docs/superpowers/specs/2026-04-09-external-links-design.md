@@ -40,9 +40,9 @@ Allow users to attach a single external URL to any Task or Project. Links are ed
 
 ### Keyboard shortcuts (task focused)
 
-| Key | Action |
-|-----|--------|
-| `U` | Open `CommandPalette` pre-focused on `@u` chip |
+| Key     | Action                                             |
+| ------- | -------------------------------------------------- |
+| `U`     | Open `CommandPalette` pre-focused on `@u` chip     |
 | `Cmd+O` | Open task's `url` in new tab (no-op if no URL set) |
 
 ### Display
@@ -62,9 +62,9 @@ Allow users to attach a single external URL to any Task or Project. Links are ed
 
 ### Keyboard shortcuts (project row focused)
 
-| Key | Action |
-|-----|--------|
-| `U` | Open `ProjectEditPalette` pre-focused on `@u` chip |
+| Key     | Action                                                |
+| ------- | ----------------------------------------------------- |
+| `U`     | Open `ProjectEditPalette` pre-focused on `@u` chip    |
 | `Cmd+O` | Open project's `url` in new tab (no-op if no URL set) |
 
 No conflict: only one element (task or project) can be focused at a time.

@@ -9,18 +9,18 @@
   gap: 8px;
   padding: 0 12px;
   height: 44px;
-  background: #FFFFFF;
-  border: 1px solid #E2E2E2;
+  background: #ffffff;
+  border: 0.5px solid #e2e2e2;
   border-radius: 0;
-  transition: border-color 0.15s;
+  transition: border-color 150ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .bar:focus-within {
-  border-color: #FF4F00;
+  border-color: #ff4f00;
 }
 
 .icon {
-  color: #BBBBBB;
+  color: #bbbbbb;
   font-size: 15px;
   flex-shrink: 0;
   user-select: none;
@@ -33,7 +33,7 @@
   outline: none;
   color: #111111;
   font-size: 13.5px;
-  font-family: 'Geist', system-ui, sans-serif;
+  font-family: "Geist", system-ui, sans-serif;
   letter-spacing: -0.1px;
   min-width: 0;
 }
@@ -43,7 +43,7 @@
 }
 
 .input::placeholder {
-  color: #BBBBBB;
+  color: #bbbbbb;
 }
 
 .chips {
@@ -63,15 +63,18 @@
   gap: 4px;
   padding: 3px 9px;
   border-radius: 0;
-  border: 1px solid #E2E2E2;
-  background: #FAFAFA;
+  border: 0.5px solid #e2e2e2;
+  background: #fafafa;
   color: #888888;
   font-size: 11.5px;
   font-weight: 500;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.1s;
+  transition:
+    background-color 100ms cubic-bezier(0.23, 1, 0.32, 1),
+    color 100ms cubic-bezier(0.23, 1, 0.32, 1),
+    border-color 100ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .chip:focus {
@@ -88,45 +91,93 @@
 }
 
 /* @p — project: orange accent when active */
-.chipProject         { background: #FAFAFA; color: #888888; border-color: #E2E2E2; }
-.chipProject.active  { background: #FFF5F2; color: #FF4F00; border-color: #FF4F00; }
-.chipProject.set     { background: #FFF5F2; color: #FF4F00; border-color: #FFCDB8; }
+.chipProject {
+  background: #fafafa;
+  color: #888888;
+  border-color: #e2e2e2;
+}
+.chipProject.active {
+  background: #fff5f2;
+  color: #ff4f00;
+  border-color: #ff4f00;
+}
+.chipProject.set {
+  background: #fff5f2;
+  color: #ff4f00;
+  border-color: #ffcdb8;
+}
 
 /* @d — due date: red tint when active */
-.chipDue             { background: #FAFAFA; color: #888888; border-color: #E2E2E2; }
-.chipDue.active      { background: #FFF0F0; color: #E60000; border-color: #E60000; }
-.chipDue.set         { background: #FFF0F0; color: #E60000; border-color: #FFBDBD; }
+.chipDue {
+  background: #fafafa;
+  color: #888888;
+  border-color: #e2e2e2;
+}
+.chipDue.active {
+  background: #fff0f0;
+  color: #e60000;
+  border-color: #e60000;
+}
+.chipDue.set {
+  background: #fff0f0;
+  color: #e60000;
+  border-color: #ffbdbd;
+}
 
 /* @w — working date: green tint when active */
-.chipWorking         { background: #FAFAFA; color: #888888; border-color: #E2E2E2; }
-.chipWorking.active  { background: #F0FFF4; color: #16A34A; border-color: #16A34A; }
-.chipWorking.set     { background: #F0FFF4; color: #16A34A; border-color: #BBF7D0; }
+.chipWorking {
+  background: #fafafa;
+  color: #888888;
+  border-color: #e2e2e2;
+}
+.chipWorking.active {
+  background: #f0fff4;
+  color: #16a34a;
+  border-color: #16a34a;
+}
+.chipWorking.set {
+  background: #f0fff4;
+  color: #16a34a;
+  border-color: #bbf7d0;
+}
 
 /* Standalone active variants for CSS Modules compatibility */
 .chipProjectActive {
-  background: #FFF5F2;
-  color: #FF4F00;
-  border-color: #FF4F00;
+  background: #fff5f2;
+  color: #ff4f00;
+  border-color: #ff4f00;
 }
 .chipDueActive {
-  background: #FFF0F0;
-  color: #E60000;
-  border-color: #E60000;
+  background: #fff0f0;
+  color: #e60000;
+  border-color: #e60000;
 }
 .chipWorkingActive {
-  background: #F0FFF4;
-  color: #16A34A;
-  border-color: #16A34A;
+  background: #f0fff4;
+  color: #16a34a;
+  border-color: #16a34a;
 }
 
 /* @u — link: accent when active / set */
-.chipUrl              { background: #FAFAFA; color: #888888; border-color: #E2E2E2; }
-.chipUrl.active       { background: #FFF5F2; color: #FF4F00; border-color: #FF4F00; }
-.chipUrl.set          { background: #FFF5F2; color: #FF4F00; border-color: #FFCDB8; }
+.chipUrl {
+  background: #fafafa;
+  color: #888888;
+  border-color: #e2e2e2;
+}
+.chipUrl.active {
+  background: #fff5f2;
+  color: #ff4f00;
+  border-color: #ff4f00;
+}
+.chipUrl.set {
+  background: #fff5f2;
+  color: #ff4f00;
+  border-color: #ffcdb8;
+}
 .chipUrlActive {
-  background: #FFF5F2;
-  color: #FF4F00;
-  border-color: #FF4F00;
+  background: #fff5f2;
+  color: #ff4f00;
+  border-color: #ff4f00;
 }
 
 .chipDot {

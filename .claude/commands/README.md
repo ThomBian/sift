@@ -20,89 +20,89 @@ Slash commands are shortcuts that control Claude's behavior during an interactiv
 
 Built-in commands are shortcuts for common actions. There are **55+ built-in commands** and **5 bundled skills** available. Type `/` in Claude Code to see the full list, or type `/` followed by any letters to filter.
 
-| Command | Purpose |
-|---------|---------|
-| `/add-dir <path>` | Add working directory |
-| `/agents` | Manage agent configurations |
-| `/branch [name]` | Branch conversation into a new session (alias: `/fork`). Note: `/fork` renamed to `/branch` in v2.1.77 |
-| `/btw <question>` | Side question without adding to history |
-| `/chrome` | Configure Chrome browser integration |
-| `/clear` | Clear conversation (aliases: `/reset`, `/new`) |
-| `/color [color\|default]` | Set prompt bar color |
-| `/compact [instructions]` | Compact conversation with optional focus instructions |
-| `/config` | Open Settings (alias: `/settings`) |
-| `/context` | Visualize context usage as colored grid |
-| `/copy [N]` | Copy assistant response to clipboard; `w` writes to file |
-| `/cost` | Show token usage statistics |
-| `/desktop` | Continue in Desktop app (alias: `/app`) |
-| `/diff` | Interactive diff viewer for uncommitted changes |
-| `/doctor` | Diagnose installation health |
-| `/effort [low\|medium\|high\|max\|auto]` | Set effort level. `max` requires Opus 4.6 |
-| `/exit` | Exit the REPL (alias: `/quit`) |
-| `/export [filename]` | Export the current conversation to a file or clipboard |
-| `/extra-usage` | Configure extra usage for rate limits |
-| `/fast [on\|off]` | Toggle fast mode |
-| `/feedback` | Submit feedback (alias: `/bug`) |
-| `/help` | Show help |
-| `/hooks` | View hook configurations |
-| `/ide` | Manage IDE integrations |
-| `/init` | Initialize `CLAUDE.md`. Set `CLAUDE_CODE_NEW_INIT=true` for interactive flow |
-| `/insights` | Generate session analysis report |
-| `/install-github-app` | Set up GitHub Actions app |
-| `/install-slack-app` | Install Slack app |
-| `/keybindings` | Open keybindings configuration |
-| `/login` | Switch Anthropic accounts |
-| `/logout` | Sign out from your Anthropic account |
-| `/mcp` | Manage MCP servers and OAuth |
-| `/memory` | Edit `CLAUDE.md`, toggle auto-memory |
-| `/mobile` | QR code for mobile app (aliases: `/ios`, `/android`) |
-| `/model [model]` | Select model with left/right arrows for effort |
-| `/passes` | Share free week of Claude Code |
-| `/permissions` | View/update permissions (alias: `/allowed-tools`) |
-| `/plan [description]` | Enter plan mode |
-| `/plugin` | Manage plugins |
-| `/pr-comments [PR]` | Fetch GitHub PR comments |
-| `/privacy-settings` | Privacy settings (Pro/Max only) |
-| `/release-notes` | View changelog |
-| `/reload-plugins` | Reload active plugins |
-| `/remote-control` | Remote control from claude.ai (alias: `/rc`) |
-| `/remote-env` | Configure default remote environment |
-| `/rename [name]` | Rename session |
-| `/resume [session]` | Resume conversation (alias: `/continue`) |
-| `/review` | **Deprecated** — install the `code-review` plugin instead |
-| `/rewind` | Rewind conversation and/or code (alias: `/checkpoint`) |
-| `/sandbox` | Toggle sandbox mode |
-| `/schedule [description]` | Create/manage scheduled tasks |
-| `/security-review` | Analyze branch for security vulnerabilities |
-| `/skills` | List available skills |
-| `/stats` | Visualize daily usage, sessions, streaks |
-| `/status` | Show version, model, account |
-| `/statusline` | Configure status line |
-| `/tasks` | List/manage background tasks |
-| `/terminal-setup` | Configure terminal keybindings |
-| `/theme` | Change color theme |
-| `/vim` | Toggle Vim/Normal modes |
-| `/voice` | Toggle push-to-talk voice dictation |
+| Command                                  | Purpose                                                                                                |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `/add-dir <path>`                        | Add working directory                                                                                  |
+| `/agents`                                | Manage agent configurations                                                                            |
+| `/branch [name]`                         | Branch conversation into a new session (alias: `/fork`). Note: `/fork` renamed to `/branch` in v2.1.77 |
+| `/btw <question>`                        | Side question without adding to history                                                                |
+| `/chrome`                                | Configure Chrome browser integration                                                                   |
+| `/clear`                                 | Clear conversation (aliases: `/reset`, `/new`)                                                         |
+| `/color [color\|default]`                | Set prompt bar color                                                                                   |
+| `/compact [instructions]`                | Compact conversation with optional focus instructions                                                  |
+| `/config`                                | Open Settings (alias: `/settings`)                                                                     |
+| `/context`                               | Visualize context usage as colored grid                                                                |
+| `/copy [N]`                              | Copy assistant response to clipboard; `w` writes to file                                               |
+| `/cost`                                  | Show token usage statistics                                                                            |
+| `/desktop`                               | Continue in Desktop app (alias: `/app`)                                                                |
+| `/diff`                                  | Interactive diff viewer for uncommitted changes                                                        |
+| `/doctor`                                | Diagnose installation health                                                                           |
+| `/effort [low\|medium\|high\|max\|auto]` | Set effort level. `max` requires Opus 4.6                                                              |
+| `/exit`                                  | Exit the REPL (alias: `/quit`)                                                                         |
+| `/export [filename]`                     | Export the current conversation to a file or clipboard                                                 |
+| `/extra-usage`                           | Configure extra usage for rate limits                                                                  |
+| `/fast [on\|off]`                        | Toggle fast mode                                                                                       |
+| `/feedback`                              | Submit feedback (alias: `/bug`)                                                                        |
+| `/help`                                  | Show help                                                                                              |
+| `/hooks`                                 | View hook configurations                                                                               |
+| `/ide`                                   | Manage IDE integrations                                                                                |
+| `/init`                                  | Initialize `CLAUDE.md`. Set `CLAUDE_CODE_NEW_INIT=true` for interactive flow                           |
+| `/insights`                              | Generate session analysis report                                                                       |
+| `/install-github-app`                    | Set up GitHub Actions app                                                                              |
+| `/install-slack-app`                     | Install Slack app                                                                                      |
+| `/keybindings`                           | Open keybindings configuration                                                                         |
+| `/login`                                 | Switch Anthropic accounts                                                                              |
+| `/logout`                                | Sign out from your Anthropic account                                                                   |
+| `/mcp`                                   | Manage MCP servers and OAuth                                                                           |
+| `/memory`                                | Edit `CLAUDE.md`, toggle auto-memory                                                                   |
+| `/mobile`                                | QR code for mobile app (aliases: `/ios`, `/android`)                                                   |
+| `/model [model]`                         | Select model with left/right arrows for effort                                                         |
+| `/passes`                                | Share free week of Claude Code                                                                         |
+| `/permissions`                           | View/update permissions (alias: `/allowed-tools`)                                                      |
+| `/plan [description]`                    | Enter plan mode                                                                                        |
+| `/plugin`                                | Manage plugins                                                                                         |
+| `/pr-comments [PR]`                      | Fetch GitHub PR comments                                                                               |
+| `/privacy-settings`                      | Privacy settings (Pro/Max only)                                                                        |
+| `/release-notes`                         | View changelog                                                                                         |
+| `/reload-plugins`                        | Reload active plugins                                                                                  |
+| `/remote-control`                        | Remote control from claude.ai (alias: `/rc`)                                                           |
+| `/remote-env`                            | Configure default remote environment                                                                   |
+| `/rename [name]`                         | Rename session                                                                                         |
+| `/resume [session]`                      | Resume conversation (alias: `/continue`)                                                               |
+| `/review`                                | **Deprecated** — install the `code-review` plugin instead                                              |
+| `/rewind`                                | Rewind conversation and/or code (alias: `/checkpoint`)                                                 |
+| `/sandbox`                               | Toggle sandbox mode                                                                                    |
+| `/schedule [description]`                | Create/manage scheduled tasks                                                                          |
+| `/security-review`                       | Analyze branch for security vulnerabilities                                                            |
+| `/skills`                                | List available skills                                                                                  |
+| `/stats`                                 | Visualize daily usage, sessions, streaks                                                               |
+| `/status`                                | Show version, model, account                                                                           |
+| `/statusline`                            | Configure status line                                                                                  |
+| `/tasks`                                 | List/manage background tasks                                                                           |
+| `/terminal-setup`                        | Configure terminal keybindings                                                                         |
+| `/theme`                                 | Change color theme                                                                                     |
+| `/vim`                                   | Toggle Vim/Normal modes                                                                                |
+| `/voice`                                 | Toggle push-to-talk voice dictation                                                                    |
 
 ### Bundled Skills
 
 These skills ship with Claude Code and are invoked like slash commands:
 
-| Skill | Purpose |
-|-------|---------|
-| `/batch <instruction>` | Orchestrate large-scale parallel changes using worktrees |
-| `/claude-api` | Load Claude API reference for project language |
-| `/debug [description]` | Enable debug logging |
-| `/loop [interval] <prompt>` | Run prompt repeatedly on interval |
-| `/simplify [focus]` | Review changed files for code quality |
+| Skill                       | Purpose                                                  |
+| --------------------------- | -------------------------------------------------------- |
+| `/batch <instruction>`      | Orchestrate large-scale parallel changes using worktrees |
+| `/claude-api`               | Load Claude API reference for project language           |
+| `/debug [description]`      | Enable debug logging                                     |
+| `/loop [interval] <prompt>` | Run prompt repeatedly on interval                        |
+| `/simplify [focus]`         | Review changed files for code quality                    |
 
 ### Deprecated Commands
 
-| Command | Status |
-|---------|--------|
-| `/review` | Deprecated — replaced by `code-review` plugin |
-| `/output-style` | Deprecated since v2.1.73 |
-| `/fork` | Renamed to `/branch` (alias still works, v2.1.77) |
+| Command         | Status                                            |
+| --------------- | ------------------------------------------------- |
+| `/review`       | Deprecated — replaced by `code-review` plugin     |
+| `/output-style` | Deprecated since v2.1.73                          |
+| `/fork`         | Renamed to `/branch` (alias still works, v2.1.77) |
 
 ### Recent Changes
 
@@ -121,10 +121,10 @@ These skills ship with Claude Code and are invoked like slash commands:
 
 Custom slash commands have been **merged into skills**. Both approaches create commands you can invoke with `/command-name`:
 
-| Approach | Location | Status |
-|----------|----------|--------|
+| Approach                 | Location                         | Status           |
+| ------------------------ | -------------------------------- | ---------------- |
 | **Skills (Recommended)** | `.claude/skills/<name>/SKILL.md` | Current standard |
-| **Legacy Commands** | `.claude/commands/<name>.md` | Still works |
+| **Legacy Commands**      | `.claude/commands/<name>.md`     | Still works      |
 
 If a skill and a command share the same name, the **skill takes precedence**. For example, when both `.claude/commands/review.md` and `.claude/skills/review/SKILL.md` exist, the skill version is used.
 
@@ -133,11 +133,13 @@ If a skill and a command share the same name, the **skill takes precedence**. Fo
 Your existing `.claude/commands/` files continue to work without changes. To migrate to skills:
 
 **Before (Command):**
+
 ```
 .claude/commands/optimize.md
 ```
 
 **After (Skill):**
+
 ```
 .claude/skills/optimize/SKILL.md
 ```
@@ -167,7 +169,6 @@ mkdir -p .claude/skills/my-command
 name: my-command
 description: What this command does and when to use it
 ---
-
 # My Command
 
 Instructions for Claude to follow when this command is invoked.
@@ -179,18 +180,18 @@ Instructions for Claude to follow when this command is invoked.
 
 ### Frontmatter Reference
 
-| Field | Purpose | Default |
-|-------|---------|---------|
-| `name` | Command name (becomes `/name`) | Directory name |
-| `description` | Brief description (helps Claude know when to use it) | First paragraph |
-| `argument-hint` | Expected arguments for auto-completion | None |
-| `allowed-tools` | Tools the command can use without permission | Inherits |
-| `model` | Specific model to use | Inherits |
-| `disable-model-invocation` | If `true`, only user can invoke (not Claude) | `false` |
-| `user-invocable` | If `false`, hide from `/` menu | `true` |
-| `context` | Set to `fork` to run in isolated subagent | None |
-| `agent` | Agent type when using `context: fork` | `general-purpose` |
-| `hooks` | Skill-scoped hooks (PreToolUse, PostToolUse, Stop) | None |
+| Field                      | Purpose                                              | Default           |
+| -------------------------- | ---------------------------------------------------- | ----------------- |
+| `name`                     | Command name (becomes `/name`)                       | Directory name    |
+| `description`              | Brief description (helps Claude know when to use it) | First paragraph   |
+| `argument-hint`            | Expected arguments for auto-completion               | None              |
+| `allowed-tools`            | Tools the command can use without permission         | Inherits          |
+| `model`                    | Specific model to use                                | Inherits          |
+| `disable-model-invocation` | If `true`, only user can invoke (not Claude)         | `false`           |
+| `user-invocable`           | If `false`, hide from `/` menu                       | `true`            |
+| `context`                  | Set to `fork` to run in isolated subagent            | None              |
+| `agent`                    | Agent type when using `context: fork`                | `general-purpose` |
+| `hooks`                    | Skill-scoped hooks (PreToolUse, PostToolUse, Stop)   | None              |
 
 ### Arguments
 
@@ -203,7 +204,6 @@ Commands can receive arguments:
 name: fix-issue
 description: Fix a GitHub issue by number
 ---
-
 Fix issue #$ARGUMENTS following our coding standards
 ```
 
@@ -216,7 +216,6 @@ Usage: `/fix-issue 123` → `$ARGUMENTS` becomes "123"
 name: review-pr
 description: Review a PR with priority
 ---
-
 Review PR #$0 with priority $1
 ```
 
@@ -265,6 +264,7 @@ Plugins can provide custom commands:
 Or simply `/command-name` when there are no naming conflicts.
 
 **Examples:**
+
 ```bash
 /frontend-design:frontend-design
 /commit-commands:commit
@@ -279,6 +279,7 @@ MCP servers can expose prompts as slash commands:
 ```
 
 **Examples:**
+
 ```bash
 /mcp__github__list_prs
 /mcp__github__pr_review 456
@@ -339,6 +340,7 @@ These example commands can be installed as skills or legacy commands.
 Analyzes code for performance issues, memory leaks, and optimization opportunities.
 
 **Usage:**
+
 ```
 /optimize
 [Paste your code]
@@ -349,6 +351,7 @@ Analyzes code for performance issues, memory leaks, and optimization opportuniti
 Guides through PR preparation checklist including linting, testing, and commit formatting.
 
 **Usage:**
+
 ```
 /pr
 ```
@@ -361,6 +364,7 @@ Guides through PR preparation checklist including linting, testing, and commit f
 Generates comprehensive API documentation from source code.
 
 **Usage:**
+
 ```
 /generate-api-docs
 ```
@@ -370,6 +374,7 @@ Generates comprehensive API documentation from source code.
 Creates a git commit with dynamic context from your repository.
 
 **Usage:**
+
 ```
 /commit [optional message]
 ```
@@ -379,11 +384,13 @@ Creates a git commit with dynamic context from your repository.
 Stages all changes, creates a commit, and pushes to remote with safety checks.
 
 **Usage:**
+
 ```
 /push-all
 ```
 
 **Safety Checks:**
+
 - Secrets: `.env*`, `*.key`, `*.pem`, `credentials.json`
 - API Keys: Detects real keys vs. placeholders
 - Large files: `>10MB` without Git LFS
@@ -394,6 +401,7 @@ Stages all changes, creates a commit, and pushes to remote with safety checks.
 Restructures project documentation for clarity and accessibility.
 
 **Usage:**
+
 ```
 /doc-refactor
 ```
@@ -403,6 +411,7 @@ Restructures project documentation for clarity and accessibility.
 Implements pre-commit hooks and GitHub Actions for quality assurance.
 
 **Usage:**
+
 ```
 /setup-ci-cd
 ```
@@ -412,6 +421,7 @@ Implements pre-commit hooks and GitHub Actions for quality assurance.
 Increases test coverage by targeting untested branches and edge cases.
 
 **Usage:**
+
 ```
 /unit-test-expand
 ```
@@ -502,20 +512,21 @@ Deploy the application to production:
 
 ## Best Practices
 
-| Do | Don't |
-|------|---------|
-| Use clear, action-oriented names | Create commands for one-time tasks |
-| Include `description` with trigger conditions | Build complex logic in commands |
-| Keep commands focused on single task | Hardcode sensitive information |
-| Use `disable-model-invocation` for side effects | Skip the description field |
-| Use `!` prefix for dynamic context | Assume Claude knows current state |
-| Organize related files in skill directories | Put everything in one file |
+| Do                                              | Don't                              |
+| ----------------------------------------------- | ---------------------------------- |
+| Use clear, action-oriented names                | Create commands for one-time tasks |
+| Include `description` with trigger conditions   | Build complex logic in commands    |
+| Keep commands focused on single task            | Hardcode sensitive information     |
+| Use `disable-model-invocation` for side effects | Skip the description field         |
+| Use `!` prefix for dynamic context              | Assume Claude knows current state  |
+| Organize related files in skill directories     | Put everything in one file         |
 
 ## Troubleshooting
 
 ### Command Not Found
 
 **Solutions:**
+
 - Check file is in `.claude/skills/<name>/SKILL.md` or `.claude/commands/<name>.md`
 - Verify the `name` field in frontmatter matches expected command name
 - Restart Claude Code session
@@ -524,6 +535,7 @@ Deploy the application to production:
 ### Command Not Executing as Expected
 
 **Solutions:**
+
 - Add more specific instructions
 - Include examples in the skill file
 - Check `allowed-tools` if using bash commands
@@ -549,4 +561,4 @@ If both exist with the same name, the **skill takes precedence**. Remove one or 
 
 ---
 
-*Part of the [Claude How To](../) guide series*
+_Part of the [Claude How To](../) guide series_

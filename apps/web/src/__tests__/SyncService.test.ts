@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { db } from '../lib/db';
-import { SyncService } from '../services/SyncService';
-import type { Space, Project, Task } from '@sift/shared';
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { db } from "../lib/db";
+import { SyncService } from "../services/SyncService";
+import type { Space, Project, Task } from "@sift/shared";
 
 const mockUpsert = vi.fn().mockResolvedValue({ error: null });
 
@@ -22,13 +22,13 @@ function createMockSupabase() {
   };
 }
 
-const now = new Date('2026-04-04T10:00:00Z');
+const now = new Date("2026-04-04T10:00:00Z");
 
 function makeSpace(overrides?: Partial<Space>): Space {
   return {
-    id: 'space-1',
-    name: 'Work',
-    color: '#5E6AD2',
+    id: "space-1",
+    name: "Work",
+    color: "#5E6AD2",
     createdAt: now,
     updatedAt: now,
     synced: false,
@@ -38,10 +38,10 @@ function makeSpace(overrides?: Partial<Space>): Space {
 
 function makeProject(overrides?: Partial<Project>): Project {
   return {
-    id: 'project-1',
-    name: 'General',
-    emoji: '📚',
-    spaceId: 'space-1',
+    id: "project-1",
+    name: "General",
+    emoji: "📚",
+    spaceId: "space-1",
     dueDate: null,
     archived: false,
     url: null,
@@ -54,10 +54,10 @@ function makeProject(overrides?: Partial<Project>): Project {
 
 function makeTask(overrides?: Partial<Task>): Task {
   return {
-    id: 'task-1',
-    title: 'Test task',
-    projectId: 'project-1',
-    status: 'inbox',
+    id: "task-1",
+    title: "Test task",
+    projectId: "project-1",
+    status: "inbox",
     workingDate: null,
     dueDate: null,
     createdAt: now,
@@ -83,88 +83,92 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('SyncService', () => {
-  describe('sync() — push', () => {
-    it('pushes unsynced spaces to Supabase', async () => {
+describe("SyncService", () => {
+  describe("sync() — push", () => {
+    it("pushes unsynced spaces to Supabase", async () => {
       await db.spaces.add(makeSpace({ synced: false }));
       const mockSupabase = createMockSupabase();
 
       const svc = new SyncService(mockSupabase as never);
-      await svc.sync('user-1');
+      await svc.sync("user-1");
 
-      expect(mockSupabase.from).toHaveBeenCalledWith('spaces');
+      expect(mockSupabase.from).toHaveBeenCalledWith("spaces");
       expect(mockUpsert).toHaveBeenCalledWith(
         expect.arrayContaining([
-          expect.objectContaining({ id: 'space-1', user_id: 'user-1' }),
+          expect.objectContaining({ id: "space-1", user_id: "user-1" }),
         ]),
-        expect.objectContaining({ onConflict: 'id' })
+        expect.objectContaining({ onConflict: "id" }),
       );
     });
 
-    it('pushes unsynced projects to Supabase', async () => {
+    it("pushes unsynced projects to Supabase", async () => {
       await db.spaces.add(makeSpace({ synced: true }));
       await db.projects.add(makeProject({ synced: false }));
       const mockSupabase = createMockSupabase();
 
       const svc = new SyncService(mockSupabase as never);
-      await svc.sync('user-1');
+      await svc.sync("user-1");
 
-      expect(mockSupabase.from).toHaveBeenCalledWith('projects');
+      expect(mockSupabase.from).toHaveBeenCalledWith("projects");
       expect(mockUpsert).toHaveBeenCalledWith(
         expect.arrayContaining([
-          expect.objectContaining({ id: 'project-1', user_id: 'user-1', emoji: '📚' }),
+          expect.objectContaining({
+            id: "project-1",
+            user_id: "user-1",
+            emoji: "📚",
+          }),
         ]),
-        expect.objectContaining({ onConflict: 'id' })
+        expect.objectContaining({ onConflict: "id" }),
       );
     });
 
-    it('pushes unsynced tasks to Supabase', async () => {
+    it("pushes unsynced tasks to Supabase", async () => {
       await db.spaces.add(makeSpace({ synced: true }));
       await db.projects.add(makeProject({ synced: true }));
       await db.tasks.add(makeTask({ synced: false }));
       const mockSupabase = createMockSupabase();
 
       const svc = new SyncService(mockSupabase as never);
-      await svc.sync('user-1');
+      await svc.sync("user-1");
 
-      expect(mockSupabase.from).toHaveBeenCalledWith('tasks');
+      expect(mockSupabase.from).toHaveBeenCalledWith("tasks");
       expect(mockUpsert).toHaveBeenCalledWith(
         expect.arrayContaining([
-          expect.objectContaining({ id: 'task-1', user_id: 'user-1' }),
+          expect.objectContaining({ id: "task-1", user_id: "user-1" }),
         ]),
-        expect.objectContaining({ onConflict: 'id' })
+        expect.objectContaining({ onConflict: "id" }),
       );
     });
 
-    it('does not push when everything is already synced', async () => {
+    it("does not push when everything is already synced", async () => {
       await db.spaces.add(makeSpace({ synced: true }));
       const mockSupabase = createMockSupabase();
 
       const svc = new SyncService(mockSupabase as never);
-      await svc.sync('user-1');
+      await svc.sync("user-1");
 
       expect(mockUpsert).not.toHaveBeenCalled();
     });
 
-    it('marks records synced=true after successful push', async () => {
+    it("marks records synced=true after successful push", async () => {
       await db.spaces.add(makeSpace({ synced: false }));
       const mockSupabase = createMockSupabase();
 
       const svc = new SyncService(mockSupabase as never);
-      await svc.sync('user-1');
+      await svc.sync("user-1");
 
-      const space = await db.spaces.get('space-1');
+      const space = await db.spaces.get("space-1");
       expect(space!.synced).toBe(true);
     });
   });
 
-  describe('sync() — pull', () => {
-    it('writes remote records to Dexie using LWW', async () => {
+  describe("sync() — pull", () => {
+    it("writes remote records to Dexie using LWW", async () => {
       const remoteTask = makeTask({
-        id: 'remote-task',
-        title: 'From server',
+        id: "remote-task",
+        title: "From server",
         synced: true,
-        updatedAt: new Date('2026-04-04T12:00:00Z'),
+        updatedAt: new Date("2026-04-04T12:00:00Z"),
       });
 
       mockGt
@@ -184,7 +188,7 @@ describe('SyncService', () => {
               completed_at: null,
               url: null,
               synced: true,
-              user_id: 'user-1',
+              user_id: "user-1",
             },
           ],
           error: null,
@@ -192,26 +196,26 @@ describe('SyncService', () => {
 
       const mockSupabase = createMockSupabase();
       const svc = new SyncService(mockSupabase as never);
-      await svc.sync('user-1');
+      await svc.sync("user-1");
 
-      const stored = await db.tasks.get('remote-task');
+      const stored = await db.tasks.get("remote-task");
       expect(stored).toBeDefined();
-      expect(stored!.title).toBe('From server');
+      expect(stored!.title).toBe("From server");
     });
 
-    it('keeps the local record when local updatedAt is newer', async () => {
-      const localUpdatedAt = new Date('2026-04-04T13:00:00Z');
-      const remoteUpdatedAt = new Date('2026-04-04T11:00:00Z');
+    it("keeps the local record when local updatedAt is newer", async () => {
+      const localUpdatedAt = new Date("2026-04-04T13:00:00Z");
+      const remoteUpdatedAt = new Date("2026-04-04T11:00:00Z");
 
       await db.spaces.add(makeSpace({ synced: true }));
       await db.projects.add(makeProject({ synced: true }));
       await db.tasks.add(
         makeTask({
-          id: 'task-conflict',
-          title: 'Local wins',
+          id: "task-conflict",
+          title: "Local wins",
           updatedAt: localUpdatedAt,
           synced: true,
-        })
+        }),
       );
 
       mockGt
@@ -220,10 +224,10 @@ describe('SyncService', () => {
         .mockResolvedValueOnce({
           data: [
             {
-              id: 'task-conflict',
-              title: 'Remote title',
-              project_id: 'project-1',
-              status: 'inbox',
+              id: "task-conflict",
+              title: "Remote title",
+              project_id: "project-1",
+              status: "inbox",
               working_date: null,
               due_date: null,
               created_at: now.toISOString(),
@@ -231,7 +235,7 @@ describe('SyncService', () => {
               completed_at: null,
               url: null,
               synced: true,
-              user_id: 'user-1',
+              user_id: "user-1",
             },
           ],
           error: null,
@@ -239,15 +243,15 @@ describe('SyncService', () => {
 
       const mockSupabase = createMockSupabase();
       const svc = new SyncService(mockSupabase as never);
-      await svc.sync('user-1');
+      await svc.sync("user-1");
 
-      const stored = await db.tasks.get('task-conflict');
-      expect(stored!.title).toBe('Local wins');
+      const stored = await db.tasks.get("task-conflict");
+      expect(stored!.title).toBe("Local wins");
     });
   });
 
-  describe('subscribe()', () => {
-    it('returns an unsubscribe function', () => {
+  describe("subscribe()", () => {
+    it("returns an unsubscribe function", () => {
       const mockSupabase = {
         from: vi.fn(),
         channel: vi.fn(() => ({
@@ -257,11 +261,11 @@ describe('SyncService', () => {
         removeChannel: vi.fn(),
       };
       const svc = new SyncService(mockSupabase as never);
-      const unsub = svc.subscribe('user-1', vi.fn());
-      expect(typeof unsub).toBe('function');
+      const unsub = svc.subscribe("user-1", vi.fn());
+      expect(typeof unsub).toBe("function");
     });
 
-    it('calls the onChange callback when Realtime fires', () => {
+    it("calls the onChange callback when Realtime fires", () => {
       const onChange = vi.fn();
       let capturedHandler: (() => void) | undefined;
 
@@ -276,7 +280,7 @@ describe('SyncService', () => {
         (_event: string, _filter: unknown, handler: () => void) => {
           capturedHandler = handler;
           return mockChannelObj;
-        }
+        },
       );
 
       const mockSupabase = {
@@ -286,7 +290,7 @@ describe('SyncService', () => {
       };
 
       const svc = new SyncService(mockSupabase as never);
-      svc.subscribe('user-1', onChange);
+      svc.subscribe("user-1", onChange);
 
       expect(capturedHandler).toBeDefined();
       capturedHandler!();

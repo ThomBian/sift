@@ -1,7 +1,7 @@
-import { useState, useMemo, type ReactNode } from 'react';
-import TaskRow from './TaskRow';
-import { useSpacesProjects } from '../hooks/useSpacesProjects';
-import type { Task, Project, Space } from '@sift/shared';
+import { useState, useMemo, type ReactNode } from "react";
+import TaskRow from "./TaskRow";
+import { useSpacesProjects } from "../hooks/useSpacesProjects";
+import type { Task, Project, Space } from "@sift/shared";
 
 interface TaskListProps {
   tasks: Task[];
@@ -12,12 +12,21 @@ interface TaskListProps {
   emptyState?: ReactNode;
 }
 
-export default function TaskList({ tasks, focusedId, onFocus, onToggle, exitingIds, emptyState }: TaskListProps) {
+export default function TaskList({
+  tasks,
+  focusedId,
+  onFocus,
+  onToggle,
+  exitingIds,
+  emptyState,
+}: TaskListProps) {
   const [doneExpanded, setDoneExpanded] = useState(false);
   const { spacesWithProjects } = useSpacesProjects();
 
-  const activeTasks = tasks.filter((t) => t.status !== 'done' && t.status !== 'archived');
-  const doneTasks = tasks.filter((t) => t.status === 'done');
+  const activeTasks = tasks.filter(
+    (t) => t.status !== "done" && t.status !== "archived",
+  );
+  const doneTasks = tasks.filter((t) => t.status === "done");
 
   const projectMap = useMemo(() => {
     const map = new Map<string, { project: Project; space: Space }>();
@@ -31,11 +40,13 @@ export default function TaskList({ tasks, focusedId, onFocus, onToggle, exitingI
 
   return (
     <div className="flex-1">
-      {activeTasks.length === 0 && doneTasks.length === 0 && (
-        emptyState ?? (
-          <p className="font-mono text-[11px] text-dim px-4 py-8 text-center uppercase tracking-[0.1em]">No tasks.</p>
-        )
-      )}
+      {activeTasks.length === 0 &&
+        doneTasks.length === 0 &&
+        (emptyState ?? (
+          <p className="font-mono text-[11px] text-dim px-4 py-8 text-center uppercase tracking-[0.1em]">
+            No tasks.
+          </p>
+        ))}
 
       {activeTasks.length > 0 ? (
         <div role="list">
@@ -70,7 +81,7 @@ export default function TaskList({ tasks, focusedId, onFocus, onToggle, exitingI
               width="10"
               height="10"
               viewBox="0 0 10 10"
-              className={`transition-transform ${doneExpanded ? '' : '-rotate-90'}`}
+              className={`transition-transform ${doneExpanded ? "" : "-rotate-90"}`}
               aria-hidden="true"
             >
               <path

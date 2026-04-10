@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import type { Task, Project, Space } from '@sift/shared';
+import { useEffect, useRef } from "react";
+import type { Task, Project, Space } from "@sift/shared";
 
 export interface TaskRowProps {
   task: Task;
@@ -14,11 +14,11 @@ export interface TaskRowProps {
 }
 
 function formatDate(date: Date): string {
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
 function isLate(task: Task): boolean {
-  if (!task.dueDate || task.status === 'done') return false;
+  if (!task.dueDate || task.status === "done") return false;
   if (task.completedAt != null) return false;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -38,15 +38,17 @@ export default function TaskRow({
 }: TaskRowProps) {
   const rowRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (isFocused) rowRef.current?.scrollIntoView?.({ block: 'nearest' });
+    if (isFocused) rowRef.current?.scrollIntoView?.({ block: "nearest" });
   }, [isFocused]);
   const late = isLate(task);
   // During exit animation, show the row as if it's done; archived tasks keep done visuals via completedAt
   const showDone =
-    exiting || task.status === 'done' || (task.status === 'archived' && task.completedAt != null);
+    exiting ||
+    task.status === "done" ||
+    (task.status === "archived" && task.completedAt != null);
 
   const rowLabel =
-    task.status === 'archived'
+    task.status === "archived"
       ? showDone
         ? `${task.title}, completed, archived`
         : `${task.title}, archived`
@@ -56,8 +58,8 @@ export default function TaskRow({
 
   const completeToggleVisual = `border-[0.5px] shrink-0 flex items-center justify-center transition-colors ${
     showDone
-      ? 'border-green bg-green/10 text-green'
-      : 'border-border-2 hover:border-accent'
+      ? "border-green bg-green/10 text-green"
+      : "border-border-2 hover:border-accent"
   }`;
 
   return (
@@ -69,21 +71,21 @@ export default function TaskRow({
       onClick={onFocus}
       onKeyDown={(e) => {
         if (e.target !== e.currentTarget) return;
-        if (e.key === 'Enter' || e.key === ' ') {
+        if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           onFocus();
         }
       }}
       className={`
-        ${exiting ? 'animate-task-exit' : 'animate-task-enter'}
+        ${exiting ? "animate-task-exit" : "animate-task-enter"}
         flex items-center min-h-11 h-auto md:h-task-row md:min-h-0 px-3 gap-3 cursor-pointer select-none min-w-0
         transition-colors duration-150
-        ${isFocused
-          ? 'bg-accent/5 laser-focus'
-          : 'hover:bg-surface-2'
-        }
+        ${isFocused ? "bg-accent/5 laser-focus" : "hover:bg-surface-2"}
       `}
-      style={{ animationDelay: exiting || late ? undefined : `${Math.min(index * 25, 150)}ms` }}
+      style={{
+        animationDelay:
+          exiting || late ? undefined : `${Math.min(index * 25, 150)}ms`,
+      }}
     >
       <span
         data-testid="space-dot"
@@ -96,7 +98,7 @@ export default function TaskRow({
         <button
           type="button"
           aria-pressed={showDone}
-          aria-label={showDone ? 'Mark as not done' : 'Mark complete'}
+          aria-label={showDone ? "Mark as not done" : "Mark complete"}
           onClick={(e) => {
             e.stopPropagation();
             onToggle();
@@ -104,7 +106,13 @@ export default function TaskRow({
           className={`${completeToggleVisual} min-w-11 min-h-11 md:min-w-0 md:min-h-0 md:w-4 md:h-4`}
         >
           {showDone && (
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+            <svg
+              width="8"
+              height="8"
+              viewBox="0 0 8 8"
+              fill="none"
+              aria-hidden="true"
+            >
               <path
                 d="M1.5 4L3 5.5L6.5 2.5"
                 stroke="currentColor"
@@ -118,7 +126,13 @@ export default function TaskRow({
       ) : (
         <span className={`${completeToggleVisual} w-4 h-4`} aria-hidden="true">
           {showDone && (
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+            <svg
+              width="8"
+              height="8"
+              viewBox="0 0 8 8"
+              fill="none"
+              aria-hidden="true"
+            >
               <path
                 d="M1.5 4L3 5.5L6.5 2.5"
                 stroke="currentColor"
@@ -133,9 +147,7 @@ export default function TaskRow({
 
       <span
         className={`flex-1 text-sm font-medium tracking-[-0.02em] truncate ${
-          showDone
-            ? 'text-muted line-through'
-            : 'text-text'
+          showDone ? "text-muted line-through" : "text-text"
         }`}
       >
         {task.title}
@@ -152,7 +164,13 @@ export default function TaskRow({
           title={task.url}
           aria-label="Open link in new tab"
         >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            aria-hidden="true"
+          >
             <path
               d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M7 1h4m0 0v4m0-4L5 7"
               stroke="currentColor"
@@ -174,7 +192,9 @@ export default function TaskRow({
               {project.emoji}
             </span>
           ) : null}
-          <em className="font-sans text-sm font-medium tracking-[-0.02em] italic truncate">{project.name}</em>
+          <em className="font-sans text-sm font-medium tracking-[-0.02em] italic truncate">
+            {project.name}
+          </em>
         </span>
       )}
 
@@ -182,13 +202,29 @@ export default function TaskRow({
         <span
           data-testid="due-date"
           className={`text-xs shrink-0 tabular-nums font-mono inline-flex items-center gap-1 ${
-            late ? 'text-red font-medium' : 'text-muted'
+            late ? "text-red font-medium" : "text-muted"
           }`}
         >
           {late && (
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-              <path d="M5 1L9.33 8.5H0.67L5 1Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
-              <path d="M5 4.5V6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 10 10"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M5 1L9.33 8.5H0.67L5 1Z"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M5 4.5V6"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+              />
               <circle cx="5" cy="7.25" r="0.5" fill="currentColor" />
             </svg>
           )}

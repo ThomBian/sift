@@ -13,37 +13,40 @@
 ## File Map
 
 ### Monorepo root
-| File | Responsibility |
-|------|----------------|
-| `package.json` | Workspace root — workspaces, shared dev deps |
-| `turbo.json` | Turborepo pipeline (build, test, dev) |
+
+| File                 | Responsibility                                  |
+| -------------------- | ----------------------------------------------- |
+| `package.json`       | Workspace root — workspaces, shared dev deps    |
+| `turbo.json`         | Turborepo pipeline (build, test, dev)           |
 | `tsconfig.base.json` | Base TypeScript config extended by all packages |
-| `.gitignore` | Node + Vite ignores |
+| `.gitignore`         | Node + Vite ignores                             |
 
 ### packages/shared
-| File | Responsibility |
-|------|----------------|
-| `package.json` | Manifest, exports map, peer deps |
-| `vite.config.ts` | Vite lib build + Vitest config |
-| `tsconfig.json` | Extends base config |
-| `src/types.ts` | Space, Project, Task TypeScript interfaces |
-| `src/db.ts` | AppDatabase (Dexie) — tables, indexes, first-launch seed |
-| `src/SmartInput/useSmartInput.ts` | Hook: chip focus, tab rotation, @x detection, value state |
-| `src/SmartInput/Dropdown.tsx` | Project list or date quick-picks based on active chip |
-| `src/SmartInput/Dropdown.module.css` | Dropdown scoped styles |
-| `src/SmartInput/SmartInput.tsx` | Assembles hook + chips + dropdown; fires onTaskReady on ⌘+Enter |
-| `src/SmartInput/SmartInput.module.css` | Input bar and chip scoped styles |
-| `src/index.ts` | Public exports |
-| `src/__tests__/setup.ts` | fake-indexeddb auto-import |
-| `src/__tests__/db.test.ts` | AppDatabase seeding and CRUD |
-| `src/__tests__/useSmartInput.test.ts` | Tab rotation, @x detection, value selection, save |
-| `src/__tests__/SmartInput.test.tsx` | Component render, chip interaction, save callback |
+
+| File                                   | Responsibility                                                  |
+| -------------------------------------- | --------------------------------------------------------------- |
+| `package.json`                         | Manifest, exports map, peer deps                                |
+| `vite.config.ts`                       | Vite lib build + Vitest config                                  |
+| `tsconfig.json`                        | Extends base config                                             |
+| `src/types.ts`                         | Space, Project, Task TypeScript interfaces                      |
+| `src/db.ts`                            | AppDatabase (Dexie) — tables, indexes, first-launch seed        |
+| `src/SmartInput/useSmartInput.ts`      | Hook: chip focus, tab rotation, @x detection, value state       |
+| `src/SmartInput/Dropdown.tsx`          | Project list or date quick-picks based on active chip           |
+| `src/SmartInput/Dropdown.module.css`   | Dropdown scoped styles                                          |
+| `src/SmartInput/SmartInput.tsx`        | Assembles hook + chips + dropdown; fires onTaskReady on ⌘+Enter |
+| `src/SmartInput/SmartInput.module.css` | Input bar and chip scoped styles                                |
+| `src/index.ts`                         | Public exports                                                  |
+| `src/__tests__/setup.ts`               | fake-indexeddb auto-import                                      |
+| `src/__tests__/db.test.ts`             | AppDatabase seeding and CRUD                                    |
+| `src/__tests__/useSmartInput.test.ts`  | Tab rotation, @x detection, value selection, save               |
+| `src/__tests__/SmartInput.test.tsx`    | Component render, chip interaction, save callback               |
 
 ---
 
 ## Task 1: Initialize monorepo root
 
 **Files:**
+
 - Create: `package.json`
 - Create: `turbo.json`
 - Create: `tsconfig.base.json`
@@ -151,6 +154,7 @@ git commit -m "chore: initialize Turborepo monorepo"
 ## Task 2: Bootstrap packages/shared
 
 **Files:**
+
 - Create: `packages/shared/package.json`
 - Create: `packages/shared/tsconfig.json`
 - Create: `packages/shared/vite.config.ts`
@@ -217,24 +221,24 @@ git commit -m "chore: initialize Turborepo monorepo"
 - [ ] **Step 3: Create packages/shared/vite.config.ts**
 
 ```typescript
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
   build: {
     lib: {
-      entry: 'src/index.ts',
-      formats: ['es'],
-      fileName: 'index',
+      entry: "src/index.ts",
+      formats: ["es"],
+      fileName: "index",
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'dexie', 'dexie-react-hooks', 'nanoid'],
+      external: ["react", "react-dom", "dexie", "dexie-react-hooks", "nanoid"],
     },
   },
   test: {
-    environment: 'jsdom',
-    setupFiles: ['src/__tests__/setup.ts'],
+    environment: "jsdom",
+    setupFiles: ["src/__tests__/setup.ts"],
   },
 });
 ```
@@ -243,7 +247,7 @@ export default defineConfig({
 
 ```typescript
 // packages/shared/src/__tests__/setup.ts
-import 'fake-indexeddb/auto';
+import "fake-indexeddb/auto";
 ```
 
 - [ ] **Step 5: Create src directories**
@@ -271,6 +275,7 @@ git commit -m "chore: bootstrap packages/shared"
 ## Task 3: Define TypeScript types
 
 **Files:**
+
 - Create: `packages/shared/src/types.ts`
 
 - [ ] **Step 1: Write types**
@@ -281,36 +286,36 @@ git commit -m "chore: bootstrap packages/shared"
 export interface Space {
   id: string;
   name: string;
-  color: string;      // hex, e.g. "#5E6AD2"
+  color: string; // hex, e.g. "#5E6AD2"
   createdAt: Date;
   updatedAt: Date;
-  synced: boolean;    // false = pending push to Supabase
+  synced: boolean; // false = pending push to Supabase
 }
 
 export interface Project {
   id: string;
   name: string;
-  spaceId: string;    // FK → Space
+  spaceId: string; // FK → Space
   createdAt: Date;
   updatedAt: Date;
   synced: boolean;
 }
 
-export type TaskStatus = 'inbox' | 'todo' | 'done' | 'archived';
+export type TaskStatus = "inbox" | "todo" | "done" | "archived";
 // inbox = no workingDate assigned yet
 // todo  = triaged (has workingDate)
 
 export interface Task {
   id: string;
   title: string;
-  projectId: string;          // FK → Project; space derived via project.spaceId
+  projectId: string; // FK → Project; space derived via project.spaceId
   status: TaskStatus;
-  workingDate: Date | null;   // drives Today view (workingDate <= today)
-  dueDate: Date | null;       // shows red when past + not done
+  workingDate: Date | null; // drives Today view (workingDate <= today)
+  dueDate: Date | null; // shows red when past + not done
   createdAt: Date;
-  updatedAt: Date;            // last-write-wins sync key
+  updatedAt: Date; // last-write-wins sync key
   completedAt: Date | null;
-  sourceUrl?: string;         // URL captured by extension
+  sourceUrl?: string; // URL captured by extension
   synced: boolean;
 }
 ```
@@ -327,16 +332,17 @@ git commit -m "feat(shared): define Space, Project, Task types"
 ## Task 4: Write failing tests for AppDatabase
 
 **Files:**
+
 - Create: `packages/shared/src/__tests__/db.test.ts`
 
 - [ ] **Step 1: Write the failing tests**
 
 ```typescript
 // packages/shared/src/__tests__/db.test.ts
-import { describe, it, expect, beforeEach } from 'vitest';
-import { AppDatabase } from '../db';
+import { describe, it, expect, beforeEach } from "vitest";
+import { AppDatabase } from "../db";
 
-describe('AppDatabase', () => {
+describe("AppDatabase", () => {
   let db: AppDatabase;
 
   beforeEach(async () => {
@@ -345,24 +351,24 @@ describe('AppDatabase', () => {
     await db.open();
   });
 
-  it('seeds a default Personal space on first open', async () => {
+  it("seeds a default Personal space on first open", async () => {
     const spaces = await db.spaces.toArray();
     expect(spaces).toHaveLength(1);
-    expect(spaces[0].name).toBe('Personal');
-    expect(spaces[0].color).toBe('#5E6AD2');
+    expect(spaces[0].name).toBe("Personal");
+    expect(spaces[0].color).toBe("#5E6AD2");
     expect(spaces[0].synced).toBe(false);
   });
 
-  it('seeds a default General project under the Personal space', async () => {
+  it("seeds a default General project under the Personal space", async () => {
     const spaces = await db.spaces.toArray();
     const projects = await db.projects.toArray();
     expect(projects).toHaveLength(1);
-    expect(projects[0].name).toBe('General');
+    expect(projects[0].name).toBe("General");
     expect(projects[0].spaceId).toBe(spaces[0].id);
     expect(projects[0].synced).toBe(false);
   });
 
-  it('does not re-seed when spaces already exist', async () => {
+  it("does not re-seed when spaces already exist", async () => {
     const db2 = new AppDatabase(db.name);
     await db2.open();
     const spaces = await db2.spaces.toArray();
@@ -370,13 +376,13 @@ describe('AppDatabase', () => {
     await db2.close();
   });
 
-  it('can add and retrieve a task', async () => {
+  it("can add and retrieve a task", async () => {
     const [project] = await db.projects.toArray();
-    const task: import('../types').Task = {
-      id: 'task-1',
-      title: 'Buy milk',
+    const task: import("../types").Task = {
+      id: "task-1",
+      title: "Buy milk",
       projectId: project.id,
-      status: 'inbox',
+      status: "inbox",
       workingDate: null,
       dueDate: null,
       createdAt: new Date(),
@@ -385,8 +391,8 @@ describe('AppDatabase', () => {
       synced: false,
     };
     await db.tasks.add(task);
-    const found = await db.tasks.get('task-1');
-    expect(found?.title).toBe('Buy milk');
+    const found = await db.tasks.get("task-1");
+    expect(found?.title).toBe("Buy milk");
     expect(found?.projectId).toBe(project.id);
   });
 });
@@ -405,29 +411,30 @@ Expected: FAIL — `Cannot find module '../db'`
 ## Task 5: Implement AppDatabase
 
 **Files:**
+
 - Create: `packages/shared/src/db.ts`
 
 - [ ] **Step 1: Write implementation**
 
 ```typescript
 // packages/shared/src/db.ts
-import Dexie, { type Table } from 'dexie';
-import { nanoid } from 'nanoid';
-import type { Space, Project, Task } from './types';
+import Dexie, { type Table } from "dexie";
+import { nanoid } from "nanoid";
+import type { Space, Project, Task } from "./types";
 
 export class AppDatabase extends Dexie {
   spaces!: Table<Space>;
   projects!: Table<Project>;
   tasks!: Table<Task>;
 
-  constructor(name = 'speedy-tasks') {
+  constructor(name = "speedy-tasks") {
     super(name);
     this.version(1).stores({
-      spaces:   'id, updatedAt, synced',
-      projects: 'id, spaceId, updatedAt, synced',
-      tasks:    'id, projectId, status, workingDate, dueDate, updatedAt, synced',
+      spaces: "id, updatedAt, synced",
+      projects: "id, spaceId, updatedAt, synced",
+      tasks: "id, projectId, status, workingDate, dueDate, updatedAt, synced",
     });
-    this.on('ready', () => this._seed());
+    this.on("ready", () => this._seed());
   }
 
   private async _seed(): Promise<void> {
@@ -439,8 +446,8 @@ export class AppDatabase extends Dexie {
 
     await this.spaces.add({
       id: spaceId,
-      name: 'Personal',
-      color: '#5E6AD2',
+      name: "Personal",
+      color: "#5E6AD2",
       createdAt: now,
       updatedAt: now,
       synced: false,
@@ -448,7 +455,7 @@ export class AppDatabase extends Dexie {
 
     await this.projects.add({
       id: nanoid(),
-      name: 'General',
+      name: "General",
       spaceId,
       createdAt: now,
       updatedAt: now,
@@ -481,20 +488,38 @@ git commit -m "feat(shared): AppDatabase with Dexie and first-launch seed"
 ## Task 6: Write failing tests for useSmartInput
 
 **Files:**
+
 - Create: `packages/shared/src/__tests__/useSmartInput.test.ts`
 
 - [ ] **Step 1: Write the failing tests**
 
 ```typescript
 // packages/shared/src/__tests__/useSmartInput.test.ts
-import { describe, it, expect, vi } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
-import { useSmartInput } from '../SmartInput/useSmartInput';
+import { describe, it, expect, vi } from "vitest";
+import { renderHook, act } from "@testing-library/react";
+import { useSmartInput } from "../SmartInput/useSmartInput";
 
-const tab       = { key: 'Tab', shiftKey: false, preventDefault: vi.fn() } as unknown as React.KeyboardEvent;
-const shiftTab  = { key: 'Tab', shiftKey: true,  preventDefault: vi.fn() } as unknown as React.KeyboardEvent;
-const esc       = { key: 'Escape', shiftKey: false, preventDefault: vi.fn() } as unknown as React.KeyboardEvent;
-const cmdEnter  = { key: 'Enter', metaKey: true, ctrlKey: false, preventDefault: vi.fn() } as unknown as React.KeyboardEvent<HTMLInputElement>;
+const tab = {
+  key: "Tab",
+  shiftKey: false,
+  preventDefault: vi.fn(),
+} as unknown as React.KeyboardEvent;
+const shiftTab = {
+  key: "Tab",
+  shiftKey: true,
+  preventDefault: vi.fn(),
+} as unknown as React.KeyboardEvent;
+const esc = {
+  key: "Escape",
+  shiftKey: false,
+  preventDefault: vi.fn(),
+} as unknown as React.KeyboardEvent;
+const cmdEnter = {
+  key: "Enter",
+  metaKey: true,
+  ctrlKey: false,
+  preventDefault: vi.fn(),
+} as unknown as React.KeyboardEvent<HTMLInputElement>;
 
 function make() {
   const onTaskReady = vi.fn();
@@ -502,134 +527,169 @@ function make() {
   return { hook, onTaskReady };
 }
 
-describe('useSmartInput — initial state', () => {
-  it('starts with focus on text and empty values', () => {
+describe("useSmartInput — initial state", () => {
+  it("starts with focus on text and empty values", () => {
     const { hook } = make();
-    expect(hook.result.current.focus).toBe('text');
-    expect(hook.result.current.values.title).toBe('');
+    expect(hook.result.current.focus).toBe("text");
+    expect(hook.result.current.values.title).toBe("");
     expect(hook.result.current.values.projectId).toBeNull();
     expect(hook.result.current.values.dueDate).toBeNull();
     expect(hook.result.current.values.workingDate).toBeNull();
   });
 });
 
-describe('useSmartInput — Tab rotation', () => {
-  it('Tab cycles text → project → dueDate → workingDate → text', () => {
+describe("useSmartInput — Tab rotation", () => {
+  it("Tab cycles text → project → dueDate → workingDate → text", () => {
     const { hook } = make();
 
     act(() => hook.result.current.handleTitleKeyDown(tab as any));
-    expect(hook.result.current.focus).toBe('project');
+    expect(hook.result.current.focus).toBe("project");
 
-    act(() => hook.result.current.handleChipKeyDown('project', tab));
-    expect(hook.result.current.focus).toBe('dueDate');
+    act(() => hook.result.current.handleChipKeyDown("project", tab));
+    expect(hook.result.current.focus).toBe("dueDate");
 
-    act(() => hook.result.current.handleChipKeyDown('dueDate', tab));
-    expect(hook.result.current.focus).toBe('workingDate');
+    act(() => hook.result.current.handleChipKeyDown("dueDate", tab));
+    expect(hook.result.current.focus).toBe("workingDate");
 
-    act(() => hook.result.current.handleChipKeyDown('workingDate', tab));
-    expect(hook.result.current.focus).toBe('text');
+    act(() => hook.result.current.handleChipKeyDown("workingDate", tab));
+    expect(hook.result.current.focus).toBe("text");
   });
 
-  it('Shift+Tab cycles in reverse (text → workingDate)', () => {
+  it("Shift+Tab cycles in reverse (text → workingDate)", () => {
     const { hook } = make();
     act(() => hook.result.current.handleTitleKeyDown(shiftTab as any));
-    expect(hook.result.current.focus).toBe('workingDate');
+    expect(hook.result.current.focus).toBe("workingDate");
   });
 });
 
-describe('useSmartInput — @x trigger detection', () => {
-  it('typing @p jumps focus to project and strips trigger from title', () => {
+describe("useSmartInput — @x trigger detection", () => {
+  it("typing @p jumps focus to project and strips trigger from title", () => {
     const { hook } = make();
-    act(() => hook.result.current.handleTitleChange({ target: { value: 'Buy milk @p' } } as any));
-    expect(hook.result.current.focus).toBe('project');
-    expect(hook.result.current.values.title).toBe('Buy milk ');
+    act(() =>
+      hook.result.current.handleTitleChange({
+        target: { value: "Buy milk @p" },
+      } as any),
+    );
+    expect(hook.result.current.focus).toBe("project");
+    expect(hook.result.current.values.title).toBe("Buy milk ");
   });
 
-  it('typing @d jumps focus to dueDate', () => {
+  it("typing @d jumps focus to dueDate", () => {
     const { hook } = make();
-    act(() => hook.result.current.handleTitleChange({ target: { value: 'Task @d' } } as any));
-    expect(hook.result.current.focus).toBe('dueDate');
-    expect(hook.result.current.values.title).toBe('Task ');
+    act(() =>
+      hook.result.current.handleTitleChange({
+        target: { value: "Task @d" },
+      } as any),
+    );
+    expect(hook.result.current.focus).toBe("dueDate");
+    expect(hook.result.current.values.title).toBe("Task ");
   });
 
-  it('typing @w jumps focus to workingDate', () => {
+  it("typing @w jumps focus to workingDate", () => {
     const { hook } = make();
-    act(() => hook.result.current.handleTitleChange({ target: { value: 'Task @w' } } as any));
-    expect(hook.result.current.focus).toBe('workingDate');
+    act(() =>
+      hook.result.current.handleTitleChange({
+        target: { value: "Task @w" },
+      } as any),
+    );
+    expect(hook.result.current.focus).toBe("workingDate");
   });
 
-  it('normal text change updates title without changing focus', () => {
+  it("normal text change updates title without changing focus", () => {
     const { hook } = make();
-    act(() => hook.result.current.handleTitleChange({ target: { value: 'Hello' } } as any));
-    expect(hook.result.current.values.title).toBe('Hello');
-    expect(hook.result.current.focus).toBe('text');
-  });
-});
-
-describe('useSmartInput — chip interaction', () => {
-  it('handleChipClick focuses the chip', () => {
-    const { hook } = make();
-    act(() => hook.result.current.handleChipClick('dueDate'));
-    expect(hook.result.current.focus).toBe('dueDate');
-  });
-
-  it('handleSelect sets value and returns focus to text', () => {
-    const { hook } = make();
-    act(() => hook.result.current.handleChipClick('project'));
-    act(() => hook.result.current.handleSelect('project', 'proj-123'));
-    expect(hook.result.current.values.projectId).toBe('proj-123');
-    expect(hook.result.current.focus).toBe('text');
-  });
-
-  it('Escape on chip returns focus to text without clearing value', () => {
-    const { hook } = make();
-    act(() => hook.result.current.handleSelect('project', 'proj-123'));
-    act(() => hook.result.current.handleChipClick('project'));
-    act(() => hook.result.current.handleChipKeyDown('project', esc));
-    expect(hook.result.current.focus).toBe('text');
-    expect(hook.result.current.values.projectId).toBe('proj-123');
+    act(() =>
+      hook.result.current.handleTitleChange({
+        target: { value: "Hello" },
+      } as any),
+    );
+    expect(hook.result.current.values.title).toBe("Hello");
+    expect(hook.result.current.focus).toBe("text");
   });
 });
 
-describe('useSmartInput — save', () => {
-  it('⌘+Enter calls onTaskReady with trimmed values and resets', () => {
+describe("useSmartInput — chip interaction", () => {
+  it("handleChipClick focuses the chip", () => {
+    const { hook } = make();
+    act(() => hook.result.current.handleChipClick("dueDate"));
+    expect(hook.result.current.focus).toBe("dueDate");
+  });
+
+  it("handleSelect sets value and returns focus to text", () => {
+    const { hook } = make();
+    act(() => hook.result.current.handleChipClick("project"));
+    act(() => hook.result.current.handleSelect("project", "proj-123"));
+    expect(hook.result.current.values.projectId).toBe("proj-123");
+    expect(hook.result.current.focus).toBe("text");
+  });
+
+  it("Escape on chip returns focus to text without clearing value", () => {
+    const { hook } = make();
+    act(() => hook.result.current.handleSelect("project", "proj-123"));
+    act(() => hook.result.current.handleChipClick("project"));
+    act(() => hook.result.current.handleChipKeyDown("project", esc));
+    expect(hook.result.current.focus).toBe("text");
+    expect(hook.result.current.values.projectId).toBe("proj-123");
+  });
+});
+
+describe("useSmartInput — save", () => {
+  it("⌘+Enter calls onTaskReady with trimmed values and resets", () => {
     const { hook, onTaskReady } = make();
-    act(() => hook.result.current.handleTitleChange({ target: { value: '  My task  ' } } as any));
-    act(() => hook.result.current.handleSelect('project', 'proj-abc'));
+    act(() =>
+      hook.result.current.handleTitleChange({
+        target: { value: "  My task  " },
+      } as any),
+    );
+    act(() => hook.result.current.handleSelect("project", "proj-abc"));
     act(() => hook.result.current.handleTitleKeyDown(cmdEnter));
 
     expect(onTaskReady).toHaveBeenCalledWith({
-      title: 'My task',
-      projectId: 'proj-abc',
+      title: "My task",
+      projectId: "proj-abc",
       dueDate: null,
       workingDate: null,
     });
-    expect(hook.result.current.values.title).toBe('');
+    expect(hook.result.current.values.title).toBe("");
     expect(hook.result.current.values.projectId).toBeNull();
-    expect(hook.result.current.focus).toBe('text');
+    expect(hook.result.current.focus).toBe("text");
   });
 
-  it('⌘+Enter does nothing when title is empty', () => {
+  it("⌘+Enter does nothing when title is empty", () => {
     const { hook, onTaskReady } = make();
     act(() => hook.result.current.handleTitleKeyDown(cmdEnter));
     expect(onTaskReady).not.toHaveBeenCalled();
   });
 
-  it('⌘+Enter also works from a chip via handleChipKeyDown', () => {
+  it("⌘+Enter also works from a chip via handleChipKeyDown", () => {
     const { hook, onTaskReady } = make();
-    act(() => hook.result.current.handleTitleChange({ target: { value: 'My task' } } as any));
-    act(() => hook.result.current.handleChipKeyDown('project', cmdEnter as unknown as React.KeyboardEvent));
-    expect(onTaskReady).toHaveBeenCalledWith(expect.objectContaining({ title: 'My task' }));
+    act(() =>
+      hook.result.current.handleTitleChange({
+        target: { value: "My task" },
+      } as any),
+    );
+    act(() =>
+      hook.result.current.handleChipKeyDown(
+        "project",
+        cmdEnter as unknown as React.KeyboardEvent,
+      ),
+    );
+    expect(onTaskReady).toHaveBeenCalledWith(
+      expect.objectContaining({ title: "My task" }),
+    );
   });
 
-  it('reset clears all values and returns focus to text', () => {
+  it("reset clears all values and returns focus to text", () => {
     const { hook } = make();
-    act(() => hook.result.current.handleTitleChange({ target: { value: 'task' } } as any));
-    act(() => hook.result.current.handleSelect('project', 'proj-1'));
+    act(() =>
+      hook.result.current.handleTitleChange({
+        target: { value: "task" },
+      } as any),
+    );
+    act(() => hook.result.current.handleSelect("project", "proj-1"));
     act(() => hook.result.current.reset());
-    expect(hook.result.current.values.title).toBe('');
+    expect(hook.result.current.values.title).toBe("");
     expect(hook.result.current.values.projectId).toBeNull();
-    expect(hook.result.current.focus).toBe('text');
+    expect(hook.result.current.focus).toBe("text");
   });
 });
 ```
@@ -647,24 +707,25 @@ Expected: FAIL — `Cannot find module '../SmartInput/useSmartInput'`
 ## Task 7: Implement useSmartInput
 
 **Files:**
+
 - Create: `packages/shared/src/SmartInput/useSmartInput.ts`
 
 - [ ] **Step 1: Write implementation**
 
 ```typescript
 // packages/shared/src/SmartInput/useSmartInput.ts
-import { useState, useCallback } from 'react';
-import type { Task } from '../types';
+import { useState, useCallback } from "react";
+import type { Task } from "../types";
 
-export type ChipFocus = 'project' | 'dueDate' | 'workingDate';
-export type FocusTarget = 'text' | ChipFocus;
+export type ChipFocus = "project" | "dueDate" | "workingDate";
+export type FocusTarget = "text" | ChipFocus;
 
-const TAB_CYCLE: FocusTarget[] = ['text', 'project', 'dueDate', 'workingDate'];
+const TAB_CYCLE: FocusTarget[] = ["text", "project", "dueDate", "workingDate"];
 
 const AT_TRIGGERS: Record<string, ChipFocus> = {
-  '@p': 'project',
-  '@d': 'dueDate',
-  '@w': 'workingDate',
+  "@p": "project",
+  "@d": "dueDate",
+  "@w": "workingDate",
 };
 
 export interface SmartInputValues {
@@ -686,7 +747,7 @@ export interface UseSmartInputReturn {
 }
 
 const EMPTY: SmartInputValues = {
-  title: '',
+  title: "",
   projectId: null,
   dueDate: null,
   workingDate: null,
@@ -698,10 +759,14 @@ function rotate(current: FocusTarget, dir: 1 | -1): FocusTarget {
 }
 
 export function useSmartInput(
-  onTaskReady: (task: Pick<Task, 'title' | 'dueDate' | 'workingDate'> & { projectId?: string }) => void
+  onTaskReady: (
+    task: Pick<Task, "title" | "dueDate" | "workingDate"> & {
+      projectId?: string;
+    },
+  ) => void,
 ): UseSmartInputReturn {
   const [values, setValues] = useState<SmartInputValues>(EMPTY);
-  const [focus, setFocus] = useState<FocusTarget>('text');
+  const [focus, setFocus] = useState<FocusTarget>("text");
 
   const handleSave = useCallback(() => {
     if (!values.title.trim()) return;
@@ -712,57 +777,69 @@ export function useSmartInput(
       workingDate: values.workingDate,
     });
     setValues(EMPTY);
-    setFocus('text');
+    setFocus("text");
   }, [values, onTaskReady]);
 
-  const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    for (const [trigger, chip] of Object.entries(AT_TRIGGERS)) {
-      if (val.endsWith(trigger)) {
-        setValues(v => ({ ...v, title: val.slice(0, -trigger.length) }));
-        setFocus(chip);
-        return;
+  const handleTitleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const val = e.target.value;
+      for (const [trigger, chip] of Object.entries(AT_TRIGGERS)) {
+        if (val.endsWith(trigger)) {
+          setValues((v) => ({ ...v, title: val.slice(0, -trigger.length) }));
+          setFocus(chip);
+          return;
+        }
       }
-    }
-    setValues(v => ({ ...v, title: val }));
-  }, []);
+      setValues((v) => ({ ...v, title: val }));
+    },
+    [],
+  );
 
-  const handleTitleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      setFocus(f => rotate(f, e.shiftKey ? -1 : 1));
-    } else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-      e.preventDefault();
-      handleSave();
-    }
-  }, [handleSave]);
+  const handleTitleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        setFocus((f) => rotate(f, e.shiftKey ? -1 : 1));
+      } else if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        handleSave();
+      }
+    },
+    [handleSave],
+  );
 
-  const handleChipKeyDown = useCallback((chip: ChipFocus, e: React.KeyboardEvent) => {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      setFocus(f => rotate(f, e.shiftKey ? -1 : 1));
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      setFocus('text');
-    } else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-      e.preventDefault();
-      handleSave();
-    }
-  }, [handleSave]);
+  const handleChipKeyDown = useCallback(
+    (chip: ChipFocus, e: React.KeyboardEvent) => {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        setFocus((f) => rotate(f, e.shiftKey ? -1 : 1));
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        setFocus("text");
+      } else if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        handleSave();
+      }
+    },
+    [handleSave],
+  );
 
   const handleChipClick = useCallback((chip: ChipFocus) => {
     setFocus(chip);
   }, []);
 
-  const handleSelect = useCallback((chip: ChipFocus, value: string | Date | null) => {
-    const key = chip === 'project' ? 'projectId' : chip;
-    setValues(v => ({ ...v, [key]: value }));
-    setFocus('text');
-  }, []);
+  const handleSelect = useCallback(
+    (chip: ChipFocus, value: string | Date | null) => {
+      const key = chip === "project" ? "projectId" : chip;
+      setValues((v) => ({ ...v, [key]: value }));
+      setFocus("text");
+    },
+    [],
+  );
 
   const reset = useCallback(() => {
     setValues(EMPTY);
-    setFocus('text');
+    setFocus("text");
   }, []);
 
   return {
@@ -798,6 +875,7 @@ git commit -m "feat(shared): useSmartInput hook — tab rotation, @x detection, 
 ## Task 8: Implement Dropdown component
 
 **Files:**
+
 - Create: `packages/shared/src/SmartInput/Dropdown.tsx`
 - Create: `packages/shared/src/SmartInput/Dropdown.module.css`
 
@@ -808,9 +886,20 @@ git commit -m "feat(shared): useSmartInput hook — tab rotation, @x detection, 
 function parseQuickDate(label: string): Date {
   const d = new Date();
   d.setHours(0, 0, 0, 0);
-  if (label === 'Today') return d;
-  if (label === 'Tomorrow') { d.setDate(d.getDate() + 1); return d; }
-  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  if (label === "Today") return d;
+  if (label === "Tomorrow") {
+    d.setDate(d.getDate() + 1);
+    return d;
+  }
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
   const target = days.indexOf(label);
   if (target !== -1) {
     const diff = (target - d.getDay() + 7) % 7 || 7;
@@ -825,10 +914,10 @@ function parseQuickDate(label: string): Date {
 
 ```tsx
 // packages/shared/src/SmartInput/Dropdown.tsx
-import React from 'react';
-import type { Project, Space } from '../types';
-import type { ChipFocus } from './useSmartInput';
-import styles from './Dropdown.module.css';
+import React from "react";
+import type { Project, Space } from "../types";
+import type { ChipFocus } from "./useSmartInput";
+import styles from "./Dropdown.module.css";
 
 export interface ProjectWithSpace extends Project {
   space: Space;
@@ -841,14 +930,33 @@ interface DropdownProps {
   onSelect: (value: string | Date | null) => void;
 }
 
-const DATE_QUICK_PICKS = ['Today', 'Tomorrow', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+const DATE_QUICK_PICKS = [
+  "Today",
+  "Tomorrow",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+];
 
 function parseQuickDate(label: string): Date {
   const d = new Date();
   d.setHours(0, 0, 0, 0);
-  if (label === 'Today') return d;
-  if (label === 'Tomorrow') { d.setDate(d.getDate() + 1); return d; }
-  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  if (label === "Today") return d;
+  if (label === "Tomorrow") {
+    d.setDate(d.getDate() + 1);
+    return d;
+  }
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
   const target = days.indexOf(label);
   if (target !== -1) {
     const diff = (target - d.getDay() + 7) % 7 || 7;
@@ -859,39 +967,68 @@ function parseQuickDate(label: string): Date {
 }
 
 export function Dropdown({ type, projects, query, onSelect }: DropdownProps) {
-  if (type === 'project') {
+  if (type === "project") {
     // Group by space
-    const spaceMap = new Map<string, { space: Space; projects: ProjectWithSpace[] }>();
+    const spaceMap = new Map<
+      string,
+      { space: Space; projects: ProjectWithSpace[] }
+    >();
     for (const p of projects) {
-      if (!spaceMap.has(p.spaceId)) spaceMap.set(p.spaceId, { space: p.space, projects: [] });
+      if (!spaceMap.has(p.spaceId))
+        spaceMap.set(p.spaceId, { space: p.space, projects: [] });
       spaceMap.get(p.spaceId)!.projects.push(p);
     }
     const filtered = query
-      ? projects.filter(p => p.name.toLowerCase().includes(query.toLowerCase()))
+      ? projects.filter((p) =>
+          p.name.toLowerCase().includes(query.toLowerCase()),
+        )
       : projects;
 
     return (
       <div className={styles.dropdown} role="listbox">
         {query
-          ? filtered.map(p => (
-              <button key={p.id} className={styles.item} onClick={() => onSelect(p.id)} role="option" type="button">
-                <span className={styles.dot} style={{ background: p.space.color }} />
+          ? filtered.map((p) => (
+              <button
+                key={p.id}
+                className={styles.item}
+                onClick={() => onSelect(p.id)}
+                role="option"
+                type="button"
+              >
+                <span
+                  className={styles.dot}
+                  style={{ background: p.space.color }}
+                />
                 {p.name}
               </button>
             ))
-          : Array.from(spaceMap.values()).map(({ space, projects: sProjects }) => (
-              <div key={space.id}>
-                <div className={styles.groupLabel}>{space.name}</div>
-                {sProjects.map(p => (
-                  <button key={p.id} className={styles.item} onClick={() => onSelect(p.id)} role="option" type="button">
-                    <span className={styles.dot} style={{ background: space.color }} />
-                    {p.name}
-                  </button>
-                ))}
-              </div>
-            ))
-        }
-        <button className={`${styles.item} ${styles.newItem}`} onClick={() => onSelect(null)} type="button">
+          : Array.from(spaceMap.values()).map(
+              ({ space, projects: sProjects }) => (
+                <div key={space.id}>
+                  <div className={styles.groupLabel}>{space.name}</div>
+                  {sProjects.map((p) => (
+                    <button
+                      key={p.id}
+                      className={styles.item}
+                      onClick={() => onSelect(p.id)}
+                      role="option"
+                      type="button"
+                    >
+                      <span
+                        className={styles.dot}
+                        style={{ background: space.color }}
+                      />
+                      {p.name}
+                    </button>
+                  ))}
+                </div>
+              ),
+            )}
+        <button
+          className={`${styles.item} ${styles.newItem}`}
+          onClick={() => onSelect(null)}
+          type="button"
+        >
           + New project…
         </button>
       </div>
@@ -902,7 +1039,7 @@ export function Dropdown({ type, projects, query, onSelect }: DropdownProps) {
   return (
     <div className={styles.dropdown} role="listbox">
       <div className={styles.quickPicks}>
-        {DATE_QUICK_PICKS.map(label => (
+        {DATE_QUICK_PICKS.map((label) => (
           <button
             key={label}
             className={styles.quickPick}
@@ -1017,6 +1154,7 @@ git commit -m "feat(shared): Dropdown component for @p project list and @d/@w da
 ## Task 9: Implement SmartInput component
 
 **Files:**
+
 - Create: `packages/shared/src/SmartInput/SmartInput.tsx`
 - Create: `packages/shared/src/SmartInput/SmartInput.module.css`
 
@@ -1033,11 +1171,13 @@ git commit -m "feat(shared): Dropdown component for @p project list and @d/@w da
   background: #0e0e0e;
   border: 1px solid #222222;
   border-radius: 8px;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 
 .bar:focus-within {
-  border-color: #5E6AD2;
+  border-color: #5e6ad2;
   box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.1);
 }
 
@@ -1100,19 +1240,58 @@ git commit -m "feat(shared): Dropdown component for @p project list and @d/@w da
 }
 
 /* @p — purple */
-.chipProject         { background: #131320; color: #3a3a6a; border-color: #1c1c30; }
-.chipProject.active  { background: #1c1f3a; color: #7c84e0; border-color: rgba(94,106,210,0.4); box-shadow: 0 0 0 2px rgba(94,106,210,0.15); }
-.chipProject.set     { background: #1c1f3a; color: #5E6AD2; border-color: rgba(94,106,210,0.25); }
+.chipProject {
+  background: #131320;
+  color: #3a3a6a;
+  border-color: #1c1c30;
+}
+.chipProject.active {
+  background: #1c1f3a;
+  color: #7c84e0;
+  border-color: rgba(94, 106, 210, 0.4);
+  box-shadow: 0 0 0 2px rgba(94, 106, 210, 0.15);
+}
+.chipProject.set {
+  background: #1c1f3a;
+  color: #5e6ad2;
+  border-color: rgba(94, 106, 210, 0.25);
+}
 
 /* @d — amber */
-.chipDue             { background: #181410; color: #4a3a1a; border-color: #221e14; }
-.chipDue.active      { background: #2a1f0a; color: #e0a020; border-color: rgba(224,160,32,0.4); box-shadow: 0 0 0 2px rgba(224,160,32,0.12); }
-.chipDue.set         { background: #201808; color: #c08010; border-color: rgba(192,128,16,0.25); }
+.chipDue {
+  background: #181410;
+  color: #4a3a1a;
+  border-color: #221e14;
+}
+.chipDue.active {
+  background: #2a1f0a;
+  color: #e0a020;
+  border-color: rgba(224, 160, 32, 0.4);
+  box-shadow: 0 0 0 2px rgba(224, 160, 32, 0.12);
+}
+.chipDue.set {
+  background: #201808;
+  color: #c08010;
+  border-color: rgba(192, 128, 16, 0.25);
+}
 
 /* @w — green */
-.chipWorking         { background: #101814; color: #1a4a28; border-color: #141e18; }
-.chipWorking.active  { background: #0f2a1a; color: #4ade80; border-color: rgba(74,222,128,0.4); box-shadow: 0 0 0 2px rgba(74,222,128,0.1); }
-.chipWorking.set     { background: #0a2010; color: #3d9f5f; border-color: rgba(61,159,95,0.25); }
+.chipWorking {
+  background: #101814;
+  color: #1a4a28;
+  border-color: #141e18;
+}
+.chipWorking.active {
+  background: #0f2a1a;
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.4);
+  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.1);
+}
+.chipWorking.set {
+  background: #0a2010;
+  color: #3d9f5f;
+  border-color: rgba(61, 159, 95, 0.25);
+}
 
 .chipDot {
   width: 6px;
@@ -1126,24 +1305,33 @@ git commit -m "feat(shared): Dropdown component for @p project list and @d/@w da
 
 ```tsx
 // packages/shared/src/SmartInput/SmartInput.tsx
-import React, { useRef, useEffect } from 'react';
-import { useSmartInput, type ChipFocus } from './useSmartInput';
-import { Dropdown, type ProjectWithSpace } from './Dropdown';
-import type { Task } from '../types';
-import styles from './SmartInput.module.css';
+import React, { useRef, useEffect } from "react";
+import { useSmartInput, type ChipFocus } from "./useSmartInput";
+import { Dropdown, type ProjectWithSpace } from "./Dropdown";
+import type { Task } from "../types";
+import styles from "./SmartInput.module.css";
 
 interface SmartInputProps {
   projects: ProjectWithSpace[];
-  onTaskReady: (task: Pick<Task, 'title' | 'dueDate' | 'workingDate'> & { projectId?: string }) => void;
+  onTaskReady: (
+    task: Pick<Task, "title" | "dueDate" | "workingDate"> & {
+      projectId?: string;
+    },
+  ) => void;
   placeholder?: string;
   className?: string;
 }
 
 function formatDate(d: Date): string {
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-export function SmartInput({ projects, onTaskReady, placeholder, className }: SmartInputProps) {
+export function SmartInput({
+  projects,
+  onTaskReady,
+  placeholder,
+  className,
+}: SmartInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const {
     values,
@@ -1157,10 +1345,11 @@ export function SmartInput({ projects, onTaskReady, placeholder, className }: Sm
 
   // Return keyboard focus to the text input when focus is 'text'
   useEffect(() => {
-    if (focus === 'text') inputRef.current?.focus();
+    if (focus === "text") inputRef.current?.focus();
   }, [focus]);
 
-  const projectForId = (id: string | null) => id ? projects.find(p => p.id === id) : undefined;
+  const projectForId = (id: string | null) =>
+    id ? projects.find((p) => p.id === id) : undefined;
 
   const chips: Array<{
     key: ChipFocus;
@@ -1171,64 +1360,74 @@ export function SmartInput({ projects, onTaskReady, placeholder, className }: Sm
     dotColor?: string;
   }> = [
     {
-      key: 'project',
+      key: "project",
       chipClass: styles.chipProject,
-      label: '@p',
-      sublabel: 'project',
+      label: "@p",
+      sublabel: "project",
       value: projectForId(values.projectId)?.name ?? null,
       dotColor: projectForId(values.projectId)?.space?.color,
     },
     {
-      key: 'dueDate',
+      key: "dueDate",
       chipClass: styles.chipDue,
-      label: '@d',
-      sublabel: 'due',
+      label: "@d",
+      sublabel: "due",
       value: values.dueDate ? formatDate(values.dueDate) : null,
     },
     {
-      key: 'workingDate',
+      key: "workingDate",
       chipClass: styles.chipWorking,
-      label: '@w',
-      sublabel: 'working',
+      label: "@w",
+      sublabel: "working",
       value: values.workingDate ? formatDate(values.workingDate) : null,
     },
   ];
 
   return (
-    <div className={`${styles.bar} ${className ?? ''}`}>
-      <span className={styles.icon} aria-hidden>+</span>
+    <div className={`${styles.bar} ${className ?? ""}`}>
+      <span className={styles.icon} aria-hidden>
+        +
+      </span>
       <input
         ref={inputRef}
         className={styles.input}
         value={values.title}
         onChange={handleTitleChange}
         onKeyDown={handleTitleKeyDown}
-        placeholder={placeholder ?? 'Add a task… type @p, @w, @d or use Tab'}
+        placeholder={placeholder ?? "Add a task… type @p, @w, @d or use Tab"}
         aria-label="Task title"
       />
       <div className={styles.chips}>
-        {chips.map(chip => (
+        {chips.map((chip) => (
           <div key={chip.key} className={styles.chipWrap}>
             <button
               className={[
                 styles.chip,
                 chip.chipClass,
-                focus === chip.key ? styles.active : '',
-                chip.value ? styles.set : '',
-              ].join(' ')}
+                focus === chip.key ? styles.active : "",
+                chip.value ? styles.set : "",
+              ].join(" ")}
               onClick={() => handleChipClick(chip.key)}
-              onKeyDown={e => handleChipKeyDown(chip.key, e)}
+              onKeyDown={(e) => handleChipKeyDown(chip.key, e)}
               tabIndex={-1}
               type="button"
               aria-label={chip.key}
             >
               {chip.value ? (
                 <>
-                  {chip.dotColor && <span className={styles.chipDot} style={{ background: chip.dotColor }} />}
+                  {chip.dotColor && (
+                    <span
+                      className={styles.chipDot}
+                      style={{ background: chip.dotColor }}
+                    />
+                  )}
                   {chip.value}
                 </>
               ) : (
-                <><span className={styles.chipLabel}>{chip.label}</span>&nbsp;{chip.sublabel}</>
+                <>
+                  <span className={styles.chipLabel}>{chip.label}</span>&nbsp;
+                  {chip.sublabel}
+                </>
               )}
             </button>
             {focus === chip.key && (
@@ -1236,7 +1435,7 @@ export function SmartInput({ projects, onTaskReady, placeholder, className }: Sm
                 type={chip.key}
                 projects={projects}
                 query=""
-                onSelect={val => handleSelect(chip.key, val)}
+                onSelect={(val) => handleSelect(chip.key, val)}
               />
             )}
           </div>
@@ -1259,96 +1458,121 @@ git commit -m "feat(shared): SmartInput component with inline chip UI"
 ## Task 10: Write and run SmartInput component tests
 
 **Files:**
+
 - Create: `packages/shared/src/__tests__/SmartInput.test.tsx`
 
 - [ ] **Step 1: Write the tests**
 
 ```tsx
 // packages/shared/src/__tests__/SmartInput.test.tsx
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { SmartInput } from '../SmartInput/SmartInput';
-import type { ProjectWithSpace } from '../SmartInput/Dropdown';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { SmartInput } from "../SmartInput/SmartInput";
+import type { ProjectWithSpace } from "../SmartInput/Dropdown";
 
 const mockProjects: ProjectWithSpace[] = [
   {
-    id: 'proj-1',
-    name: 'General',
-    spaceId: 'space-1',
+    id: "proj-1",
+    name: "General",
+    spaceId: "space-1",
     createdAt: new Date(),
     updatedAt: new Date(),
     synced: false,
-    space: { id: 'space-1', name: 'Personal', color: '#5E6AD2', createdAt: new Date(), updatedAt: new Date(), synced: false },
+    space: {
+      id: "space-1",
+      name: "Personal",
+      color: "#5E6AD2",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      synced: false,
+    },
   },
   {
-    id: 'proj-2',
-    name: 'Auth PR',
-    spaceId: 'space-2',
+    id: "proj-2",
+    name: "Auth PR",
+    spaceId: "space-2",
     createdAt: new Date(),
     updatedAt: new Date(),
     synced: false,
-    space: { id: 'space-2', name: 'Work', color: '#e05252', createdAt: new Date(), updatedAt: new Date(), synced: false },
+    space: {
+      id: "space-2",
+      name: "Work",
+      color: "#e05252",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      synced: false,
+    },
   },
 ];
 
-describe('SmartInput', () => {
+describe("SmartInput", () => {
   let onTaskReady: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     onTaskReady = vi.fn();
   });
 
-  it('renders the input and three chip buttons', () => {
+  it("renders the input and three chip buttons", () => {
     render(<SmartInput projects={mockProjects} onTaskReady={onTaskReady} />);
-    expect(screen.getByRole('textbox', { name: /task title/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'project' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'dueDate' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'workingDate' })).toBeInTheDocument();
+    expect(
+      screen.getByRole("textbox", { name: /task title/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "project" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "dueDate" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "workingDate" }),
+    ).toBeInTheDocument();
   });
 
-  it('clicking the @p chip opens the project dropdown', async () => {
+  it("clicking the @p chip opens the project dropdown", async () => {
     render(<SmartInput projects={mockProjects} onTaskReady={onTaskReady} />);
-    await userEvent.click(screen.getByRole('button', { name: 'project' }));
-    expect(screen.getByRole('option', { name: /General/ })).toBeInTheDocument();
-    expect(screen.getByRole('option', { name: /Auth PR/ })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "project" }));
+    expect(screen.getByRole("option", { name: /General/ })).toBeInTheDocument();
+    expect(screen.getByRole("option", { name: /Auth PR/ })).toBeInTheDocument();
   });
 
-  it('selecting a project from the dropdown updates the chip label', async () => {
+  it("selecting a project from the dropdown updates the chip label", async () => {
     render(<SmartInput projects={mockProjects} onTaskReady={onTaskReady} />);
-    await userEvent.click(screen.getByRole('button', { name: 'project' }));
-    await userEvent.click(screen.getByRole('option', { name: /General/ }));
-    expect(screen.getByRole('button', { name: 'project' })).toHaveTextContent('General');
+    await userEvent.click(screen.getByRole("button", { name: "project" }));
+    await userEvent.click(screen.getByRole("option", { name: /General/ }));
+    expect(screen.getByRole("button", { name: "project" })).toHaveTextContent(
+      "General",
+    );
   });
 
-  it('clicking the @d chip opens the date dropdown', async () => {
+  it("clicking the @d chip opens the date dropdown", async () => {
     render(<SmartInput projects={mockProjects} onTaskReady={onTaskReady} />);
-    await userEvent.click(screen.getByRole('button', { name: 'dueDate' }));
-    expect(screen.getByRole('option', { name: 'Today' })).toBeInTheDocument();
-    expect(screen.getByRole('option', { name: 'Tomorrow' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "dueDate" }));
+    expect(screen.getByRole("option", { name: "Today" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("option", { name: "Tomorrow" }),
+    ).toBeInTheDocument();
   });
 
-  it('⌘+Enter calls onTaskReady with the entered title', async () => {
+  it("⌘+Enter calls onTaskReady with the entered title", async () => {
     render(<SmartInput projects={mockProjects} onTaskReady={onTaskReady} />);
-    const input = screen.getByRole('textbox', { name: /task title/i });
-    await userEvent.type(input, 'Buy milk');
-    fireEvent.keyDown(input, { key: 'Enter', metaKey: true });
-    expect(onTaskReady).toHaveBeenCalledWith(expect.objectContaining({ title: 'Buy milk' }));
+    const input = screen.getByRole("textbox", { name: /task title/i });
+    await userEvent.type(input, "Buy milk");
+    fireEvent.keyDown(input, { key: "Enter", metaKey: true });
+    expect(onTaskReady).toHaveBeenCalledWith(
+      expect.objectContaining({ title: "Buy milk" }),
+    );
   });
 
-  it('does not call onTaskReady when title is empty', async () => {
+  it("does not call onTaskReady when title is empty", async () => {
     render(<SmartInput projects={mockProjects} onTaskReady={onTaskReady} />);
-    const input = screen.getByRole('textbox', { name: /task title/i });
-    fireEvent.keyDown(input, { key: 'Enter', metaKey: true });
+    const input = screen.getByRole("textbox", { name: /task title/i });
+    fireEvent.keyDown(input, { key: "Enter", metaKey: true });
     expect(onTaskReady).not.toHaveBeenCalled();
   });
 
-  it('resets the input after successful save', async () => {
+  it("resets the input after successful save", async () => {
     render(<SmartInput projects={mockProjects} onTaskReady={onTaskReady} />);
-    const input = screen.getByRole('textbox', { name: /task title/i });
-    await userEvent.type(input, 'Some task');
-    fireEvent.keyDown(input, { key: 'Enter', metaKey: true });
-    expect(input).toHaveValue('');
+    const input = screen.getByRole("textbox", { name: /task title/i });
+    await userEvent.type(input, "Some task");
+    fireEvent.keyDown(input, { key: "Enter", metaKey: true });
+    expect(input).toHaveValue("");
   });
 });
 ```
@@ -1373,18 +1597,24 @@ git commit -m "test(shared): SmartInput component tests"
 ## Task 11: Wire up public exports and verify build
 
 **Files:**
+
 - Create: `packages/shared/src/index.ts`
 
 - [ ] **Step 1: Create index.ts**
 
 ```typescript
 // packages/shared/src/index.ts
-export type { Space, Project, Task, TaskStatus } from './types';
-export { AppDatabase, db } from './db';
-export { SmartInput } from './SmartInput/SmartInput';
-export { useSmartInput } from './SmartInput/useSmartInput';
-export type { UseSmartInputReturn, SmartInputValues, ChipFocus, FocusTarget } from './SmartInput/useSmartInput';
-export type { ProjectWithSpace } from './SmartInput/Dropdown';
+export type { Space, Project, Task, TaskStatus } from "./types";
+export { AppDatabase, db } from "./db";
+export { SmartInput } from "./SmartInput/SmartInput";
+export { useSmartInput } from "./SmartInput/useSmartInput";
+export type {
+  UseSmartInputReturn,
+  SmartInputValues,
+  ChipFocus,
+  FocusTarget,
+} from "./SmartInput/useSmartInput";
+export type { ProjectWithSpace } from "./SmartInput/Dropdown";
 ```
 
 - [ ] **Step 2: Run the build**

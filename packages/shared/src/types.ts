@@ -3,17 +3,17 @@
 export interface Space {
   id: string;
   name: string;
-  color: string;      // hex, e.g. "#5E6AD2"
+  color: string; // hex, e.g. "#5E6AD2"
   createdAt: Date;
   updatedAt: Date;
-  synced: boolean;    // false = pending push to Supabase
+  synced: boolean; // false = pending push to Supabase
 }
 
 export interface Project {
   id: string;
   name: string;
-  emoji: string | null;   // single emoji character
-  spaceId: string;    // FK → Space
+  emoji: string | null; // single emoji character
+  spaceId: string; // FK → Space
   dueDate: Date | null;
   archived: boolean;
   url: string | null;
@@ -22,19 +22,19 @@ export interface Project {
   synced: boolean;
 }
 
-export type TaskStatus = 'inbox' | 'todo' | 'done' | 'archived';
+export type TaskStatus = "inbox" | "todo" | "done" | "archived";
 // inbox = no workingDate assigned yet
 // todo  = triaged (has workingDate)
 
 export interface Task {
   id: string;
   title: string;
-  projectId: string;          // FK → Project; space derived via project.spaceId
+  projectId: string; // FK → Project; space derived via project.spaceId
   status: TaskStatus;
-  workingDate: Date | null;   // drives Today view (workingDate <= today)
-  dueDate: Date | null;       // shows red when past + not done
+  workingDate: Date | null; // drives Today view (workingDate <= today)
+  dueDate: Date | null; // shows red when past + not done
   createdAt: Date;
-  updatedAt: Date;            // last-write-wins sync key
+  updatedAt: Date; // last-write-wins sync key
   completedAt: Date | null;
   url: string | null;
   synced: boolean;

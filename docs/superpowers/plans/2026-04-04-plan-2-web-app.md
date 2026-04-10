@@ -12,48 +12,49 @@
 
 ## File Map
 
-| File | Responsibility |
-|------|----------------|
-| `apps/web/package.json` | App manifest, scripts, all direct dependencies |
-| `apps/web/vite.config.ts` | Vite config with React plugin and Vitest config |
-| `apps/web/tailwind.config.ts` | Tailwind config with custom design tokens |
-| `apps/web/postcss.config.js` | PostCSS config required by Tailwind v3 |
-| `apps/web/tsconfig.json` | TypeScript config extending monorepo base |
-| `apps/web/index.html` | HTML entry point, mounts `#root` |
-| `apps/web/.env.example` | Documents required env vars (Supabase URL + anon key) |
-| `apps/web/vercel.json` | Vercel deployment config pointing to monorepo build |
-| `apps/web/src/main.tsx` | ReactDOM.createRoot, wraps App in providers |
-| `apps/web/src/App.tsx` | React Router root, ProtectedRoute, route tree |
-| `apps/web/src/index.css` | Tailwind directives + CSS custom properties |
-| `apps/web/src/lib/supabase.ts` | Supabase client singleton created from env vars |
-| `apps/web/src/lib/db.ts` | Re-exports `db` from `@sift/shared` |
-| `apps/web/src/contexts/AuthContext.tsx` | Supabase auth state, session listener, provider + hook |
-| `apps/web/src/pages/AuthPage.tsx` | Google OAuth + magic-link login UI |
-| `apps/web/src/components/layout/AppLayout.tsx` | Topbar + Sidebar + `<Outlet />` content slot |
-| `apps/web/src/components/layout/Topbar.tsx` | Nav tabs with live counts, sync badge, avatar |
-| `apps/web/src/components/layout/Sidebar.tsx` | Global view links + collapsible spaces/projects |
-| `apps/web/src/components/layout/HintBar.tsx` | Persistent keyboard shortcut reference strip |
-| `apps/web/src/components/TaskRow.tsx` | 36px task row with focus border, late state, space dot |
-| `apps/web/src/components/TaskList.tsx` | Active section + collapsed Done section |
-| `apps/web/src/components/InputBar.tsx` | SmartInput wrapper that writes completed tasks to Dexie |
-| `apps/web/src/hooks/useTasks.ts` | `useInboxTasks`, `useTodayTasks`, `useProjectTasks` via useLiveQuery |
-| `apps/web/src/hooks/useSpacesProjects.ts` | Live Dexie query returning all spaces and projects |
-| `apps/web/src/hooks/useKeyboardNav.ts` | j/k/Enter/Backspace focus and mutation handlers |
-| `apps/web/src/views/InboxView.tsx` | Inbox view: renders TaskList + InputBar |
-| `apps/web/src/views/TodayView.tsx` | Today view: renders TaskList + InputBar |
-| `apps/web/src/views/ProjectsView.tsx` | Projects view: grouped by space → project with progress bars |
-| `apps/web/src/services/SyncService.ts` | LWW sync: push unsynced, pull remote, merge, Realtime |
-| `apps/web/src/__tests__/setup.ts` | fake-indexeddb auto-import + @testing-library/jest-dom |
-| `apps/web/src/__tests__/useTasks.test.ts` | Tests for useInboxTasks, useTodayTasks, useProjectTasks |
-| `apps/web/src/__tests__/useKeyboardNav.test.ts` | Tests for focus movement, toggle done, archive |
-| `apps/web/src/__tests__/TaskRow.test.tsx` | Tests for focused state, late styling, space dot, click |
-| `apps/web/src/__tests__/SyncService.test.ts` | Tests for push, pull, merge, no-op when logged out |
+| File                                            | Responsibility                                                       |
+| ----------------------------------------------- | -------------------------------------------------------------------- |
+| `apps/web/package.json`                         | App manifest, scripts, all direct dependencies                       |
+| `apps/web/vite.config.ts`                       | Vite config with React plugin and Vitest config                      |
+| `apps/web/tailwind.config.ts`                   | Tailwind config with custom design tokens                            |
+| `apps/web/postcss.config.js`                    | PostCSS config required by Tailwind v3                               |
+| `apps/web/tsconfig.json`                        | TypeScript config extending monorepo base                            |
+| `apps/web/index.html`                           | HTML entry point, mounts `#root`                                     |
+| `apps/web/.env.example`                         | Documents required env vars (Supabase URL + anon key)                |
+| `apps/web/vercel.json`                          | Vercel deployment config pointing to monorepo build                  |
+| `apps/web/src/main.tsx`                         | ReactDOM.createRoot, wraps App in providers                          |
+| `apps/web/src/App.tsx`                          | React Router root, ProtectedRoute, route tree                        |
+| `apps/web/src/index.css`                        | Tailwind directives + CSS custom properties                          |
+| `apps/web/src/lib/supabase.ts`                  | Supabase client singleton created from env vars                      |
+| `apps/web/src/lib/db.ts`                        | Re-exports `db` from `@sift/shared`                                  |
+| `apps/web/src/contexts/AuthContext.tsx`         | Supabase auth state, session listener, provider + hook               |
+| `apps/web/src/pages/AuthPage.tsx`               | Google OAuth + magic-link login UI                                   |
+| `apps/web/src/components/layout/AppLayout.tsx`  | Topbar + Sidebar + `<Outlet />` content slot                         |
+| `apps/web/src/components/layout/Topbar.tsx`     | Nav tabs with live counts, sync badge, avatar                        |
+| `apps/web/src/components/layout/Sidebar.tsx`    | Global view links + collapsible spaces/projects                      |
+| `apps/web/src/components/layout/HintBar.tsx`    | Persistent keyboard shortcut reference strip                         |
+| `apps/web/src/components/TaskRow.tsx`           | 36px task row with focus border, late state, space dot               |
+| `apps/web/src/components/TaskList.tsx`          | Active section + collapsed Done section                              |
+| `apps/web/src/components/InputBar.tsx`          | SmartInput wrapper that writes completed tasks to Dexie              |
+| `apps/web/src/hooks/useTasks.ts`                | `useInboxTasks`, `useTodayTasks`, `useProjectTasks` via useLiveQuery |
+| `apps/web/src/hooks/useSpacesProjects.ts`       | Live Dexie query returning all spaces and projects                   |
+| `apps/web/src/hooks/useKeyboardNav.ts`          | j/k/Enter/Backspace focus and mutation handlers                      |
+| `apps/web/src/views/InboxView.tsx`              | Inbox view: renders TaskList + InputBar                              |
+| `apps/web/src/views/TodayView.tsx`              | Today view: renders TaskList + InputBar                              |
+| `apps/web/src/views/ProjectsView.tsx`           | Projects view: grouped by space → project with progress bars         |
+| `apps/web/src/services/SyncService.ts`          | LWW sync: push unsynced, pull remote, merge, Realtime                |
+| `apps/web/src/__tests__/setup.ts`               | fake-indexeddb auto-import + @testing-library/jest-dom               |
+| `apps/web/src/__tests__/useTasks.test.ts`       | Tests for useInboxTasks, useTodayTasks, useProjectTasks              |
+| `apps/web/src/__tests__/useKeyboardNav.test.ts` | Tests for focus movement, toggle done, archive                       |
+| `apps/web/src/__tests__/TaskRow.test.tsx`       | Tests for focused state, late styling, space dot, click              |
+| `apps/web/src/__tests__/SyncService.test.ts`    | Tests for push, pull, merge, no-op when logged out                   |
 
 ---
 
 ## Task 1: Bootstrap apps/web
 
 **Files:**
+
 - Create: `apps/web/package.json`
 - Create: `apps/web/vite.config.ts`
 - Create: `apps/web/tsconfig.json`
@@ -106,14 +107,14 @@
 
 ```typescript
 // apps/web/vite.config.ts
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: 'jsdom',
-    setupFiles: ['src/__tests__/setup.ts'],
+    environment: "jsdom",
+    setupFiles: ["src/__tests__/setup.ts"],
     globals: true,
   },
 });
@@ -154,7 +155,10 @@ export default defineConfig({
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <title>Speedy Tasks</title>
   </head>
   <body>
@@ -197,6 +201,7 @@ git commit -m "chore: bootstrap apps/web package"
 ## Task 2: Design tokens — Tailwind config + CSS vars
 
 **Files:**
+
 - Create: `apps/web/tailwind.config.ts`
 - Create: `apps/web/postcss.config.js`
 - Create: `apps/web/src/index.css`
@@ -205,30 +210,30 @@ git commit -m "chore: bootstrap apps/web package"
 
 ```typescript
 // apps/web/tailwind.config.ts
-import type { Config } from 'tailwindcss';
+import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: ['./index.html', './src/**/*.{ts,tsx}'],
+  content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        bg: '#080808',
-        surface: '#0e0e0e',
-        'surface-2': '#141414',
-        border: '#1f1f1f',
-        'border-2': '#262626',
-        text: '#e2e2e2',
-        muted: '#666666',
-        dim: '#444444',
-        accent: '#5E6AD2',
-        red: '#ff4d4d',
-        green: '#4ade80',
+        bg: "#080808",
+        surface: "#0e0e0e",
+        "surface-2": "#141414",
+        border: "#1f1f1f",
+        "border-2": "#262626",
+        text: "#e2e2e2",
+        muted: "#666666",
+        dim: "#444444",
+        accent: "#5E6AD2",
+        red: "#ff4d4d",
+        green: "#4ade80",
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ["Inter", "system-ui", "sans-serif"],
       },
       height: {
-        'task-row': '36px',
+        "task-row": "36px",
       },
     },
   },
@@ -320,6 +325,7 @@ git commit -m "feat(web): add Tailwind design tokens and CSS variables"
 ## Task 3: Supabase client + .env.example
 
 **Files:**
+
 - Create: `apps/web/.env.example`
 - Create: `apps/web/src/lib/supabase.ts`
 - Create: `apps/web/src/lib/db.ts`
@@ -338,14 +344,14 @@ VITE_SUPABASE_ANON_KEY=your-anon-key-here
 
 ```typescript
 // apps/web/src/lib/supabase.ts
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error(
-    'Missing Supabase env vars. Copy .env.example to .env.local and fill in values.'
+    "Missing Supabase env vars. Copy .env.example to .env.local and fill in values.",
   );
 }
 
@@ -357,7 +363,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 ```typescript
 // apps/web/src/lib/db.ts
 // Re-export the shared Dexie singleton so app code imports from one place.
-export { db } from '@sift/shared';
+export { db } from "@sift/shared";
 ```
 
 - [ ] **Step 4: Commit**
@@ -372,6 +378,7 @@ git commit -m "feat(web): add Supabase client singleton and db re-export"
 ## Task 4: AuthContext + AuthPage
 
 **Files:**
+
 - Create: `apps/web/src/contexts/AuthContext.tsx`
 - Create: `apps/web/src/pages/AuthPage.tsx`
 
@@ -385,9 +392,9 @@ import {
   useEffect,
   useState,
   type ReactNode,
-} from 'react';
-import type { Session, User } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
+} from "react";
+import type { Session, User } from "@supabase/supabase-js";
+import { supabase } from "../lib/supabase";
 
 interface AuthContextValue {
   session: Session | null;
@@ -412,18 +419,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, newSession) => {
-        setSession(newSession);
-      }
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+    });
 
     return () => subscription.unsubscribe();
   }, []);
 
   async function signInWithGoogle() {
     await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: "google",
       options: { redirectTo: window.location.origin },
     });
   }
@@ -458,7 +465,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth(): AuthContextValue {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used inside <AuthProvider>');
+  if (!ctx) throw new Error("useAuth must be used inside <AuthProvider>");
   return ctx;
 }
 ```
@@ -467,13 +474,13 @@ export function useAuth(): AuthContextValue {
 
 ```tsx
 // apps/web/src/pages/AuthPage.tsx
-import { useState, type FormEvent } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useState, type FormEvent } from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function AuthPage() {
   const { user, loading, signInWithGoogle, signInWithMagicLink } = useAuth();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [magicSent, setMagicSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -489,7 +496,7 @@ export default function AuthPage() {
       await signInWithMagicLink(email);
       setMagicSent(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong');
+      setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setSubmitting(false);
     }
@@ -512,7 +519,7 @@ export default function AuthPage() {
           {magicSent ? (
             <div className="text-center py-4">
               <p className="text-text text-sm">
-                Check your email — a magic link is on its way to{' '}
+                Check your email — a magic link is on its way to{" "}
                 <span className="text-accent">{email}</span>.
               </p>
             </div>
@@ -523,7 +530,12 @@ export default function AuthPage() {
                 onClick={signInWithGoogle}
                 className="w-full flex items-center justify-center gap-3 bg-surface-2 hover:bg-border text-text text-sm font-medium px-4 py-2.5 rounded-md border border-border-2 transition-colors"
               >
-                <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  aria-hidden="true"
+                >
                   <path
                     fill="#4285F4"
                     d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"
@@ -560,15 +572,13 @@ export default function AuthPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-surface-2 border border-border-2 rounded-md px-3 py-2 text-text text-sm placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
                 />
-                {error && (
-                  <p className="text-red text-xs">{error}</p>
-                )}
+                {error && <p className="text-red text-xs">{error}</p>}
                 <button
                   type="submit"
                   disabled={submitting}
                   className="w-full bg-accent hover:bg-accent/90 disabled:opacity-50 text-white text-sm font-medium px-4 py-2.5 rounded-md transition-colors"
                 >
-                  {submitting ? 'Sending…' : 'Send magic link'}
+                  {submitting ? "Sending…" : "Send magic link"}
                 </button>
               </form>
             </>
@@ -596,6 +606,7 @@ git commit -m "feat(web): add AuthContext and AuthPage with Google OAuth + magic
 ## Task 5: AppLayout + Topbar + Sidebar + HintBar
 
 **Files:**
+
 - Create: `apps/web/src/components/layout/AppLayout.tsx`
 - Create: `apps/web/src/components/layout/Topbar.tsx`
 - Create: `apps/web/src/components/layout/Sidebar.tsx`
@@ -605,17 +616,17 @@ git commit -m "feat(web): add AuthContext and AuthPage with Google OAuth + magic
 
 ```tsx
 // apps/web/src/components/layout/Topbar.tsx
-import { NavLink } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { useTasks } from '../../hooks/useTasks';
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import { useTasks } from "../../hooks/useTasks";
 
 function SyncBadge({ isSynced }: { isSynced: boolean }) {
   return (
     <div className="flex items-center gap-1.5 text-xs text-muted">
       <span
-        className={`w-1.5 h-1.5 rounded-full ${isSynced ? 'bg-green' : 'bg-muted'}`}
+        className={`w-1.5 h-1.5 rounded-full ${isSynced ? "bg-green" : "bg-muted"}`}
       />
-      {isSynced ? 'Synced' : 'Local only'}
+      {isSynced ? "Synced" : "Local only"}
     </div>
   );
 }
@@ -635,8 +646,8 @@ function NavTab({
       className={({ isActive }) =>
         `flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors ${
           isActive
-            ? 'bg-surface-2 text-text'
-            : 'text-muted hover:text-text hover:bg-surface-2'
+            ? "bg-surface-2 text-text"
+            : "text-muted hover:text-text hover:bg-surface-2"
         }`
       }
     >
@@ -650,8 +661,8 @@ function NavTab({
 
 export default function Topbar({ isSynced }: { isSynced: boolean }) {
   const { user, signOut } = useAuth();
-  const inboxTasks = useTasks('inbox');
-  const todayTasks = useTasks('today');
+  const inboxTasks = useTasks("inbox");
+  const todayTasks = useTasks("today");
 
   return (
     <header className="flex items-center justify-between h-12 px-4 border-b border-border bg-surface shrink-0">
@@ -676,7 +687,7 @@ export default function Topbar({ isSynced }: { isSynced: boolean }) {
             className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-white text-xs font-medium hover:bg-accent/80 transition-colors"
             title="Sign out"
           >
-            {(user.email ?? 'U')[0].toUpperCase()}
+            {(user.email ?? "U")[0].toUpperCase()}
           </button>
         ) : null}
       </div>
@@ -689,10 +700,10 @@ export default function Topbar({ isSynced }: { isSynced: boolean }) {
 
 ```tsx
 // apps/web/src/components/layout/Sidebar.tsx
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { useSpacesProjects } from '../../hooks/useSpacesProjects';
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import { useSpacesProjects } from "../../hooks/useSpacesProjects";
 
 function SidebarLink({ to, label }: { to: string; label: string }) {
   return (
@@ -701,8 +712,8 @@ function SidebarLink({ to, label }: { to: string; label: string }) {
       className={({ isActive }) =>
         `block px-3 py-1.5 rounded-md text-sm transition-colors ${
           isActive
-            ? 'bg-surface-2 text-text'
-            : 'text-muted hover:text-text hover:bg-surface-2'
+            ? "bg-surface-2 text-text"
+            : "text-muted hover:text-text hover:bg-surface-2"
         }`
       }
     >
@@ -756,7 +767,7 @@ export default function Sidebar() {
                 height="10"
                 viewBox="0 0 10 10"
                 className={`shrink-0 transition-transform ${
-                  collapsed.has(space.id) ? '-rotate-90' : ''
+                  collapsed.has(space.id) ? "-rotate-90" : ""
                 }`}
               >
                 <path
@@ -813,13 +824,13 @@ interface Hint {
 }
 
 const HINTS: Hint[] = [
-  { keys: ['j', 'k'], label: 'Move' },
-  { keys: ['Enter'], label: 'Done' },
-  { keys: ['Backspace'], label: 'Archive' },
-  { keys: ['w'], label: '@working date' },
-  { keys: ['p'], label: '@project' },
-  { keys: ['d'], label: '@due date' },
-  { keys: ['⌘+Enter'], label: 'Save' },
+  { keys: ["j", "k"], label: "Move" },
+  { keys: ["Enter"], label: "Done" },
+  { keys: ["Backspace"], label: "Archive" },
+  { keys: ["w"], label: "@working date" },
+  { keys: ["p"], label: "@project" },
+  { keys: ["d"], label: "@due date" },
+  { keys: ["⌘+Enter"], label: "Save" },
 ];
 
 function Key({ label }: { label: string }) {
@@ -852,10 +863,10 @@ export default function HintBar() {
 
 ```tsx
 // apps/web/src/components/layout/AppLayout.tsx
-import { Outlet } from 'react-router-dom';
-import Topbar from './Topbar';
-import Sidebar from './Sidebar';
-import HintBar from './HintBar';
+import { Outlet } from "react-router-dom";
+import Topbar from "./Topbar";
+import Sidebar from "./Sidebar";
+import HintBar from "./HintBar";
 
 interface AppLayoutProps {
   isSynced: boolean;
@@ -891,35 +902,40 @@ git commit -m "feat(web): add AppLayout, Topbar, Sidebar, and HintBar components
 ## Task 6: Failing tests for useTasks
 
 **Files:**
+
 - Create: `apps/web/src/__tests__/setup.ts`
 - Create: `apps/web/src/__tests__/useTasks.test.ts`
 
-- [ ] **Step 1: Create apps/web/src/__tests__/setup.ts**
+- [ ] **Step 1: Create apps/web/src/**tests**/setup.ts**
 
 ```typescript
 // apps/web/src/__tests__/setup.ts
-import 'fake-indexeddb/auto';
-import '@testing-library/jest-dom';
+import "fake-indexeddb/auto";
+import "@testing-library/jest-dom";
 ```
 
-- [ ] **Step 2: Create apps/web/src/__tests__/useTasks.test.ts**
+- [ ] **Step 2: Create apps/web/src/**tests**/useTasks.test.ts**
 
 ```typescript
 // apps/web/src/__tests__/useTasks.test.ts
-import { describe, it, expect, beforeEach } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
-import { db } from '../lib/db';
-import { useInboxTasks, useTodayTasks, useProjectTasks } from '../hooks/useTasks';
-import type { Space, Project, Task } from '@sift/shared';
+import { describe, it, expect, beforeEach } from "vitest";
+import { renderHook, waitFor } from "@testing-library/react";
+import { db } from "../lib/db";
+import {
+  useInboxTasks,
+  useTodayTasks,
+  useProjectTasks,
+} from "../hooks/useTasks";
+import type { Space, Project, Task } from "@sift/shared";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function makeSpace(overrides?: Partial<Space>): Space {
   const now = new Date();
   return {
-    id: 'space-1',
-    name: 'Work',
-    color: '#5E6AD2',
+    id: "space-1",
+    name: "Work",
+    color: "#5E6AD2",
     createdAt: now,
     updatedAt: now,
     synced: true,
@@ -930,9 +946,9 @@ function makeSpace(overrides?: Partial<Space>): Space {
 function makeProject(overrides?: Partial<Project>): Project {
   const now = new Date();
   return {
-    id: 'project-1',
-    name: 'General',
-    spaceId: 'space-1',
+    id: "project-1",
+    name: "General",
+    spaceId: "space-1",
     createdAt: now,
     updatedAt: now,
     synced: true,
@@ -943,10 +959,10 @@ function makeProject(overrides?: Partial<Project>): Project {
 function makeTask(overrides?: Partial<Task>): Task {
   const now = new Date();
   return {
-    id: 'task-1',
-    title: 'Test task',
-    projectId: 'project-1',
-    status: 'inbox',
+    id: "task-1",
+    title: "Test task",
+    projectId: "project-1",
+    status: "inbox",
     workingDate: null,
     dueDate: null,
     createdAt: now,
@@ -989,23 +1005,23 @@ beforeEach(async () => {
 
 // ── useInboxTasks ─────────────────────────────────────────────────────────────
 
-describe('useInboxTasks', () => {
-  it('returns tasks with workingDate null and non-terminal status', async () => {
+describe("useInboxTasks", () => {
+  it("returns tasks with workingDate null and non-terminal status", async () => {
     await db.tasks.bulkAdd([
-      makeTask({ id: 't1', status: 'inbox', workingDate: null }),
-      makeTask({ id: 't2', status: 'todo', workingDate: today() }),   // has workingDate — excluded
-      makeTask({ id: 't3', status: 'done', workingDate: null }),       // done — excluded
-      makeTask({ id: 't4', status: 'archived', workingDate: null }),   // archived — excluded
+      makeTask({ id: "t1", status: "inbox", workingDate: null }),
+      makeTask({ id: "t2", status: "todo", workingDate: today() }), // has workingDate — excluded
+      makeTask({ id: "t3", status: "done", workingDate: null }), // done — excluded
+      makeTask({ id: "t4", status: "archived", workingDate: null }), // archived — excluded
     ]);
 
     const { result } = renderHook(() => useInboxTasks());
     await waitFor(() => expect(result.current.length).toBeGreaterThan(0));
 
     expect(result.current).toHaveLength(1);
-    expect(result.current[0].id).toBe('t1');
+    expect(result.current[0].id).toBe("t1");
   });
 
-  it('returns empty array when no inbox tasks exist', async () => {
+  it("returns empty array when no inbox tasks exist", async () => {
     const { result } = renderHook(() => useInboxTasks());
     await waitFor(() => expect(result.current).toBeDefined());
     expect(result.current).toHaveLength(0);
@@ -1014,44 +1030,52 @@ describe('useInboxTasks', () => {
 
 // ── useTodayTasks ─────────────────────────────────────────────────────────────
 
-describe('useTodayTasks', () => {
-  it('returns tasks where workingDate <= today and status is not done/archived', async () => {
+describe("useTodayTasks", () => {
+  it("returns tasks where workingDate <= today and status is not done/archived", async () => {
     await db.tasks.bulkAdd([
-      makeTask({ id: 't1', status: 'todo', workingDate: today() }),
-      makeTask({ id: 't2', status: 'todo', workingDate: yesterday() }),
-      makeTask({ id: 't3', status: 'todo', workingDate: tomorrow() }),   // future — excluded
-      makeTask({ id: 't4', status: 'done', workingDate: today() }),       // done — excluded
-      makeTask({ id: 't5', status: 'archived', workingDate: yesterday() }), // archived — excluded
+      makeTask({ id: "t1", status: "todo", workingDate: today() }),
+      makeTask({ id: "t2", status: "todo", workingDate: yesterday() }),
+      makeTask({ id: "t3", status: "todo", workingDate: tomorrow() }), // future — excluded
+      makeTask({ id: "t4", status: "done", workingDate: today() }), // done — excluded
+      makeTask({ id: "t5", status: "archived", workingDate: yesterday() }), // archived — excluded
     ]);
 
     const { result } = renderHook(() => useTodayTasks());
     await waitFor(() => expect(result.current.length).toBeGreaterThan(0));
 
     const ids = result.current.map((t) => t.id).sort();
-    expect(ids).toEqual(['t1', 't2']);
+    expect(ids).toEqual(["t1", "t2"]);
   });
 });
 
 // ── useProjectTasks ───────────────────────────────────────────────────────────
 
-describe('useProjectTasks', () => {
-  it('groups tasks by space then project', async () => {
-    const space2 = makeSpace({ id: 'space-2', name: 'Personal', color: '#4ade80' });
-    const project2 = makeProject({ id: 'project-2', name: 'Errands', spaceId: 'space-2' });
+describe("useProjectTasks", () => {
+  it("groups tasks by space then project", async () => {
+    const space2 = makeSpace({
+      id: "space-2",
+      name: "Personal",
+      color: "#4ade80",
+    });
+    const project2 = makeProject({
+      id: "project-2",
+      name: "Errands",
+      spaceId: "space-2",
+    });
     await db.spaces.add(space2);
     await db.projects.add(project2);
 
     await db.tasks.bulkAdd([
-      makeTask({ id: 't1', projectId: 'project-1', status: 'todo' }),
-      makeTask({ id: 't2', projectId: 'project-2', status: 'inbox' }),
+      makeTask({ id: "t1", projectId: "project-1", status: "todo" }),
+      makeTask({ id: "t2", projectId: "project-2", status: "inbox" }),
     ]);
 
     const { result } = renderHook(() => useProjectTasks());
     await waitFor(() => expect(result.current.length).toBeGreaterThan(0));
 
     expect(result.current).toHaveLength(2);
-    const workSpace = result.current.find((g) => g.space.id === 'space-1');
-    const personalSpace = result.current.find((g) => g.space.id === 'space-2');
+    const workSpace = result.current.find((g) => g.space.id === "space-1");
+    const personalSpace = result.current.find((g) => g.space.id === "space-2");
 
     expect(workSpace).toBeDefined();
     expect(workSpace!.projects[0].tasks).toHaveLength(1);
@@ -1059,10 +1083,10 @@ describe('useProjectTasks', () => {
     expect(personalSpace!.projects[0].tasks).toHaveLength(1);
   });
 
-  it('includes done tasks in project groups (for progress bars)', async () => {
+  it("includes done tasks in project groups (for progress bars)", async () => {
     await db.tasks.bulkAdd([
-      makeTask({ id: 't1', status: 'todo' }),
-      makeTask({ id: 't2', status: 'done' }),
+      makeTask({ id: "t1", status: "todo" }),
+      makeTask({ id: "t2", status: "done" }),
     ]);
 
     const { result } = renderHook(() => useProjectTasks());
@@ -1093,6 +1117,7 @@ git commit -m "test(web): add failing tests for useTasks hook"
 ## Task 7: Implement useTasks + useSpacesProjects
 
 **Files:**
+
 - Create: `apps/web/src/hooks/useTasks.ts`
 - Create: `apps/web/src/hooks/useSpacesProjects.ts`
 
@@ -1100,25 +1125,28 @@ git commit -m "test(web): add failing tests for useTasks hook"
 
 ```typescript
 // apps/web/src/hooks/useSpacesProjects.ts
-import { useLiveQuery } from 'dexie-react-hooks';
-import { db } from '../lib/db';
-import type { Space, Project } from '@sift/shared';
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "../lib/db";
+import type { Space, Project } from "@sift/shared";
 
 export interface SpaceWithProjects {
   space: Space;
   projects: Project[];
 }
 
-export function useSpacesProjects(): { spacesWithProjects: SpaceWithProjects[] } {
-  const spacesWithProjects = useLiveQuery(async () => {
-    const spaces = await db.spaces.orderBy('name').toArray();
-    const projects = await db.projects.orderBy('name').toArray();
+export function useSpacesProjects(): {
+  spacesWithProjects: SpaceWithProjects[];
+} {
+  const spacesWithProjects =
+    useLiveQuery(async () => {
+      const spaces = await db.spaces.orderBy("name").toArray();
+      const projects = await db.projects.orderBy("name").toArray();
 
-    return spaces.map((space) => ({
-      space,
-      projects: projects.filter((p) => p.spaceId === space.id),
-    }));
-  }, []) ?? [];
+      return spaces.map((space) => ({
+        space,
+        projects: projects.filter((p) => p.spaceId === space.id),
+      }));
+    }, []) ?? [];
 
   return { spacesWithProjects };
 }
@@ -1128,25 +1156,29 @@ export function useSpacesProjects(): { spacesWithProjects: SpaceWithProjects[] }
 
 ```typescript
 // apps/web/src/hooks/useTasks.ts
-import { useLiveQuery } from 'dexie-react-hooks';
-import { db } from '../lib/db';
-import type { Task, Space, Project } from '@sift/shared';
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "../lib/db";
+import type { Task, Space, Project } from "@sift/shared";
 
-const TERMINAL_STATUSES = ['done', 'archived'] as const;
+const TERMINAL_STATUSES = ["done", "archived"] as const;
 
 /** Inbox: workingDate === null AND status not in done/archived */
 export function useInboxTasks(): Task[] {
-  return useLiveQuery(
-    () =>
-      db.tasks
-        .filter(
-          (t) =>
-            t.workingDate === null &&
-            !TERMINAL_STATUSES.includes(t.status as typeof TERMINAL_STATUSES[number])
-        )
-        .toArray(),
-    []
-  ) ?? [];
+  return (
+    useLiveQuery(
+      () =>
+        db.tasks
+          .filter(
+            (t) =>
+              t.workingDate === null &&
+              !TERMINAL_STATUSES.includes(
+                t.status as (typeof TERMINAL_STATUSES)[number],
+              ),
+          )
+          .toArray(),
+      [],
+    ) ?? []
+  );
 }
 
 /** Today: workingDate <= today AND status not in done/archived */
@@ -1154,18 +1186,22 @@ export function useTodayTasks(): Task[] {
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
 
-  return useLiveQuery(
-    () =>
-      db.tasks
-        .filter(
-          (t) =>
-            t.workingDate !== null &&
-            t.workingDate <= todayStart &&
-            !TERMINAL_STATUSES.includes(t.status as typeof TERMINAL_STATUSES[number])
-        )
-        .toArray(),
-    []
-  ) ?? [];
+  return (
+    useLiveQuery(
+      () =>
+        db.tasks
+          .filter(
+            (t) =>
+              t.workingDate !== null &&
+              t.workingDate <= todayStart &&
+              !TERMINAL_STATUSES.includes(
+                t.status as (typeof TERMINAL_STATUSES)[number],
+              ),
+          )
+          .toArray(),
+      [],
+    ) ?? []
+  );
 }
 
 export interface ProjectGroup {
@@ -1180,34 +1216,36 @@ export interface SpaceGroup {
 
 /** Projects: all tasks (including done) grouped by space → project */
 export function useProjectTasks(): SpaceGroup[] {
-  return useLiveQuery(async () => {
-    const [spaces, projects, tasks] = await Promise.all([
-      db.spaces.orderBy('name').toArray(),
-      db.projects.orderBy('name').toArray(),
-      db.tasks.where('status').notEqual('archived').toArray(),
-    ]);
+  return (
+    useLiveQuery(async () => {
+      const [spaces, projects, tasks] = await Promise.all([
+        db.spaces.orderBy("name").toArray(),
+        db.projects.orderBy("name").toArray(),
+        db.tasks.where("status").notEqual("archived").toArray(),
+      ]);
 
-    return spaces.map((space) => {
-      const spaceProjects = projects.filter((p) => p.spaceId === space.id);
-      return {
-        space,
-        projects: spaceProjects.map((project) => ({
-          project,
-          tasks: tasks.filter((t) => t.projectId === project.id),
-        })),
-      };
-    });
-  }, []) ?? [];
+      return spaces.map((space) => {
+        const spaceProjects = projects.filter((p) => p.spaceId === space.id);
+        return {
+          space,
+          projects: spaceProjects.map((project) => ({
+            project,
+            tasks: tasks.filter((t) => t.projectId === project.id),
+          })),
+        };
+      });
+    }, []) ?? []
+  );
 }
 
 /**
  * Convenience overload used by Topbar for live task counts.
  * 'inbox' | 'today' → returns the appropriate task array
  */
-export function useTasks(view: 'inbox' | 'today'): Task[] {
+export function useTasks(view: "inbox" | "today"): Task[] {
   const inbox = useInboxTasks();
   const today = useTodayTasks();
-  return view === 'inbox' ? inbox : today;
+  return view === "inbox" ? inbox : today;
 }
 ```
 
@@ -1231,25 +1269,26 @@ git commit -m "feat(web): implement useTasks and useSpacesProjects hooks"
 ## Task 8: Failing tests for useKeyboardNav
 
 **Files:**
+
 - Create: `apps/web/src/__tests__/useKeyboardNav.test.ts`
 
-- [ ] **Step 1: Create apps/web/src/__tests__/useKeyboardNav.test.ts**
+- [ ] **Step 1: Create apps/web/src/**tests**/useKeyboardNav.test.ts**
 
 ```typescript
 // apps/web/src/__tests__/useKeyboardNav.test.ts
-import { describe, it, expect, beforeEach } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
-import { db } from '../lib/db';
-import { useKeyboardNav } from '../hooks/useKeyboardNav';
-import type { Task } from '@sift/shared';
+import { describe, it, expect, beforeEach } from "vitest";
+import { renderHook, act } from "@testing-library/react";
+import { db } from "../lib/db";
+import { useKeyboardNav } from "../hooks/useKeyboardNav";
+import type { Task } from "@sift/shared";
 
 function makeTask(overrides?: Partial<Task>): Task {
   const now = new Date();
   return {
-    id: 'task-1',
-    title: 'Test',
-    projectId: 'project-1',
-    status: 'inbox',
+    id: "task-1",
+    title: "Test",
+    projectId: "project-1",
+    status: "inbox",
     workingDate: null,
     dueDate: null,
     createdAt: now,
@@ -1261,13 +1300,13 @@ function makeTask(overrides?: Partial<Task>): Task {
 }
 
 const TASKS: Task[] = [
-  makeTask({ id: 'a', title: 'Task A' }),
-  makeTask({ id: 'b', title: 'Task B' }),
-  makeTask({ id: 'c', title: 'Task C' }),
+  makeTask({ id: "a", title: "Task A" }),
+  makeTask({ id: "b", title: "Task B" }),
+  makeTask({ id: "c", title: "Task C" }),
 ];
 
 function makeKeyEvent(key: string): KeyboardEvent {
-  return new KeyboardEvent('keydown', { key, bubbles: true });
+  return new KeyboardEvent("keydown", { key, bubbles: true });
 }
 
 beforeEach(async () => {
@@ -1276,168 +1315,228 @@ beforeEach(async () => {
   await db.spaces.clear();
 });
 
-describe('useKeyboardNav', () => {
-  it('starts with focusedId null', () => {
+describe("useKeyboardNav", () => {
+  it("starts with focusedId null", () => {
     const { result } = renderHook(() => useKeyboardNav());
     expect(result.current.focusedId).toBeNull();
   });
 
-  it('j / ArrowDown moves focus to next task', () => {
+  it("j / ArrowDown moves focus to next task", () => {
     const { result } = renderHook(() => useKeyboardNav());
 
     act(() => {
-      result.current.setFocusedId('a');
+      result.current.setFocusedId("a");
     });
 
     act(() => {
-      result.current.handleKeyDown(makeKeyEvent('j'), TASKS);
+      result.current.handleKeyDown(makeKeyEvent("j"), TASKS);
     });
 
-    expect(result.current.focusedId).toBe('b');
+    expect(result.current.focusedId).toBe("b");
   });
 
-  it('k / ArrowUp moves focus to previous task', () => {
+  it("k / ArrowUp moves focus to previous task", () => {
     const { result } = renderHook(() => useKeyboardNav());
 
     act(() => {
-      result.current.setFocusedId('c');
+      result.current.setFocusedId("c");
     });
 
     act(() => {
-      result.current.handleKeyDown(makeKeyEvent('k'), TASKS);
+      result.current.handleKeyDown(makeKeyEvent("k"), TASKS);
     });
 
-    expect(result.current.focusedId).toBe('b');
+    expect(result.current.focusedId).toBe("b");
   });
 
-  it('j does not move past the last task', () => {
+  it("j does not move past the last task", () => {
     const { result } = renderHook(() => useKeyboardNav());
 
     act(() => {
-      result.current.setFocusedId('c');
+      result.current.setFocusedId("c");
     });
 
     act(() => {
-      result.current.handleKeyDown(makeKeyEvent('j'), TASKS);
+      result.current.handleKeyDown(makeKeyEvent("j"), TASKS);
     });
 
-    expect(result.current.focusedId).toBe('c');
+    expect(result.current.focusedId).toBe("c");
   });
 
-  it('k does not move before the first task', () => {
+  it("k does not move before the first task", () => {
     const { result } = renderHook(() => useKeyboardNav());
 
     act(() => {
-      result.current.setFocusedId('a');
+      result.current.setFocusedId("a");
     });
 
     act(() => {
-      result.current.handleKeyDown(makeKeyEvent('k'), TASKS);
+      result.current.handleKeyDown(makeKeyEvent("k"), TASKS);
     });
 
-    expect(result.current.focusedId).toBe('a');
+    expect(result.current.focusedId).toBe("a");
   });
 
-  it('ArrowDown works like j', () => {
+  it("ArrowDown works like j", () => {
     const { result } = renderHook(() => useKeyboardNav());
 
     act(() => {
-      result.current.setFocusedId('a');
+      result.current.setFocusedId("a");
     });
 
     act(() => {
-      result.current.handleKeyDown(makeKeyEvent('ArrowDown'), TASKS);
+      result.current.handleKeyDown(makeKeyEvent("ArrowDown"), TASKS);
     });
 
-    expect(result.current.focusedId).toBe('b');
+    expect(result.current.focusedId).toBe("b");
   });
 
-  it('ArrowUp works like k', () => {
+  it("ArrowUp works like k", () => {
     const { result } = renderHook(() => useKeyboardNav());
 
     act(() => {
-      result.current.setFocusedId('b');
+      result.current.setFocusedId("b");
     });
 
     act(() => {
-      result.current.handleKeyDown(makeKeyEvent('ArrowUp'), TASKS);
+      result.current.handleKeyDown(makeKeyEvent("ArrowUp"), TASKS);
     });
 
-    expect(result.current.focusedId).toBe('a');
+    expect(result.current.focusedId).toBe("a");
   });
 
-  it('Enter toggles focused task from inbox to done', async () => {
-    await db.spaces.add({ id: 'space-1', name: 'Work', color: '#5E6AD2', createdAt: new Date(), updatedAt: new Date(), synced: true });
-    await db.projects.add({ id: 'project-1', name: 'General', spaceId: 'space-1', createdAt: new Date(), updatedAt: new Date(), synced: true });
+  it("Enter toggles focused task from inbox to done", async () => {
+    await db.spaces.add({
+      id: "space-1",
+      name: "Work",
+      color: "#5E6AD2",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      synced: true,
+    });
+    await db.projects.add({
+      id: "project-1",
+      name: "General",
+      spaceId: "space-1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      synced: true,
+    });
     await db.tasks.add(TASKS[0]);
 
     const { result } = renderHook(() => useKeyboardNav());
 
     act(() => {
-      result.current.setFocusedId('a');
+      result.current.setFocusedId("a");
     });
 
     await act(async () => {
-      result.current.handleKeyDown(makeKeyEvent('Enter'), TASKS);
+      result.current.handleKeyDown(makeKeyEvent("Enter"), TASKS);
       await new Promise((r) => setTimeout(r, 10));
     });
 
-    const updated = await db.tasks.get('a');
-    expect(updated!.status).toBe('done');
+    const updated = await db.tasks.get("a");
+    expect(updated!.status).toBe("done");
     expect(updated!.completedAt).not.toBeNull();
   });
 
-  it('Enter toggles focused task from done back to inbox', async () => {
-    await db.spaces.add({ id: 'space-1', name: 'Work', color: '#5E6AD2', createdAt: new Date(), updatedAt: new Date(), synced: true });
-    await db.projects.add({ id: 'project-1', name: 'General', spaceId: 'space-1', createdAt: new Date(), updatedAt: new Date(), synced: true });
-    const doneTask = { ...TASKS[0], status: 'done' as const, completedAt: new Date() };
+  it("Enter toggles focused task from done back to inbox", async () => {
+    await db.spaces.add({
+      id: "space-1",
+      name: "Work",
+      color: "#5E6AD2",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      synced: true,
+    });
+    await db.projects.add({
+      id: "project-1",
+      name: "General",
+      spaceId: "space-1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      synced: true,
+    });
+    const doneTask = {
+      ...TASKS[0],
+      status: "done" as const,
+      completedAt: new Date(),
+    };
     await db.tasks.add(doneTask);
 
     const { result } = renderHook(() => useKeyboardNav());
-    act(() => result.current.setFocusedId('a'));
+    act(() => result.current.setFocusedId("a"));
 
     await act(async () => {
-      result.current.handleKeyDown(makeKeyEvent('Enter'), [doneTask]);
+      result.current.handleKeyDown(makeKeyEvent("Enter"), [doneTask]);
       await new Promise((r) => setTimeout(r, 10));
     });
 
-    const updated = await db.tasks.get('a');
-    expect(updated!.status).toBe('inbox');
+    const updated = await db.tasks.get("a");
+    expect(updated!.status).toBe("inbox");
     expect(updated!.completedAt).toBeNull();
   });
 
-  it('Backspace archives the focused task', async () => {
-    await db.spaces.add({ id: 'space-1', name: 'Work', color: '#5E6AD2', createdAt: new Date(), updatedAt: new Date(), synced: true });
-    await db.projects.add({ id: 'project-1', name: 'General', spaceId: 'space-1', createdAt: new Date(), updatedAt: new Date(), synced: true });
+  it("Backspace archives the focused task", async () => {
+    await db.spaces.add({
+      id: "space-1",
+      name: "Work",
+      color: "#5E6AD2",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      synced: true,
+    });
+    await db.projects.add({
+      id: "project-1",
+      name: "General",
+      spaceId: "space-1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      synced: true,
+    });
     await db.tasks.add(TASKS[1]);
 
     const { result } = renderHook(() => useKeyboardNav());
-    act(() => result.current.setFocusedId('b'));
+    act(() => result.current.setFocusedId("b"));
 
     await act(async () => {
-      result.current.handleKeyDown(makeKeyEvent('Backspace'), TASKS);
+      result.current.handleKeyDown(makeKeyEvent("Backspace"), TASKS);
       await new Promise((r) => setTimeout(r, 10));
     });
 
-    const updated = await db.tasks.get('b');
-    expect(updated!.status).toBe('archived');
+    const updated = await db.tasks.get("b");
+    expect(updated!.status).toBe("archived");
   });
 
-  it('Delete works like Backspace for archiving', async () => {
-    await db.spaces.add({ id: 'space-1', name: 'Work', color: '#5E6AD2', createdAt: new Date(), updatedAt: new Date(), synced: true });
-    await db.projects.add({ id: 'project-1', name: 'General', spaceId: 'space-1', createdAt: new Date(), updatedAt: new Date(), synced: true });
+  it("Delete works like Backspace for archiving", async () => {
+    await db.spaces.add({
+      id: "space-1",
+      name: "Work",
+      color: "#5E6AD2",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      synced: true,
+    });
+    await db.projects.add({
+      id: "project-1",
+      name: "General",
+      spaceId: "space-1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      synced: true,
+    });
     await db.tasks.add(TASKS[2]);
 
     const { result } = renderHook(() => useKeyboardNav());
-    act(() => result.current.setFocusedId('c'));
+    act(() => result.current.setFocusedId("c"));
 
     await act(async () => {
-      result.current.handleKeyDown(makeKeyEvent('Delete'), TASKS);
+      result.current.handleKeyDown(makeKeyEvent("Delete"), TASKS);
       await new Promise((r) => setTimeout(r, 10));
     });
 
-    const updated = await db.tasks.get('c');
-    expect(updated!.status).toBe('archived');
+    const updated = await db.tasks.get("c");
+    expect(updated!.status).toBe("archived");
   });
 });
 ```
@@ -1462,15 +1561,16 @@ git commit -m "test(web): add failing tests for useKeyboardNav hook"
 ## Task 9: Implement useKeyboardNav
 
 **Files:**
+
 - Create: `apps/web/src/hooks/useKeyboardNav.ts`
 
 - [ ] **Step 1: Create apps/web/src/hooks/useKeyboardNav.ts**
 
 ```typescript
 // apps/web/src/hooks/useKeyboardNav.ts
-import { useState } from 'react';
-import { db } from '../lib/db';
-import type { Task } from '@sift/shared';
+import { useState } from "react";
+import { db } from "../lib/db";
+import type { Task } from "@sift/shared";
 
 export interface UseKeyboardNavReturn {
   focusedId: string | null;
@@ -1487,8 +1587,8 @@ export function useKeyboardNav(): UseKeyboardNavReturn {
     const currentIndex = tasks.findIndex((t) => t.id === focusedId);
 
     switch (e.key) {
-      case 'j':
-      case 'ArrowDown': {
+      case "j":
+      case "ArrowDown": {
         e.preventDefault();
         if (currentIndex < tasks.length - 1) {
           setFocusedId(tasks[currentIndex + 1].id);
@@ -1496,8 +1596,8 @@ export function useKeyboardNav(): UseKeyboardNavReturn {
         break;
       }
 
-      case 'k':
-      case 'ArrowUp': {
+      case "k":
+      case "ArrowUp": {
         e.preventDefault();
         if (currentIndex > 0) {
           setFocusedId(tasks[currentIndex - 1].id);
@@ -1505,22 +1605,22 @@ export function useKeyboardNav(): UseKeyboardNavReturn {
         break;
       }
 
-      case 'Enter': {
+      case "Enter": {
         if (focusedId === null) break;
         const task = tasks.find((t) => t.id === focusedId);
         if (!task) break;
 
         const now = new Date();
-        if (task.status === 'done') {
+        if (task.status === "done") {
           db.tasks.update(focusedId, {
-            status: task.workingDate ? 'todo' : 'inbox',
+            status: task.workingDate ? "todo" : "inbox",
             completedAt: null,
             updatedAt: now,
             synced: false,
           });
         } else {
           db.tasks.update(focusedId, {
-            status: 'done',
+            status: "done",
             completedAt: now,
             updatedAt: now,
             synced: false,
@@ -1529,12 +1629,12 @@ export function useKeyboardNav(): UseKeyboardNavReturn {
         break;
       }
 
-      case 'Backspace':
-      case 'Delete': {
+      case "Backspace":
+      case "Delete": {
         if (focusedId === null) break;
         const now = new Date();
         db.tasks.update(focusedId, {
-          status: 'archived',
+          status: "archived",
           updatedAt: now,
           synced: false,
         });
@@ -1578,42 +1678,43 @@ git commit -m "feat(web): implement useKeyboardNav hook"
 ## Task 10: Failing tests for TaskRow
 
 **Files:**
+
 - Create: `apps/web/src/__tests__/TaskRow.test.tsx`
 
-- [ ] **Step 1: Create apps/web/src/__tests__/TaskRow.test.tsx**
+- [ ] **Step 1: Create apps/web/src/**tests**/TaskRow.test.tsx**
 
 ```tsx
 // apps/web/src/__tests__/TaskRow.test.tsx
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
-import TaskRow from '../components/TaskRow';
-import type { Task, Project, Space } from '@sift/shared';
+import { describe, it, expect, vi } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import TaskRow from "../components/TaskRow";
+import type { Task, Project, Space } from "@sift/shared";
 
 const now = new Date();
 
 const space: Space = {
-  id: 'space-1',
-  name: 'Work',
-  color: '#5E6AD2',
+  id: "space-1",
+  name: "Work",
+  color: "#5E6AD2",
   createdAt: now,
   updatedAt: now,
   synced: true,
 };
 
 const project: Project = {
-  id: 'project-1',
-  name: 'General',
-  spaceId: 'space-1',
+  id: "project-1",
+  name: "General",
+  spaceId: "space-1",
   createdAt: now,
   updatedAt: now,
   synced: true,
 };
 
 const baseTask: Task = {
-  id: 'task-1',
-  title: 'Write unit tests',
-  projectId: 'project-1',
-  status: 'inbox',
+  id: "task-1",
+  title: "Write unit tests",
+  projectId: "project-1",
+  status: "inbox",
   workingDate: null,
   dueDate: null,
   createdAt: now,
@@ -1622,8 +1723,8 @@ const baseTask: Task = {
   synced: true,
 };
 
-describe('TaskRow', () => {
-  it('renders the task title', () => {
+describe("TaskRow", () => {
+  it("renders the task title", () => {
     render(
       <TaskRow
         task={baseTask}
@@ -1631,12 +1732,12 @@ describe('TaskRow', () => {
         space={space}
         isFocused={false}
         onFocus={vi.fn()}
-      />
+      />,
     );
-    expect(screen.getByText('Write unit tests')).toBeInTheDocument();
+    expect(screen.getByText("Write unit tests")).toBeInTheDocument();
   });
 
-  it('applies focused styles when isFocused is true', () => {
+  it("applies focused styles when isFocused is true", () => {
     const { container } = render(
       <TaskRow
         task={baseTask}
@@ -1644,14 +1745,14 @@ describe('TaskRow', () => {
         space={space}
         isFocused={true}
         onFocus={vi.fn()}
-      />
+      />,
     );
     // The row should have the accent left border class
     const row = container.firstChild as HTMLElement;
     expect(row.className).toMatch(/border-accent/);
   });
 
-  it('does not apply focused styles when isFocused is false', () => {
+  it("does not apply focused styles when isFocused is false", () => {
     const { container } = render(
       <TaskRow
         task={baseTask}
@@ -1659,13 +1760,13 @@ describe('TaskRow', () => {
         space={space}
         isFocused={false}
         onFocus={vi.fn()}
-      />
+      />,
     );
     const row = container.firstChild as HTMLElement;
     expect(row.className).not.toMatch(/border-accent/);
   });
 
-  it('calls onFocus when the row is clicked', () => {
+  it("calls onFocus when the row is clicked", () => {
     const onFocus = vi.fn();
     const { container } = render(
       <TaskRow
@@ -1674,13 +1775,13 @@ describe('TaskRow', () => {
         space={space}
         isFocused={false}
         onFocus={onFocus}
-      />
+      />,
     );
     fireEvent.click(container.firstChild as HTMLElement);
     expect(onFocus).toHaveBeenCalledOnce();
   });
 
-  it('renders space dot with space color', () => {
+  it("renders space dot with space color", () => {
     const { container } = render(
       <TaskRow
         task={baseTask}
@@ -1688,18 +1789,20 @@ describe('TaskRow', () => {
         space={space}
         isFocused={false}
         onFocus={vi.fn()}
-      />
+      />,
     );
-    const dot = container.querySelector('[data-testid="space-dot"]') as HTMLElement;
+    const dot = container.querySelector(
+      '[data-testid="space-dot"]',
+    ) as HTMLElement;
     expect(dot).toBeInTheDocument();
-    expect(dot.style.backgroundColor).toBe('rgb(94, 106, 210)'); // #5E6AD2
+    expect(dot.style.backgroundColor).toBe("rgb(94, 106, 210)"); // #5E6AD2
   });
 
-  it('shows due date in red when task is late', () => {
+  it("shows due date in red when task is late", () => {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
 
-    const lateTask: Task = { ...baseTask, dueDate: yesterday, status: 'todo' };
+    const lateTask: Task = { ...baseTask, dueDate: yesterday, status: "todo" };
 
     render(
       <TaskRow
@@ -1708,21 +1811,21 @@ describe('TaskRow', () => {
         space={space}
         isFocused={false}
         onFocus={vi.fn()}
-      />
+      />,
     );
 
-    const dateEl = screen.getByTestId('due-date');
+    const dateEl = screen.getByTestId("due-date");
     expect(dateEl.className).toMatch(/text-red/);
   });
 
-  it('does not show due date in red when task is done', () => {
+  it("does not show due date in red when task is done", () => {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
 
     const doneTask: Task = {
       ...baseTask,
       dueDate: yesterday,
-      status: 'done',
+      status: "done",
       completedAt: new Date(),
     };
 
@@ -1733,15 +1836,15 @@ describe('TaskRow', () => {
         space={space}
         isFocused={false}
         onFocus={vi.fn()}
-      />
+      />,
     );
 
-    const dateEl = screen.getByTestId('due-date');
+    const dateEl = screen.getByTestId("due-date");
     expect(dateEl.className).not.toMatch(/text-red/);
   });
 
-  it('shows a link icon when task has sourceUrl', () => {
-    const taskWithUrl: Task = { ...baseTask, sourceUrl: 'https://example.com' };
+  it("shows a link icon when task has sourceUrl", () => {
+    const taskWithUrl: Task = { ...baseTask, sourceUrl: "https://example.com" };
 
     render(
       <TaskRow
@@ -1750,13 +1853,13 @@ describe('TaskRow', () => {
         space={space}
         isFocused={false}
         onFocus={vi.fn()}
-      />
+      />,
     );
 
-    expect(screen.getByTestId('source-url-icon')).toBeInTheDocument();
+    expect(screen.getByTestId("source-url-icon")).toBeInTheDocument();
   });
 
-  it('does not show link icon when task has no sourceUrl', () => {
+  it("does not show link icon when task has no sourceUrl", () => {
     render(
       <TaskRow
         task={baseTask}
@@ -1764,10 +1867,10 @@ describe('TaskRow', () => {
         space={space}
         isFocused={false}
         onFocus={vi.fn()}
-      />
+      />,
     );
 
-    expect(screen.queryByTestId('source-url-icon')).toBeNull();
+    expect(screen.queryByTestId("source-url-icon")).toBeNull();
   });
 });
 ```
@@ -1792,13 +1895,14 @@ git commit -m "test(web): add failing tests for TaskRow component"
 ## Task 11: Implement TaskRow
 
 **Files:**
+
 - Create: `apps/web/src/components/TaskRow.tsx`
 
 - [ ] **Step 1: Create apps/web/src/components/TaskRow.tsx**
 
 ```tsx
 // apps/web/src/components/TaskRow.tsx
-import type { Task, Project, Space } from '@sift/shared';
+import type { Task, Project, Space } from "@sift/shared";
 
 export interface TaskRowProps {
   task: Task;
@@ -1809,17 +1913,22 @@ export interface TaskRowProps {
 }
 
 function formatDate(date: Date): string {
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
 function isLate(task: Task): boolean {
-  if (!task.dueDate || task.status === 'done') return false;
+  if (!task.dueDate || task.status === "done") return false;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return task.dueDate < today;
 }
 
-export default function TaskRow({ task, space, isFocused, onFocus }: TaskRowProps) {
+export default function TaskRow({
+  task,
+  space,
+  isFocused,
+  onFocus,
+}: TaskRowProps) {
   const late = isLate(task);
 
   return (
@@ -1828,7 +1937,7 @@ export default function TaskRow({ task, space, isFocused, onFocus }: TaskRowProp
       className={`
         flex items-center h-task-row px-3 gap-3 cursor-pointer select-none
         border-l-2 transition-colors
-        ${isFocused ? 'border-accent bg-surface-2' : 'border-transparent hover:bg-surface-2/50'}
+        ${isFocused ? "border-accent bg-surface-2" : "border-transparent hover:bg-surface-2/50"}
       `}
     >
       {/* Space dot */}
@@ -1841,12 +1950,12 @@ export default function TaskRow({ task, space, isFocused, onFocus }: TaskRowProp
       {/* Done checkbox circle */}
       <span
         className={`w-4 h-4 rounded-full border shrink-0 flex items-center justify-center transition-colors ${
-          task.status === 'done'
-            ? 'border-green bg-green/20'
-            : 'border-border-2 hover:border-accent'
+          task.status === "done"
+            ? "border-green bg-green/20"
+            : "border-border-2 hover:border-accent"
         }`}
       >
-        {task.status === 'done' && (
+        {task.status === "done" && (
           <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
             <path
               d="M1.5 4L3 5.5L6.5 2.5"
@@ -1862,7 +1971,7 @@ export default function TaskRow({ task, space, isFocused, onFocus }: TaskRowProp
       {/* Title */}
       <span
         className={`flex-1 text-sm truncate ${
-          task.status === 'done' ? 'text-muted line-through' : 'text-text'
+          task.status === "done" ? "text-muted line-through" : "text-text"
         }`}
       >
         {task.title}
@@ -1896,7 +2005,7 @@ export default function TaskRow({ task, space, isFocused, onFocus }: TaskRowProp
         <span
           data-testid="due-date"
           className={`text-xs shrink-0 tabular-nums ${
-            late ? 'text-red' : 'text-muted'
+            late ? "text-red" : "text-muted"
           }`}
         >
           {formatDate(task.dueDate)}
@@ -1927,16 +2036,17 @@ git commit -m "feat(web): implement TaskRow component"
 ## Task 12: Implement TaskList
 
 **Files:**
+
 - Create: `apps/web/src/components/TaskList.tsx`
 
 - [ ] **Step 1: Create apps/web/src/components/TaskList.tsx**
 
 ```tsx
 // apps/web/src/components/TaskList.tsx
-import { useState } from 'react';
-import TaskRow from './TaskRow';
-import { useSpacesProjects } from '../hooks/useSpacesProjects';
-import type { Task } from '@sift/shared';
+import { useState } from "react";
+import TaskRow from "./TaskRow";
+import { useSpacesProjects } from "../hooks/useSpacesProjects";
+import type { Task } from "@sift/shared";
 
 interface TaskListProps {
   tasks: Task[];
@@ -1948,8 +2058,10 @@ export default function TaskList({ tasks, focusedId, onFocus }: TaskListProps) {
   const [doneExpanded, setDoneExpanded] = useState(false);
   const { spacesWithProjects } = useSpacesProjects();
 
-  const activeTasks = tasks.filter((t) => t.status !== 'done' && t.status !== 'archived');
-  const doneTasks = tasks.filter((t) => t.status === 'done');
+  const activeTasks = tasks.filter(
+    (t) => t.status !== "done" && t.status !== "archived",
+  );
+  const doneTasks = tasks.filter((t) => t.status === "done");
 
   function getProjectAndSpace(task: Task) {
     for (const { space, projects } of spacesWithProjects) {
@@ -1963,7 +2075,9 @@ export default function TaskList({ tasks, focusedId, onFocus }: TaskListProps) {
     <div className="flex-1">
       {/* Active tasks */}
       {activeTasks.length === 0 && doneTasks.length === 0 && (
-        <p className="text-muted text-sm px-4 py-8 text-center">No tasks here.</p>
+        <p className="text-muted text-sm px-4 py-8 text-center">
+          No tasks here.
+        </p>
       )}
 
       {activeTasks.map((task) => {
@@ -1992,7 +2106,7 @@ export default function TaskList({ tasks, focusedId, onFocus }: TaskListProps) {
               width="10"
               height="10"
               viewBox="0 0 10 10"
-              className={`transition-transform ${doneExpanded ? '' : '-rotate-90'}`}
+              className={`transition-transform ${doneExpanded ? "" : "-rotate-90"}`}
             >
               <path
                 d="M2 3.5L5 6.5L8 3.5"
@@ -2039,16 +2153,17 @@ git commit -m "feat(web): implement TaskList with active and done sections"
 ## Task 13: Implement InputBar
 
 **Files:**
+
 - Create: `apps/web/src/components/InputBar.tsx`
 
 - [ ] **Step 1: Create apps/web/src/components/InputBar.tsx**
 
 ```tsx
 // apps/web/src/components/InputBar.tsx
-import { SmartInput } from '@sift/shared';
-import { db } from '../lib/db';
-import { nanoid } from 'nanoid';
-import type { Task } from '@sift/shared';
+import { SmartInput } from "@sift/shared";
+import { db } from "../lib/db";
+import { nanoid } from "nanoid";
+import type { Task } from "@sift/shared";
 
 interface InputBarProps {
   /** Default project ID assigned when the user hasn't selected one. */
@@ -2057,14 +2172,14 @@ interface InputBarProps {
 
 async function handleTaskReady(
   partial: Partial<Task>,
-  defaultProjectId: string
+  defaultProjectId: string,
 ): Promise<void> {
   const now = new Date();
   await db.tasks.add({
     id: nanoid(),
     title: partial.title!,
     projectId: partial.projectId ?? defaultProjectId,
-    status: partial.workingDate ? 'todo' : 'inbox',
+    status: partial.workingDate ? "todo" : "inbox",
     workingDate: partial.workingDate ?? null,
     dueDate: partial.dueDate ?? null,
     createdAt: now,
@@ -2097,18 +2212,19 @@ git commit -m "feat(web): implement InputBar wrapping SmartInput with Dexie writ
 ## Task 14: Implement InboxView
 
 **Files:**
+
 - Create: `apps/web/src/views/InboxView.tsx`
 
 - [ ] **Step 1: Create apps/web/src/views/InboxView.tsx**
 
 ```tsx
 // apps/web/src/views/InboxView.tsx
-import { useEffect } from 'react';
-import { useInboxTasks } from '../hooks/useTasks';
-import { useKeyboardNav } from '../hooks/useKeyboardNav';
-import { useSpacesProjects } from '../hooks/useSpacesProjects';
-import TaskList from '../components/TaskList';
-import InputBar from '../components/InputBar';
+import { useEffect } from "react";
+import { useInboxTasks } from "../hooks/useTasks";
+import { useKeyboardNav } from "../hooks/useKeyboardNav";
+import { useSpacesProjects } from "../hooks/useSpacesProjects";
+import TaskList from "../components/TaskList";
+import InputBar from "../components/InputBar";
 
 /** Resolve the first available project ID for the InputBar default. */
 function useDefaultProjectId(): string {
@@ -2116,7 +2232,7 @@ function useDefaultProjectId(): string {
   for (const { projects } of spacesWithProjects) {
     if (projects.length > 0) return projects[0].id;
   }
-  return '';
+  return "";
 }
 
 export default function InboxView() {
@@ -2136,11 +2252,11 @@ export default function InboxView() {
     function onKey(e: KeyboardEvent) {
       // Don't intercept when user is typing in an input/textarea
       const tag = (e.target as HTMLElement).tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
       handleKeyDown(e, tasks);
     }
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [tasks, handleKeyDown]);
 
   return (
@@ -2171,32 +2287,33 @@ git commit -m "feat(web): implement InboxView"
 ## Task 15: Implement TodayView
 
 **Files:**
+
 - Create: `apps/web/src/views/TodayView.tsx`
 
 - [ ] **Step 1: Create apps/web/src/views/TodayView.tsx**
 
 ```tsx
 // apps/web/src/views/TodayView.tsx
-import { useEffect } from 'react';
-import { useTodayTasks } from '../hooks/useTasks';
-import { useKeyboardNav } from '../hooks/useKeyboardNav';
-import { useSpacesProjects } from '../hooks/useSpacesProjects';
-import TaskList from '../components/TaskList';
-import InputBar from '../components/InputBar';
+import { useEffect } from "react";
+import { useTodayTasks } from "../hooks/useTasks";
+import { useKeyboardNav } from "../hooks/useKeyboardNav";
+import { useSpacesProjects } from "../hooks/useSpacesProjects";
+import TaskList from "../components/TaskList";
+import InputBar from "../components/InputBar";
 
 function useDefaultProjectId(): string {
   const { spacesWithProjects } = useSpacesProjects();
   for (const { projects } of spacesWithProjects) {
     if (projects.length > 0) return projects[0].id;
   }
-  return '';
+  return "";
 }
 
 function todayLabel(): string {
-  return new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
+  return new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
   });
 }
 
@@ -2214,11 +2331,11 @@ export default function TodayView() {
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const tag = (e.target as HTMLElement).tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
       handleKeyDown(e, tasks);
     }
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [tasks, handleKeyDown]);
 
   return (
@@ -2250,18 +2367,19 @@ git commit -m "feat(web): implement TodayView"
 ## Task 16: Implement ProjectsView
 
 **Files:**
+
 - Create: `apps/web/src/views/ProjectsView.tsx`
 
 - [ ] **Step 1: Create apps/web/src/views/ProjectsView.tsx**
 
 ```tsx
 // apps/web/src/views/ProjectsView.tsx
-import { useEffect } from 'react';
-import { useProjectTasks } from '../hooks/useTasks';
-import { useKeyboardNav } from '../hooks/useKeyboardNav';
-import TaskRow from '../components/TaskRow';
-import InputBar from '../components/InputBar';
-import type { Task } from '@sift/shared';
+import { useEffect } from "react";
+import { useProjectTasks } from "../hooks/useTasks";
+import { useKeyboardNav } from "../hooks/useKeyboardNav";
+import TaskRow from "../components/TaskRow";
+import InputBar from "../components/InputBar";
+import type { Task } from "@sift/shared";
 
 function ProgressBar({ done, total }: { done: number; total: number }) {
   const pct = total === 0 ? 0 : Math.round((done / total) * 100);
@@ -2285,7 +2403,7 @@ function useDefaultProjectId(): string {
   for (const { projects } of groups) {
     if (projects.length > 0) return projects[0].project.id;
   }
-  return '';
+  return "";
 }
 
 export default function ProjectsView() {
@@ -2296,8 +2414,8 @@ export default function ProjectsView() {
   // Flatten all active tasks for keyboard navigation
   const allTasks: Task[] = groups.flatMap(({ projects }) =>
     projects.flatMap(({ tasks }) =>
-      tasks.filter((t) => t.status !== 'done' && t.status !== 'archived')
-    )
+      tasks.filter((t) => t.status !== "done" && t.status !== "archived"),
+    ),
   );
 
   useEffect(() => {
@@ -2309,11 +2427,11 @@ export default function ProjectsView() {
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const tag = (e.target as HTMLElement).tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
       handleKeyDown(e, allTasks);
     }
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [allTasks, handleKeyDown]);
 
   return (
@@ -2337,10 +2455,10 @@ export default function ProjectsView() {
             </div>
 
             {projects.map(({ project, tasks }) => {
-              const done = tasks.filter((t) => t.status === 'done').length;
+              const done = tasks.filter((t) => t.status === "done").length;
               const total = tasks.length;
               const activeTasks = tasks.filter(
-                (t) => t.status !== 'done' && t.status !== 'archived'
+                (t) => t.status !== "done" && t.status !== "archived",
               );
 
               return (
@@ -2401,6 +2519,7 @@ git commit -m "feat(web): implement ProjectsView with progress bars"
 ## Task 17: App.tsx + React Router + ProtectedRoute
 
 **Files:**
+
 - Create: `apps/web/src/main.tsx`
 - Create: `apps/web/src/App.tsx`
 
@@ -2408,21 +2527,21 @@ git commit -m "feat(web): implement ProjectsView with progress bars"
 
 ```tsx
 // apps/web/src/main.tsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import { AuthProvider } from './contexts/AuthContext';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import { AuthProvider } from "./contexts/AuthContext";
+import "./index.css";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <App />
       </AuthProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 ```
 
@@ -2430,16 +2549,16 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 ```tsx
 // apps/web/src/App.tsx
-import { useState, useEffect, type ReactNode } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './contexts/AuthContext';
-import AppLayout from './components/layout/AppLayout';
-import AuthPage from './pages/AuthPage';
-import InboxView from './views/InboxView';
-import TodayView from './views/TodayView';
-import ProjectsView from './views/ProjectsView';
-import { SyncService } from './services/SyncService';
-import { supabase } from './lib/supabase';
+import { useState, useEffect, type ReactNode } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./contexts/AuthContext";
+import AppLayout from "./components/layout/AppLayout";
+import AuthPage from "./pages/AuthPage";
+import InboxView from "./views/InboxView";
+import TodayView from "./views/TodayView";
+import ProjectsView from "./views/ProjectsView";
+import { SyncService } from "./services/SyncService";
+import { supabase } from "./lib/supabase";
 
 const syncService = new SyncService(supabase);
 
@@ -2480,7 +2599,7 @@ export default function App() {
     function handleOnline() {
       runSync();
     }
-    window.addEventListener('online', handleOnline);
+    window.addEventListener("online", handleOnline);
 
     // Subscribe to Realtime
     unsubscribeRealtime = syncService.subscribe(user.id, () => {
@@ -2488,7 +2607,7 @@ export default function App() {
     });
 
     return () => {
-      window.removeEventListener('online', handleOnline);
+      window.removeEventListener("online", handleOnline);
       unsubscribeRealtime?.();
     };
   }, [user]);
@@ -2526,16 +2645,17 @@ git commit -m "feat(web): add App.tsx with React Router, ProtectedRoute, and syn
 ## Task 18: Failing tests for SyncService
 
 **Files:**
+
 - Create: `apps/web/src/__tests__/SyncService.test.ts`
 
-- [ ] **Step 1: Create apps/web/src/__tests__/SyncService.test.ts**
+- [ ] **Step 1: Create apps/web/src/**tests**/SyncService.test.ts**
 
 ```typescript
 // apps/web/src/__tests__/SyncService.test.ts
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { db } from '../lib/db';
-import { SyncService } from '../services/SyncService';
-import type { Space, Project, Task } from '@sift/shared';
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { db } from "../lib/db";
+import { SyncService } from "../services/SyncService";
+import type { Space, Project, Task } from "@sift/shared";
 
 // ── Supabase mock ─────────────────────────────────────────────────────────────
 
@@ -2559,13 +2679,13 @@ const mockSupabase = {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-const now = new Date('2026-04-04T10:00:00Z');
+const now = new Date("2026-04-04T10:00:00Z");
 
 function makeSpace(overrides?: Partial<Space>): Space {
   return {
-    id: 'space-1',
-    name: 'Work',
-    color: '#5E6AD2',
+    id: "space-1",
+    name: "Work",
+    color: "#5E6AD2",
     createdAt: now,
     updatedAt: now,
     synced: false,
@@ -2575,9 +2695,9 @@ function makeSpace(overrides?: Partial<Space>): Space {
 
 function makeProject(overrides?: Partial<Project>): Project {
   return {
-    id: 'project-1',
-    name: 'General',
-    spaceId: 'space-1',
+    id: "project-1",
+    name: "General",
+    spaceId: "space-1",
     createdAt: now,
     updatedAt: now,
     synced: false,
@@ -2587,10 +2707,10 @@ function makeProject(overrides?: Partial<Project>): Project {
 
 function makeTask(overrides?: Partial<Task>): Task {
   return {
-    id: 'task-1',
-    title: 'Test task',
-    projectId: 'project-1',
-    status: 'inbox',
+    id: "task-1",
+    title: "Test task",
+    projectId: "project-1",
+    status: "inbox",
     workingDate: null,
     dueDate: null,
     createdAt: now,
@@ -2619,173 +2739,186 @@ afterEach(() => {
 
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
-describe('SyncService', () => {
-  describe('sync() — push', () => {
-    it('pushes unsynced spaces to Supabase', async () => {
+describe("SyncService", () => {
+  describe("sync() — push", () => {
+    it("pushes unsynced spaces to Supabase", async () => {
       await db.spaces.add(makeSpace({ synced: false }));
 
       const svc = new SyncService(mockSupabase as any);
-      await svc.sync('user-1');
+      await svc.sync("user-1");
 
-      expect(mockSupabase.from).toHaveBeenCalledWith('spaces');
+      expect(mockSupabase.from).toHaveBeenCalledWith("spaces");
       expect(mockUpsert).toHaveBeenCalledWith(
         expect.arrayContaining([
-          expect.objectContaining({ id: 'space-1', user_id: 'user-1' }),
+          expect.objectContaining({ id: "space-1", user_id: "user-1" }),
         ]),
-        expect.objectContaining({ onConflict: 'id' })
+        expect.objectContaining({ onConflict: "id" }),
       );
     });
 
-    it('pushes unsynced projects to Supabase', async () => {
+    it("pushes unsynced projects to Supabase", async () => {
       await db.spaces.add(makeSpace({ synced: true }));
       await db.projects.add(makeProject({ synced: false }));
 
       const svc = new SyncService(mockSupabase as any);
-      await svc.sync('user-1');
+      await svc.sync("user-1");
 
-      expect(mockSupabase.from).toHaveBeenCalledWith('projects');
+      expect(mockSupabase.from).toHaveBeenCalledWith("projects");
       expect(mockUpsert).toHaveBeenCalledWith(
         expect.arrayContaining([
-          expect.objectContaining({ id: 'project-1', user_id: 'user-1' }),
+          expect.objectContaining({ id: "project-1", user_id: "user-1" }),
         ]),
-        expect.objectContaining({ onConflict: 'id' })
+        expect.objectContaining({ onConflict: "id" }),
       );
     });
 
-    it('pushes unsynced tasks to Supabase', async () => {
+    it("pushes unsynced tasks to Supabase", async () => {
       await db.spaces.add(makeSpace({ synced: true }));
       await db.projects.add(makeProject({ synced: true }));
       await db.tasks.add(makeTask({ synced: false }));
 
       const svc = new SyncService(mockSupabase as any);
-      await svc.sync('user-1');
+      await svc.sync("user-1");
 
-      expect(mockSupabase.from).toHaveBeenCalledWith('tasks');
+      expect(mockSupabase.from).toHaveBeenCalledWith("tasks");
       expect(mockUpsert).toHaveBeenCalledWith(
         expect.arrayContaining([
-          expect.objectContaining({ id: 'task-1', user_id: 'user-1' }),
+          expect.objectContaining({ id: "task-1", user_id: "user-1" }),
         ]),
-        expect.objectContaining({ onConflict: 'id' })
+        expect.objectContaining({ onConflict: "id" }),
       );
     });
 
-    it('does not push records that are already synced', async () => {
+    it("does not push records that are already synced", async () => {
       await db.spaces.add(makeSpace({ synced: true }));
 
       const svc = new SyncService(mockSupabase as any);
-      await svc.sync('user-1');
+      await svc.sync("user-1");
 
       // upsert should not be called for spaces (no unsynced records)
       const spaceUpsertCalls = mockUpsert.mock.calls.filter(
-        (_args, i) => mockSupabase.from.mock.calls[i]?.[0] === 'spaces'
+        (_args, i) => mockSupabase.from.mock.calls[i]?.[0] === "spaces",
       );
       expect(spaceUpsertCalls).toHaveLength(0);
     });
 
-    it('marks records synced=true after successful push', async () => {
+    it("marks records synced=true after successful push", async () => {
       await db.spaces.add(makeSpace({ synced: false }));
 
       const svc = new SyncService(mockSupabase as any);
-      await svc.sync('user-1');
+      await svc.sync("user-1");
 
-      const space = await db.spaces.get('space-1');
+      const space = await db.spaces.get("space-1");
       expect(space!.synced).toBe(true);
     });
   });
 
-  describe('sync() — pull', () => {
-    it('writes remote records to Dexie using LWW', async () => {
+  describe("sync() — pull", () => {
+    it("writes remote records to Dexie using LWW", async () => {
       const remoteTask = makeTask({
-        id: 'remote-task',
-        title: 'From server',
+        id: "remote-task",
+        title: "From server",
         synced: true,
-        updatedAt: new Date('2026-04-04T12:00:00Z'),
+        updatedAt: new Date("2026-04-04T12:00:00Z"),
       });
 
       // Simulate select returning a remote task
-      mockSelect.mockResolvedValueOnce({ data: [] })   // spaces
-        .mockResolvedValueOnce({ data: [] })             // projects
-        .mockResolvedValueOnce({                          // tasks
-          data: [{
-            id: remoteTask.id,
-            title: remoteTask.title,
-            project_id: remoteTask.projectId,
-            status: remoteTask.status,
-            working_date: null,
-            due_date: null,
-            created_at: remoteTask.createdAt.toISOString(),
-            updated_at: remoteTask.updatedAt.toISOString(),
-            completed_at: null,
-            source_url: null,
-            synced: true,
-            user_id: 'user-1',
-          }],
+      mockSelect
+        .mockResolvedValueOnce({ data: [] }) // spaces
+        .mockResolvedValueOnce({ data: [] }) // projects
+        .mockResolvedValueOnce({
+          // tasks
+          data: [
+            {
+              id: remoteTask.id,
+              title: remoteTask.title,
+              project_id: remoteTask.projectId,
+              status: remoteTask.status,
+              working_date: null,
+              due_date: null,
+              created_at: remoteTask.createdAt.toISOString(),
+              updated_at: remoteTask.updatedAt.toISOString(),
+              completed_at: null,
+              source_url: null,
+              synced: true,
+              user_id: "user-1",
+            },
+          ],
           error: null,
         });
 
       const svc = new SyncService(mockSupabase as any);
-      await svc.sync('user-1');
+      await svc.sync("user-1");
 
-      const stored = await db.tasks.get('remote-task');
+      const stored = await db.tasks.get("remote-task");
       expect(stored).toBeDefined();
-      expect(stored!.title).toBe('From server');
+      expect(stored!.title).toBe("From server");
     });
 
-    it('keeps the local record when local updatedAt is newer', async () => {
-      const localUpdatedAt = new Date('2026-04-04T13:00:00Z');
-      const remoteUpdatedAt = new Date('2026-04-04T11:00:00Z');
+    it("keeps the local record when local updatedAt is newer", async () => {
+      const localUpdatedAt = new Date("2026-04-04T13:00:00Z");
+      const remoteUpdatedAt = new Date("2026-04-04T11:00:00Z");
 
       await db.spaces.add(makeSpace({ synced: true }));
       await db.projects.add(makeProject({ synced: true }));
       await db.tasks.add(
-        makeTask({ id: 'task-conflict', title: 'Local wins', updatedAt: localUpdatedAt, synced: true })
+        makeTask({
+          id: "task-conflict",
+          title: "Local wins",
+          updatedAt: localUpdatedAt,
+          synced: true,
+        }),
       );
 
       mockSelect.mockResolvedValue({
-        data: [{
-          id: 'task-conflict',
-          title: 'Remote title',
-          project_id: 'project-1',
-          status: 'inbox',
-          working_date: null,
-          due_date: null,
-          created_at: now.toISOString(),
-          updated_at: remoteUpdatedAt.toISOString(),
-          completed_at: null,
-          source_url: null,
-          synced: true,
-          user_id: 'user-1',
-        }],
+        data: [
+          {
+            id: "task-conflict",
+            title: "Remote title",
+            project_id: "project-1",
+            status: "inbox",
+            working_date: null,
+            due_date: null,
+            created_at: now.toISOString(),
+            updated_at: remoteUpdatedAt.toISOString(),
+            completed_at: null,
+            source_url: null,
+            synced: true,
+            user_id: "user-1",
+          },
+        ],
         error: null,
       });
 
       const svc = new SyncService(mockSupabase as any);
-      await svc.sync('user-1');
+      await svc.sync("user-1");
 
-      const stored = await db.tasks.get('task-conflict');
-      expect(stored!.title).toBe('Local wins');
+      const stored = await db.tasks.get("task-conflict");
+      expect(stored!.title).toBe("Local wins");
     });
   });
 
-  describe('subscribe()', () => {
-    it('returns an unsubscribe function', () => {
+  describe("subscribe()", () => {
+    it("returns an unsubscribe function", () => {
       const svc = new SyncService(mockSupabase as any);
-      const unsub = svc.subscribe('user-1', vi.fn());
-      expect(typeof unsub).toBe('function');
+      const unsub = svc.subscribe("user-1", vi.fn());
+      expect(typeof unsub).toBe("function");
     });
 
-    it('calls the onChange callback when Realtime fires', () => {
+    it("calls the onChange callback when Realtime fires", () => {
       const onChange = vi.fn();
       const svc = new SyncService(mockSupabase as any);
 
       // Capture the handler passed to .on()
       let capturedHandler: (() => void) | undefined;
-      mockOn.mockImplementation((_event: string, _filter: unknown, handler: () => void) => {
-        capturedHandler = handler;
-        return { on: mockOn, subscribe: mockSubscribe };
-      });
+      mockOn.mockImplementation(
+        (_event: string, _filter: unknown, handler: () => void) => {
+          capturedHandler = handler;
+          return { on: mockOn, subscribe: mockSubscribe };
+        },
+      );
 
-      svc.subscribe('user-1', onChange);
+      svc.subscribe("user-1", onChange);
       expect(capturedHandler).toBeDefined();
       capturedHandler!();
       expect(onChange).toHaveBeenCalledOnce();
@@ -2814,17 +2947,18 @@ git commit -m "test(web): add failing tests for SyncService"
 ## Task 19: Implement SyncService
 
 **Files:**
+
 - Create: `apps/web/src/services/SyncService.ts`
 
 - [ ] **Step 1: Create apps/web/src/services/SyncService.ts**
 
 ```typescript
 // apps/web/src/services/SyncService.ts
-import type { SupabaseClient } from '@supabase/supabase-js';
-import { db } from '../lib/db';
-import type { Space, Project, Task } from '@sift/shared';
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { db } from "../lib/db";
+import type { Space, Project, Task } from "@sift/shared";
 
-const LAST_SYNC_KEY = 'speedy_last_synced_at';
+const LAST_SYNC_KEY = "speedy_last_synced_at";
 
 function getLastSyncedAt(): Date {
   const stored = localStorage.getItem(LAST_SYNC_KEY);
@@ -2905,7 +3039,7 @@ function rowToTask(row: Record<string, unknown>): Task {
     id: row.id as string,
     title: row.title as string,
     projectId: row.project_id as string,
-    status: row.status as Task['status'],
+    status: row.status as Task["status"],
     workingDate: row.working_date ? new Date(row.working_date as string) : null,
     dueDate: row.due_date ? new Date(row.due_date as string) : null,
     createdAt: new Date(row.created_at as string),
@@ -2938,21 +3072,22 @@ export class SyncService {
 
   private async syncSpaces(userId: string, lastSyncedAt: Date): Promise<void> {
     // Push
-    const unsynced = await db.spaces.where('synced').equals(0).toArray();
+    const unsynced = await db.spaces.where("synced").equals(0).toArray();
     if (unsynced.length > 0) {
-      const { error } = await this.supabase
-        .from('spaces')
-        .upsert(unsynced.map((s) => spaceToRow(s, userId)), { onConflict: 'id' });
+      const { error } = await this.supabase.from("spaces").upsert(
+        unsynced.map((s) => spaceToRow(s, userId)),
+        { onConflict: "id" },
+      );
       if (!error) {
-        await db.spaces.where('synced').equals(0).modify({ synced: true });
+        await db.spaces.where("synced").equals(0).modify({ synced: true });
       }
     }
 
     // Pull
     const { data, error: pullError } = await this.supabase
-      .from('spaces')
-      .select('*')
-      .gt('updated_at', lastSyncedAt.toISOString());
+      .from("spaces")
+      .select("*")
+      .gt("updated_at", lastSyncedAt.toISOString());
 
     if (pullError || !data) return;
 
@@ -2965,23 +3100,27 @@ export class SyncService {
     }
   }
 
-  private async syncProjects(userId: string, lastSyncedAt: Date): Promise<void> {
+  private async syncProjects(
+    userId: string,
+    lastSyncedAt: Date,
+  ): Promise<void> {
     // Push
-    const unsynced = await db.projects.where('synced').equals(0).toArray();
+    const unsynced = await db.projects.where("synced").equals(0).toArray();
     if (unsynced.length > 0) {
-      const { error } = await this.supabase
-        .from('projects')
-        .upsert(unsynced.map((p) => projectToRow(p, userId)), { onConflict: 'id' });
+      const { error } = await this.supabase.from("projects").upsert(
+        unsynced.map((p) => projectToRow(p, userId)),
+        { onConflict: "id" },
+      );
       if (!error) {
-        await db.projects.where('synced').equals(0).modify({ synced: true });
+        await db.projects.where("synced").equals(0).modify({ synced: true });
       }
     }
 
     // Pull
     const { data, error: pullError } = await this.supabase
-      .from('projects')
-      .select('*')
-      .gt('updated_at', lastSyncedAt.toISOString());
+      .from("projects")
+      .select("*")
+      .gt("updated_at", lastSyncedAt.toISOString());
 
     if (pullError || !data) return;
 
@@ -2996,21 +3135,22 @@ export class SyncService {
 
   private async syncTasks(userId: string, lastSyncedAt: Date): Promise<void> {
     // Push
-    const unsynced = await db.tasks.where('synced').equals(0).toArray();
+    const unsynced = await db.tasks.where("synced").equals(0).toArray();
     if (unsynced.length > 0) {
-      const { error } = await this.supabase
-        .from('tasks')
-        .upsert(unsynced.map((t) => taskToRow(t, userId)), { onConflict: 'id' });
+      const { error } = await this.supabase.from("tasks").upsert(
+        unsynced.map((t) => taskToRow(t, userId)),
+        { onConflict: "id" },
+      );
       if (!error) {
-        await db.tasks.where('synced').equals(0).modify({ synced: true });
+        await db.tasks.where("synced").equals(0).modify({ synced: true });
       }
     }
 
     // Pull
     const { data, error: pullError } = await this.supabase
-      .from('tasks')
-      .select('*')
-      .gt('updated_at', lastSyncedAt.toISOString());
+      .from("tasks")
+      .select("*")
+      .gt("updated_at", lastSyncedAt.toISOString());
 
     if (pullError || !data) return;
 
@@ -3033,9 +3173,14 @@ export class SyncService {
     const channel = this.supabase
       .channel(channelName)
       .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'tasks', filter: `user_id=eq.${userId}` },
-        onChange
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "tasks",
+          filter: `user_id=eq.${userId}`,
+        },
+        onChange,
       )
       .subscribe();
 
@@ -3068,6 +3213,7 @@ git commit -m "feat(web): implement SyncService with LWW push/pull and Realtime 
 - [ ] **Step 1: Confirm App.tsx already wires sync correctly**
 
 The App.tsx written in Task 17 already:
+
 - Calls `syncService.sync(user.id)` on mount when authenticated
 - Re-runs sync on `window 'online'` event
 - Calls `syncService.subscribe(user.id, callback)` for Realtime and cleans up on unmount
@@ -3110,6 +3256,7 @@ git commit -m "test(web): verify full test suite passes after sync wiring"
 ## Task 21: vercel.json + .env.example + final bootstrap
 
 **Files:**
+
 - Create: `apps/web/vercel.json`
 
 - [ ] **Step 1: Create apps/web/vercel.json**
@@ -3120,9 +3267,7 @@ git commit -m "test(web): verify full test suite passes after sync wiring"
   "outputDirectory": "apps/web/dist",
   "installCommand": "npm install",
   "framework": null,
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
-  ]
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
 }
 ```
 
@@ -3137,6 +3282,7 @@ cat apps/web/.env.example
 ```
 
 Expected:
+
 ```
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key-here
@@ -3163,13 +3309,13 @@ git commit -m "chore(web): add vercel.json with SPA rewrite rule for React Route
 
 After completing all 21 tasks, `apps/web` will be a fully functional Vite + React + Tailwind web app with:
 
-| Capability | Implementation |
-|---|---|
-| Auth | Supabase Google OAuth + magic link via `AuthContext` |
-| Local-first storage | Dexie via `@sift/shared`, reactive via `useLiveQuery` |
-| Views | Inbox, Today, Projects — each keyboard-navigable |
-| Keyboard shortcuts | `j`/`k` focus, `Enter` toggle done, `Backspace` archive |
-| Cloud sync | LWW SyncService: push unsynced, pull remote, Realtime sub |
-| Design | Tailwind v3 with dark design tokens matching spec |
-| Tests | TDD for all hooks and SyncService; component tests for TaskRow |
-| Deployment | `vercel.json` with SPA rewrite, env vars documented |
+| Capability          | Implementation                                                 |
+| ------------------- | -------------------------------------------------------------- |
+| Auth                | Supabase Google OAuth + magic link via `AuthContext`           |
+| Local-first storage | Dexie via `@sift/shared`, reactive via `useLiveQuery`          |
+| Views               | Inbox, Today, Projects — each keyboard-navigable               |
+| Keyboard shortcuts  | `j`/`k` focus, `Enter` toggle done, `Backspace` archive        |
+| Cloud sync          | LWW SyncService: push unsynced, pull remote, Realtime sub      |
+| Design              | Tailwind v3 with dark design tokens matching spec              |
+| Tests               | TDD for all hooks and SyncService; component tests for TaskRow |
+| Deployment          | `vercel.json` with SPA rewrite, env vars documented            |

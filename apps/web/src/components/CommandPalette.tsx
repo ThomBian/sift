@@ -1,6 +1,13 @@
 import { useEffect, useRef, useMemo, useState, useCallback } from "react";
-import { SmartInput, type ProjectWithSpace, type Task, type ChipFocus, type SmartInputValues } from "@sift/shared";
+import {
+  SmartInput,
+  type ProjectWithSpace,
+  type Task,
+  type ChipFocus,
+  type SmartInputValues,
+} from "@sift/shared";
 import { useSpacesProjects } from "../hooks/useSpacesProjects";
+import { useTaskCounts } from "../hooks/useTasks";
 import { db } from "../lib/db";
 import { nanoid } from "nanoid";
 
@@ -14,7 +21,9 @@ interface CommandPaletteProps {
 }
 
 async function createTask(
-  partial: Pick<Task, "title" | "dueDate" | "workingDate" | "url"> & { projectId?: string },
+  partial: Pick<Task, "title" | "dueDate" | "workingDate" | "url"> & {
+    projectId?: string;
+  },
   defaultProjectId: string,
 ): Promise<void> {
   const now = new Date();
@@ -35,7 +44,9 @@ async function createTask(
 
 async function updateTask(
   taskId: string,
-  partial: Pick<Task, "title" | "dueDate" | "workingDate" | "url"> & { projectId?: string },
+  partial: Pick<Task, "title" | "dueDate" | "workingDate" | "url"> & {
+    projectId?: string;
+  },
 ): Promise<void> {
   const patch: Partial<Task> = {
     title: partial.title,
@@ -61,6 +72,7 @@ export default function CommandPalette({
   editChip,
 }: CommandPaletteProps) {
   const { spacesWithProjects } = useSpacesProjects();
+  const taskCounts = useTaskCounts();
   const inputRef = useRef<HTMLInputElement>(null);
   const triggerRef = useRef<Element | null>(null);
   const [isClosing, setIsClosing] = useState(false);
@@ -114,7 +126,7 @@ export default function CommandPalette({
       }}
     >
       <div
-        className={`${isClosing ? 'animate-palette-out' : 'animate-palette-in'} w-full max-w-[min(820px,calc(100vw-1.5rem))] border-[0.5px] border-border bg-bg/95 floating-panel shadow-panel`}
+        className={`${isClosing ? "animate-palette-out" : "animate-palette-in"} w-full max-w-[min(820px,calc(100vw-1.5rem))] border-[0.5px] border-border bg-bg/95 floating-panel shadow-panel`}
       >
         <div className="flex items-center px-3 py-1.5 border-b border-[0.5px] border-border">
           <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-dim">
@@ -139,6 +151,7 @@ export default function CommandPalette({
           initialValues={initialValues}
           initialFocus={editChip ?? undefined}
           dropdownPosition="inline"
+          taskCounts={taskCounts}
         />
       </div>
     </div>

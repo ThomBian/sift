@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { useSpacesProjects } from '../../hooks/useSpacesProjects';
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import { useSpacesProjects } from "../../hooks/useSpacesProjects";
 
 function SidebarLink({
   to,
@@ -19,8 +19,8 @@ function SidebarLink({
       className={({ isActive }) =>
         `flex items-center px-3 py-2.5 md:py-1.5 font-mono text-[11px] transition-colors duration-150 min-h-11 md:min-h-0 ${
           isActive
-            ? 'text-text bg-accent/5'
-            : 'text-muted hover:text-text hover:bg-surface-2'
+            ? "text-text bg-accent/5"
+            : "text-muted hover:text-text hover:bg-surface-2"
         }`
       }
     >
@@ -34,7 +34,7 @@ export interface SidebarProps {
   onNavigate?: () => void;
 }
 
-export default function Sidebar({ className = '', onNavigate }: SidebarProps) {
+export default function Sidebar({ className = "", onNavigate }: SidebarProps) {
   const { spacesWithProjects } = useSpacesProjects();
   const { user } = useAuth();
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
@@ -55,7 +55,9 @@ export default function Sidebar({ className = '', onNavigate }: SidebarProps) {
       <div className="h-[2px] bg-accent shrink-0" />
 
       <div className="p-2 pt-3 space-y-0.5">
-        <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-dim px-3 pb-1.5">Views</p>
+        <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-dim px-3 pb-1.5">
+          Views
+        </p>
         <SidebarLink to="/inbox" label="Inbox" onNavigate={onNavigate} />
         <SidebarLink to="/today" label="Today" onNavigate={onNavigate} />
         <SidebarLink to="/projects" label="Projects" onNavigate={onNavigate} />
@@ -64,7 +66,9 @@ export default function Sidebar({ className = '', onNavigate }: SidebarProps) {
       <div className="h-[0.5px] min-h-[0.5px] bg-border mx-2 my-1" />
 
       <div className="p-2 space-y-1 flex-1">
-        <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-dim px-2 pb-1">Spaces</p>
+        <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-dim px-2 pb-1">
+          Spaces
+        </p>
         {spacesWithProjects.map(({ space, projects }) => (
           <div key={space.id}>
             <button
@@ -86,7 +90,7 @@ export default function Sidebar({ className = '', onNavigate }: SidebarProps) {
                 height="10"
                 viewBox="0 0 10 10"
                 className={`shrink-0 transition-transform ${
-                  collapsed.has(space.id) ? '-rotate-90' : ''
+                  collapsed.has(space.id) ? "-rotate-90" : ""
                 }`}
               >
                 <path
@@ -101,7 +105,7 @@ export default function Sidebar({ className = '', onNavigate }: SidebarProps) {
 
             <div
               id={`space-projects-${space.id}`}
-              className={`ml-4 space-y-0.5 mt-0.5 ${collapsed.has(space.id) ? 'hidden' : ''}`}
+              className={`ml-4 space-y-0.5 mt-0.5 ${collapsed.has(space.id) ? "hidden" : ""}`}
             >
               {projects.map((project) => (
                 <div key={project.id} className="flex items-center min-w-0">
@@ -123,7 +127,13 @@ export default function Sidebar({ className = '', onNavigate }: SidebarProps) {
                       className="shrink-0 px-1 text-dim hover:text-accent transition-colors"
                       aria-label={`Visit ${project.name} link`}
                     >
-                      <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                      <svg
+                        width="10"
+                        height="10"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        aria-hidden="true"
+                      >
                         <path
                           d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M7 1h4m0 0v4m0-4L5 7"
                           stroke="currentColor"

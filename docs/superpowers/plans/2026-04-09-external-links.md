@@ -12,29 +12,30 @@
 
 ## File Map
 
-| File | Change |
-|------|--------|
-| `packages/shared/src/types.ts` | Rename `sourceUrl?` → `url: string \| null` on Task; add `url` to Project |
-| `packages/shared/src/db.ts` | Add Dexie v5 migration |
-| `apps/web/src/services/SyncService.ts` | Update task/project serializers |
-| `apps/web/src/components/TaskRow.tsx` | Swap `sourceUrl` → `url`, rename testid |
-| `apps/web/src/__tests__/TaskRow.test.tsx` | Update baseTask + url tests |
-| `apps/web/src/components/CommandPalette.tsx` | Add `'url'` to EditField/EditPatch + `@u` chip |
-| `apps/web/src/__tests__/CommandPalette.test.tsx` | Update baseTask + add @u chip tests |
-| `apps/web/src/components/CommandPalette.tsx` | Add `url: null` to createTask |
-| `apps/web/src/views/InboxView.tsx` | U hotkey, Cmd+O, render CommandPalette |
-| `apps/web/src/views/TodayView.tsx` | U hotkey, Cmd+O, render CommandPalette |
-| `apps/web/src/views/ProjectsView.tsx` | U/Cmd+O for tasks + projects; link icon on project row |
-| `apps/web/src/components/ProjectEditPalette.tsx` | Add `@u` chip |
-| `apps/web/src/components/layout/AppLayout.tsx` | Extend `sift:edit-project` event type to include `'url'` |
-| `apps/web/src/components/layout/HintBar.tsx` | Add U and ⌘O to task and project hints |
-| `apps/web/src/components/layout/Sidebar.tsx` | Link icon on project rows |
+| File                                             | Change                                                                    |
+| ------------------------------------------------ | ------------------------------------------------------------------------- |
+| `packages/shared/src/types.ts`                   | Rename `sourceUrl?` → `url: string \| null` on Task; add `url` to Project |
+| `packages/shared/src/db.ts`                      | Add Dexie v5 migration                                                    |
+| `apps/web/src/services/SyncService.ts`           | Update task/project serializers                                           |
+| `apps/web/src/components/TaskRow.tsx`            | Swap `sourceUrl` → `url`, rename testid                                   |
+| `apps/web/src/__tests__/TaskRow.test.tsx`        | Update baseTask + url tests                                               |
+| `apps/web/src/components/CommandPalette.tsx`     | Add `'url'` to EditField/EditPatch + `@u` chip                            |
+| `apps/web/src/__tests__/CommandPalette.test.tsx` | Update baseTask + add @u chip tests                                       |
+| `apps/web/src/components/CommandPalette.tsx`     | Add `url: null` to createTask                                             |
+| `apps/web/src/views/InboxView.tsx`               | U hotkey, Cmd+O, render CommandPalette                                    |
+| `apps/web/src/views/TodayView.tsx`               | U hotkey, Cmd+O, render CommandPalette                                    |
+| `apps/web/src/views/ProjectsView.tsx`            | U/Cmd+O for tasks + projects; link icon on project row                    |
+| `apps/web/src/components/ProjectEditPalette.tsx` | Add `@u` chip                                                             |
+| `apps/web/src/components/layout/AppLayout.tsx`   | Extend `sift:edit-project` event type to include `'url'`                  |
+| `apps/web/src/components/layout/HintBar.tsx`     | Add U and ⌘O to task and project hints                                    |
+| `apps/web/src/components/layout/Sidebar.tsx`     | Link icon on project rows                                                 |
 
 ---
 
 ## Task 1: Data Model — Rename Task.sourceUrl → url, add Project.url
 
 **Files:**
+
 - Modify: `packages/shared/src/types.ts`
 - Modify: `packages/shared/src/db.ts`
 
@@ -50,7 +51,7 @@ export interface Project {
   spaceId: string;
   dueDate: Date | null;
   archived: boolean;
-  url: string | null;   // ← add this line
+  url: string | null; // ← add this line
   createdAt: Date;
   updatedAt: Date;
   synced: boolean;
@@ -66,7 +67,7 @@ export interface Task {
   createdAt: Date;
   updatedAt: Date;
   completedAt: Date | null;
-  url: string | null;   // ← was: sourceUrl?: string;
+  url: string | null; // ← was: sourceUrl?: string;
   synced: boolean;
 }
 ```
@@ -76,20 +77,28 @@ export interface Task {
 Append after the `version(4)` block in `packages/shared/src/db.ts`:
 
 ```typescript
-this.version(5).stores({
-  tasks:    'id, projectId, status, workingDate, dueDate, updatedAt, synced',
-  projects: 'id, spaceId, dueDate, archived, updatedAt, synced',
-}).upgrade(tx => {
-  return Promise.all([
-    tx.table('tasks').toCollection().modify((task: any) => {
-      task.url = task.sourceUrl ?? null;
-      delete task.sourceUrl;
-    }),
-    tx.table('projects').toCollection().modify((project: any) => {
-      project.url = null;
-    }),
-  ]);
-});
+this.version(5)
+  .stores({
+    tasks: "id, projectId, status, workingDate, dueDate, updatedAt, synced",
+    projects: "id, spaceId, dueDate, archived, updatedAt, synced",
+  })
+  .upgrade((tx) => {
+    return Promise.all([
+      tx
+        .table("tasks")
+        .toCollection()
+        .modify((task: any) => {
+          task.url = task.sourceUrl ?? null;
+          delete task.sourceUrl;
+        }),
+      tx
+        .table("projects")
+        .toCollection()
+        .modify((project: any) => {
+          project.url = null;
+        }),
+    ]);
+  });
 ```
 
 - [ ] **Step 3: Build shared package**
@@ -112,6 +121,7 @@ git commit -m "feat: rename Task.sourceUrl→url, add Project.url with db migrat
 ## Task 2: SyncService — Update Serializers
 
 **Files:**
+
 - Modify: `apps/web/src/services/SyncService.ts`
 
 - [ ] **Step 1: Update taskToRow and rowToTask**
@@ -145,7 +155,7 @@ function rowToTask(row: Record<string, unknown>): Task {
     id: row.id as string,
     title: row.title as string,
     projectId: row.project_id as string,
-    status: row.status as Task['status'],
+    status: row.status as Task["status"],
     workingDate: row.working_date ? new Date(row.working_date as string) : null,
     dueDate: row.due_date ? new Date(row.due_date as string) : null,
     createdAt: new Date(row.created_at as string),
@@ -229,6 +239,7 @@ git commit -m "feat: update sync serializers for url rename and project url"
 ## Task 3: TaskRow — Swap sourceUrl → url
 
 **Files:**
+
 - Modify: `apps/web/src/__tests__/TaskRow.test.tsx`
 - Modify: `apps/web/src/components/TaskRow.tsx`
 
@@ -237,15 +248,16 @@ git commit -m "feat: update sync serializers for url rename and project url"
 In `apps/web/src/__tests__/TaskRow.test.tsx`:
 
 1. Add `url: null` to `baseTask` (url is now required):
+
 ```typescript
 const baseTask: Task = {
-  id: 'task-1',
-  title: 'Write unit tests',
-  projectId: 'project-1',
-  status: 'inbox',
+  id: "task-1",
+  title: "Write unit tests",
+  projectId: "project-1",
+  status: "inbox",
   workingDate: null,
   dueDate: null,
-  url: null,          // ← add
+  url: null, // ← add
   createdAt: now,
   updatedAt: now,
   completedAt: null,
@@ -254,6 +266,7 @@ const baseTask: Task = {
 ```
 
 2. Update the link icon test (rename field and testid):
+
 ```typescript
 it('shows a link icon when task has url', () => {
   const taskWithUrl: Task = { ...baseTask, url: 'https://example.com' };
@@ -343,6 +356,7 @@ git commit -m "feat: swap Task.sourceUrl→url in TaskRow and tests"
 ## Task 4: CommandPalette — Add @u Chip
 
 **Files:**
+
 - Modify: `apps/web/src/__tests__/CommandPalette.test.tsx`
 - Modify: `apps/web/src/components/CommandPalette.tsx`
 
@@ -351,15 +365,16 @@ git commit -m "feat: swap Task.sourceUrl→url in TaskRow and tests"
 In `apps/web/src/__tests__/CommandPalette.test.tsx`:
 
 1. Add `url: null` to `baseTask`:
+
 ```typescript
 const baseTask: Task = {
-  id: 'task-1',
-  title: 'Fix the bug',
-  projectId: 'p1',
-  status: 'inbox',
+  id: "task-1",
+  title: "Fix the bug",
+  projectId: "p1",
+  status: "inbox",
   workingDate: null,
   dueDate: null,
-  url: null,        // ← add
+  url: null, // ← add
   createdAt: now,
   updatedAt: now,
   completedAt: null,
@@ -368,6 +383,7 @@ const baseTask: Task = {
 ```
 
 2. Add two new tests at the end of the `describe` block:
+
 ```typescript
 it('renders the @u chip', () => {
   render(
@@ -728,6 +744,7 @@ git commit -m "feat: add @u chip to CommandPalette"
 ## Task 5: InboxView + TodayView — U Hotkey, Cmd+O, CommandPalette
 
 **Files:**
+
 - Modify: `apps/web/src/views/InboxView.tsx`
 - Modify: `apps/web/src/views/TodayView.tsx`
 
@@ -866,6 +883,7 @@ export default function InboxView() {
 - [ ] **Step 2: Update TodayView.tsx**
 
 Read the full current TodayView.tsx (to capture the rest of the component after the cut-off), then replace its content with the same pattern. The changes are:
+
 1. Import `useMemo`, `useSpacesProjects`, `CommandPalette`, `type EditPatch`, `type ProjectWithSpace`
 2. Add `urlEditTask` state
 3. Compute `allProjects` from `spacesWithProjects`
@@ -895,6 +913,7 @@ git commit -m "feat: U hotkey and Cmd+O for task url in Inbox and Today views"
 ## Task 6: ProjectEditPalette — Add @u Chip + Update AppLayout Event Types
 
 **Files:**
+
 - Modify: `apps/web/src/components/ProjectEditPalette.tsx`
 - Modify: `apps/web/src/components/layout/AppLayout.tsx`
 
@@ -903,28 +922,34 @@ git commit -m "feat: U hotkey and Cmd+O for task url in Inbox and Today views"
 Make the following changes to `apps/web/src/components/ProjectEditPalette.tsx`:
 
 **a) Extend ActiveChip and TAB_ORDER:**
+
 ```typescript
-type ActiveChip = 'name' | 'emoji' | 'dueDate' | 'url';
-const TAB_ORDER: ActiveChip[] = ['name', 'emoji', 'dueDate', 'url'];
+type ActiveChip = "name" | "emoji" | "dueDate" | "url";
+const TAB_ORDER: ActiveChip[] = ["name", "emoji", "dueDate", "url"];
 ```
 
 **b) Update initialField prop type:**
+
 ```typescript
 initialField?: 'name' | 'emoji' | 'dueDate' | 'url';
 ```
 
 **c) Add url state (after dueDate state):**
+
 ```typescript
 const [url, setUrl] = useState<string | null>(null);
 ```
 
 **d) Update the useEffect that resets state on open — add url reset:**
+
 ```typescript
 setUrl(project?.url ?? null);
 ```
+
 (alongside the existing setName/setEmoji/setDueDate/setActiveChip/setQuery calls)
 
 **e) Update handleConfirm to include url in both update and add paths:**
+
 ```typescript
 // update path:
 await db.projects.update(project.id, {
@@ -952,83 +977,94 @@ await db.projects.add({
 ```
 
 **f) Update handleClear to handle url:**
+
 ```typescript
 function handleClear() {
-  if (activeChip === 'emoji') {
+  if (activeChip === "emoji") {
     setEmoji(null);
-  } else if (activeChip === 'url') {
+  } else if (activeChip === "url") {
     setUrl(null);
   } else {
     setDueDate(null);
   }
-  setActiveChip('name');
-  setQuery('');
+  setActiveChip("name");
+  setQuery("");
   requestAnimationFrame(() => inputRef.current?.focus());
 }
 ```
 
 **g) Update handleKeyDown Enter condition:**
+
 ```typescript
-if (e.key === 'Enter' && (activeChip === 'name' || activeChip === 'url')) {
+if (e.key === "Enter" && (activeChip === "name" || activeChip === "url")) {
   e.preventDefault();
   void handleConfirm();
 }
 ```
 
 **h) Update chipClass to handle url:**
+
 ```typescript
-function chipClass(chip: ActiveChip, activeChip: ActiveChip, isSet: boolean): string {
+function chipClass(
+  chip: ActiveChip,
+  activeChip: ActiveChip,
+  isSet: boolean,
+): string {
   const isActive = activeChip === chip;
-  if (chip === 'emoji') {
+  if (chip === "emoji") {
     if (isActive) return `${CHIP_BASE} border-accent text-accent bg-accent/5`;
-    if (isSet)    return `${CHIP_BASE} border-accent/30 text-accent bg-accent/5`;
-    return              `${CHIP_BASE} border-border text-muted bg-surface`;
+    if (isSet) return `${CHIP_BASE} border-accent/30 text-accent bg-accent/5`;
+    return `${CHIP_BASE} border-border text-muted bg-surface`;
   }
-  if (chip === 'url') {
+  if (chip === "url") {
     if (isActive) return `${CHIP_BASE} border-accent text-accent bg-accent/5`;
-    if (isSet)    return `${CHIP_BASE} border-accent/30 text-accent bg-accent/5`;
-    return              `${CHIP_BASE} border-border text-muted bg-surface`;
+    if (isSet) return `${CHIP_BASE} border-accent/30 text-accent bg-accent/5`;
+    return `${CHIP_BASE} border-border text-muted bg-surface`;
   }
   // dueDate
   if (isActive) return `${CHIP_BASE} border-red text-red bg-red/5`;
-  if (isSet)    return `${CHIP_BASE} border-red/30 text-red bg-red/5`;
-  return              `${CHIP_BASE} border-border text-muted bg-surface`;
+  if (isSet) return `${CHIP_BASE} border-red/30 text-red bg-red/5`;
+  return `${CHIP_BASE} border-border text-muted bg-surface`;
 }
 ```
 
 **i) Update inputValue and inputPlaceholder computation:**
+
 ```typescript
-const inputValue = activeChip === 'name' ? name : activeChip === 'url' ? (url ?? '') : query;
-const inputPlaceholder = activeChip === 'emoji'
-  ? 'Search emojis…'
-  : activeChip === 'dueDate'
-    ? 'Pick a date…'
-    : activeChip === 'url'
-      ? 'Add a link…'
-      : 'Project name…';
+const inputValue =
+  activeChip === "name" ? name : activeChip === "url" ? (url ?? "") : query;
+const inputPlaceholder =
+  activeChip === "emoji"
+    ? "Search emojis…"
+    : activeChip === "dueDate"
+      ? "Pick a date…"
+      : activeChip === "url"
+        ? "Add a link…"
+        : "Project name…";
 ```
 
 **j) Update handleInputChange to handle url mode and @u trigger:**
+
 ```typescript
 function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
-  if (activeChip === 'url') {
+  if (activeChip === "url") {
     setUrl(e.target.value || null);
     return;
   }
-  if (activeChip !== 'name') {
+  if (activeChip !== "name") {
     setQuery(e.target.value);
     return;
   }
   const val = e.target.value;
-  if (val.endsWith('@c')) {
+  if (val.endsWith("@c")) {
     setName(val.slice(0, -2));
-    handleChipClick('emoji');
-  } else if (val.endsWith('@d')) {
+    handleChipClick("emoji");
+  } else if (val.endsWith("@d")) {
     setName(val.slice(0, -2));
-    handleChipClick('dueDate');
-  } else if (val.endsWith('@u')) {
+    handleChipClick("dueDate");
+  } else if (val.endsWith("@u")) {
     setName(val.slice(0, -2));
-    handleChipClick('url');
+    handleChipClick("url");
   } else {
     setName(val);
   }
@@ -1036,6 +1072,7 @@ function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
 ```
 
 **k) Add @u chip button after the dueDate chip button:**
+
 ```typescript
 <button
   type="button"
@@ -1055,6 +1092,7 @@ function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
 ```
 
 **l) Add Clear button for url mode (after the dueDate Dropdown section):**
+
 ```typescript
 {activeChip === 'url' && url && (
   <button
@@ -1075,16 +1113,18 @@ In `apps/web/src/components/layout/AppLayout.tsx`, update `ProjectPaletteState` 
 interface ProjectPaletteState {
   spaceId?: string;
   project?: Project;
-  initialField?: 'name' | 'emoji' | 'dueDate' | 'url';
+  initialField?: "name" | "emoji" | "dueDate" | "url";
 }
 ```
 
 ```typescript
 function onEditProject(e: Event) {
-  const { project, field } = (e as CustomEvent<{
-    project: Project;
-    field: 'name' | 'emoji' | 'dueDate' | 'url';
-  }>).detail;
+  const { project, field } = (
+    e as CustomEvent<{
+      project: Project;
+      field: "name" | "emoji" | "dueDate" | "url";
+    }>
+  ).detail;
   setProjectPaletteState({ project, initialField: field });
   setProjectPaletteOpen(true);
 }
@@ -1102,6 +1142,7 @@ git commit -m "feat: add @u chip to ProjectEditPalette"
 ## Task 7: ProjectsView — U/Cmd+O for Tasks + Projects, Link Icon on Project Rows
 
 **Files:**
+
 - Modify: `apps/web/src/views/ProjectsView.tsx`
 
 - [ ] **Step 1: Add urlEditTask state and allProjects**
@@ -1109,20 +1150,22 @@ git commit -m "feat: add @u chip to ProjectEditPalette"
 At the top of `ProjectsView`, add imports and state:
 
 ```typescript
-import CommandPalette, { type EditPatch } from '../components/CommandPalette';
-import type { ProjectWithSpace } from '@sift/shared';
+import CommandPalette, { type EditPatch } from "../components/CommandPalette";
+import type { ProjectWithSpace } from "@sift/shared";
 // (add to existing imports, useMemo is already imported)
 ```
 
 Inside the component, after the existing state declarations:
+
 ```typescript
 const [urlEditTask, setUrlEditTask] = useState<Task | null>(null);
 
 const allProjects = useMemo<ProjectWithSpace[]>(
-  () => groups.flatMap(({ space, projects: ps }) =>
-    ps.map(({ project }) => ({ ...project, space }))
-  ),
-  [groups]
+  () =>
+    groups.flatMap(({ space, projects: ps }) =>
+      ps.map(({ project }) => ({ ...project, space })),
+    ),
+  [groups],
 );
 ```
 
@@ -1133,14 +1176,14 @@ Inside the `onKey` handler in `ProjectsView`, in the `navMode === 'task'` branch
 ```typescript
 if (focused) {
   // existing D/W/P/E...
-  if (e.key === 'u' || e.key === 'U') {
+  if (e.key === "u" || e.key === "U") {
     e.preventDefault();
     setUrlEditTask(focused);
     return;
   }
-  if (e.metaKey && e.key === 'o') {
+  if (e.metaKey && e.key === "o") {
     e.preventDefault();
-    if (focused.url) window.open(focused.url, '_blank', 'noopener,noreferrer');
+    if (focused.url) window.open(focused.url, "_blank", "noopener,noreferrer");
     return;
   }
 }
@@ -1149,18 +1192,19 @@ if (focused) {
 In the `navMode === 'project'` branch, add after the `'C'` handler (and before the `' '` handler):
 
 ```typescript
-if (e.key === 'u' || e.key === 'U') {
+if (e.key === "u" || e.key === "U") {
   e.preventDefault();
   window.dispatchEvent(
-    new CustomEvent('sift:edit-project', {
-      detail: { project: focusedProject, field: 'url' },
-    })
+    new CustomEvent("sift:edit-project", {
+      detail: { project: focusedProject, field: "url" },
+    }),
   );
   return;
 }
-if (e.metaKey && e.key === 'o') {
+if (e.metaKey && e.key === "o") {
   e.preventDefault();
-  if (focusedProject.url) window.open(focusedProject.url, '_blank', 'noopener,noreferrer');
+  if (focusedProject.url)
+    window.open(focusedProject.url, "_blank", "noopener,noreferrer");
   return;
 }
 ```
@@ -1172,7 +1216,11 @@ After the `handleDeleteConfirm` callback, add:
 ```typescript
 async function handleUrlSave(patch: EditPatch) {
   if (!urlEditTask) return;
-  await db.tasks.update(urlEditTask.id, { url: patch.url ?? null, updatedAt: new Date(), synced: false });
+  await db.tasks.update(urlEditTask.id, {
+    url: patch.url ?? null,
+    updatedAt: new Date(),
+    synced: false,
+  });
   setUrlEditTask(null);
 }
 ```
@@ -1261,6 +1309,7 @@ git commit -m "feat: U/Cmd+O for projects and tasks in ProjectsView + link icon 
 ## Task 8: Sidebar — Link Icon on Project Rows
 
 **Files:**
+
 - Modify: `apps/web/src/components/layout/Sidebar.tsx`
 
 - [ ] **Step 1: Update Sidebar.tsx project NavLink**
@@ -1313,6 +1362,7 @@ git commit -m "feat: show link icon on sidebar project rows when url is set"
 ## Task 9: HintBar — Add U and ⌘O Hints
 
 **Files:**
+
 - Modify: `apps/web/src/components/layout/HintBar.tsx`
 
 - [ ] **Step 1: Update TASK_HINTS and buildProjectHints**
@@ -1321,36 +1371,36 @@ In `apps/web/src/components/layout/HintBar.tsx`, replace `TASK_HINTS`:
 
 ```typescript
 const TASK_HINTS: Hint[] = [
-  { keys: ['Enter'], label: 'Done', hot: true },
-  { keys: ['D'], label: 'Due date', hot: true },
-  { keys: ['W'], label: 'Today', hot: true },
-  { keys: ['P'], label: 'Project', hot: true },
-  { keys: ['E'], label: 'Edit', hot: true },
-  { keys: ['U'], label: 'Link', hot: true },
-  { keys: ['⌘O'], label: 'Open link', hot: true },
-  { keys: ['⌫'], label: 'Archive' },
-  { keys: ['Esc'], label: 'Back' },
+  { keys: ["Enter"], label: "Done", hot: true },
+  { keys: ["D"], label: "Due date", hot: true },
+  { keys: ["W"], label: "Today", hot: true },
+  { keys: ["P"], label: "Project", hot: true },
+  { keys: ["E"], label: "Edit", hot: true },
+  { keys: ["U"], label: "Link", hot: true },
+  { keys: ["⌘O"], label: "Open link", hot: true },
+  { keys: ["⌫"], label: "Archive" },
+  { keys: ["Esc"], label: "Back" },
 ];
 ```
 
 Update `buildProjectHints` to add `U` and `⌘O` before the `X` entry:
 
 ```typescript
-function buildProjectHints(archiveHint?: 'archive' | 'unarchive'): Hint[] {
+function buildProjectHints(archiveHint?: "archive" | "unarchive"): Hint[] {
   const base: Hint[] = [
-    { keys: ['N'], label: 'New', hot: true },
-    { keys: ['E'], label: 'Edit', hot: true },
-    { keys: ['D'], label: 'Due date', hot: true },
-    { keys: ['C'], label: 'Icon', hot: true },
-    { keys: ['U'], label: 'Link', hot: true },
-    { keys: ['⌘O'], label: 'Open link', hot: true },
-    { keys: ['Space'], label: 'Open', hot: true },
+    { keys: ["N"], label: "New", hot: true },
+    { keys: ["E"], label: "Edit", hot: true },
+    { keys: ["D"], label: "Due date", hot: true },
+    { keys: ["C"], label: "Icon", hot: true },
+    { keys: ["U"], label: "Link", hot: true },
+    { keys: ["⌘O"], label: "Open link", hot: true },
+    { keys: ["Space"], label: "Open", hot: true },
   ];
   if (archiveHint) {
-    base.push({ keys: ['A'], label: archiveHint, hot: true });
+    base.push({ keys: ["A"], label: archiveHint, hot: true });
   }
-  base.push({ keys: ['X'], label: 'delete', hot: true });
-  base.push({ keys: ['Esc'], label: 'Deselect' });
+  base.push({ keys: ["X"], label: "delete", hot: true });
+  base.push({ keys: ["Esc"], label: "Deselect" });
   return base;
 }
 ```

@@ -20,7 +20,7 @@ export interface Project {
   id: string;
   name: string;
   spaceId: string;
-  dueDate: Date | null;   // NEW
+  dueDate: Date | null; // NEW
   createdAt: Date;
   updatedAt: Date;
   synced: boolean;
@@ -33,7 +33,7 @@ Bump to schema version 2, adding `dueDate` to the projects index:
 
 ```ts
 this.version(2).stores({
-  projects: 'id, spaceId, dueDate, updatedAt, synced',
+  projects: "id, spaceId, dueDate, updatedAt, synced",
 });
 ```
 
@@ -52,10 +52,11 @@ export function useProjectNav(): {
   focusedProjectId: string | null;
   setFocusedProjectId: (id: string | null) => void;
   handleProjectKeyDown: (e: KeyboardEvent, projects: Project[]) => void;
-}
+};
 ```
 
 **Behaviour:**
+
 - `↑` — move focus to previous project; at first → deselect (null)
 - `↓` — move focus to next project; at last → deselect (null)
 - `Escape` — deselect (set to null)
@@ -72,7 +73,7 @@ export function useProjectNav(): {
 ### Navigation modes
 
 ```ts
-const [navMode, setNavMode] = useState<'project' | 'task'>('project');
+const [navMode, setNavMode] = useState<"project" | "task">("project");
 const [expandedProjectId, setExpandedProjectId] = useState<string | null>(null);
 ```
 
@@ -108,10 +109,13 @@ if navMode === 'task':
 ### Cmd+K prefill
 
 Whenever `focusedProjectId` changes, dispatch:
+
 ```ts
-window.dispatchEvent(new CustomEvent('sift:project-focused', {
-  detail: { projectId: focusedProjectId }
-}));
+window.dispatchEvent(
+  new CustomEvent("sift:project-focused", {
+    detail: { projectId: focusedProjectId },
+  }),
+);
 ```
 
 ### HintBar
@@ -121,9 +125,11 @@ Pass a discriminated prop to indicate the current focus state:
 ```tsx
 <HintBar
   focusState={
-    navMode === 'task' && focusedTaskId !== null ? 'task'
-    : focusedProjectId !== null ? 'project'
-    : 'none'
+    navMode === "task" && focusedTaskId !== null
+      ? "task"
+      : focusedProjectId !== null
+        ? "project"
+        : "none"
   }
 />
 ```
@@ -146,7 +152,7 @@ interface ProjectEditPaletteProps {
   spaceId?: string;
   // edit mode
   project?: Project;
-  initialField?: 'name' | 'dueDate';
+  initialField?: "name" | "dueDate";
 }
 ```
 
@@ -160,10 +166,10 @@ interface ProjectEditPaletteProps {
 
 ### Fields
 
-| Field | Control | Notes |
-|-------|---------|-------|
-| Name | Text input | Geist Sans, weight 500 |
-| Due date | Date chip (reuse SmartInput chip style) | Optional, clearable |
+| Field    | Control                                 | Notes                  |
+| -------- | --------------------------------------- | ---------------------- |
+| Name     | Text input                              | Geist Sans, weight 500 |
+| Due date | Date chip (reuse SmartInput chip style) | Optional, clearable    |
 
 Space is not user-selectable during edit. During creation, it defaults to the dispatched `spaceId` (the focused project's space, or the first space).
 
@@ -180,7 +186,7 @@ const [projectPaletteOpen, setProjectPaletteOpen] = useState(false);
 const [projectPaletteProps, setProjectPaletteProps] = useState<{
   spaceId?: string;
   project?: Project;
-  initialField?: 'name' | 'dueDate';
+  initialField?: "name" | "dueDate";
 }>({});
 const [focusedProjectId, setFocusedProjectId] = useState<string | null>(null);
 ```
@@ -189,21 +195,21 @@ const [focusedProjectId, setFocusedProjectId] = useState<string | null>(null);
 
 ```ts
 // sift:new-project → open palette in create mode
-window.addEventListener('sift:new-project', (e) => {
+window.addEventListener("sift:new-project", (e) => {
   const { spaceId } = e.detail;
   setProjectPaletteProps({ spaceId });
   setProjectPaletteOpen(true);
 });
 
 // sift:edit-project → open palette in edit mode
-window.addEventListener('sift:edit-project', (e) => {
+window.addEventListener("sift:edit-project", (e) => {
   const { project, field } = e.detail;
   setProjectPaletteProps({ project, initialField: field });
   setProjectPaletteOpen(true);
 });
 
 // sift:project-focused → update defaultProjectId for Cmd+K
-window.addEventListener('sift:project-focused', (e) => {
+window.addEventListener("sift:project-focused", (e) => {
   setFocusedProjectId(e.detail.projectId);
 });
 ```
@@ -253,7 +259,7 @@ const TASK_HINTS   = [Enter Done, D Due, W Today, P Project, E Edit, ⌫ Archive
 `InboxView` and `TodayView` currently pass `taskFocused={focusedId !== null}`. After the `HintBar` prop is renamed to `focusState`, both views must be updated:
 
 ```tsx
-<HintBar focusState={focusedId !== null ? 'task' : 'none'} />
+<HintBar focusState={focusedId !== null ? "task" : "none"} />
 ```
 
 ---

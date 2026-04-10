@@ -4,9 +4,9 @@ import {
   useEffect,
   useState,
   type ReactNode,
-} from 'react';
-import type { Session, User } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
+} from "react";
+import type { Session, User } from "@supabase/supabase-js";
+import { supabase } from "../lib/supabase";
 
 interface AuthContextValue {
   session: Session | null;
@@ -47,13 +47,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function signInWithGoogle() {
     if (!supabase) return;
     await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: "google",
       options: { redirectTo: window.location.origin },
     });
   }
 
   async function signInWithMagicLink(email: string) {
-    if (!supabase) throw new Error('Supabase is not configured');
+    if (!supabase) throw new Error("Supabase is not configured");
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: window.location.origin },
@@ -84,6 +84,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth(): AuthContextValue {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used inside <AuthProvider>');
+  if (!ctx) throw new Error("useAuth must be used inside <AuthProvider>");
   return ctx;
 }

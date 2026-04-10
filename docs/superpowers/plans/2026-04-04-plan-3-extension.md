@@ -12,30 +12,31 @@
 
 ## File Map
 
-| File | Responsibility |
-|------|----------------|
-| `apps/extension/package.json` | Package manifest, workspace deps, build/dev/test scripts |
-| `apps/extension/vite.config.ts` | Vite config with CRXJS plugin and React plugin; Vitest config |
-| `apps/extension/tsconfig.json` | TypeScript config extending monorepo base, Chrome types |
-| `apps/extension/manifest.json` | MV3 manifest — permissions, commands, content scripts, popup, service worker |
-| `apps/extension/src/types/messages.ts` | `ExtensionMessage` union type and `StoredTask` interface — shared across all extension entry points |
-| `apps/extension/src/background/index.ts` | Service worker: message routing, `chrome.storage.local` ops, `chrome.commands` handler |
-| `apps/extension/src/content/index.ts` | Content script entry: double-Shift listener, `Alt+Shift+I` command listener, overlay lifecycle |
-| `apps/extension/src/content/shadow.ts` | Creates Shadow DOM host element and returns the `ShadowRoot` for React mounting |
-| `apps/extension/src/content/overlay.tsx` | React component rendered into Shadow DOM: `SmartInput` + save-to-storage logic + close handler |
-| `apps/extension/src/popup/index.html` | Popup HTML entry point; imports `main.tsx` |
-| `apps/extension/src/popup/main.tsx` | Mounts `Popup` React component into `#root` |
-| `apps/extension/src/popup/Popup.tsx` | Shows unsynced task count; "Open Speedy" button linking to Vercel URL |
-| `apps/extension/src/__tests__/background.test.ts` | Vitest unit tests for background message handlers (chrome global mocked) |
-| `apps/extension/src/__tests__/overlay.test.tsx` | @testing-library/react tests for Overlay component |
-| `apps/extension/src/__tests__/doubleShift.test.ts` | Unit tests for the double-Shift detection logic extracted as a pure function |
-| `apps/extension/src/__tests__/setup.ts` | Vitest setup file: chrome global mock |
+| File                                               | Responsibility                                                                                      |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `apps/extension/package.json`                      | Package manifest, workspace deps, build/dev/test scripts                                            |
+| `apps/extension/vite.config.ts`                    | Vite config with CRXJS plugin and React plugin; Vitest config                                       |
+| `apps/extension/tsconfig.json`                     | TypeScript config extending monorepo base, Chrome types                                             |
+| `apps/extension/manifest.json`                     | MV3 manifest — permissions, commands, content scripts, popup, service worker                        |
+| `apps/extension/src/types/messages.ts`             | `ExtensionMessage` union type and `StoredTask` interface — shared across all extension entry points |
+| `apps/extension/src/background/index.ts`           | Service worker: message routing, `chrome.storage.local` ops, `chrome.commands` handler              |
+| `apps/extension/src/content/index.ts`              | Content script entry: double-Shift listener, `Alt+Shift+I` command listener, overlay lifecycle      |
+| `apps/extension/src/content/shadow.ts`             | Creates Shadow DOM host element and returns the `ShadowRoot` for React mounting                     |
+| `apps/extension/src/content/overlay.tsx`           | React component rendered into Shadow DOM: `SmartInput` + save-to-storage logic + close handler      |
+| `apps/extension/src/popup/index.html`              | Popup HTML entry point; imports `main.tsx`                                                          |
+| `apps/extension/src/popup/main.tsx`                | Mounts `Popup` React component into `#root`                                                         |
+| `apps/extension/src/popup/Popup.tsx`               | Shows unsynced task count; "Open Speedy" button linking to Vercel URL                               |
+| `apps/extension/src/__tests__/background.test.ts`  | Vitest unit tests for background message handlers (chrome global mocked)                            |
+| `apps/extension/src/__tests__/overlay.test.tsx`    | @testing-library/react tests for Overlay component                                                  |
+| `apps/extension/src/__tests__/doubleShift.test.ts` | Unit tests for the double-Shift detection logic extracted as a pure function                        |
+| `apps/extension/src/__tests__/setup.ts`            | Vitest setup file: chrome global mock                                                               |
 
 ---
 
 ## Task 1: Bootstrap apps/extension
 
 **Files created:**
+
 - `apps/extension/package.json`
 - `apps/extension/vite.config.ts`
 - `apps/extension/tsconfig.json`
@@ -93,19 +94,16 @@
 - [ ] **Step 3: Create apps/extension/vite.config.ts**
 
 ```typescript
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import { crx } from '@crxjs/vite-plugin';
-import manifest from './manifest.json';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { crx } from "@crxjs/vite-plugin";
+import manifest from "./manifest.json";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    crx({ manifest }),
-  ],
+  plugins: [react(), crx({ manifest })],
   test: {
-    environment: 'jsdom',
-    setupFiles: ['src/__tests__/setup.ts'],
+    environment: "jsdom",
+    setupFiles: ["src/__tests__/setup.ts"],
     globals: true,
   },
 });
@@ -131,6 +129,7 @@ git commit -m "chore(extension): bootstrap package with Vite + CRXJS"
 ## Task 2: manifest.json
 
 **Files created:**
+
 - `apps/extension/manifest.json`
 
 - [ ] **Step 1: Create apps/extension/manifest.json**
@@ -208,6 +207,7 @@ git commit -m "feat(extension): add MV3 manifest"
 ## Task 3: Message types
 
 **Files created:**
+
 - `apps/extension/src/types/messages.ts`
 
 - [ ] **Step 1: Create src/types/messages.ts**
@@ -239,31 +239,36 @@ export interface StoredTask {
 
 export type ExtensionMessage =
   // Content script → background: show the overlay in the active tab
-  | { type: 'OVERLAY_OPEN' }
+  | { type: "OVERLAY_OPEN" }
   // Content script → background: the overlay was closed
-  | { type: 'OVERLAY_CLOSE' }
+  | { type: "OVERLAY_CLOSE" }
   // Content/overlay → background: persist a new task
-  | { type: 'TASK_SAVE'; task: StoredTask }
+  | { type: "TASK_SAVE"; task: StoredTask }
   // Web app or popup → background: fetch all unsynced tasks
-  | { type: 'GET_UNSYNCED' }
+  | { type: "GET_UNSYNCED" }
   // Web app → background: mark these task IDs as synced
-  | { type: 'MARK_SYNCED'; ids: string[] }
+  | { type: "MARK_SYNCED"; ids: string[] }
   // Web app → background: store the Supabase session token
-  | { type: 'SET_SESSION'; token: string }
+  | { type: "SET_SESSION"; token: string }
   // Popup or background → background: retrieve stored session token
-  | { type: 'GET_SESSION' };
+  | { type: "GET_SESSION" };
 
 /**
  * Response shapes keyed by message type.
  * Background's onMessage handler returns these via `sendResponse`.
  */
-export type ExtensionResponse<T extends ExtensionMessage['type']> =
-  T extends 'GET_UNSYNCED' ? StoredTask[] :
-  T extends 'GET_SESSION' ? string | null :
-  T extends 'TASK_SAVE' ? { ok: true } :
-  T extends 'MARK_SYNCED' ? { ok: true } :
-  T extends 'SET_SESSION' ? { ok: true } :
-  void;
+export type ExtensionResponse<T extends ExtensionMessage["type"]> =
+  T extends "GET_UNSYNCED"
+    ? StoredTask[]
+    : T extends "GET_SESSION"
+      ? string | null
+      : T extends "TASK_SAVE"
+        ? { ok: true }
+        : T extends "MARK_SYNCED"
+          ? { ok: true }
+          : T extends "SET_SESSION"
+            ? { ok: true }
+            : void;
 ```
 
 - [ ] **Step 2: Commit**
@@ -278,15 +283,16 @@ git commit -m "feat(extension): add type-safe message union and StoredTask inter
 ## Task 4: Failing tests for background service worker (TDD)
 
 **Files created:**
+
 - `apps/extension/src/__tests__/setup.ts`
 - `apps/extension/src/__tests__/background.test.ts`
 
 Write these tests **before** writing any background implementation code. All tests must fail at this point.
 
-- [ ] **Step 1: Create src/__tests__/setup.ts**
+- [ ] **Step 1: Create src/**tests**/setup.ts**
 
 ```typescript
-import { vi } from 'vitest';
+import { vi } from "vitest";
 
 /**
  * Global Chrome API mock injected before every test file.
@@ -336,25 +342,32 @@ beforeEach(() => {
 });
 ```
 
-- [ ] **Step 2: Create src/__tests__/background.test.ts**
+- [ ] **Step 2: Create src/**tests**/background.test.ts**
 
 ```typescript
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { StoredTask, ExtensionMessage } from '../types/messages';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import type { StoredTask, ExtensionMessage } from "../types/messages";
 
 // We import the handler factory so we can test it in isolation
 // (the background index.ts will export a handleMessage function)
-import { handleMessage, getUnsyncedTasks, saveTask, markSynced, setSession, getSession } from '../background/index';
+import {
+  handleMessage,
+  getUnsyncedTasks,
+  saveTask,
+  markSynced,
+  setSession,
+  getSession,
+} from "../background/index";
 
 // Helper to create a minimal valid StoredTask
 function makeTask(overrides: Partial<StoredTask> = {}): StoredTask {
   return {
-    id: 'task-1',
-    title: 'Write tests',
+    id: "task-1",
+    title: "Write tests",
     projectId: undefined,
     dueDate: null,
     workingDate: null,
-    sourceUrl: 'https://example.com',
+    sourceUrl: "https://example.com",
     capturedAt: new Date().toISOString(),
     synced: false,
     ...overrides,
@@ -363,79 +376,91 @@ function makeTask(overrides: Partial<StoredTask> = {}): StoredTask {
 
 // ─── saveTask ────────────────────────────────────────────────────────────────
 
-describe('saveTask', () => {
-  it('reads existing tasks, appends the new task, and writes back', async () => {
-    const existing: StoredTask[] = [makeTask({ id: 'existing-1' })];
-    const newTask = makeTask({ id: 'new-1', title: 'New task' });
+describe("saveTask", () => {
+  it("reads existing tasks, appends the new task, and writes back", async () => {
+    const existing: StoredTask[] = [makeTask({ id: "existing-1" })];
+    const newTask = makeTask({ id: "new-1", title: "New task" });
 
     (chrome.storage.local.get as ReturnType<typeof vi.fn>).mockImplementation(
-      (_keys: string[], callback: (result: Record<string, unknown>) => void) => {
+      (
+        _keys: string[],
+        callback: (result: Record<string, unknown>) => void,
+      ) => {
         callback({ tasks: existing });
-      }
+      },
     );
     (chrome.storage.local.set as ReturnType<typeof vi.fn>).mockImplementation(
       (_data: Record<string, unknown>, callback: () => void) => {
         callback();
-      }
+      },
     );
 
     await saveTask(newTask);
 
     expect(chrome.storage.local.set).toHaveBeenCalledWith(
       { tasks: [existing[0], newTask] },
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 
-  it('handles empty storage (no existing tasks key)', async () => {
-    const newTask = makeTask({ id: 'only-task' });
+  it("handles empty storage (no existing tasks key)", async () => {
+    const newTask = makeTask({ id: "only-task" });
 
     (chrome.storage.local.get as ReturnType<typeof vi.fn>).mockImplementation(
-      (_keys: string[], callback: (result: Record<string, unknown>) => void) => {
+      (
+        _keys: string[],
+        callback: (result: Record<string, unknown>) => void,
+      ) => {
         callback({});
-      }
+      },
     );
     (chrome.storage.local.set as ReturnType<typeof vi.fn>).mockImplementation(
       (_data: Record<string, unknown>, callback: () => void) => {
         callback();
-      }
+      },
     );
 
     await saveTask(newTask);
 
     expect(chrome.storage.local.set).toHaveBeenCalledWith(
       { tasks: [newTask] },
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 });
 
 // ─── getUnsyncedTasks ────────────────────────────────────────────────────────
 
-describe('getUnsyncedTasks', () => {
-  it('returns only tasks where synced === false', async () => {
+describe("getUnsyncedTasks", () => {
+  it("returns only tasks where synced === false", async () => {
     const tasks: StoredTask[] = [
-      makeTask({ id: '1', synced: false }),
-      makeTask({ id: '2', synced: true }),
-      makeTask({ id: '3', synced: false }),
+      makeTask({ id: "1", synced: false }),
+      makeTask({ id: "2", synced: true }),
+      makeTask({ id: "3", synced: false }),
     ];
 
     (chrome.storage.local.get as ReturnType<typeof vi.fn>).mockImplementation(
-      (_keys: string[], callback: (result: Record<string, unknown>) => void) => {
+      (
+        _keys: string[],
+        callback: (result: Record<string, unknown>) => void,
+      ) => {
         callback({ tasks });
-      }
+      },
     );
 
     const result = await getUnsyncedTasks();
     expect(result).toHaveLength(2);
-    expect(result.map((t) => t.id)).toEqual(['1', '3']);
+    expect(result.map((t) => t.id)).toEqual(["1", "3"]);
   });
 
-  it('returns empty array when storage has no tasks', async () => {
+  it("returns empty array when storage has no tasks", async () => {
     (chrome.storage.local.get as ReturnType<typeof vi.fn>).mockImplementation(
-      (_keys: string[], callback: (result: Record<string, unknown>) => void) => {
+      (
+        _keys: string[],
+        callback: (result: Record<string, unknown>) => void,
+      ) => {
         callback({});
-      }
+      },
     );
 
     const result = await getUnsyncedTasks();
@@ -445,52 +470,60 @@ describe('getUnsyncedTasks', () => {
 
 // ─── markSynced ──────────────────────────────────────────────────────────────
 
-describe('markSynced', () => {
-  it('sets synced=true for matching IDs and writes back', async () => {
+describe("markSynced", () => {
+  it("sets synced=true for matching IDs and writes back", async () => {
     const tasks: StoredTask[] = [
-      makeTask({ id: 'a', synced: false }),
-      makeTask({ id: 'b', synced: false }),
-      makeTask({ id: 'c', synced: false }),
+      makeTask({ id: "a", synced: false }),
+      makeTask({ id: "b", synced: false }),
+      makeTask({ id: "c", synced: false }),
     ];
 
     (chrome.storage.local.get as ReturnType<typeof vi.fn>).mockImplementation(
-      (_keys: string[], callback: (result: Record<string, unknown>) => void) => {
+      (
+        _keys: string[],
+        callback: (result: Record<string, unknown>) => void,
+      ) => {
         callback({ tasks });
-      }
+      },
     );
     (chrome.storage.local.set as ReturnType<typeof vi.fn>).mockImplementation(
       (_data: Record<string, unknown>, callback: () => void) => {
         callback();
-      }
+      },
     );
 
-    await markSynced(['a', 'c']);
+    await markSynced(["a", "c"]);
 
-    const written = (chrome.storage.local.set as ReturnType<typeof vi.fn>).mock.calls[0][0] as {
+    const written = (chrome.storage.local.set as ReturnType<typeof vi.fn>).mock
+      .calls[0][0] as {
       tasks: StoredTask[];
     };
-    expect(written.tasks.find((t) => t.id === 'a')?.synced).toBe(true);
-    expect(written.tasks.find((t) => t.id === 'b')?.synced).toBe(false);
-    expect(written.tasks.find((t) => t.id === 'c')?.synced).toBe(true);
+    expect(written.tasks.find((t) => t.id === "a")?.synced).toBe(true);
+    expect(written.tasks.find((t) => t.id === "b")?.synced).toBe(false);
+    expect(written.tasks.find((t) => t.id === "c")?.synced).toBe(true);
   });
 
-  it('is a no-op when ids array is empty', async () => {
-    const tasks: StoredTask[] = [makeTask({ id: 'x', synced: false })];
+  it("is a no-op when ids array is empty", async () => {
+    const tasks: StoredTask[] = [makeTask({ id: "x", synced: false })];
 
     (chrome.storage.local.get as ReturnType<typeof vi.fn>).mockImplementation(
-      (_keys: string[], callback: (result: Record<string, unknown>) => void) => {
+      (
+        _keys: string[],
+        callback: (result: Record<string, unknown>) => void,
+      ) => {
         callback({ tasks });
-      }
+      },
     );
     (chrome.storage.local.set as ReturnType<typeof vi.fn>).mockImplementation(
       (_data: Record<string, unknown>, callback: () => void) => {
         callback();
-      }
+      },
     );
 
     await markSynced([]);
 
-    const written = (chrome.storage.local.set as ReturnType<typeof vi.fn>).mock.calls[0][0] as {
+    const written = (chrome.storage.local.set as ReturnType<typeof vi.fn>).mock
+      .calls[0][0] as {
       tasks: StoredTask[];
     };
     expect(written.tasks[0].synced).toBe(false);
@@ -499,40 +532,46 @@ describe('markSynced', () => {
 
 // ─── setSession / getSession ─────────────────────────────────────────────────
 
-describe('setSession', () => {
+describe("setSession", () => {
   it('saves the token to chrome.storage.local under "session_token"', async () => {
     (chrome.storage.local.set as ReturnType<typeof vi.fn>).mockImplementation(
       (_data: Record<string, unknown>, callback: () => void) => {
         callback();
-      }
+      },
     );
 
-    await setSession('my-jwt-token');
+    await setSession("my-jwt-token");
 
     expect(chrome.storage.local.set).toHaveBeenCalledWith(
-      { session_token: 'my-jwt-token' },
-      expect.any(Function)
+      { session_token: "my-jwt-token" },
+      expect.any(Function),
     );
   });
 });
 
-describe('getSession', () => {
-  it('returns the stored token string', async () => {
+describe("getSession", () => {
+  it("returns the stored token string", async () => {
     (chrome.storage.local.get as ReturnType<typeof vi.fn>).mockImplementation(
-      (_keys: string[], callback: (result: Record<string, unknown>) => void) => {
-        callback({ session_token: 'stored-token' });
-      }
+      (
+        _keys: string[],
+        callback: (result: Record<string, unknown>) => void,
+      ) => {
+        callback({ session_token: "stored-token" });
+      },
     );
 
     const token = await getSession();
-    expect(token).toBe('stored-token');
+    expect(token).toBe("stored-token");
   });
 
-  it('returns null when no token is stored', async () => {
+  it("returns null when no token is stored", async () => {
     (chrome.storage.local.get as ReturnType<typeof vi.fn>).mockImplementation(
-      (_keys: string[], callback: (result: Record<string, unknown>) => void) => {
+      (
+        _keys: string[],
+        callback: (result: Record<string, unknown>) => void,
+      ) => {
         callback({});
-      }
+      },
     );
 
     const token = await getSession();
@@ -542,84 +581,87 @@ describe('getSession', () => {
 
 // ─── handleMessage ────────────────────────────────────────────────────────────
 
-describe('handleMessage', () => {
-  it('calls saveTask and sends { ok: true } for TASK_SAVE', async () => {
+describe("handleMessage", () => {
+  it("calls saveTask and sends { ok: true } for TASK_SAVE", async () => {
     const task = makeTask();
     const sendResponse = vi.fn();
 
     (chrome.storage.local.get as ReturnType<typeof vi.fn>).mockImplementation(
-      (_keys: string[], cb: (r: Record<string, unknown>) => void) => cb({ tasks: [] })
+      (_keys: string[], cb: (r: Record<string, unknown>) => void) =>
+        cb({ tasks: [] }),
     );
     (chrome.storage.local.set as ReturnType<typeof vi.fn>).mockImplementation(
-      (_data: Record<string, unknown>, cb: () => void) => cb()
+      (_data: Record<string, unknown>, cb: () => void) => cb(),
     );
 
-    const msg: ExtensionMessage = { type: 'TASK_SAVE', task };
+    const msg: ExtensionMessage = { type: "TASK_SAVE", task };
     await handleMessage(msg, sendResponse);
 
     expect(sendResponse).toHaveBeenCalledWith({ ok: true });
   });
 
-  it('returns unsynced tasks for GET_UNSYNCED', async () => {
+  it("returns unsynced tasks for GET_UNSYNCED", async () => {
     const tasks: StoredTask[] = [makeTask({ synced: false })];
     const sendResponse = vi.fn();
 
     (chrome.storage.local.get as ReturnType<typeof vi.fn>).mockImplementation(
-      (_keys: string[], cb: (r: Record<string, unknown>) => void) => cb({ tasks })
+      (_keys: string[], cb: (r: Record<string, unknown>) => void) =>
+        cb({ tasks }),
     );
 
-    const msg: ExtensionMessage = { type: 'GET_UNSYNCED' };
+    const msg: ExtensionMessage = { type: "GET_UNSYNCED" };
     await handleMessage(msg, sendResponse);
 
     expect(sendResponse).toHaveBeenCalledWith(tasks);
   });
 
-  it('marks synced and sends { ok: true } for MARK_SYNCED', async () => {
-    const tasks: StoredTask[] = [makeTask({ id: 'z', synced: false })];
-    const sendResponse = vi.fn();
-
-    (chrome.storage.local.get as ReturnType<typeof vi.fn>).mockImplementation(
-      (_keys: string[], cb: (r: Record<string, unknown>) => void) => cb({ tasks })
-    );
-    (chrome.storage.local.set as ReturnType<typeof vi.fn>).mockImplementation(
-      (_data: Record<string, unknown>, cb: () => void) => cb()
-    );
-
-    const msg: ExtensionMessage = { type: 'MARK_SYNCED', ids: ['z'] };
-    await handleMessage(msg, sendResponse);
-
-    expect(sendResponse).toHaveBeenCalledWith({ ok: true });
-  });
-
-  it('stores session for SET_SESSION', async () => {
-    const sendResponse = vi.fn();
-
-    (chrome.storage.local.set as ReturnType<typeof vi.fn>).mockImplementation(
-      (_data: Record<string, unknown>, cb: () => void) => cb()
-    );
-
-    const msg: ExtensionMessage = { type: 'SET_SESSION', token: 'tok' };
-    await handleMessage(msg, sendResponse);
-
-    expect(chrome.storage.local.set).toHaveBeenCalledWith(
-      { session_token: 'tok' },
-      expect.any(Function)
-    );
-    expect(sendResponse).toHaveBeenCalledWith({ ok: true });
-  });
-
-  it('retrieves session for GET_SESSION', async () => {
+  it("marks synced and sends { ok: true } for MARK_SYNCED", async () => {
+    const tasks: StoredTask[] = [makeTask({ id: "z", synced: false })];
     const sendResponse = vi.fn();
 
     (chrome.storage.local.get as ReturnType<typeof vi.fn>).mockImplementation(
       (_keys: string[], cb: (r: Record<string, unknown>) => void) =>
-        cb({ session_token: 'my-tok' })
+        cb({ tasks }),
+    );
+    (chrome.storage.local.set as ReturnType<typeof vi.fn>).mockImplementation(
+      (_data: Record<string, unknown>, cb: () => void) => cb(),
     );
 
-    const msg: ExtensionMessage = { type: 'GET_SESSION' };
+    const msg: ExtensionMessage = { type: "MARK_SYNCED", ids: ["z"] };
     await handleMessage(msg, sendResponse);
 
-    expect(sendResponse).toHaveBeenCalledWith('my-tok');
+    expect(sendResponse).toHaveBeenCalledWith({ ok: true });
+  });
+
+  it("stores session for SET_SESSION", async () => {
+    const sendResponse = vi.fn();
+
+    (chrome.storage.local.set as ReturnType<typeof vi.fn>).mockImplementation(
+      (_data: Record<string, unknown>, cb: () => void) => cb(),
+    );
+
+    const msg: ExtensionMessage = { type: "SET_SESSION", token: "tok" };
+    await handleMessage(msg, sendResponse);
+
+    expect(chrome.storage.local.set).toHaveBeenCalledWith(
+      { session_token: "tok" },
+      expect.any(Function),
+    );
+    expect(sendResponse).toHaveBeenCalledWith({ ok: true });
+  });
+
+  it("retrieves session for GET_SESSION", async () => {
+    const sendResponse = vi.fn();
+
+    (chrome.storage.local.get as ReturnType<typeof vi.fn>).mockImplementation(
+      (_keys: string[], cb: (r: Record<string, unknown>) => void) =>
+        cb({ session_token: "my-tok" }),
+    );
+
+    const msg: ExtensionMessage = { type: "GET_SESSION" };
+    await handleMessage(msg, sendResponse);
+
+    expect(sendResponse).toHaveBeenCalledWith("my-tok");
   });
 });
 ```
@@ -644,20 +686,21 @@ git commit -m "test(extension): add failing tests for background service worker 
 ## Task 5: Implement background service worker
 
 **Files created:**
+
 - `apps/extension/src/background/index.ts`
 
 - [ ] **Step 1: Create src/background/index.ts**
 
 ```typescript
-import type { ExtensionMessage, StoredTask } from '../types/messages';
+import type { ExtensionMessage, StoredTask } from "../types/messages";
 
 // ─── Storage helpers ──────────────────────────────────────────────────────────
 
 /** Read the full tasks array from chrome.storage.local. */
 function readTasks(): Promise<StoredTask[]> {
   return new Promise((resolve) => {
-    chrome.storage.local.get(['tasks'], (result) => {
-      resolve((result['tasks'] as StoredTask[] | undefined) ?? []);
+    chrome.storage.local.get(["tasks"], (result) => {
+      resolve((result["tasks"] as StoredTask[] | undefined) ?? []);
     });
   });
 }
@@ -689,7 +732,7 @@ export async function markSynced(ids: string[]): Promise<void> {
   const tasks = await readTasks();
   const idSet = new Set(ids);
   const updated = tasks.map((t) =>
-    idSet.has(t.id) ? { ...t, synced: true } : t
+    idSet.has(t.id) ? { ...t, synced: true } : t,
   );
   await writeTasks(updated);
 }
@@ -704,8 +747,8 @@ export async function setSession(token: string): Promise<void> {
 /** Retrieve the stored Supabase session token, or null if absent. */
 export async function getSession(): Promise<string | null> {
   return new Promise((resolve) => {
-    chrome.storage.local.get(['session_token'], (result) => {
-      resolve((result['session_token'] as string | undefined) ?? null);
+    chrome.storage.local.get(["session_token"], (result) => {
+      resolve((result["session_token"] as string | undefined) ?? null);
     });
   });
 }
@@ -720,30 +763,30 @@ export async function getSession(): Promise<string | null> {
  */
 export async function handleMessage(
   message: ExtensionMessage,
-  sendResponse: (response: unknown) => void
+  sendResponse: (response: unknown) => void,
 ): Promise<void> {
   switch (message.type) {
-    case 'TASK_SAVE': {
+    case "TASK_SAVE": {
       await saveTask(message.task);
       sendResponse({ ok: true });
       break;
     }
-    case 'GET_UNSYNCED': {
+    case "GET_UNSYNCED": {
       const tasks = await getUnsyncedTasks();
       sendResponse(tasks);
       break;
     }
-    case 'MARK_SYNCED': {
+    case "MARK_SYNCED": {
       await markSynced(message.ids);
       sendResponse({ ok: true });
       break;
     }
-    case 'SET_SESSION': {
+    case "SET_SESSION": {
       await setSession(message.token);
       sendResponse({ ok: true });
       break;
     }
-    case 'GET_SESSION': {
+    case "GET_SESSION": {
       const token = await getSession();
       sendResponse(token);
       break;
@@ -766,7 +809,7 @@ chrome.runtime.onMessage.addListener(
   (message: ExtensionMessage, _sender, sendResponse) => {
     handleMessage(message, sendResponse);
     return true; // keep channel open for async response
-  }
+  },
 );
 
 /**
@@ -779,10 +822,15 @@ chrome.runtime.onMessage.addListener(
  * If a future manifest adds a named command (e.g. "toggle-overlay"), wire it:
  */
 chrome.commands.onCommand.addListener(async (command) => {
-  if (command === 'toggle-overlay') {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (command === "toggle-overlay") {
+    const [tab] = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
     if (tab?.id != null) {
-      chrome.tabs.sendMessage(tab.id, { type: 'OVERLAY_OPEN' } satisfies ExtensionMessage);
+      chrome.tabs.sendMessage(tab.id, {
+        type: "OVERLAY_OPEN",
+      } satisfies ExtensionMessage);
     }
   }
 });
@@ -793,20 +841,20 @@ chrome.commands.onCommand.addListener(async (command) => {
  */
 async function updateBadge(): Promise<void> {
   const unsynced = await getUnsyncedTasks();
-  const text = unsynced.length > 0 ? String(unsynced.length) : '';
+  const text = unsynced.length > 0 ? String(unsynced.length) : "";
   chrome.action.setBadgeText({ text });
-  chrome.action.setBadgeBackgroundColor({ color: '#5E6AD2' });
+  chrome.action.setBadgeBackgroundColor({ color: "#5E6AD2" });
 }
 
 // Patch handleMessage to also refresh the badge after mutations
 const _originalHandleMessage = handleMessage;
 chrome.runtime.onMessage.addListener(
   (message: ExtensionMessage, _sender, _sendResponse) => {
-    if (message.type === 'TASK_SAVE' || message.type === 'MARK_SYNCED') {
+    if (message.type === "TASK_SAVE" || message.type === "MARK_SYNCED") {
       // Fire-and-forget badge update after the main handler completes
       void _originalHandleMessage(message, () => {}).then(() => updateBadge());
     }
-  }
+  },
 );
 ```
 
@@ -843,76 +891,77 @@ git commit -m "feat(extension): implement background service worker with storage
 ## Task 6: Content script — double-Shift listener
 
 **Files created:**
+
 - `apps/extension/src/__tests__/doubleShift.test.ts`
 - `apps/extension/src/content/index.ts`
 
 We extract the double-Shift detection into a testable pure function before wiring it to the DOM.
 
-- [ ] **Step 1: Create src/__tests__/doubleShift.test.ts**
+- [ ] **Step 1: Create src/**tests**/doubleShift.test.ts**
 
 ```typescript
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { makeDoubleShiftDetector } from '../content/index';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { makeDoubleShiftDetector } from "../content/index";
 
-describe('makeDoubleShiftDetector', () => {
+describe("makeDoubleShiftDetector", () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
 
-  it('fires callback when two Shift presses occur within 300ms', () => {
+  it("fires callback when two Shift presses occur within 300ms", () => {
     const callback = vi.fn();
     const detect = makeDoubleShiftDetector(callback);
 
     const t0 = Date.now();
-    detect(t0);          // first press
-    detect(t0 + 200);    // second press within 300ms
+    detect(t0); // first press
+    detect(t0 + 200); // second press within 300ms
 
     expect(callback).toHaveBeenCalledTimes(1);
   });
 
-  it('does not fire when gap exceeds 300ms', () => {
+  it("does not fire when gap exceeds 300ms", () => {
     const callback = vi.fn();
     const detect = makeDoubleShiftDetector(callback);
 
     const t0 = Date.now();
     detect(t0);
-    detect(t0 + 350);    // too slow
+    detect(t0 + 350); // too slow
 
     expect(callback).not.toHaveBeenCalled();
   });
 
-  it('resets after firing so a third Shift does not immediately re-fire', () => {
+  it("resets after firing so a third Shift does not immediately re-fire", () => {
     const callback = vi.fn();
     const detect = makeDoubleShiftDetector(callback);
 
     const t0 = Date.now();
     detect(t0);
-    detect(t0 + 100);   // fires
-    detect(t0 + 150);   // should be treated as first press of a new sequence
+    detect(t0 + 100); // fires
+    detect(t0 + 150); // should be treated as first press of a new sequence
 
     expect(callback).toHaveBeenCalledTimes(1);
   });
 
-  it('fires again on the next valid double-press after a reset', () => {
+  it("fires again on the next valid double-press after a reset", () => {
     const callback = vi.fn();
     const detect = makeDoubleShiftDetector(callback);
 
     const t0 = Date.now();
     detect(t0);
-    detect(t0 + 100);    // first double-press fires
-    detect(t0 + 150);    // becomes first of new sequence
-    detect(t0 + 250);    // second press within 300ms of t0+150 → fires again
+    detect(t0 + 100); // first double-press fires
+    detect(t0 + 150); // becomes first of new sequence
+    detect(t0 + 250); // second press within 300ms of t0+150 → fires again
 
     expect(callback).toHaveBeenCalledTimes(2);
   });
 
-  it('boundary: exactly 300ms gap does not fire (strictly less than)', () => {
+  it("boundary: exactly 300ms gap does not fire (strictly less than)", () => {
     const callback = vi.fn();
     const detect = makeDoubleShiftDetector(callback);
 
     const t0 = Date.now();
     detect(t0);
-    detect(t0 + 300);   // exactly 300ms — should NOT fire
+    detect(t0 + 300); // exactly 300ms — should NOT fire
 
     expect(callback).not.toHaveBeenCalled();
   });
@@ -922,8 +971,8 @@ describe('makeDoubleShiftDetector', () => {
 - [ ] **Step 2: Create src/content/index.ts**
 
 ```typescript
-import { createShadowHost } from './shadow';
-import type { ExtensionMessage } from '../types/messages';
+import { createShadowHost } from "./shadow";
+import type { ExtensionMessage } from "../types/messages";
 
 // ─── Double-Shift detection ───────────────────────────────────────────────────
 
@@ -937,7 +986,7 @@ import type { ExtensionMessage } from '../types/messages';
  */
 export function makeDoubleShiftDetector(
   onDetected: () => void,
-  thresholdMs = 300
+  thresholdMs = 300,
 ): (now: number) => void {
   let lastShiftAt = 0;
 
@@ -963,9 +1012,9 @@ async function openOverlay(): Promise<void> {
 
   // Lazy-import React and the overlay component to avoid loading them until needed
   const [{ default: React }, { createRoot }, { Overlay }] = await Promise.all([
-    import('react'),
-    import('react-dom/client'),
-    import('./overlay'),
+    import("react"),
+    import("react-dom/client"),
+    import("./overlay"),
   ]);
 
   const { host, shadow } = createShadowHost();
@@ -975,7 +1024,7 @@ async function openOverlay(): Promise<void> {
     React.createElement(Overlay, {
       sourceUrl: document.location.href,
       onClose: closeOverlay,
-    })
+    }),
   );
 
   unmountOverlay = () => {
@@ -997,11 +1046,11 @@ const detectDoubleShift = makeDoubleShiftDetector(() => {
   void openOverlay();
 });
 
-document.addEventListener('keydown', (e: KeyboardEvent) => {
-  if (e.key === 'Shift') {
+document.addEventListener("keydown", (e: KeyboardEvent) => {
+  if (e.key === "Shift") {
     detectDoubleShift(Date.now());
   }
-  if (e.key === 'Escape' && overlayVisible) {
+  if (e.key === "Escape" && overlayVisible) {
     closeOverlay();
   }
 });
@@ -1009,10 +1058,10 @@ document.addEventListener('keydown', (e: KeyboardEvent) => {
 // Listen for OVERLAY_OPEN messages forwarded by the background service worker
 // (e.g. when triggered by the Alt+Shift+I command or from the popup)
 chrome.runtime.onMessage.addListener((message: ExtensionMessage) => {
-  if (message.type === 'OVERLAY_OPEN') {
+  if (message.type === "OVERLAY_OPEN") {
     void openOverlay();
   }
-  if (message.type === 'OVERLAY_CLOSE') {
+  if (message.type === "OVERLAY_CLOSE") {
     closeOverlay();
   }
 });
@@ -1038,6 +1087,7 @@ git commit -m "feat(extension): content script with double-shift detection and o
 ## Task 7: Shadow DOM setup
 
 **Files created:**
+
 - `apps/extension/src/content/shadow.ts`
 
 - [ ] **Step 1: Create src/content/shadow.ts**
@@ -1056,33 +1106,34 @@ git commit -m "feat(extension): content script with double-shift detection and o
  */
 export function createShadowHost(): { host: HTMLElement; shadow: ShadowRoot } {
   // Remove any pre-existing host (safety: prevents duplicates on rapid calls)
-  const existing = document.getElementById('speedy-capture-host');
+  const existing = document.getElementById("speedy-capture-host");
   if (existing) existing.remove();
 
-  const host = document.createElement('div');
-  host.id = 'speedy-capture-host';
-  host.style.cssText = [
-    'position: fixed',
-    'top: 0',
-    'left: 0',
-    'width: 100%',
-    'height: 100%',
-    'z-index: 2147483647',
-    'pointer-events: none',
-    // Prevent the host from being captured by page screenshot tools
-    'isolation: isolate',
-  ].join('; ') + ';';
+  const host = document.createElement("div");
+  host.id = "speedy-capture-host";
+  host.style.cssText =
+    [
+      "position: fixed",
+      "top: 0",
+      "left: 0",
+      "width: 100%",
+      "height: 100%",
+      "z-index: 2147483647",
+      "pointer-events: none",
+      // Prevent the host from being captured by page screenshot tools
+      "isolation: isolate",
+    ].join("; ") + ";";
 
   document.body.appendChild(host);
 
-  const shadow = host.attachShadow({ mode: 'open' });
+  const shadow = host.attachShadow({ mode: "open" });
 
   // Inject Inter font into the shadow root so it is available to the overlay
   // even on pages that don't load Inter themselves.
-  const fontLink = document.createElement('link');
-  fontLink.rel = 'stylesheet';
+  const fontLink = document.createElement("link");
+  fontLink.rel = "stylesheet";
   fontLink.href =
-    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap';
+    "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap";
   shadow.appendChild(fontLink);
 
   return { host, shadow };
@@ -1101,16 +1152,17 @@ git commit -m "feat(extension): Shadow DOM host factory for capture overlay"
 ## Task 8: Overlay React component
 
 **Files created:**
+
 - `apps/extension/src/content/overlay.tsx`
 
 - [ ] **Step 1: Create src/content/overlay.tsx**
 
 ```tsx
-import React, { useCallback, useEffect, useRef } from 'react';
-import { SmartInput } from '@sift/shared';
-import type { Task } from '@sift/shared';
-import { nanoid } from 'nanoid';
-import type { StoredTask, ExtensionMessage } from '../types/messages';
+import React, { useCallback, useEffect, useRef } from "react";
+import { SmartInput } from "@sift/shared";
+import type { Task } from "@sift/shared";
+import { nanoid } from "nanoid";
+import type { StoredTask, ExtensionMessage } from "../types/messages";
 
 interface OverlayProps {
   /** URL of the page where the overlay was triggered — attached as sourceUrl */
@@ -1127,19 +1179,22 @@ interface OverlayProps {
  *  - Backdrop: pointer-events:auto — clicking it closes the overlay
  *  - Inner bar: pointer-events:auto + stopPropagation — clicks don't leak to backdrop
  */
-export function Overlay({ sourceUrl, onClose }: OverlayProps): React.ReactElement {
+export function Overlay({
+  sourceUrl,
+  onClose,
+}: OverlayProps): React.ReactElement {
   const backdropRef = useRef<HTMLDivElement>(null);
 
   // Close on Escape key (belt-and-suspenders: content/index.ts also handles Escape,
   // but the overlay itself should be self-contained)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
     // Listen on the shadow root's document-equivalent is not possible;
     // window events bubble into shadow roots, so this works.
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
   /** Called by SmartInput when the user presses ⌘+Enter */
@@ -1147,9 +1202,11 @@ export function Overlay({ sourceUrl, onClose }: OverlayProps): React.ReactElemen
     async (partial: Partial<Task>) => {
       const task: StoredTask = {
         id: nanoid(),
-        title: partial.title ?? '',
+        title: partial.title ?? "",
         projectId: partial.projectId,
-        dueDate: partial.dueDate ? (partial.dueDate as Date).toISOString() : null,
+        dueDate: partial.dueDate
+          ? (partial.dueDate as Date).toISOString()
+          : null,
         workingDate: partial.workingDate
           ? (partial.workingDate as Date).toISOString()
           : null,
@@ -1158,12 +1215,12 @@ export function Overlay({ sourceUrl, onClose }: OverlayProps): React.ReactElemen
         synced: false,
       };
 
-      const msg: ExtensionMessage = { type: 'TASK_SAVE', task };
+      const msg: ExtensionMessage = { type: "TASK_SAVE", task };
       chrome.runtime.sendMessage(msg);
 
       onClose();
     },
-    [sourceUrl, onClose]
+    [sourceUrl, onClose],
   );
 
   return (
@@ -1172,40 +1229,40 @@ export function Overlay({ sourceUrl, onClose }: OverlayProps): React.ReactElemen
       data-testid="overlay-backdrop"
       onClick={onClose}
       style={{
-        position: 'fixed',
+        position: "fixed",
         inset: 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.6)',
-        backdropFilter: 'blur(4px)',
-        WebkitBackdropFilter: 'blur(4px)',
-        pointerEvents: 'auto',
-        fontFamily: 'Inter, system-ui, sans-serif',
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+        backdropFilter: "blur(4px)",
+        WebkitBackdropFilter: "blur(4px)",
+        pointerEvents: "auto",
+        fontFamily: "Inter, system-ui, sans-serif",
       }}
     >
       <div
         data-testid="overlay-panel"
         onClick={(e) => e.stopPropagation()}
         style={{
-          width: '100%',
-          maxWidth: '640px',
-          margin: '0 16px',
-          backgroundColor: '#0e0e0e',
-          border: '1px solid #1f1f1f',
-          borderRadius: '10px',
-          padding: '12px',
-          boxShadow: '0 24px 80px rgba(0,0,0,0.8)',
-          pointerEvents: 'auto',
+          width: "100%",
+          maxWidth: "640px",
+          margin: "0 16px",
+          backgroundColor: "#0e0e0e",
+          border: "1px solid #1f1f1f",
+          borderRadius: "10px",
+          padding: "12px",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.8)",
+          pointerEvents: "auto",
         }}
       >
         <SmartInput onTaskReady={handleTaskReady} autoFocus />
         <p
           style={{
-            margin: '8px 0 0',
-            fontSize: '11px',
-            color: '#666666',
-            textAlign: 'right',
+            margin: "8px 0 0",
+            fontSize: "11px",
+            color: "#666666",
+            textAlign: "right",
           }}
         >
           ⌘↵ to save · Esc to close
@@ -1228,21 +1285,22 @@ git commit -m "feat(extension): capture overlay React component with SmartInput 
 ## Task 9: Test overlay component
 
 **Files created:**
+
 - `apps/extension/src/__tests__/overlay.test.tsx`
 
-- [ ] **Step 1: Create src/__tests__/overlay.test.tsx**
+- [ ] **Step 1: Create src/**tests**/overlay.test.tsx**
 
 ```tsx
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
-import '@testing-library/jest-dom';
-import { Overlay } from '../content/overlay';
+import React from "react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { vi, describe, it, expect, beforeEach } from "vitest";
+import "@testing-library/jest-dom";
+import { Overlay } from "../content/overlay";
 
 // Mock @sift/shared's SmartInput with a minimal substitute.
 // We test Overlay's own responsibilities (save, close, backdrop click),
 // not SmartInput internals (those are tested in packages/shared).
-vi.mock('@sift/shared', () => ({
+vi.mock("@sift/shared", () => ({
   SmartInput: ({
     onTaskReady,
   }: {
@@ -1251,7 +1309,7 @@ vi.mock('@sift/shared', () => ({
   }) => (
     <button
       data-testid="smart-input-mock"
-      onClick={() => onTaskReady({ title: 'Test task' })}
+      onClick={() => onTaskReady({ title: "Test task" })}
     >
       Save task
     </button>
@@ -1259,90 +1317,95 @@ vi.mock('@sift/shared', () => ({
 }));
 
 // Mock nanoid to return deterministic IDs in tests
-vi.mock('nanoid', () => ({ nanoid: () => 'test-id-123' }));
+vi.mock("nanoid", () => ({ nanoid: () => "test-id-123" }));
 
-describe('Overlay', () => {
+describe("Overlay", () => {
   const defaultProps = {
-    sourceUrl: 'https://example.com/page',
+    sourceUrl: "https://example.com/page",
     onClose: vi.fn(),
   };
 
   beforeEach(() => {
     vi.clearAllMocks();
     // Reset the chrome.runtime.sendMessage mock provided by setup.ts
-    (chrome.runtime.sendMessage as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+    (chrome.runtime.sendMessage as ReturnType<typeof vi.fn>).mockResolvedValue(
+      undefined,
+    );
   });
 
-  it('renders the backdrop and panel', () => {
+  it("renders the backdrop and panel", () => {
     render(<Overlay {...defaultProps} />);
-    expect(screen.getByTestId('overlay-backdrop')).toBeInTheDocument();
-    expect(screen.getByTestId('overlay-panel')).toBeInTheDocument();
+    expect(screen.getByTestId("overlay-backdrop")).toBeInTheDocument();
+    expect(screen.getByTestId("overlay-panel")).toBeInTheDocument();
   });
 
-  it('calls onClose when backdrop is clicked', () => {
+  it("calls onClose when backdrop is clicked", () => {
     render(<Overlay {...defaultProps} />);
-    fireEvent.click(screen.getByTestId('overlay-backdrop'));
+    fireEvent.click(screen.getByTestId("overlay-backdrop"));
     expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('does NOT call onClose when the panel itself is clicked', () => {
+  it("does NOT call onClose when the panel itself is clicked", () => {
     render(<Overlay {...defaultProps} />);
-    fireEvent.click(screen.getByTestId('overlay-panel'));
+    fireEvent.click(screen.getByTestId("overlay-panel"));
     expect(defaultProps.onClose).not.toHaveBeenCalled();
   });
 
-  it('calls onClose when Escape is pressed', () => {
+  it("calls onClose when Escape is pressed", () => {
     render(<Overlay {...defaultProps} />);
-    fireEvent.keyDown(window, { key: 'Escape' });
+    fireEvent.keyDown(window, { key: "Escape" });
     expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('sends TASK_SAVE message and calls onClose when SmartInput fires onTaskReady', async () => {
+  it("sends TASK_SAVE message and calls onClose when SmartInput fires onTaskReady", async () => {
     render(<Overlay {...defaultProps} />);
 
-    fireEvent.click(screen.getByTestId('smart-input-mock'));
+    fireEvent.click(screen.getByTestId("smart-input-mock"));
 
     await waitFor(() => {
       expect(chrome.runtime.sendMessage).toHaveBeenCalledWith(
         expect.objectContaining({
-          type: 'TASK_SAVE',
+          type: "TASK_SAVE",
           task: expect.objectContaining({
-            id: 'test-id-123',
-            title: 'Test task',
-            sourceUrl: 'https://example.com/page',
+            id: "test-id-123",
+            title: "Test task",
+            sourceUrl: "https://example.com/page",
             synced: false,
           }),
-        })
+        }),
       );
     });
 
     expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('includes sourceUrl from props in the saved task', async () => {
-    render(<Overlay sourceUrl="https://news.ycombinator.com" onClose={vi.fn()} />);
+  it("includes sourceUrl from props in the saved task", async () => {
+    render(
+      <Overlay sourceUrl="https://news.ycombinator.com" onClose={vi.fn()} />,
+    );
 
-    fireEvent.click(screen.getByTestId('smart-input-mock'));
+    fireEvent.click(screen.getByTestId("smart-input-mock"));
 
     await waitFor(() => {
       expect(chrome.runtime.sendMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           task: expect.objectContaining({
-            sourceUrl: 'https://news.ycombinator.com',
+            sourceUrl: "https://news.ycombinator.com",
           }),
-        })
+        }),
       );
     });
   });
 
-  it('sets capturedAt to a valid ISO string', async () => {
+  it("sets capturedAt to a valid ISO string", async () => {
     const before = new Date().toISOString();
     render(<Overlay {...defaultProps} />);
 
-    fireEvent.click(screen.getByTestId('smart-input-mock'));
+    fireEvent.click(screen.getByTestId("smart-input-mock"));
 
     await waitFor(() => {
-      const call = (chrome.runtime.sendMessage as ReturnType<typeof vi.fn>).mock.calls[0][0];
+      const call = (chrome.runtime.sendMessage as ReturnType<typeof vi.fn>).mock
+        .calls[0][0];
       const after = new Date().toISOString();
       expect(call.task.capturedAt >= before).toBe(true);
       expect(call.task.capturedAt <= after).toBe(true);
@@ -1386,6 +1449,7 @@ git commit -m "test(extension): overlay component tests — backdrop, close, sav
 ## Task 10: Popup
 
 **Files created:**
+
 - `apps/extension/src/popup/index.html`
 - `apps/extension/src/popup/main.tsx`
 - `apps/extension/src/popup/Popup.tsx`
@@ -1399,16 +1463,17 @@ git commit -m "test(extension): overlay component tests — backdrop, close, sav
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Speedy Tasks</title>
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
     />
     <style>
-      * { box-sizing: border-box; margin: 0; padding: 0; }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
       body {
         width: 280px;
         background: #080808;
@@ -1428,12 +1493,12 @@ git commit -m "test(extension): overlay component tests — backdrop, close, sav
 - [ ] **Step 2: Create src/popup/main.tsx**
 
 ```tsx
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { Popup } from './Popup';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { Popup } from "./Popup";
 
-const root = document.getElementById('root');
-if (!root) throw new Error('No #root element found in popup HTML');
+const root = document.getElementById("root");
+if (!root) throw new Error("No #root element found in popup HTML");
 
 createRoot(root).render(<Popup />);
 ```
@@ -1441,8 +1506,8 @@ createRoot(root).render(<Popup />);
 - [ ] **Step 3: Create src/popup/Popup.tsx**
 
 ```tsx
-import React, { useEffect, useState } from 'react';
-import type { ExtensionMessage, StoredTask } from '../types/messages';
+import React, { useEffect, useState } from "react";
+import type { ExtensionMessage, StoredTask } from "../types/messages";
 
 /**
  * The Vercel deployment URL for the Speedy web app.
@@ -1450,15 +1515,16 @@ import type { ExtensionMessage, StoredTask } from '../types/messages';
  * Falls back to localhost for development.
  */
 const WEB_APP_URL: string =
-  (typeof import.meta.env !== 'undefined' && import.meta.env['VITE_WEB_APP_URL'] as string) ||
-  'http://localhost:5173';
+  (typeof import.meta.env !== "undefined" &&
+    (import.meta.env["VITE_WEB_APP_URL"] as string)) ||
+  "http://localhost:5173";
 
 export function Popup(): React.ReactElement {
   const [unsyncedCount, setUnsyncedCount] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const msg: ExtensionMessage = { type: 'GET_UNSYNCED' };
+    const msg: ExtensionMessage = { type: "GET_UNSYNCED" };
     chrome.runtime.sendMessage(msg, (tasks: StoredTask[]) => {
       setUnsyncedCount(Array.isArray(tasks) ? tasks.length : 0);
       setIsLoading(false);
@@ -1473,7 +1539,7 @@ export function Popup(): React.ReactElement {
   const openOverlay = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
       if (tab?.id != null) {
-        const msg: ExtensionMessage = { type: 'OVERLAY_OPEN' };
+        const msg: ExtensionMessage = { type: "OVERLAY_OPEN" };
         chrome.tabs.sendMessage(tab.id, msg);
       }
     });
@@ -1483,22 +1549,22 @@ export function Popup(): React.ReactElement {
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0',
+        display: "flex",
+        flexDirection: "column",
+        gap: "0",
       }}
     >
       {/* Header */}
       <div
         style={{
-          padding: '16px',
-          borderBottom: '1px solid #1f1f1f',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
+          padding: "16px",
+          borderBottom: "1px solid #1f1f1f",
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
         }}
       >
-        <span style={{ fontSize: '16px', fontWeight: 600, color: '#e2e2e2' }}>
+        <span style={{ fontSize: "16px", fontWeight: 600, color: "#e2e2e2" }}>
           Speedy Tasks
         </span>
       </div>
@@ -1506,29 +1572,33 @@ export function Popup(): React.ReactElement {
       {/* Unsynced count */}
       <div
         style={{
-          padding: '16px',
-          borderBottom: '1px solid #1f1f1f',
+          padding: "16px",
+          borderBottom: "1px solid #1f1f1f",
         }}
       >
-        <p style={{ color: '#666666', fontSize: '12px', marginBottom: '4px' }}>
+        <p style={{ color: "#666666", fontSize: "12px", marginBottom: "4px" }}>
           Captured, not yet synced
         </p>
         <p
           style={{
-            fontSize: '28px',
+            fontSize: "28px",
             fontWeight: 600,
-            color: isLoading ? '#666666' : unsyncedCount === 0 ? '#4ade80' : '#e2e2e2',
+            color: isLoading
+              ? "#666666"
+              : unsyncedCount === 0
+                ? "#4ade80"
+                : "#e2e2e2",
           }}
         >
-          {isLoading ? '…' : unsyncedCount}
+          {isLoading ? "…" : unsyncedCount}
         </p>
         {!isLoading && unsyncedCount === 0 && (
-          <p style={{ fontSize: '12px', color: '#4ade80', marginTop: '2px' }}>
+          <p style={{ fontSize: "12px", color: "#4ade80", marginTop: "2px" }}>
             All synced
           </p>
         )}
         {!isLoading && unsyncedCount !== null && unsyncedCount > 0 && (
-          <p style={{ fontSize: '12px', color: '#666666', marginTop: '2px' }}>
+          <p style={{ fontSize: "12px", color: "#666666", marginTop: "2px" }}>
             Open Speedy to sync
           </p>
         )}
@@ -1537,25 +1607,25 @@ export function Popup(): React.ReactElement {
       {/* Actions */}
       <div
         style={{
-          padding: '12px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px',
+          padding: "12px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px",
         }}
       >
         <button
           onClick={openWebApp}
           style={{
-            width: '100%',
-            padding: '9px 12px',
-            backgroundColor: '#5E6AD2',
-            color: '#ffffff',
-            border: 'none',
-            borderRadius: '6px',
-            fontSize: '13px',
+            width: "100%",
+            padding: "9px 12px",
+            backgroundColor: "#5E6AD2",
+            color: "#ffffff",
+            border: "none",
+            borderRadius: "6px",
+            fontSize: "13px",
             fontWeight: 500,
-            cursor: 'pointer',
-            fontFamily: 'inherit',
+            cursor: "pointer",
+            fontFamily: "inherit",
           }}
         >
           Open Speedy
@@ -1563,16 +1633,16 @@ export function Popup(): React.ReactElement {
         <button
           onClick={openOverlay}
           style={{
-            width: '100%',
-            padding: '9px 12px',
-            backgroundColor: 'transparent',
-            color: '#e2e2e2',
-            border: '1px solid #1f1f1f',
-            borderRadius: '6px',
-            fontSize: '13px',
+            width: "100%",
+            padding: "9px 12px",
+            backgroundColor: "transparent",
+            color: "#e2e2e2",
+            border: "1px solid #1f1f1f",
+            borderRadius: "6px",
+            fontSize: "13px",
             fontWeight: 500,
-            cursor: 'pointer',
-            fontFamily: 'inherit',
+            cursor: "pointer",
+            fontFamily: "inherit",
           }}
         >
           Capture task (Alt+Shift+I)
@@ -1676,18 +1746,18 @@ git commit -m "feat(extension): complete build verification — 25 tests passing
 
 ### What was built
 
-| Deliverable | Status |
-|-------------|--------|
-| `apps/extension` package scaffolded (Vite + CRXJS + React + TypeScript) | Done |
-| MV3 manifest with Alt+Shift+I command, content scripts, popup, service worker | Done |
-| `ExtensionMessage` discriminated union + `StoredTask` interface | Done |
-| Background service worker: `saveTask`, `getUnsyncedTasks`, `markSynced`, `setSession`, `getSession`, message router, badge updater | Done |
-| Content script: `makeDoubleShiftDetector` pure function + overlay lifecycle | Done |
-| Shadow DOM host factory (`createShadowHost`) | Done |
-| Capture overlay React component using `SmartInput` from `@sift/shared` | Done |
-| Extension popup: unsynced count, "Open Speedy" button, "Capture task" button | Done |
-| 25 passing unit tests (TDD for background, overlay, double-shift) | Done |
-| Production build producing a `.zip` ready for Chrome Web Store submission | Done |
+| Deliverable                                                                                                                        | Status |
+| ---------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| `apps/extension` package scaffolded (Vite + CRXJS + React + TypeScript)                                                            | Done   |
+| MV3 manifest with Alt+Shift+I command, content scripts, popup, service worker                                                      | Done   |
+| `ExtensionMessage` discriminated union + `StoredTask` interface                                                                    | Done   |
+| Background service worker: `saveTask`, `getUnsyncedTasks`, `markSynced`, `setSession`, `getSession`, message router, badge updater | Done   |
+| Content script: `makeDoubleShiftDetector` pure function + overlay lifecycle                                                        | Done   |
+| Shadow DOM host factory (`createShadowHost`)                                                                                       | Done   |
+| Capture overlay React component using `SmartInput` from `@sift/shared`                                                             | Done   |
+| Extension popup: unsynced count, "Open Speedy" button, "Capture task" button                                                       | Done   |
+| 25 passing unit tests (TDD for background, overlay, double-shift)                                                                  | Done   |
+| Production build producing a `.zip` ready for Chrome Web Store submission                                                          | Done   |
 
 ### Message bridge — what's handled here vs. Plan 2
 
