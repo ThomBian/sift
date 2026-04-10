@@ -122,3 +122,17 @@ export function useTasks(view: 'inbox' | 'today'): Task[] {
   const today = useTodayTasks();
   return view === 'inbox' ? inbox : today;
 }
+
+export function useTaskCounts() {
+  return useLiveQuery(async () => {
+    const tasks = await db.tasks.where('status').notEqual('done').toArray();
+    const counts: Record<string, number> = {};
+    for (const t of tasks) {
+      const d = t.dueDate || t.workingDate;
+      if (!d) continue;
+      const key = d.toISOString().split('T')[0];
+      counts[key] = (counts[key] || 0) + 1;
+    }
+    return counts;
+  }, []) ?? {};
+}
