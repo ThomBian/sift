@@ -28,3 +28,35 @@ export function parseLooseDateQuery(query: string, reference: Date = new Date())
 
   return d;
 }
+
+const WEEKDAYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+/**
+ * Smart prefix parsing for dates. Supports "toda", "tomor", "mon", etc.
+ * Falls back to `parseLooseDateQuery` for other formats.
+ */
+export function matchBestDate(query: string, reference: Date = new Date()): Date | null {
+  const q = query.toLowerCase().trim();
+  if (!q) return null;
+
+  const d = new Date(reference);
+  d.setHours(0, 0, 0, 0);
+
+  if ('today'.startsWith(q)) return d;
+  if ('tomorrow'.startsWith(q)) {
+    d.setDate(d.getDate() + 1);
+    return d;
+  }
+
+  for (let i = 0; i < 7; i++) {
+    const dayName = WEEKDAYS[i];
+    if (dayName.startsWith(q)) {
+      const today = reference.getDay();
+      const diff = (i - today + 7) % 7 || 7;
+      d.setDate(d.getDate() + diff);
+      return d;
+    }
+  }
+
+  return parseLooseDateQuery(query, reference);
+}
