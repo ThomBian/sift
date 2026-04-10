@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 
 const EXIT_MS = 120;
 
@@ -7,11 +13,11 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
     'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
   const fromDesc = Array.from(container.querySelectorAll<HTMLElement>(sel));
   const out: HTMLElement[] = [];
-  if (container.tabIndex >= 0 && !container.matches(':disabled')) {
+  if (container.tabIndex >= 0 && !container.matches(":disabled")) {
     out.push(container);
   }
   for (const el of fromDesc) {
-    if (el !== container && !el.hasAttribute('disabled')) out.push(el);
+    if (el !== container && !el.hasAttribute("disabled")) out.push(el);
   }
   return out;
 }
@@ -22,7 +28,11 @@ export interface ConfirmModalProps {
   onCancel: () => void;
 }
 
-export default function ConfirmModal({ message, onConfirm, onCancel }: ConfirmModalProps) {
+export default function ConfirmModal({
+  message,
+  onConfirm,
+  onCancel,
+}: ConfirmModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const confirmButtonRef = useRef<HTMLButtonElement>(null);
   const exitTimeoutRef = useRef<number | null>(null);
@@ -63,13 +73,13 @@ export default function ConfirmModal({ message, onConfirm, onCancel }: ConfirmMo
     function onKeyDown(e: KeyboardEvent) {
       if (exitingRef.current) return;
 
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         e.preventDefault();
         runExit(onCancel);
         return;
       }
 
-      if (e.key !== 'Tab') return;
+      if (e.key !== "Tab") return;
       const panel = panelRef.current;
       if (!panel) return;
 
@@ -99,8 +109,8 @@ export default function ConfirmModal({ message, onConfirm, onCancel }: ConfirmMo
       }
     }
 
-    window.addEventListener('keydown', onKeyDown, true);
-    return () => window.removeEventListener('keydown', onKeyDown, true);
+    window.addEventListener("keydown", onKeyDown, true);
+    return () => window.removeEventListener("keydown", onKeyDown, true);
   }, [onConfirm, onCancel, runExit]);
 
   useEffect(() => {
@@ -114,14 +124,14 @@ export default function ConfirmModal({ message, onConfirm, onCancel }: ConfirmMo
       }
     }
 
-    document.addEventListener('focusin', onFocusIn);
-    return () => document.removeEventListener('focusin', onFocusIn);
+    document.addEventListener("focusin", onFocusIn);
+    return () => document.removeEventListener("focusin", onFocusIn);
   }, []);
 
   return (
     <div
       className={`fixed inset-0 z-50 flex items-center justify-center bg-text/20 transition-opacity duration-150 ${
-        backdropOpaque ? 'opacity-100' : 'opacity-0'
+        backdropOpaque ? "opacity-100" : "opacity-0"
       }`}
     >
       <div
@@ -131,11 +141,14 @@ export default function ConfirmModal({ message, onConfirm, onCancel }: ConfirmMo
         aria-labelledby="confirm-modal-message"
         aria-describedby="confirm-modal-hint"
         className={`w-[320px] max-w-[calc(100vw-2rem)] border-[0.5px] border-border bg-bg/95 shadow-panel backdrop-blur-panel outline-none floating-panel ${
-          isExiting ? 'animate-modal-out' : 'animate-modal-in'
+          isExiting ? "animate-modal-out" : "animate-modal-in"
         }`}
       >
         <div className="px-4 pt-4 pb-3">
-          <div id="confirm-modal-message" className="font-sans text-[13.5px] font-medium tracking-[-0.02em] text-text break-words">
+          <div
+            id="confirm-modal-message"
+            className="font-sans text-[13.5px] font-medium tracking-[-0.02em] text-text break-words"
+          >
             {message}
           </div>
         </div>
@@ -156,8 +169,12 @@ export default function ConfirmModal({ message, onConfirm, onCancel }: ConfirmMo
             Confirm
           </button>
         </div>
-        <p id="confirm-modal-hint" className="px-4 pb-3 font-mono text-[10px] text-muted">
-          <span className="text-accent">↵</span> on Confirm · <span className="text-muted">esc</span> cancel
+        <p
+          id="confirm-modal-hint"
+          className="px-4 pb-3 font-mono text-[10px] text-muted"
+        >
+          <span className="text-accent">↵</span> on Confirm ·{" "}
+          <span className="text-muted">esc</span> cancel
         </p>
       </div>
     </div>

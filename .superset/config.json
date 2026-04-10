@@ -1,7 +1,5 @@
 {
-  "setup": [
-    "npm ci"
-  ],
+  "setup": ["npm ci"],
   "teardown": [],
   "run": []
 }

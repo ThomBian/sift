@@ -13,6 +13,7 @@
 ### Task 1: Update `SmartInput` to accept `taskCounts`
 
 **Files:**
+
 - Modify: `packages/shared/src/SmartInput/SmartInput.tsx`
 
 - [ ] **Step 1: Update `SmartInputProps` interface**
@@ -20,17 +21,21 @@
 ```typescript
 interface SmartInputProps {
   projects: ProjectWithSpace[];
-  onTaskReady: (task: Pick<Task, 'title' | 'dueDate' | 'workingDate' | 'url'> & { projectId?: string }) => void;
+  onTaskReady: (
+    task: Pick<Task, "title" | "dueDate" | "workingDate" | "url"> & {
+      projectId?: string;
+    },
+  ) => void;
   placeholder?: string;
   className?: string;
   /** Optional external ref to the underlying <input> for programmatic focus from the parent. */
   inputRef?: React.RefObject<HTMLInputElement | null>;
   /** Pre-fill the input with existing values (edit mode). */
-  initialValues?: Partial<import('./useSmartInput').SmartInputValues>;
+  initialValues?: Partial<import("./useSmartInput").SmartInputValues>;
   /** Auto-open this chip's dropdown on mount (edit mode). */
-  initialFocus?: import('./useSmartInput').ChipFocus;
+  initialFocus?: import("./useSmartInput").ChipFocus;
   /** Whether the chip dropdown floats absolutely or expands inline below the bar. Default: 'floating'. */
-  dropdownPosition?: 'floating' | 'inline';
+  dropdownPosition?: "floating" | "inline";
   /** Task counts per day for the calendar. */
   taskCounts?: Record<string, number>;
 }
@@ -55,6 +60,7 @@ git commit -m "feat(shared): add taskCounts prop to SmartInput"
 ### Task 2: Wire up `taskCounts` in Web App Components
 
 **Files:**
+
 - Modify: `apps/web/src/components/InputBar.tsx`
 - Modify: `apps/web/src/components/CommandPalette.tsx`
 - Modify: `apps/web/src/components/ProjectEditPalette.tsx`

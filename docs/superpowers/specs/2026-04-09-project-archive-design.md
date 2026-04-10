@@ -25,10 +25,12 @@ projects: 'id, spaceId, dueDate, archived, updatedAt, synced'
 ### Helper functions — `packages/shared/src/db.ts`
 
 **`archiveProject(projectId: string)`**
+
 1. Set `project.archived = true`, `updatedAt = now`, `synced = false`
 2. Set all project tasks → `status = 'archived'`, `updatedAt = now`, `synced = false`
 
 **`unarchiveProject(projectId: string)`**
+
 1. Set `project.archived = false`, `updatedAt = now`, `synced = false`
 2. Restore each task: `status = task.workingDate ? 'todo' : 'inbox'`, `updatedAt = now`, `synced = false`
    (Same pattern as task un-done in ProjectsView.)
@@ -44,6 +46,7 @@ The `projects` table needs an `archived boolean default false` column for sync r
 **`apps/web/src/components/ConfirmModal.tsx`** — reusable confirmation overlay for destructive actions.
 
 Props:
+
 ```ts
 interface ConfirmModalProps {
   message: string;
@@ -55,6 +58,7 @@ interface ConfirmModalProps {
 ### Visual design
 
 Matches the existing palette family exactly:
+
 - `backdrop-filter: blur(12px)` on the modal panel
 - Full-screen semi-transparent backdrop: `bg-black/20` behind the panel to dim surroundings
 - Sharp edges, zero border-radius, `border-[0.5px] border-border`
@@ -66,6 +70,7 @@ Matches the existing palette family exactly:
 ### Animations
 
 Add to `tailwind.config.ts`:
+
 ```js
 'modal-in':  'modal-in 150ms cubic-bezier(0.34, 1.56, 0.64, 1) both',
 'modal-out': 'modal-out 120ms ease-in forwards',
@@ -95,6 +100,7 @@ keyframes: {
 ### Project row exit animation
 
 When a project is archived and confirmed:
+
 - Add the project ID to an `exitingProjectIds` Set (same pattern as `exitingIds` for tasks)
 - Apply `animate-task-exit` to the row immediately — slides right + fades out (250ms)
 - After 250ms, call `archiveProject(id)` to write to DB (row is now gone from DOM via Dexie reactivity)
@@ -103,6 +109,7 @@ When a project is archived and confirmed:
 ### `A` key in ProjectsView
 
 When a project is focused:
+
 - Active project → opens `ConfirmModal` with message `Archive "Project Name"? Tasks will be archived too.`
   - `Enter` → plays project row exit animation (250ms) → `archiveProject(id)`, modal closes, focus advances
   - `Esc` → plays modal-out → modal closes, nothing changes
@@ -115,10 +122,12 @@ No dedicated keyboard shortcut for the show/hide toggle.
 A focusable element rendered at the bottom of the scrollable project list, below all space groups. Label: `Show archived (N)` where `N` is the count of archived projects across all spaces. Hidden when `N === 0`.
 
 **Keyboard:**
+
 - Arrow navigation flows naturally into it after the last project row.
 - `Space` toggles `showArchived` state on/off.
 
 **Display when `showArchived = true`:**
+
 - Archived projects appear at the bottom of their respective space group, below active projects.
 - Rendered at `opacity-40`, dimmed name, no focus accent glow.
 - Animate in with `animate-task-enter` (reuse existing keyframe) staggered at 25ms per item — same pattern as task rows.
@@ -130,6 +139,7 @@ When keyboard-focused (arrow nav lands on it), show the laser focus treatment: `
 ### HintBar
 
 `project` focus state gains an `A` hint:
+
 - Focused project is active → `A archive`
 - Focused project is archived → `A unarchive`
 

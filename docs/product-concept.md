@@ -6,7 +6,7 @@
 
 - **Zero Inbox:** The "Inbox" is a temporary triage station. Tasks are moved to "Today" or "Projects."
 - **Keyboard-Native:** 100% operable without a mouse. Inspired by Linear’s speed and density.
-- **Universal Capture:** Capture tasks from *anywhere* in the browser via a Chromium Extension.
+- **Universal Capture:** Capture tasks from _anywhere_ in the browser via a Chromium Extension.
 - **Local-First:** Sub-50ms latency using IndexedDB. No loading spinners or cloud-sync lag.
 
 ---
@@ -26,13 +26,13 @@
 interface Task {
   id: string;
   title: string;
-  project: string;         // Default: "General"
-  status: 'inbox' | 'todo' | 'done' | 'archived';
+  project: string; // Default: "General"
+  status: "inbox" | "todo" | "done" | "archived";
   workingDate: Date | null; // The "Planned" date (for Today view)
-  dueDate: Date | null;    // The "Deadline" date (for Late alerts)
+  dueDate: Date | null; // The "Deadline" date (for Late alerts)
   createdAt: Date;
   completedAt: Date | null;
-  sourceUrl?: string;      // The URL of the tab where the task was captured
+  sourceUrl?: string; // The URL of the tab where the task was captured
 }
 ```
 
@@ -69,7 +69,6 @@ Both the Web App and the Extension must use a shared "Smart Input" component.
 
 ## 5. Keyboard Shortcut Map
 
-
 | Key                        | Context      | Action                         |
 | -------------------------- | ------------ | ------------------------------ |
 | `Alt/Cmd + I` / `Shift x2` | Anywhere     | Open Universal Capture Overlay |
@@ -80,7 +79,6 @@ Both the Web App and the Extension must use a shared "Smart Input" component.
 | `Enter`                    | Task Focused | Toggle Done / Confirm Input    |
 | `Backspace`                | Task Focused | Delete/Archive Task            |
 | `Esc`                      | Any Modal    | Close / Cancel                 |
-
 
 ---
 
@@ -104,4 +102,3 @@ The monorepo implements the same product with a **normalized** data model in `@s
 2. **Shared Components:** Ensure the "Smart Input" logic is reusable between the extension (content script) and the main React app.
 3. **Conflict Prevention:** In the extension, use a **Shadow DOM** for the capture overlay to ensure the host website's CSS does not break the task bar's styling.
 4. **Local First:** Ensure Dexie.js is correctly configured for IndexedDB persistence.
-

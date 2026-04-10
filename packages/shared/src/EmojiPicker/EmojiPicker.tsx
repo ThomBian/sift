@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
-import { EMOJI_POOL, searchEmojis } from '../emojiPool';
+import { useState, useEffect, useRef, useMemo } from "react";
+import { EMOJI_POOL, searchEmojis } from "../emojiPool";
 import {
   globalToSectionLocal,
   sectionLocalToGlobal,
@@ -7,8 +7,8 @@ import {
   moveUp,
   moveLeft,
   moveRight,
-} from './gridNav';
-import styles from './EmojiPicker.module.css';
+} from "./gridNav";
+import styles from "./EmojiPicker.module.css";
 
 interface EmojiPickerProps {
   query: string;
@@ -22,7 +22,8 @@ export function EmojiPicker({ query, onSelect }: EmojiPickerProps) {
     if (query.trim()) {
       const matched = searchEmojis(query);
       return {
-        sections: matched.length > 0 ? [{ category: 'Results', emojis: matched }] : [],
+        sections:
+          matched.length > 0 ? [{ category: "Results", emojis: matched }] : [],
         flatEmojis: matched,
       };
     }
@@ -38,13 +39,21 @@ export function EmojiPicker({ query, onSelect }: EmojiPickerProps) {
   }, [query]);
 
   const flatEmojisRef = useRef(flatEmojis);
-  useEffect(() => { flatEmojisRef.current = flatEmojis; }, [flatEmojis]);
+  useEffect(() => {
+    flatEmojisRef.current = flatEmojis;
+  }, [flatEmojis]);
   const sectionsRef = useRef(sections);
-  useEffect(() => { sectionsRef.current = sections; }, [sections]);
+  useEffect(() => {
+    sectionsRef.current = sections;
+  }, [sections]);
   const focusedIndexRef = useRef(focusedIndex);
-  useEffect(() => { focusedIndexRef.current = focusedIndex; }, [focusedIndex]);
+  useEffect(() => {
+    focusedIndexRef.current = focusedIndex;
+  }, [focusedIndex]);
   const onSelectRef = useRef(onSelect);
-  useEffect(() => { onSelectRef.current = onSelect; }, [onSelect]);
+  useEffect(() => {
+    onSelectRef.current = onSelect;
+  }, [onSelect]);
 
   const pickerRef = useRef<HTMLDivElement>(null);
 
@@ -52,8 +61,10 @@ export function EmojiPicker({ query, onSelect }: EmojiPickerProps) {
     if (focusedIndex < 0) return;
     const root = pickerRef.current;
     if (!root) return;
-    const el = root.querySelector<HTMLElement>(`[data-emoji-index="${focusedIndex}"]`);
-    el?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
+    const el = root.querySelector<HTMLElement>(
+      `[data-emoji-index="${focusedIndex}"]`,
+    );
+    el?.scrollIntoView?.({ block: "nearest", inline: "nearest" });
   }, [focusedIndex]);
 
   // Capture-phase keyboard listener (same pattern as Dropdown in SmartInput)
@@ -65,7 +76,7 @@ export function EmojiPicker({ query, onSelect }: EmojiPickerProps) {
       const secs = sectionsRef.current;
       if (secs.length === 0) return;
 
-      if (e.key === 'ArrowRight') {
+      if (e.key === "ArrowRight") {
         e.stopImmediatePropagation();
         e.preventDefault();
         setFocusedIndex((i) => {
@@ -75,7 +86,7 @@ export function EmojiPicker({ query, onSelect }: EmojiPickerProps) {
           const n = moveRight(secs, pos.si, pos.local);
           return sectionLocalToGlobal(secs, n.si, n.local);
         });
-      } else if (e.key === 'ArrowLeft') {
+      } else if (e.key === "ArrowLeft") {
         e.stopImmediatePropagation();
         e.preventDefault();
         setFocusedIndex((i) => {
@@ -85,7 +96,7 @@ export function EmojiPicker({ query, onSelect }: EmojiPickerProps) {
           const n = moveLeft(secs, pos.si, pos.local);
           return sectionLocalToGlobal(secs, n.si, n.local);
         });
-      } else if (e.key === 'ArrowDown') {
+      } else if (e.key === "ArrowDown") {
         e.stopImmediatePropagation();
         e.preventDefault();
         setFocusedIndex((i) => {
@@ -95,7 +106,7 @@ export function EmojiPicker({ query, onSelect }: EmojiPickerProps) {
           const n = moveDown(secs, pos.si, pos.local);
           return sectionLocalToGlobal(secs, n.si, n.local);
         });
-      } else if (e.key === 'ArrowUp') {
+      } else if (e.key === "ArrowUp") {
         e.stopImmediatePropagation();
         e.preventDefault();
         setFocusedIndex((i) => {
@@ -105,7 +116,7 @@ export function EmojiPicker({ query, onSelect }: EmojiPickerProps) {
           const n = moveUp(secs, pos.si, pos.local);
           return sectionLocalToGlobal(secs, n.si, n.local);
         });
-      } else if (e.key === 'Enter' && !e.metaKey && !e.ctrlKey) {
+      } else if (e.key === "Enter" && !e.metaKey && !e.ctrlKey) {
         e.stopImmediatePropagation();
         e.preventDefault();
         const idx = focusedIndexRef.current >= 0 ? focusedIndexRef.current : 0;
@@ -113,8 +124,8 @@ export function EmojiPicker({ query, onSelect }: EmojiPickerProps) {
         if (emoji) onSelectRef.current(emoji);
       }
     }
-    window.addEventListener('keydown', onKey, true);
-    return () => window.removeEventListener('keydown', onKey, true);
+    window.addEventListener("keydown", onKey, true);
+    return () => window.removeEventListener("keydown", onKey, true);
   }, []);
 
   if (flatEmojis.length === 0) {
@@ -140,7 +151,7 @@ export function EmojiPicker({ query, onSelect }: EmojiPickerProps) {
                   key={`${section.category}-${emoji}`}
                   type="button"
                   data-emoji-index={idx}
-                  className={`${styles.cell} ${idx === focusedIndex ? styles.cellFocused : ''}`}
+                  className={`${styles.cell} ${idx === focusedIndex ? styles.cellFocused : ""}`}
                   onClick={() => onSelect(emoji)}
                 >
                   {emoji}

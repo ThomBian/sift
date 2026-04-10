@@ -55,6 +55,7 @@ Space (id, name, color)
 ```
 
 `status`: `'inbox' | 'todo' | 'done' | 'archived'`
+
 - Inbox view: tasks where `workingDate === null` and status not done/archived
 - Today view: tasks where `workingDate <= today` and status not done/archived
 
@@ -65,6 +66,7 @@ Every record has `synced: boolean`. All writes hit IndexedDB immediately; `synce
 **IndexedDB (Dexie) is the source of truth.** All writes are optimistic — UI updates before any network call.
 
 `SyncService`:
+
 1. Pushes `synced: false` records to Supabase via upsert (projects include `emoji`)
 2. Pulls records with `updated_at > speedy_last_synced_at` (stored in `localStorage`)
 3. Conflict resolution: last-write-wins on `updatedAt`
@@ -92,16 +94,17 @@ Each view registers its own `window.keydown` listener that skips events when `e.
 ## Environment
 
 Create `apps/web/.env` from `.env.example`:
+
 ```
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key-here
 ```
+
 Vitest injects stub values automatically via `vite.config.ts`.
 
 ## Testing
 
 Vitest + Testing Library + jsdom + `fake-indexeddb`. Each package has `src/__tests__/setup.ts` which configures `fake-indexeddb` so Dexie runs in Node. Clear db tables in `beforeEach` when tests write to the db.
-
 
 # Design rules
 

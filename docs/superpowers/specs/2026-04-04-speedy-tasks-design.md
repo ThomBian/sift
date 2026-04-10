@@ -1,5 +1,6 @@
 # Speedy Tasks — Design Spec
-*Date: 2026-04-04*
+
+_Date: 2026-04-04_
 
 ## Overview
 
@@ -31,41 +32,42 @@ speedy-tasks/
 
 ```typescript
 interface Space {
-  id: string;       // nanoid
-  name: string;     // e.g. "Work", "Personal"
-  color: string;    // hex — used as dot color throughout the UI
+  id: string; // nanoid
+  name: string; // e.g. "Work", "Personal"
+  color: string; // hex — used as dot color throughout the UI
   createdAt: Date;
   updatedAt: Date;
   synced: boolean;
 }
 
 interface Project {
-  id: string;       // nanoid
+  id: string; // nanoid
   name: string;
-  spaceId: string;  // every project belongs to a space
+  spaceId: string; // every project belongs to a space
   createdAt: Date;
   updatedAt: Date;
   synced: boolean;
 }
 
 interface Task {
-  id: string;           // nanoid
+  id: string; // nanoid
   title: string;
-  projectId: string;    // FK → Project; space is derived via project.spaceId
-  status: 'inbox' | 'todo' | 'done' | 'archived'; // inbox = no workingDate yet; todo = triaged (has workingDate)
-  workingDate: Date | null;  // Planned date — drives Today view
-  dueDate: Date | null;      // Deadline — shows red if past
+  projectId: string; // FK → Project; space is derived via project.spaceId
+  status: "inbox" | "todo" | "done" | "archived"; // inbox = no workingDate yet; todo = triaged (has workingDate)
+  workingDate: Date | null; // Planned date — drives Today view
+  dueDate: Date | null; // Deadline — shows red if past
   createdAt: Date;
-  updatedAt: Date;           // Used for last-write-wins sync
+  updatedAt: Date; // Used for last-write-wins sync
   completedAt: Date | null;
-  sourceUrl?: string;        // URL captured from extension
-  synced: boolean;           // false = pending push to Supabase
+  sourceUrl?: string; // URL captured from extension
+  synced: boolean; // false = pending push to Supabase
 }
 ```
 
 A task's Space is always **derived** (`task → project → space`) — no redundant `spaceId` on Task.
 
 **Dexie tables & indexes:**
+
 - `spaces`: `'id, updatedAt, synced'`
 - `projects`: `'id, spaceId, updatedAt, synced'`
 - `tasks`: `'id, projectId, status, workingDate, dueDate, updatedAt, synced'`
@@ -96,6 +98,7 @@ When the user is not logged in, the sync service is a no-op. The app works entir
 **Navigation:** Top bar with three tabs — Inbox, Today, Projects — showing live task counts. Left sidebar has two sections: global views (Inbox, Today) at the top, then each Space as a collapsible section containing its projects.
 
 **Views:**
+
 - **Inbox:** all tasks across all spaces where `workingDate == null` and `status != done/archived`
 - **Today:** all tasks across all spaces where `workingDate <= today` and `status != done/archived`
 - **Projects:** tasks grouped by space, then by project, with a progress bar per project (`done / total`)
@@ -106,16 +109,16 @@ When the user is not logged in, the sync service is a no-op. The app works entir
 
 **Keyboard shortcut map:**
 
-| Key | Context | Action |
-|-----|---------|--------|
-| `j` / `k` | List | Move focus down / up |
-| `Enter` | Task focused | Toggle done |
-| `w` | Task focused | Focus @w chip |
-| `p` | Task focused | Focus @p chip |
-| `d` | Task focused | Focus @d chip |
-| `Backspace` | Task focused | Archive task |
-| `Esc` | Any modal/dropdown | Close |
-| `Alt+Shift+I` | Anywhere | Open extension capture overlay (MV3 registered command) |
+| Key           | Context            | Action                                                  |
+| ------------- | ------------------ | ------------------------------------------------------- |
+| `j` / `k`     | List               | Move focus down / up                                    |
+| `Enter`       | Task focused       | Toggle done                                             |
+| `w`           | Task focused       | Focus @w chip                                           |
+| `p`           | Task focused       | Focus @p chip                                           |
+| `d`           | Task focused       | Focus @d chip                                           |
+| `Backspace`   | Task focused       | Archive task                                            |
+| `Esc`         | Any modal/dropdown | Close                                                   |
+| `Alt+Shift+I` | Anywhere           | Open extension capture overlay (MV3 registered command) |
 
 **Done tasks** collapse into a "Done" section below active tasks within the same view.
 
@@ -134,6 +137,7 @@ Shared `SmartInput` component in `packages/shared`. Used identically in the web 
 **Tab rotation:** `Tab` cycles focus: title → @p → @d → @w → title (wraps). `Shift+Tab` reverses.
 
 **Chip interaction:**
+
 1. When a chip receives focus, its dropdown opens automatically.
 2. The user selects a value with `Enter` (or clicks an option). Focus returns to the title text.
 3. The user can continue typing in the title after any chip selection.
@@ -142,6 +146,7 @@ Shared `SmartInput` component in `packages/shared`. Used identically in the web 
 **Save:** `⌘+Enter` saves the task from anywhere in the bar. The bar resets to empty.
 
 **Dropdowns:**
+
 - `@p` — filterable list of existing projects + "New project…" option
 - `@d` / `@w` — quick-pick chips (Today, Tomorrow, day names) + free-text date entry
 
@@ -156,6 +161,7 @@ Shared `SmartInput` component in `packages/shared`. Used identically in the web 
 **Trigger:** `Alt+Shift+I` (registered MV3 command) or double-Shift within 300ms (content script `keyup` listener).
 
 **Capture overlay:**
+
 - Centered floating bar injected via Shadow DOM — host-page CSS cannot affect it.
 - Uses `SmartInput` from `packages/shared`.
 - Saves to `chrome.storage.local` with `synced: false`.
@@ -181,33 +187,33 @@ Shared `SmartInput` component in `packages/shared`. Used identically in the web 
 
 ## 8. Design Tokens
 
-| Token | Value |
-|-------|-------|
-| Background | `#080808` |
-| Surface | `#0e0e0e` |
-| Surface 2 | `#141414` |
-| Border | `#1f1f1f` |
-| Text | `#e2e2e2` |
-| Text muted | `#666666` |
-| Accent | `#5E6AD2` |
-| Red (late) | `#ff4d4d` |
-| Green (done) | `#4ade80` |
-| Font | Inter |
-| Task row height | 36px |
+| Token           | Value     |
+| --------------- | --------- |
+| Background      | `#080808` |
+| Surface         | `#0e0e0e` |
+| Surface 2       | `#141414` |
+| Border          | `#1f1f1f` |
+| Text            | `#e2e2e2` |
+| Text muted      | `#666666` |
+| Accent          | `#5E6AD2` |
+| Red (late)      | `#ff4d4d` |
+| Green (done)    | `#4ade80` |
+| Font            | Inter     |
+| Task row height | 36px      |
 
 ---
 
 ## 9. Tech Stack Summary
 
-| Layer | Choice |
-|-------|--------|
-| Monorepo | npm workspaces + Turborepo |
-| Web app build | Vite + React + TypeScript |
-| Extension build | Vite + CRXJS |
-| Styling | Tailwind CSS |
-| Local DB | Dexie.js (IndexedDB) |
-| Cloud sync + auth | Supabase |
-| Deployment | Vercel (web), Chrome Web Store (extension) |
+| Layer             | Choice                                     |
+| ----------------- | ------------------------------------------ |
+| Monorepo          | npm workspaces + Turborepo                 |
+| Web app build     | Vite + React + TypeScript                  |
+| Extension build   | Vite + CRXJS                               |
+| Styling           | Tailwind CSS                               |
+| Local DB          | Dexie.js (IndexedDB)                       |
+| Cloud sync + auth | Supabase                                   |
+| Deployment        | Vercel (web), Chrome Web Store (extension) |
 
 ---
 
@@ -217,14 +223,14 @@ Shared `SmartInput` component in `packages/shared`. Used identically in the web 
 
 Delivered per [docs/superpowers/plans/2026-04-04-plan-1-foundation.md](../plans/2026-04-04-plan-1-foundation.md):
 
-| Item | Location / notes |
-|------|------------------|
-| Monorepo | npm workspaces + Turborepo 2; root `packageManager` field for Turbo workspace resolution |
-| Shared library | `packages/shared` (`@sift/shared`) — Vite library build, `vite-plugin-dts`, CSS Modules for SmartInput |
-| Data | `Space`, `Project`, `Task`, `TaskStatus`; `AppDatabase` Dexie schema v1; first-launch seed (Personal + General) |
-| Smart Input | `useSmartInput`, `Dropdown`, `SmartInput`; `@p` / `@w` / `@d`, Tab rotation, ⌘/Ctrl+Enter save |
-| Tests | Vitest + Testing Library + `fake-indexeddb`; jest-dom + `cleanup` in `src/__tests__/setup.ts` |
-| Build output | `dist/index.js`, `dist/index.d.ts`, bundled `dist/style.css` (import when consuming `SmartInput` in apps) |
+| Item           | Location / notes                                                                                                |
+| -------------- | --------------------------------------------------------------------------------------------------------------- |
+| Monorepo       | npm workspaces + Turborepo 2; root `packageManager` field for Turbo workspace resolution                        |
+| Shared library | `packages/shared` (`@sift/shared`) — Vite library build, `vite-plugin-dts`, CSS Modules for SmartInput          |
+| Data           | `Space`, `Project`, `Task`, `TaskStatus`; `AppDatabase` Dexie schema v1; first-launch seed (Personal + General) |
+| Smart Input    | `useSmartInput`, `Dropdown`, `SmartInput`; `@p` / `@w` / `@d`, Tab rotation, ⌘/Ctrl+Enter save                  |
+| Tests          | Vitest + Testing Library + `fake-indexeddb`; jest-dom + `cleanup` in `src/__tests__/setup.ts`                   |
+| Build output   | `dist/index.js`, `dist/index.d.ts`, bundled `dist/style.css` (import when consuming `SmartInput` in apps)       |
 
 Turbo tasks: `npm run build`, `npm run test`, `npm run dev` from repo root orchestrate packages.
 
@@ -232,16 +238,16 @@ Turbo tasks: `npm run build`, `npm run test`, `npm run dev` from repo root orche
 
 Web dashboard per [docs/superpowers/plans/2026-04-04-plan-2-web-app.md](../plans/2026-04-04-plan-2-web-app.md):
 
-| Item | Notes |
-|------|--------|
-| `apps/web` | Vite 5 + React 18 + Tailwind 3 + React Router 6 |
-| Data | `useLiveQuery` hooks; `db` re-exported from `@sift/shared` |
-| Views | Inbox, Today, Projects + `TaskList` / `TaskRow` / `InputBar` (`SmartInput` + `projects` prop) |
-| Keyboard | `useKeyboardNav` — j/k, Enter, Backspace/Delete |
-| Auth | Supabase Google + magic link when `VITE_*` env vars are set; **no route gating** — matches §7 logged-out UX |
-| Sync | `SyncService` LWW push/pull + Realtime subscribe when authenticated |
-| Tests | Vitest: `useTasks`, `useKeyboardNav`, `TaskRow`, `SyncService` (mocked Supabase) |
-| Deploy | `vercel.json` uses `npx turbo build --filter=web` |
+| Item       | Notes                                                                                                       |
+| ---------- | ----------------------------------------------------------------------------------------------------------- |
+| `apps/web` | Vite 5 + React 18 + Tailwind 3 + React Router 6                                                             |
+| Data       | `useLiveQuery` hooks; `db` re-exported from `@sift/shared`                                                  |
+| Views      | Inbox, Today, Projects + `TaskList` / `TaskRow` / `InputBar` (`SmartInput` + `projects` prop)               |
+| Keyboard   | `useKeyboardNav` — j/k, Enter, Backspace/Delete                                                             |
+| Auth       | Supabase Google + magic link when `VITE_*` env vars are set; **no route gating** — matches §7 logged-out UX |
+| Sync       | `SyncService` LWW push/pull + Realtime subscribe when authenticated                                         |
+| Tests      | Vitest: `useTasks`, `useKeyboardNav`, `TaskRow`, `SyncService` (mocked Supabase)                            |
+| Deploy     | `vercel.json` uses `npx turbo build --filter=web`                                                           |
 
 **Deviations from the written Plan 2 tasks:** Removed mandatory `ProtectedRoute` around the main shell so local-first use matches this spec. `supabase.ts` does not throw when env is missing. Dexie queries use `toArray()` + in-memory sort by `name` (schema indexes do not include `name`). `@sift/shared` exposes `./style.css` for the SmartInput bundle.
 

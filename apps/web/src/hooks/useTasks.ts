@@ -1,8 +1,8 @@
-import { useLiveQuery } from 'dexie-react-hooks';
-import { db } from '../lib/db';
-import type { Task, Space, Project } from '@sift/shared';
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "../lib/db";
+import type { Task, Space, Project } from "@sift/shared";
 
-const TERMINAL_STATUSES = ['done', 'archived'] as const;
+const TERMINAL_STATUSES = ["done", "archived"] as const;
 
 /** Inbox: workingDate === null AND status not in done/archived */
 export function useInboxTasks(): Task[] {
@@ -14,11 +14,11 @@ export function useInboxTasks(): Task[] {
             (t) =>
               t.workingDate === null &&
               !TERMINAL_STATUSES.includes(
-                t.status as (typeof TERMINAL_STATUSES)[number]
-              )
+                t.status as (typeof TERMINAL_STATUSES)[number],
+              ),
           )
           .toArray(),
-      []
+      [],
     ) ?? []
   );
 }
@@ -37,11 +37,11 @@ export function useTodayTasks(): Task[] {
               t.workingDate !== null &&
               t.workingDate <= todayStart &&
               !TERMINAL_STATUSES.includes(
-                t.status as (typeof TERMINAL_STATUSES)[number]
-              )
+                t.status as (typeof TERMINAL_STATUSES)[number],
+              ),
           )
           .toArray(),
-      []
+      [],
     ) ?? []
   );
 }
@@ -58,7 +58,9 @@ export interface SpaceGroup {
 }
 
 function taskCountsAsDone(t: Task): boolean {
-  return t.status === 'done' || (t.status === 'archived' && t.completedAt != null);
+  return (
+    t.status === "done" || (t.status === "archived" && t.completedAt != null)
+  );
 }
 
 function tasksForProject(tasks: Task[], project: Project): Task[] {
@@ -66,7 +68,7 @@ function tasksForProject(tasks: Task[], project: Project): Task[] {
     .filter((t) => {
       if (t.projectId !== project.id) return false;
       if (project.archived) return true;
-      return t.status !== 'archived';
+      return t.status !== "archived";
     })
     .sort((a, b) => {
       const aDone = taskCountsAsDone(a) ? 1 : 0;
@@ -83,58 +85,59 @@ type ProjectTasksLive = { groups: SpaceGroup[]; archivedCount: number };
 
 /** Projects: tasks grouped by space → active / archived project lists (archived projects include archived-status tasks) */
 export function useProjectTasks(): readonly [SpaceGroup[], number] {
-  const data =
-    useLiveQuery(async (): Promise<ProjectTasksLive> => {
-      const [spacesRaw, projectsRaw, allTasks] = await Promise.all([
-        db.spaces.toArray(),
-        db.projects.toArray(),
-        db.tasks.toArray(),
-      ]);
-      const spaces = spacesRaw.sort((a, b) => a.name.localeCompare(b.name));
-      const projects = projectsRaw.sort((a, b) => a.name.localeCompare(b.name));
+  const data = useLiveQuery(async (): Promise<ProjectTasksLive> => {
+    const [spacesRaw, projectsRaw, allTasks] = await Promise.all([
+      db.spaces.toArray(),
+      db.projects.toArray(),
+      db.tasks.toArray(),
+    ]);
+    const spaces = spacesRaw.sort((a, b) => a.name.localeCompare(b.name));
+    const projects = projectsRaw.sort((a, b) => a.name.localeCompare(b.name));
 
-      let archivedCount = 0;
-      const groups = spaces.map((space) => {
-        const spaceProjects = projects.filter((p) => p.spaceId === space.id);
-        const active = spaceProjects.filter((p) => !p.archived);
-        const archived = spaceProjects.filter((p) => p.archived);
-        archivedCount += archived.length;
-        return {
-          space,
-          projects: active.map((project) => ({
-            project,
-            tasks: tasksForProject(allTasks, project),
-          })),
-          archivedProjects: archived.map((project) => ({
-            project,
-            tasks: tasksForProject(allTasks, project),
-          })),
-        };
-      });
-      return { groups, archivedCount };
-    }, []) ?? { groups: [], archivedCount: 0 };
+    let archivedCount = 0;
+    const groups = spaces.map((space) => {
+      const spaceProjects = projects.filter((p) => p.spaceId === space.id);
+      const active = spaceProjects.filter((p) => !p.archived);
+      const archived = spaceProjects.filter((p) => p.archived);
+      archivedCount += archived.length;
+      return {
+        space,
+        projects: active.map((project) => ({
+          project,
+          tasks: tasksForProject(allTasks, project),
+        })),
+        archivedProjects: archived.map((project) => ({
+          project,
+          tasks: tasksForProject(allTasks, project),
+        })),
+      };
+    });
+    return { groups, archivedCount };
+  }, []) ?? { groups: [], archivedCount: 0 };
 
   return [data.groups, data.archivedCount] as const;
 }
 
-export function useTasks(view: 'inbox' | 'today'): Task[] {
+export function useTasks(view: "inbox" | "today"): Task[] {
   const inbox = useInboxTasks();
   const today = useTodayTasks();
-  return view === 'inbox' ? inbox : today;
+  return view === "inbox" ? inbox : today;
 }
 
 export function useTaskCounts() {
-  return useLiveQuery(async () => {
-    const tasks = await db.tasks
-      .filter((t) => t.status !== 'done' && t.status !== 'archived')
-      .toArray();
-    const counts: Record<string, number> = {};
-    for (const t of tasks) {
-      const d = t.dueDate || t.workingDate;
-      if (!d) continue;
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-      counts[key] = (counts[key] || 0) + 1;
-    }
-    return counts;
-  }, []) ?? {};
+  return (
+    useLiveQuery(async () => {
+      const tasks = await db.tasks
+        .filter((t) => t.status !== "done" && t.status !== "archived")
+        .toArray();
+      const counts: Record<string, number> = {};
+      for (const t of tasks) {
+        const d = t.dueDate || t.workingDate;
+        if (!d) continue;
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+        counts[key] = (counts[key] || 0) + 1;
+      }
+      return counts;
+    }, []) ?? {}
+  );
 }

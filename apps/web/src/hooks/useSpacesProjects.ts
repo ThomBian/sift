@@ -1,20 +1,22 @@
-import { useLiveQuery } from 'dexie-react-hooks';
-import { db } from '../lib/db';
-import type { Space, Project } from '@sift/shared';
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "../lib/db";
+import type { Space, Project } from "@sift/shared";
 
 export interface SpaceWithProjects {
   space: Space;
   projects: Project[];
 }
 
-export function useSpacesProjects(): { spacesWithProjects: SpaceWithProjects[] } {
+export function useSpacesProjects(): {
+  spacesWithProjects: SpaceWithProjects[];
+} {
   const spacesWithProjects =
     useLiveQuery(async () => {
       const spaces = (await db.spaces.toArray()).sort((a, b) =>
-        a.name.localeCompare(b.name)
+        a.name.localeCompare(b.name),
       );
       const projects = (await db.projects.toArray()).sort((a, b) =>
-        a.name.localeCompare(b.name)
+        a.name.localeCompare(b.name),
       );
 
       const bySpace = new Map<string, Project[]>();

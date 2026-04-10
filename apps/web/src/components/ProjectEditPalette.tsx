@@ -1,45 +1,55 @@
-import { useState, useEffect, useRef, useCallback, type ChangeEvent } from 'react';
-import { nanoid } from 'nanoid';
-import { db } from '../lib/db';
-import { useTaskCounts } from '../hooks/useTasks';
-import { Dropdown, EmojiPicker, getRandomEmoji } from '@sift/shared';
-import type { Project } from '@sift/shared';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  type ChangeEvent,
+} from "react";
+import { nanoid } from "nanoid";
+import { db } from "../lib/db";
+import { useTaskCounts } from "../hooks/useTasks";
+import { Dropdown, EmojiPicker, getRandomEmoji } from "@sift/shared";
+import type { Project } from "@sift/shared";
 
 interface ProjectEditPaletteProps {
   isOpen: boolean;
   onClose: () => void;
   spaceId?: string;
   project?: Project;
-  initialField?: 'name' | 'emoji' | 'dueDate' | 'url';
+  initialField?: "name" | "emoji" | "dueDate" | "url";
 }
 
 function formatDate(date: Date): string {
-  return date.toLocaleDateString('fr-FR');
+  return date.toLocaleDateString("fr-FR");
 }
 
-type ActiveChip = 'name' | 'emoji' | 'dueDate' | 'url';
+type ActiveChip = "name" | "emoji" | "dueDate" | "url";
 
-const TAB_ORDER: ActiveChip[] = ['name', 'emoji', 'dueDate', 'url'];
+const TAB_ORDER: ActiveChip[] = ["name", "emoji", "dueDate", "url"];
 
 const CHIP_BASE =
-  'inline-flex items-center gap-1 px-[9px] py-[3px] border-[0.5px] font-mono text-[11.5px] font-medium cursor-pointer whitespace-nowrap transition-colors duration-150';
+  "inline-flex items-center gap-1 px-[9px] py-[3px] border-[0.5px] font-mono text-[11.5px] font-medium cursor-pointer whitespace-nowrap transition-colors duration-150";
 
-function chipClass(chip: ActiveChip, activeChip: ActiveChip, isSet: boolean): string {
+function chipClass(
+  chip: ActiveChip,
+  activeChip: ActiveChip,
+  isSet: boolean,
+): string {
   const isActive = activeChip === chip;
-  if (chip === 'emoji') {
+  if (chip === "emoji") {
     if (isActive) return `${CHIP_BASE} border-accent text-accent bg-accent/5`;
-    if (isSet)    return `${CHIP_BASE} border-accent/30 text-accent bg-accent/5`;
-    return              `${CHIP_BASE} border-border text-muted bg-surface`;
+    if (isSet) return `${CHIP_BASE} border-accent/30 text-accent bg-accent/5`;
+    return `${CHIP_BASE} border-border text-muted bg-surface`;
   }
-  if (chip === 'url') {
+  if (chip === "url") {
     if (isActive) return `${CHIP_BASE} border-accent text-accent bg-accent/5`;
-    if (isSet)    return `${CHIP_BASE} border-accent/30 text-accent bg-accent/5`;
-    return              `${CHIP_BASE} border-border text-muted bg-surface`;
+    if (isSet) return `${CHIP_BASE} border-accent/30 text-accent bg-accent/5`;
+    return `${CHIP_BASE} border-border text-muted bg-surface`;
   }
   // dueDate
   if (isActive) return `${CHIP_BASE} border-red text-red bg-red/5`;
-  if (isSet)    return `${CHIP_BASE} border-red/30 text-red bg-red/5`;
-  return              `${CHIP_BASE} border-border text-muted bg-surface`;
+  if (isSet) return `${CHIP_BASE} border-red/30 text-red bg-red/5`;
+  return `${CHIP_BASE} border-border text-muted bg-surface`;
 }
 
 export default function ProjectEditPalette({
@@ -47,14 +57,14 @@ export default function ProjectEditPalette({
   onClose,
   spaceId,
   project,
-  initialField = 'name',
+  initialField = "name",
 }: ProjectEditPaletteProps) {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [emoji, setEmoji] = useState<string | null>(null);
   const [dueDate, setDueDate] = useState<Date | null>(null);
   const [url, setUrl] = useState<string | null>(null);
   const [activeChip, setActiveChip] = useState<ActiveChip>(initialField);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [isClosing, setIsClosing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const triggerRef = useRef<Element | null>(null);
@@ -73,12 +83,12 @@ export default function ProjectEditPalette({
     if (!isOpen) return;
     triggerRef.current = document.activeElement;
     setIsClosing(false);
-    setName(project?.name ?? '');
+    setName(project?.name ?? "");
     setEmoji(project?.emoji ?? null);
     setDueDate(project?.dueDate ?? null);
     setUrl(project?.url ?? null);
     setActiveChip(initialField);
-    setQuery('');
+    setQuery("");
   }, [isOpen, project, initialField]);
 
   useEffect(() => {
@@ -117,7 +127,7 @@ export default function ProjectEditPalette({
 
   function handleChipClick(chip: ActiveChip) {
     setActiveChip(chip);
-    setQuery('');
+    setQuery("");
     requestAnimationFrame(() => inputRef.current?.focus());
   }
 
@@ -129,43 +139,43 @@ export default function ProjectEditPalette({
 
   function handleEmojiSelect(selected: string) {
     setEmoji(selected);
-    setActiveChip('name');
-    setQuery('');
+    setActiveChip("name");
+    setQuery("");
     requestAnimationFrame(() => inputRef.current?.focus());
   }
 
   function handleDateSelect(value: string | Date | null) {
     setDueDate(value instanceof Date ? value : null);
-    setActiveChip('name');
-    setQuery('');
+    setActiveChip("name");
+    setQuery("");
     requestAnimationFrame(() => inputRef.current?.focus());
   }
 
   function handleClear() {
-    if (activeChip === 'emoji') {
+    if (activeChip === "emoji") {
       setEmoji(null);
-    } else if (activeChip === 'url') {
+    } else if (activeChip === "url") {
       setUrl(null);
     } else {
       setDueDate(null);
     }
-    setActiveChip('name');
-    setQuery('');
+    setActiveChip("name");
+    setQuery("");
     requestAnimationFrame(() => inputRef.current?.focus());
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       e.preventDefault();
       handleClose();
       return;
     }
-    if (e.key === 'Tab') {
+    if (e.key === "Tab") {
       e.preventDefault();
       handleTabNext();
       return;
     }
-    if (e.key === 'Enter' && (activeChip === 'name' || activeChip === 'url')) {
+    if (e.key === "Enter" && (activeChip === "name" || activeChip === "url")) {
       e.preventDefault();
       void handleConfirm();
     }
@@ -173,34 +183,36 @@ export default function ProjectEditPalette({
 
   if (!isOpen && !isClosing) return null;
 
-  const inputValue = activeChip === 'name' ? name : activeChip === 'url' ? (url ?? '') : query;
-  const inputPlaceholder = activeChip === 'emoji'
-    ? 'Search emojis…'
-    : activeChip === 'dueDate'
-      ? 'Pick a date…'
-      : activeChip === 'url'
-        ? 'Add a link…'
-        : 'Project name…';
+  const inputValue =
+    activeChip === "name" ? name : activeChip === "url" ? (url ?? "") : query;
+  const inputPlaceholder =
+    activeChip === "emoji"
+      ? "Search emojis…"
+      : activeChip === "dueDate"
+        ? "Pick a date…"
+        : activeChip === "url"
+          ? "Add a link…"
+          : "Project name…";
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
-    if (activeChip === 'url') {
+    if (activeChip === "url") {
       setUrl(e.target.value || null);
       return;
     }
-    if (activeChip !== 'name') {
+    if (activeChip !== "name") {
       setQuery(e.target.value);
       return;
     }
     const val = e.target.value;
-    if (val.endsWith('@c')) {
+    if (val.endsWith("@c")) {
       setName(val.slice(0, -2));
-      handleChipClick('emoji');
-    } else if (val.endsWith('@d')) {
+      handleChipClick("emoji");
+    } else if (val.endsWith("@d")) {
       setName(val.slice(0, -2));
-      handleChipClick('dueDate');
-    } else if (val.endsWith('@u')) {
+      handleChipClick("dueDate");
+    } else if (val.endsWith("@u")) {
       setName(val.slice(0, -2));
-      handleChipClick('url');
+      handleChipClick("url");
     } else {
       setName(val);
     }
@@ -214,12 +226,12 @@ export default function ProjectEditPalette({
       }}
     >
       <div
-        className={`${isClosing ? 'animate-palette-out' : 'animate-palette-in'} w-full max-w-[min(820px,calc(100vw-1.5rem))] border-[0.5px] border-border bg-bg/95 floating-panel shadow-panel`}
+        className={`${isClosing ? "animate-palette-out" : "animate-palette-in"} w-full max-w-[min(820px,calc(100vw-1.5rem))] border-[0.5px] border-border bg-bg/95 floating-panel shadow-panel`}
       >
         {/* Context row */}
         <div className="flex items-center px-3 py-1.5 border-b border-[0.5px] border-border">
           <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-dim">
-            {project ? `Editing · ${project.name}` : 'New Project'}
+            {project ? `Editing · ${project.name}` : "New Project"}
           </span>
           <span className="ml-auto font-mono text-[9px] text-dim">
             esc to close
@@ -237,49 +249,58 @@ export default function ProjectEditPalette({
             placeholder={inputPlaceholder}
             aria-label={inputPlaceholder}
             className="flex-1 bg-transparent border-none text-[13.5px] text-text font-sans min-w-0"
-            style={{ outline: 'none', letterSpacing: '-0.1px' }}
+            style={{ outline: "none", letterSpacing: "-0.1px" }}
           />
           <button
             type="button"
-            onClick={() => handleChipClick('emoji')}
-            className={chipClass('emoji', activeChip, emoji !== null)}
+            onClick={() => handleChipClick("emoji")}
+            className={chipClass("emoji", activeChip, emoji !== null)}
           >
             {emoji ? (
               <>{emoji}</>
             ) : (
-              <><span className="text-[10px] opacity-55">@c</span>&nbsp;icon</>
+              <>
+                <span className="text-[10px] opacity-55">@c</span>&nbsp;icon
+              </>
             )}
           </button>
           <button
             type="button"
-            onClick={() => handleChipClick('dueDate')}
-            className={chipClass('dueDate', activeChip, dueDate !== null)}
+            onClick={() => handleChipClick("dueDate")}
+            className={chipClass("dueDate", activeChip, dueDate !== null)}
           >
             {dueDate ? (
-              <><span className="text-[10px] opacity-55">@d</span>&nbsp;{formatDate(dueDate)}</>
+              <>
+                <span className="text-[10px] opacity-55">@d</span>&nbsp;
+                {formatDate(dueDate)}
+              </>
             ) : (
-              <><span className="text-[10px] opacity-55">@d</span>&nbsp;due</>
+              <>
+                <span className="text-[10px] opacity-55">@d</span>&nbsp;due
+              </>
             )}
           </button>
           <button
             type="button"
-            onClick={() => handleChipClick('url')}
-            className={chipClass('url', activeChip, url !== null)}
+            onClick={() => handleChipClick("url")}
+            className={chipClass("url", activeChip, url !== null)}
           >
             {url ? (
               <>
                 <span className="text-[10px] opacity-55">@u</span>&nbsp;
-                {url.replace(/^https?:\/\//, '').slice(0, 15)}
-                {url.replace(/^https?:\/\//, '').length > 15 ? '…' : ''}
+                {url.replace(/^https?:\/\//, "").slice(0, 15)}
+                {url.replace(/^https?:\/\//, "").length > 15 ? "…" : ""}
               </>
             ) : (
-              <><span className="text-[10px] opacity-55">@u</span>&nbsp;link</>
+              <>
+                <span className="text-[10px] opacity-55">@u</span>&nbsp;link
+              </>
             )}
           </button>
         </div>
 
         {/* Emoji picker — inline below input */}
-        {activeChip === 'emoji' && (
+        {activeChip === "emoji" && (
           <>
             <EmojiPicker query={query} onSelect={handleEmojiSelect} />
             <button
@@ -293,7 +314,7 @@ export default function ProjectEditPalette({
         )}
 
         {/* Date dropdown — reuses shared Dropdown with inline mode */}
-        {activeChip === 'dueDate' && (
+        {activeChip === "dueDate" && (
           <>
             <Dropdown
               type="dueDate"
@@ -313,7 +334,7 @@ export default function ProjectEditPalette({
           </>
         )}
 
-        {activeChip === 'url' && url && (
+        {activeChip === "url" && url && (
           <button
             type="button"
             onClick={handleClear}

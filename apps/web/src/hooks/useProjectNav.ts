@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-export const SHOW_ARCHIVED_TOGGLE_ID = '__sift_show_archived_toggle__';
+export const SHOW_ARCHIVED_TOGGLE_ID = "__sift_show_archived_toggle__";
 
 export interface ProjectKeyDownContext {
   /**
@@ -31,7 +31,7 @@ export function useProjectNav(): UseProjectNavReturn {
         : -1;
 
       switch (e.key) {
-        case 'ArrowDown': {
+        case "ArrowDown": {
           e.preventDefault();
           if (currentIndex === -1) {
             setFocusedProjectId(orderedIds[0] ?? null);
@@ -42,7 +42,7 @@ export function useProjectNav(): UseProjectNavReturn {
           }
           break;
         }
-        case 'ArrowUp': {
+        case "ArrowUp": {
           e.preventDefault();
           if (currentIndex === -1) {
             setFocusedProjectId(orderedIds[orderedIds.length - 1] ?? null);
@@ -53,11 +53,11 @@ export function useProjectNav(): UseProjectNavReturn {
           }
           break;
         }
-        case 'Escape': {
+        case "Escape": {
           setFocusedProjectId(null);
           break;
         }
-        case ' ': {
+        case " ": {
           if (focusedProjectId === SHOW_ARCHIVED_TOGGLE_ID) {
             e.preventDefault();
             onSpaceOnToggle?.();
@@ -68,7 +68,7 @@ export function useProjectNav(): UseProjectNavReturn {
           break;
       }
     },
-    [focusedProjectId]
+    [focusedProjectId],
   );
 
   return { focusedProjectId, setFocusedProjectId, handleProjectKeyDown };

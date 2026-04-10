@@ -9,7 +9,6 @@ When a task is focused via keyboard navigation, the user can trigger contextual 
 
 ## Keyboard Shortcuts (task focused)
 
-
 | Key         | Action                                     |
 | ----------- | ------------------------------------------ |
 | `D`         | Open edit palette, focus due date chip     |
@@ -19,7 +18,6 @@ When a task is focused via keyboard navigation, the user can trigger contextual 
 | `Enter`     | Toggle done (existing)                     |
 | `Backspace` | Archive (existing)                         |
 | `Esc`       | Close palette if open, else deselect task  |
-
 
 ## Edit Palette
 
@@ -113,4 +111,3 @@ Escape at any point: `editField → null` (palette closes, task stays focused).
 - Mouse/click interaction to open the edit palette (keyboard-only for now)
 - Bulk editing multiple tasks
 - Reordering fields in the chip row
-

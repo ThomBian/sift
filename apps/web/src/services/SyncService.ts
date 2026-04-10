@@ -1,8 +1,8 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
-import { db } from '../lib/db';
-import type { Space, Project, Task } from '@sift/shared';
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { db } from "../lib/db";
+import type { Space, Project, Task } from "@sift/shared";
 
-const LAST_SYNC_KEY = 'speedy_last_synced_at';
+const LAST_SYNC_KEY = "speedy_last_synced_at";
 
 function getLastSyncedAt(): Date {
   const stored = localStorage.getItem(LAST_SYNC_KEY);
@@ -88,7 +88,7 @@ function rowToTask(row: Record<string, unknown>): Task {
     id: row.id as string,
     title: row.title as string,
     projectId: row.project_id as string,
-    status: row.status as Task['status'],
+    status: row.status as Task["status"],
     workingDate: row.working_date ? new Date(row.working_date as string) : null,
     dueDate: row.due_date ? new Date(row.due_date as string) : null,
     createdAt: new Date(row.created_at as string),
@@ -122,18 +122,19 @@ export class SyncService {
   private async syncSpaces(userId: string, lastSyncedAt: Date): Promise<void> {
     const unsynced = await db.spaces.filter((s) => !s.synced).toArray();
     if (unsynced.length > 0) {
-      const { error } = await this.supabase
-        .from('spaces')
-        .upsert(unsynced.map((s) => spaceToRow(s, userId)), { onConflict: 'id' });
+      const { error } = await this.supabase.from("spaces").upsert(
+        unsynced.map((s) => spaceToRow(s, userId)),
+        { onConflict: "id" },
+      );
       if (!error) {
         await db.spaces.bulkPut(unsynced.map((s) => ({ ...s, synced: true })));
       }
     }
 
     const { data, error: pullError } = await this.supabase
-      .from('spaces')
-      .select('*')
-      .gt('updated_at', lastSyncedAt.toISOString());
+      .from("spaces")
+      .select("*")
+      .gt("updated_at", lastSyncedAt.toISOString());
 
     if (pullError || !data) return;
 
@@ -147,25 +148,33 @@ export class SyncService {
     if (toUpsert.length > 0) await db.spaces.bulkPut(toUpsert);
   }
 
-  private async syncProjects(userId: string, lastSyncedAt: Date): Promise<void> {
+  private async syncProjects(
+    userId: string,
+    lastSyncedAt: Date,
+  ): Promise<void> {
     const unsynced = await db.projects.filter((p) => !p.synced).toArray();
     if (unsynced.length > 0) {
-      const { error } = await this.supabase
-        .from('projects')
-        .upsert(unsynced.map((p) => projectToRow(p, userId)), { onConflict: 'id' });
+      const { error } = await this.supabase.from("projects").upsert(
+        unsynced.map((p) => projectToRow(p, userId)),
+        { onConflict: "id" },
+      );
       if (!error) {
-        await db.projects.bulkPut(unsynced.map((p) => ({ ...p, synced: true })));
+        await db.projects.bulkPut(
+          unsynced.map((p) => ({ ...p, synced: true })),
+        );
       }
     }
 
     const { data, error: pullError } = await this.supabase
-      .from('projects')
-      .select('*')
-      .gt('updated_at', lastSyncedAt.toISOString());
+      .from("projects")
+      .select("*")
+      .gt("updated_at", lastSyncedAt.toISOString());
 
     if (pullError || !data) return;
 
-    const remoteProjects = (data as Record<string, unknown>[]).map(rowToProject);
+    const remoteProjects = (data as Record<string, unknown>[]).map(
+      rowToProject,
+    );
     const locals = await db.projects.bulkGet(remoteProjects.map((p) => p.id));
     const localMap = new Map(locals.filter(Boolean).map((p) => [p!.id, p!]));
     const toUpsert = remoteProjects.filter((remote) => {
@@ -178,18 +187,19 @@ export class SyncService {
   private async syncTasks(userId: string, lastSyncedAt: Date): Promise<void> {
     const unsynced = await db.tasks.filter((t) => !t.synced).toArray();
     if (unsynced.length > 0) {
-      const { error } = await this.supabase
-        .from('tasks')
-        .upsert(unsynced.map((t) => taskToRow(t, userId)), { onConflict: 'id' });
+      const { error } = await this.supabase.from("tasks").upsert(
+        unsynced.map((t) => taskToRow(t, userId)),
+        { onConflict: "id" },
+      );
       if (!error) {
         await db.tasks.bulkPut(unsynced.map((t) => ({ ...t, synced: true })));
       }
     }
 
     const { data, error: pullError } = await this.supabase
-      .from('tasks')
-      .select('*')
-      .gt('updated_at', lastSyncedAt.toISOString());
+      .from("tasks")
+      .select("*")
+      .gt("updated_at", lastSyncedAt.toISOString());
 
     if (pullError || !data) return;
 
@@ -207,9 +217,14 @@ export class SyncService {
     const channel = this.supabase
       .channel(`tasks:user:${userId}`)
       .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'tasks', filter: `user_id=eq.${userId}` },
-        onChange
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "tasks",
+          filter: `user_id=eq.${userId}`,
+        },
+        onChange,
       )
       .subscribe();
 

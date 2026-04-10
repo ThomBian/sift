@@ -1,17 +1,23 @@
 // packages/shared/src/SmartInput/useSmartInput.ts
-import { useState, useCallback, useRef } from 'react';
-import type { Task } from '../types';
+import { useState, useCallback, useRef } from "react";
+import type { Task } from "../types";
 
-export type ChipFocus = 'project' | 'dueDate' | 'workingDate' | 'url';
-export type FocusTarget = 'text' | ChipFocus;
+export type ChipFocus = "project" | "dueDate" | "workingDate" | "url";
+export type FocusTarget = "text" | ChipFocus;
 
-const FOCUS_CYCLE: FocusTarget[] = ['text', 'project', 'dueDate', 'workingDate', 'url'];
+const FOCUS_CYCLE: FocusTarget[] = [
+  "text",
+  "project",
+  "dueDate",
+  "workingDate",
+  "url",
+];
 
 const AT_TRIGGERS: Record<string, ChipFocus> = {
-  '@p': 'project',
-  '@d': 'dueDate',
-  '@w': 'workingDate',
-  '@u': 'url',
+  "@p": "project",
+  "@d": "dueDate",
+  "@w": "workingDate",
+  "@u": "url",
 };
 
 export interface SmartInputValues {
@@ -23,10 +29,10 @@ export interface SmartInputValues {
 }
 
 function isFilled(chip: ChipFocus, values: SmartInputValues): boolean {
-  if (chip === 'project') return values.projectId !== null;
-  if (chip === 'dueDate') return values.dueDate !== null;
-  if (chip === 'workingDate') return values.workingDate !== null;
-  return values.url != null && values.url.trim() !== '';
+  if (chip === "project") return values.projectId !== null;
+  if (chip === "dueDate") return values.dueDate !== null;
+  if (chip === "workingDate") return values.workingDate !== null;
+  return values.url != null && values.url.trim() !== "";
 }
 
 // Forward Tab: from text → first unfilled chip (or full cycle restart — see ref below); from chip → one step
@@ -35,13 +41,15 @@ function nextFocus(
   values: SmartInputValues,
   fullCycleFromText: boolean,
 ): FocusTarget {
-  if (current === 'text') {
+  if (current === "text") {
     if (fullCycleFromText) {
       // Just finished text → … → workingDate → text via Tab; continue the full ring from project
       return FOCUS_CYCLE[1];
     }
     // First Tab from title (after select / escape / initial): jump to first unfilled chip, or project if all filled
-    const first = (FOCUS_CYCLE.slice(1) as ChipFocus[]).find(c => !isFilled(c, values));
+    const first = (FOCUS_CYCLE.slice(1) as ChipFocus[]).find(
+      (c) => !isFilled(c, values),
+    );
     return first ?? FOCUS_CYCLE[1];
   }
   const i = FOCUS_CYCLE.indexOf(current);
@@ -69,7 +77,7 @@ export interface UseSmartInputReturn {
 }
 
 const EMPTY: SmartInputValues = {
-  title: '',
+  title: "",
   projectId: null,
   dueDate: null,
   workingDate: null,
@@ -77,11 +85,18 @@ const EMPTY: SmartInputValues = {
 };
 
 export function useSmartInput(
-  onTaskReady: (task: Pick<Task, 'title' | 'dueDate' | 'workingDate' | 'url'> & { projectId?: string }) => void,
+  onTaskReady: (
+    task: Pick<Task, "title" | "dueDate" | "workingDate" | "url"> & {
+      projectId?: string;
+    },
+  ) => void,
   initialValues: Partial<SmartInputValues> = {},
-  initialFocus: FocusTarget = 'text',
+  initialFocus: FocusTarget = "text",
 ): UseSmartInputReturn {
-  const [values, setValues] = useState<SmartInputValues>(() => ({ ...EMPTY, ...initialValues }));
+  const [values, setValues] = useState<SmartInputValues>(() => ({
+    ...EMPTY,
+    ...initialValues,
+  }));
   const [focus, setFocus] = useState<FocusTarget>(initialFocus);
   /** After Tab advances workingDate → text, next Tab from title should walk all chips, not only empty ones. */
   const afterFullChipRingRef = useRef(false);
@@ -98,35 +113,38 @@ export function useSmartInput(
     });
     setValues(EMPTY);
     afterFullChipRingRef.current = false;
-    setFocus('text');
+    setFocus("text");
   }, [values, onTaskReady]);
 
-  const handleTitleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    for (const [trigger, chip] of Object.entries(AT_TRIGGERS)) {
-      if (val.endsWith(trigger)) {
-        setValues(v => ({ ...v, title: val.slice(0, -trigger.length) }));
-        setFocus(chip);
-        return;
+  const handleTitleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const val = e.target.value;
+      for (const [trigger, chip] of Object.entries(AT_TRIGGERS)) {
+        if (val.endsWith(trigger)) {
+          setValues((v) => ({ ...v, title: val.slice(0, -trigger.length) }));
+          setFocus(chip);
+          return;
+        }
       }
-    }
-    setValues(v => ({ ...v, title: val }));
-  }, []);
+      setValues((v) => ({ ...v, title: val }));
+    },
+    [],
+  );
 
   const moveFocusOnTab = useCallback(
     (e: React.KeyboardEvent, f: FocusTarget): FocusTarget => {
       if (e.shiftKey) {
         const next = prevFocus(f);
-        if (next === 'text') afterFullChipRingRef.current = false;
+        if (next === "text") afterFullChipRingRef.current = false;
         return next;
       }
       let fullCycleFromText = false;
-      if (f === 'text') {
+      if (f === "text") {
         fullCycleFromText = afterFullChipRingRef.current;
         afterFullChipRingRef.current = false;
       }
       const next = nextFocus(f, values, fullCycleFromText);
-      if (f === 'url' && next === 'text') {
+      if (f === "url" && next === "text") {
         afterFullChipRingRef.current = true;
       }
       return next;
@@ -134,76 +152,93 @@ export function useSmartInput(
     [values],
   );
 
-  const handleTitleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      setFocus(f => moveFocusOnTab(e, f));
-    } else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-      e.preventDefault();
-      handleSave();
-    }
-  }, [handleSave, moveFocusOnTab]);
+  const handleTitleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        setFocus((f) => moveFocusOnTab(e, f));
+      } else if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        handleSave();
+      }
+    },
+    [handleSave, moveFocusOnTab],
+  );
 
-  const handleChipKeyDown = useCallback((chip: ChipFocus, e: React.KeyboardEvent) => {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      setFocus(f => moveFocusOnTab(e, f));
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      setFocus('text');
-    } else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-      e.preventDefault();
-      handleSave();
-    }
-  }, [handleSave, moveFocusOnTab]);
+  const handleChipKeyDown = useCallback(
+    (chip: ChipFocus, e: React.KeyboardEvent) => {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        setFocus((f) => moveFocusOnTab(e, f));
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        setFocus("text");
+      } else if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        handleSave();
+      }
+    },
+    [handleSave, moveFocusOnTab],
+  );
 
-  const handleUrlChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const v = e.target.value;
-    setValues(prev => ({ ...prev, url: v || null }));
-  }, []);
+  const handleUrlChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const v = e.target.value;
+      setValues((prev) => ({ ...prev, url: v || null }));
+    },
+    [],
+  );
 
-  const handleUrlKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      setFocus(f => moveFocusOnTab(e, f));
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      setFocus('text');
-    } else if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-      e.preventDefault();
-      handleSave();
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      setFocus('text');
-    }
-  }, [handleSave, moveFocusOnTab]);
+  const handleUrlKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        setFocus((f) => moveFocusOnTab(e, f));
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        setFocus("text");
+      } else if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        handleSave();
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        setFocus("text");
+      }
+    },
+    [handleSave, moveFocusOnTab],
+  );
 
   const handleChipClick = useCallback((chip: ChipFocus) => {
     setFocus(chip);
   }, []);
 
-  const handleSelect = useCallback((chip: ChipFocus, value: string | Date | null) => {
-    const key = chip === 'project' ? 'projectId' : chip;
-    setValues(v => {
-      const updated = { ...v, [key]: value };
-      // Advance to next unfilled chip, or back to text if this was the last one
-      const chipIndex = FOCUS_CYCLE.indexOf(chip);
-      const remaining = (FOCUS_CYCLE.slice(chipIndex + 1) as ChipFocus[]).filter(c => !isFilled(c, updated));
-      afterFullChipRingRef.current = false;
-      setFocus(remaining.length > 0 ? remaining[0] : 'text');
-      return updated;
-    });
-  }, []);
+  const handleSelect = useCallback(
+    (chip: ChipFocus, value: string | Date | null) => {
+      const key = chip === "project" ? "projectId" : chip;
+      setValues((v) => {
+        const updated = { ...v, [key]: value };
+        // Advance to next unfilled chip, or back to text if this was the last one
+        const chipIndex = FOCUS_CYCLE.indexOf(chip);
+        const remaining = (
+          FOCUS_CYCLE.slice(chipIndex + 1) as ChipFocus[]
+        ).filter((c) => !isFilled(c, updated));
+        afterFullChipRingRef.current = false;
+        setFocus(remaining.length > 0 ? remaining[0] : "text");
+        return updated;
+      });
+    },
+    [],
+  );
 
   const cancelChipSelection = useCallback(() => {
     afterFullChipRingRef.current = false;
-    setFocus('text');
+    setFocus("text");
   }, []);
 
   const reset = useCallback(() => {
     afterFullChipRingRef.current = false;
     setValues(EMPTY);
-    setFocus('text');
+    setFocus("text");
   }, []);
 
   return {

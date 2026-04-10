@@ -175,34 +175,37 @@ export default function ProjectsView() {
     }
   }, [archivedCount, focusedProjectId, orderedNavIdSet, setFocusedProjectId]);
 
-  const handleToggle = useCallback((task: Task) => {
-    if (task.status === "archived") return;
-    if (task.status === "done") {
-      const now = new Date();
-      void db.tasks.update(task.id, {
-        status: task.workingDate ? "todo" : "inbox",
-        completedAt: null,
-        updatedAt: now,
-        synced: false,
-      });
-    } else {
-      setExitingIds((prev) => new Set([...prev, task.id]));
-      scheduleExit(() => {
+  const handleToggle = useCallback(
+    (task: Task) => {
+      if (task.status === "archived") return;
+      if (task.status === "done") {
         const now = new Date();
         void db.tasks.update(task.id, {
-          status: "done",
-          completedAt: now,
+          status: task.workingDate ? "todo" : "inbox",
+          completedAt: null,
           updatedAt: now,
           synced: false,
         });
-        setExitingIds((prev) => {
-          const n = new Set(prev);
-          n.delete(task.id);
-          return n;
-        });
-      }, 160);
-    }
-  }, [scheduleExit]);
+      } else {
+        setExitingIds((prev) => new Set([...prev, task.id]));
+        scheduleExit(() => {
+          const now = new Date();
+          void db.tasks.update(task.id, {
+            status: "done",
+            completedAt: now,
+            updatedAt: now,
+            synced: false,
+          });
+          setExitingIds((prev) => {
+            const n = new Set(prev);
+            n.delete(task.id);
+            return n;
+          });
+        }, 160);
+      }
+    },
+    [scheduleExit],
+  );
   const { focusedId, setFocusedId, handleKeyDown } =
     useKeyboardNav(handleToggle);
 
@@ -568,7 +571,13 @@ export default function ProjectsView() {
                   title={project.url}
                   aria-label="Visit project link"
                 >
-                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <svg
+                    width="11"
+                    height="11"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    aria-hidden="true"
+                  >
                     <path
                       d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7M7 1h4m0 0v4m0-4L5 7"
                       stroke="currentColor"

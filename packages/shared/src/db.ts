@@ -1,58 +1,76 @@
 // packages/shared/src/db.ts
-import Dexie, { type Table } from 'dexie';
-import { nanoid } from 'nanoid';
-import type { Space, Project, Task } from './types';
-import { getRandomEmoji } from './emojiPool';
+import Dexie, { type Table } from "dexie";
+import { nanoid } from "nanoid";
+import type { Space, Project, Task } from "./types";
+import { getRandomEmoji } from "./emojiPool";
 
 export class AppDatabase extends Dexie {
   spaces!: Table<Space>;
   projects!: Table<Project>;
   tasks!: Table<Task>;
 
-  constructor(name = 'speedy-tasks') {
+  constructor(name = "speedy-tasks") {
     super(name);
     this.version(1).stores({
-      spaces:   'id, updatedAt, synced',
-      projects: 'id, spaceId, updatedAt, synced',
-      tasks:    'id, projectId, status, workingDate, dueDate, updatedAt, synced',
+      spaces: "id, updatedAt, synced",
+      projects: "id, spaceId, updatedAt, synced",
+      tasks: "id, projectId, status, workingDate, dueDate, updatedAt, synced",
     });
 
     this.version(2).stores({
-      projects: 'id, spaceId, dueDate, updatedAt, synced',
+      projects: "id, spaceId, dueDate, updatedAt, synced",
     });
 
-    this.version(3).stores({
-      projects: 'id, spaceId, dueDate, updatedAt, synced',
-    }).upgrade(tx => {
-      return tx.table('projects').toCollection().modify((project: any) => {
-        project.emoji = getRandomEmoji();
+    this.version(3)
+      .stores({
+        projects: "id, spaceId, dueDate, updatedAt, synced",
+      })
+      .upgrade((tx) => {
+        return tx
+          .table("projects")
+          .toCollection()
+          .modify((project: any) => {
+            project.emoji = getRandomEmoji();
+          });
       });
-    });
 
-    this.version(4).stores({
-      projects: 'id, spaceId, dueDate, archived, updatedAt, synced',
-    }).upgrade(tx => {
-      return tx.table('projects').toCollection().modify((project: any) => {
-        project.archived = false;
+    this.version(4)
+      .stores({
+        projects: "id, spaceId, dueDate, archived, updatedAt, synced",
+      })
+      .upgrade((tx) => {
+        return tx
+          .table("projects")
+          .toCollection()
+          .modify((project: any) => {
+            project.archived = false;
+          });
       });
-    });
 
-    this.version(5).stores({
-      tasks:    'id, projectId, status, workingDate, dueDate, updatedAt, synced',
-      projects: 'id, spaceId, dueDate, archived, updatedAt, synced',
-    }).upgrade(tx => {
-      return Promise.all([
-        tx.table('tasks').toCollection().modify((task: any) => {
-          task.url = task.sourceUrl ?? null;
-          delete task.sourceUrl;
-        }),
-        tx.table('projects').toCollection().modify((project: any) => {
-          project.url = null;
-        }),
-      ]);
-    });
+    this.version(5)
+      .stores({
+        tasks: "id, projectId, status, workingDate, dueDate, updatedAt, synced",
+        projects: "id, spaceId, dueDate, archived, updatedAt, synced",
+      })
+      .upgrade((tx) => {
+        return Promise.all([
+          tx
+            .table("tasks")
+            .toCollection()
+            .modify((task: any) => {
+              task.url = task.sourceUrl ?? null;
+              delete task.sourceUrl;
+            }),
+          tx
+            .table("projects")
+            .toCollection()
+            .modify((project: any) => {
+              project.url = null;
+            }),
+        ]);
+      });
 
-    this.on('ready', () => this._seed());
+    this.on("ready", () => this._seed());
   }
 
   private async _seed(): Promise<void> {
@@ -64,8 +82,8 @@ export class AppDatabase extends Dexie {
 
     await this.spaces.add({
       id: spaceId,
-      name: 'Personal',
-      color: '#5E6AD2',
+      name: "Personal",
+      color: "#5E6AD2",
       createdAt: now,
       updatedAt: now,
       synced: false,
@@ -73,7 +91,7 @@ export class AppDatabase extends Dexie {
 
     await this.projects.add({
       id: nanoid(),
-      name: 'General',
+      name: "General",
       emoji: getRandomEmoji(),
       spaceId,
       dueDate: null,
@@ -91,7 +109,7 @@ export const db = new AppDatabase();
 
 export async function archiveProject(projectId: string): Promise<void> {
   const now = new Date();
-  await db.transaction('rw', db.projects, db.tasks, async () => {
+  await db.transaction("rw", db.projects, db.tasks, async () => {
     const project = await db.projects.get(projectId);
     if (!project) return;
     await db.projects.update(projectId, {
@@ -99,8 +117,8 @@ export async function archiveProject(projectId: string): Promise<void> {
       updatedAt: now,
       synced: false,
     });
-    await db.tasks.where('projectId').equals(projectId).modify({
-      status: 'archived',
+    await db.tasks.where("projectId").equals(projectId).modify({
+      status: "archived",
       updatedAt: now,
       synced: false,
     });
@@ -108,15 +126,15 @@ export async function archiveProject(projectId: string): Promise<void> {
 }
 
 export async function deleteProject(projectId: string): Promise<void> {
-  await db.transaction('rw', db.projects, db.tasks, async () => {
-    await db.tasks.where('projectId').equals(projectId).delete();
+  await db.transaction("rw", db.projects, db.tasks, async () => {
+    await db.tasks.where("projectId").equals(projectId).delete();
     await db.projects.delete(projectId);
   });
 }
 
 export async function unarchiveProject(projectId: string): Promise<void> {
   const now = new Date();
-  await db.transaction('rw', db.projects, db.tasks, async () => {
+  await db.transaction("rw", db.projects, db.tasks, async () => {
     const project = await db.projects.get(projectId);
     if (!project) return;
     await db.projects.update(projectId, {
@@ -124,21 +142,21 @@ export async function unarchiveProject(projectId: string): Promise<void> {
       updatedAt: now,
       synced: false,
     });
-    const tasks = await db.tasks.where('projectId').equals(projectId).toArray();
+    const tasks = await db.tasks.where("projectId").equals(projectId).toArray();
     await Promise.all(
       tasks.map((task) => {
         const status =
           task.completedAt != null
-            ? ('done' as const)
+            ? ("done" as const)
             : task.workingDate
-              ? ('todo' as const)
-              : ('inbox' as const);
+              ? ("todo" as const)
+              : ("inbox" as const);
         return db.tasks.update(task.id, {
           status,
           updatedAt: now,
           synced: false,
         });
-      })
+      }),
     );
   });
 }

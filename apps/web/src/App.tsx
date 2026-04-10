@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './contexts/AuthContext';
-import AppLayout from './components/layout/AppLayout';
-import AuthPage from './pages/AuthPage';
-import InboxView from './views/InboxView';
-import TodayView from './views/TodayView';
-import ProjectsView from './views/ProjectsView';
-import { SyncService } from './services/SyncService';
-import { supabase } from './lib/supabase';
+import { useState, useEffect } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./contexts/AuthContext";
+import AppLayout from "./components/layout/AppLayout";
+import AuthPage from "./pages/AuthPage";
+import InboxView from "./views/InboxView";
+import TodayView from "./views/TodayView";
+import ProjectsView from "./views/ProjectsView";
+import { SyncService } from "./services/SyncService";
+import { supabase } from "./lib/supabase";
 
 export default function App() {
   const { user } = useAuth();
@@ -37,14 +37,14 @@ export default function App() {
     function handleOnline() {
       void runSync();
     }
-    window.addEventListener('online', handleOnline);
+    window.addEventListener("online", handleOnline);
 
     unsubscribeRealtime = syncService.subscribe(userId, () => {
       void runSync();
     });
 
     return () => {
-      window.removeEventListener('online', handleOnline);
+      window.removeEventListener("online", handleOnline);
       unsubscribeRealtime?.();
     };
   }, [user]);

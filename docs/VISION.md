@@ -29,6 +29,3 @@ A "Sifted World" is a world where humanity is freed from the "loop" of rememberi
 People can finally be fully present in the moment—whether that is deep work or deep rest—because they know their external cortex is "Sifting" the future for them.
 
 ---
-
-
-
