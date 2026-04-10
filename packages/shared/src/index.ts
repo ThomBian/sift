@@ -13,3 +13,5 @@ export type {
 export type { ProjectWithSpace, DropdownChip } from './SmartInput/Dropdown';
 export { Dropdown } from './SmartInput/Dropdown';
 export { EmojiPicker } from './EmojiPicker/EmojiPicker';
+export { Calendar } from './Calendar/Calendar';
+export type { CalendarProps } from './Calendar/Calendar';
