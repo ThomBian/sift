@@ -1,6 +1,7 @@
 // packages/shared/src/SmartInput/Dropdown.tsx
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { parseLooseDateQuery } from '../parseLooseDate';
+import { matchBestDate } from '../parseLooseDate';
+import { Calendar } from '../Calendar/Calendar';
 import type { Project, Space } from '../types';
 import type { ChipFocus } from './useSmartInput';
 import styles from './Dropdown.module.css';
@@ -17,6 +18,7 @@ interface DropdownProps {
   query: string;
   onSelect: (value: string | Date | null) => void;
   mode?: 'floating' | 'inline';
+  taskCounts?: Record<string, number>;
 }
 
 const DATE_QUICK_PICKS = ['Today', 'Tomorrow', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -41,11 +43,18 @@ type FlatItem =
   | { kind: 'new' }
   | { kind: 'date'; label: string; date?: Date };
 
-export function Dropdown({ type, projects, query, onSelect, mode = 'floating' }: DropdownProps) {
+export function Dropdown({ type, projects, query, onSelect, mode = 'floating', taskCounts }: DropdownProps) {
   const [focusedIndex, setFocusedIndex] = useState(-1);
 
   // Reset focused item when query changes
   useEffect(() => { setFocusedIndex(-1); }, [query]);
+
+  const bestMatch = useMemo(() => matchBestDate(query), [query]);
+  const [displayMonth, setDisplayMonth] = useState(bestMatch || new Date());
+
+  useEffect(() => {
+    if (bestMatch) setDisplayMonth(bestMatch);
+  }, [bestMatch]);
 
   const flatItems = useMemo((): FlatItem[] => {
     if (type === 'project') {
@@ -76,14 +85,14 @@ export function Dropdown({ type, projects, query, onSelect, mode = 'floating' }:
     const items: FlatItem[] = filtered.map(label => ({ kind: 'date', label }));
     // Try to parse query as a raw date (e.g. "Apr 10", "4/15") — year defaults to current when omitted
     if (query && items.length === 0) {
-      const d = parseLooseDateQuery(query);
+      const d = bestMatch;
       if (d) {
         const formatted = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         items.push({ kind: 'date', label: formatted, date: d });
       }
     }
     return items;
-  }, [type, projects, query]);
+  }, [type, projects, query, bestMatch]);
 
   // Stable refs so the keyboard listener never goes stale without re-registering
   const flatItemsRef = useRef(flatItems);
@@ -92,21 +101,31 @@ export function Dropdown({ type, projects, query, onSelect, mode = 'floating' }:
   useEffect(() => { focusedIndexRef.current = focusedIndex; }, [focusedIndex]);
   const onSelectRef = useRef(onSelect);
   useEffect(() => { onSelectRef.current = onSelect; }, [onSelect]);
+  const bestMatchRef = useRef(bestMatch);
+  useEffect(() => { bestMatchRef.current = bestMatch; }, [bestMatch]);
+  const typeRef = useRef(type);
+  useEffect(() => { typeRef.current = type; }, [type]);
 
   // Capture-phase listener fires before view bubble listeners and before React's synthetic events
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === 'ArrowDown') {
+        if (typeRef.current !== 'project') return; // Let Calendar or other things handle it if we want, or just ignore
         e.stopImmediatePropagation();
         e.preventDefault();
         setFocusedIndex(i => Math.min(i + 1, flatItemsRef.current.length - 1));
       } else if (e.key === 'ArrowUp') {
+        if (typeRef.current !== 'project') return;
         e.stopImmediatePropagation();
         e.preventDefault();
         setFocusedIndex(i => Math.max(i - 1, 0));
       } else if (e.key === 'Enter' && !e.metaKey && !e.ctrlKey) {
         e.stopImmediatePropagation();
         e.preventDefault();
+        if (typeRef.current !== 'project') {
+          if (bestMatchRef.current) onSelectRef.current(bestMatchRef.current);
+          return;
+        }
         const idx = focusedIndexRef.current >= 0 ? focusedIndexRef.current : 0;
         const item = flatItemsRef.current[idx];
         if (!item) return;
@@ -163,23 +182,14 @@ export function Dropdown({ type, projects, query, onSelect, mode = 'floating' }:
 
   // Date picker (dueDate or workingDate)
   return (
-    <div className={dropdownClass} role="listbox">
-      <div className={styles.quickPicks}>
-        {flatItems.map((item, idx) => {
-          if (item.kind !== 'date') return null;
-          return (
-            <button
-              key={item.label}
-              className={`${styles.quickPick} ${idx === focusedIndex ? styles.quickPickFocused : ''}`}
-              onClick={() => onSelect(item.date ?? parseQuickDate(item.label))}
-              role="option"
-              type="button"
-            >
-              {item.label}
-            </button>
-          );
-        })}
-      </div>
+    <div className={dropdownClass}>
+      <Calendar
+        selected={bestMatch || undefined}
+        onSelect={onSelect}
+        taskCounts={taskCounts}
+        month={displayMonth}
+        onMonthChange={setDisplayMonth}
+      />
     </div>
   );
 }
