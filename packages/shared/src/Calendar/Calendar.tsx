@@ -1,5 +1,4 @@
-import { DayPicker } from 'react-day-picker';
-import { fr } from 'date-fns/locale';
+import { DayPicker, type DayProps } from 'react-day-picker';
 import styles from './Calendar.module.css';
 
 export interface CalendarProps {
@@ -10,6 +9,10 @@ export interface CalendarProps {
   onMonthChange?: (month: Date) => void;
 }
 
+function localDateKey(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 export function Calendar({ selected, onSelect, taskCounts = {}, month, onMonthChange }: CalendarProps) {
   return (
     <DayPicker
@@ -18,18 +21,26 @@ export function Calendar({ selected, onSelect, taskCounts = {}, month, onMonthCh
       onSelect={(d) => d && onSelect(d)}
       month={month}
       onMonthChange={onMonthChange}
-      locale={fr}
       className={styles.rdp}
-      modifiers={{ hasTasks: (date) => !!taskCounts[date.toISOString().split('T')[0]] }}
+      modifiers={{ hasTasks: (date) => !!taskCounts[localDateKey(date)] }}
       modifiersClassNames={{ hasTasks: styles.hasTasks }}
       components={{
-        DayContent: ({ date }) => {
-          const count = taskCounts[date.toISOString().split('T')[0]];
+          Day: ({ day, modifiers, ...props }: DayProps) => {
+          if (!day || !day.date) {
+            // Return an empty td if day or day.date is not provided
+            return <td {...props} />; 
+          }
+          const isoDate = day.date.toISOString().split('T')[0];
+          const count = taskCounts[isoDate];
           return (
-            <div className={styles.dayCell}>
-              <span>{date.getDate()}</span>
+            <td 
+              {...props} 
+              className={`${styles.dayCell} ${modifiers.hasTasks ? styles.hasTasks : ''}`}
+              data-testid={`day-cell-${isoDate}`}
+            >
+              <span>{day.date.getDate()}</span>
               {count > 0 && <span className={styles.count}>{count}</span>}
-            </div>
+            </td>
           );
         }
       }}

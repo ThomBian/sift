@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Calendar } from '../Calendar/Calendar';
+import styles from '../Calendar/Calendar.module.css'; // Import styles to use class names
 
 describe('Calendar', () => {
   it('renders correctly', () => {
@@ -35,7 +36,8 @@ describe('Calendar', () => {
     
     render(<Calendar onSelect={onSelect} taskCounts={taskCounts} />);
     
-    // Check if the count "3" is rendered
-    expect(screen.getByText('3')).toBeDefined();
+    // Find the element with the count class and the text "3"
+    const countElement = screen.getByText('3', { selector: `.${styles.count}` });
+    expect(countElement).toBeDefined();
   });
 });
