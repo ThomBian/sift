@@ -18,13 +18,25 @@ interface SmartInputProps {
   initialFocus?: import('./useSmartInput').ChipFocus;
   /** Whether the chip dropdown floats absolutely or expands inline below the bar. Default: 'floating'. */
   dropdownPosition?: 'floating' | 'inline';
+  /** Task counts per day for the calendar. */
+  taskCounts?: Record<string, number>;
 }
 
 function formatDate(d: Date): string {
   return d.toLocaleDateString('fr-FR');
 }
 
-export function SmartInput({ projects, onTaskReady, placeholder, className, inputRef: externalInputRef, initialValues, initialFocus, dropdownPosition = 'floating' }: SmartInputProps) {
+export function SmartInput({
+  projects,
+  onTaskReady,
+  placeholder,
+  className,
+  inputRef: externalInputRef,
+  initialValues,
+  initialFocus,
+  dropdownPosition = 'floating',
+  taskCounts,
+}: SmartInputProps) {
   const localRef = useRef<HTMLInputElement>(null);
   const inputRef = externalInputRef ?? localRef;
 
@@ -210,6 +222,7 @@ export function SmartInput({ projects, onTaskReady, placeholder, className, inpu
                   projects={projects}
                   query={query}
                   onSelect={val => handleSelect(chip.key, val)}
+                  taskCounts={taskCounts}
                 />
               )}
             </div>
@@ -223,6 +236,7 @@ export function SmartInput({ projects, onTaskReady, placeholder, className, inpu
           query={query}
           onSelect={val => handleSelect(focus as ChipFocus, val)}
           mode="inline"
+          taskCounts={taskCounts}
         />
       )}
     </div>

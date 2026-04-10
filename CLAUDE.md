@@ -30,7 +30,7 @@ Turborepo + npm workspaces monorepo:
   - `src/db.ts` — Dexie.js `AppDatabase` singleton (`db`); auto-seeds a "Personal" space + "General" project on first run; schema v3 adds per-project emoji
   - `src/emojiPool.ts` — curated emoji list, `getRandomEmoji`, keyword `searchEmojis`
   - `src/EmojiPicker/` — grid picker (used from `ProjectEditPalette`)
-  - `src/SmartInput/` — reusable task-input component with `@p`/`@w`/`@d` inline chip triggers; `Dropdown` uses `parseLooseDateQuery` for freeform date text
+  - `src/SmartInput/` — reusable task-input component with `@p`/`@w`/`@d` inline chip triggers; `Dropdown` uses `matchBestDate` for freeform date text and grid calendar selection
   - `src/parseLooseDate.ts` — `parseLooseDateQuery`: when the user types a date **without** an explicit year (e.g. `Apr 10`, `4/15`), the year is set to the **current calendar year** (JS `Date` alone would use 2001). If the string includes a 4-digit year or `m/d/y` with a year segment, that year is kept.
   - `src/EmojiPicker/gridNav.ts` — keyboard arrows move in an **8-column grid per category** (not one global `index+8`); focused cell scrolls into view inside the picker
 

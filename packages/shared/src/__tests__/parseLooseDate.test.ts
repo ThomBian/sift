@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { dateQueryHasExplicitYear, parseLooseDateQuery } from '../parseLooseDate';
+import { dateQueryHasExplicitYear, parseLooseDateQuery, matchBestDate } from '../parseLooseDate';
 
 describe('dateQueryHasExplicitYear', () => {
   it('detects 4-digit years', () => {
@@ -19,7 +19,7 @@ describe('dateQueryHasExplicitYear', () => {
 });
 
 describe('parseLooseDateQuery', () => {
-  const ref = new Date(2026, 3, 8);
+  const ref = new Date(2026, 3, 8); // April 8th, 2026 (Wednesday)
 
   it('applies reference year when year omitted', () => {
     const d = parseLooseDateQuery('Apr 10', ref);
@@ -50,5 +50,38 @@ describe('parseLooseDateQuery', () => {
   it('returns null for garbage', () => {
     expect(parseLooseDateQuery('not a date', ref)).toBeNull();
     expect(parseLooseDateQuery('', ref)).toBeNull();
+  });
+});
+
+describe('matchBestDate', () => {
+  const ref = new Date(2026, 3, 8); // Wednesday, April 8, 2026
+
+  it('matches today prefixes', () => {
+    const d = matchBestDate('toda', ref);
+    expect(d!.getDate()).toBe(8);
+  });
+
+  it('matches tomorrow prefixes', () => {
+    const d = matchBestDate('tom', ref);
+    expect(d!.getDate()).toBe(9);
+  });
+
+  it('matches next specific weekday', () => {
+    // Current is Wed (3). Friday (5) should be +2.
+    const fri = matchBestDate('fri', ref);
+    expect(fri!.getDate()).toBe(10);
+
+    // Monday (1) should be next week (+5).
+    const mon = matchBestDate('mon', ref);
+    expect(mon!.getDate()).toBe(13);
+
+    // Wednesday (3) should be exactly 1 week from now if it is already Wednesday.
+    const wed = matchBestDate('wed', ref);
+    expect(wed!.getDate()).toBe(15);
+  });
+
+  it('falls back to parseLooseDateQuery', () => {
+    const d = matchBestDate('Apr 10', ref);
+    expect(d!.getDate()).toBe(10);
   });
 });

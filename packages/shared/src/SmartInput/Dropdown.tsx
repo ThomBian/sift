@@ -109,6 +109,27 @@ export function Dropdown({ type, projects, query, onSelect, mode = 'floating', t
   // Capture-phase listener fires before view bubble listeners and before React's synthetic events
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
+      if (typeRef.current === 'dueDate' || typeRef.current === 'workingDate') {
+        const current = bestMatchRef.current || new Date();
+        if (e.key === 'ArrowDown') {
+          e.stopImmediatePropagation(); e.preventDefault();
+          const next = new Date(current); next.setDate(next.getDate() + 7);
+          onSelectRef.current(next);
+        } else if (e.key === 'ArrowUp') {
+          e.stopImmediatePropagation(); e.preventDefault();
+          const next = new Date(current); next.setDate(next.getDate() - 7);
+          onSelectRef.current(next);
+        } else if (e.key === 'ArrowRight') {
+          e.stopImmediatePropagation(); e.preventDefault();
+          const next = new Date(current); next.setDate(next.getDate() + 1);
+          onSelectRef.current(next);
+        } else if (e.key === 'ArrowLeft') {
+          e.stopImmediatePropagation(); e.preventDefault();
+          const next = new Date(current); next.setDate(next.getDate() - 1);
+          onSelectRef.current(next);
+        }
+      }
+
       if (e.key === 'ArrowDown') {
         if (typeRef.current !== 'project') return; // Let Calendar or other things handle it if we want, or just ignore
         e.stopImmediatePropagation();
