@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, type ChangeEvent } from 'react';
 import { nanoid } from 'nanoid';
 import { db } from '../lib/db';
+import { useTaskCounts } from '../hooks/useTasks';
 import { Dropdown, EmojiPicker, getRandomEmoji } from '@sift/shared';
 import type { Project } from '@sift/shared';
 
@@ -57,6 +58,7 @@ export default function ProjectEditPalette({
   const [isClosing, setIsClosing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const triggerRef = useRef<Element | null>(null);
+  const taskCounts = useTaskCounts();
 
   const handleClose = useCallback(() => {
     setIsClosing(true);
@@ -299,6 +301,7 @@ export default function ProjectEditPalette({
               query={query}
               onSelect={handleDateSelect}
               mode="inline"
+              taskCounts={taskCounts}
             />
             <button
               type="button"

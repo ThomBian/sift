@@ -125,12 +125,14 @@ export function useTasks(view: 'inbox' | 'today'): Task[] {
 
 export function useTaskCounts() {
   return useLiveQuery(async () => {
-    const tasks = await db.tasks.where('status').notEqual('done').toArray();
+    const tasks = await db.tasks
+      .filter((t) => t.status !== 'done' && t.status !== 'archived')
+      .toArray();
     const counts: Record<string, number> = {};
     for (const t of tasks) {
       const d = t.dueDate || t.workingDate;
       if (!d) continue;
-      const key = d.toISOString().split('T')[0];
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
       counts[key] = (counts[key] || 0) + 1;
     }
     return counts;

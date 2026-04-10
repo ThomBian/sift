@@ -8,6 +8,7 @@ import {
 import { db } from '../lib/db';
 import { nanoid } from 'nanoid';
 import { useSpacesProjects } from '../hooks/useSpacesProjects';
+import { useTaskCounts } from '../hooks/useTasks';
 
 interface InputBarProps {
   defaultProjectId: string;
@@ -36,6 +37,7 @@ async function handleTaskReady(
 
 export default function InputBar({ defaultProjectId, inputRef }: InputBarProps) {
   const { spacesWithProjects } = useSpacesProjects();
+  const taskCounts = useTaskCounts();
 
   const projects: ProjectWithSpace[] = useMemo(
     () =>
@@ -51,6 +53,7 @@ export default function InputBar({ defaultProjectId, inputRef }: InputBarProps) 
         projects={projects}
         onTaskReady={(partial) => handleTaskReady(partial, defaultProjectId)}
         inputRef={inputRef}
+        taskCounts={taskCounts}
       />
     </div>
   );

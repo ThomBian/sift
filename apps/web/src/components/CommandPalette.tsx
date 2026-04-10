@@ -1,6 +1,7 @@
 import { useEffect, useRef, useMemo, useState, useCallback } from "react";
 import { SmartInput, type ProjectWithSpace, type Task, type ChipFocus, type SmartInputValues } from "@sift/shared";
 import { useSpacesProjects } from "../hooks/useSpacesProjects";
+import { useTaskCounts } from "../hooks/useTasks";
 import { db } from "../lib/db";
 import { nanoid } from "nanoid";
 
@@ -61,6 +62,7 @@ export default function CommandPalette({
   editChip,
 }: CommandPaletteProps) {
   const { spacesWithProjects } = useSpacesProjects();
+  const taskCounts = useTaskCounts();
   const inputRef = useRef<HTMLInputElement>(null);
   const triggerRef = useRef<Element | null>(null);
   const [isClosing, setIsClosing] = useState(false);
@@ -139,6 +141,7 @@ export default function CommandPalette({
           initialValues={initialValues}
           initialFocus={editChip ?? undefined}
           dropdownPosition="inline"
+          taskCounts={taskCounts}
         />
       </div>
     </div>

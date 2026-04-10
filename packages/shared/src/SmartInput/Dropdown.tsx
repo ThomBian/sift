@@ -206,7 +206,7 @@ export function Dropdown({ type, projects, query, onSelect, mode = 'floating', t
     <div className={dropdownClass}>
       <Calendar
         selected={bestMatch || undefined}
-        onSelect={onSelect}
+        onSelect={(date) => onSelect(date)}
         taskCounts={taskCounts}
         month={displayMonth}
         onMonthChange={setDisplayMonth}

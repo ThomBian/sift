@@ -1,23 +1,172 @@
-/* packages/shared/src/Calendar/Calendar.module.css */
+/* ── Sift design-system override for react-day-picker v9 ──────────────────
+   .rdp (scoped) is applied to the rdp-root element via className.
+   Child overrides use :global() to pierce CSS Modules scoping.
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* ── CSS variable overrides ─────────────────────────────────────────────── */
 .rdp {
-  --rdp-accent-color: var(--accent);
-  --rdp-background-color: var(--surface-2);
-  margin: 0;
-}
-.dayCell {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  --rdp-accent-color: #ff4f00;
+  --rdp-accent-background-color: rgba(255, 79, 0, 0.06);
+  --rdp-today-color: #ff4f00;
+
+  /* 32px cells match Sift's task-row density */
+  --rdp-day-height: 32px;
+  --rdp-day-width: 32px;
+  --rdp-day_button-height: 30px;
+  --rdp-day_button-width: 100%;
+
+  /* Zero radius — non-negotiable */
+  --rdp-day_button-border-radius: 0;
+  --rdp-day_button-border: 0.5px solid transparent;
+
+  /* No selected-border outline — bg + glow communicates selection */
+  --rdp-selected-border: none;
+
+  /* Outside month days: more transparent */
+  --rdp-outside-opacity: 0.25;
+
+  /* Nav sizing */
+  --rdp-nav_button-height: 20px;
+  --rdp-nav_button-width: 20px;
+  --rdp-nav-height: 28px;
+
+  /* Motion: 150ms, Sift's standard ease-out */
+  --rdp-animation_duration: 0.15s;
+  --rdp-animation_timing: cubic-bezier(0.23, 1, 0.32, 1);
+
   width: 100%;
-  height: 100%;
+  margin: 0;
+  padding: 8px 8px 6px;
 }
+
+/* Force the month container and grid table to fill available width */
+.rdp :global(.rdp-months) {
+  width: 100%;
+  max-width: 100%;
+}
+
+.rdp :global(.rdp-month) {
+  width: 100%;
+}
+
+.rdp :global(.rdp-month_grid) {
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* Let cells fill their column (overrides the fixed --rdp-day-width pixel value) */
+.rdp :global(.rdp-day) {
+  width: auto;
+}
+
+/* ── Month caption ──────────────────────────────────────────────────────── */
+.rdp :global(.rdp-month_caption) {
+  height: 28px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #111111;
+}
+
+/* ── Weekday column headers ─────────────────────────────────────────────── */
+.rdp :global(.rdp-weekday) {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #bbbbbb;
+  opacity: 1; /* override rdp's default 0.75 */
+  padding: 4px 0;
+}
+
+/* ── Navigation buttons ─────────────────────────────────────────────────── */
+.rdp :global(.rdp-button_previous),
+.rdp :global(.rdp-button_next) {
+  color: #bbbbbb;
+  border-radius: 0 !important;
+  transition: color 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.rdp :global(.rdp-button_previous:hover),
+.rdp :global(.rdp-button_next:hover) {
+  color: #111111;
+  background: transparent;
+}
+
+.rdp :global(.rdp-chevron) {
+  fill: currentColor;
+}
+
+/* ── Day button base ────────────────────────────────────────────────────── */
+.rdp :global(.rdp-day_button) {
+  border-radius: 0 !important;
+  font-family: "Geist", system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #111111;
+  position: relative; /* anchor the .count badge */
+  transition:
+    background-color 150ms cubic-bezier(0.23, 1, 0.32, 1),
+    color 150ms cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Hover (non-selected focusable days) */
+.rdp :global(.rdp-focusable:not(.rdp-selected)):hover :global(.rdp-day_button) {
+  background-color: rgba(255, 79, 0, 0.06);
+  color: #111111;
+}
+
+/* ── Selected day ───────────────────────────────────────────────────────── */
+.rdp :global(.rdp-selected) :global(.rdp-day_button) {
+  background-color: #ff4f00;
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 0 8px rgba(255, 79, 0, 0.4);
+}
+
+.rdp :global(.rdp-selected) :global(.rdp-day_button:hover) {
+  background-color: #e64500;
+}
+
+/* ── Today (not selected) ───────────────────────────────────────────────── */
+.rdp :global(.rdp-today:not(.rdp-selected)) :global(.rdp-day_button) {
+  color: #ff4f00;
+  font-weight: 600;
+}
+
+/* ── Task count badge ───────────────────────────────────────────────────── */
 .count {
   position: absolute;
-  top: 2px;
+  top: 1px;
   right: 2px;
-  font-size: 8px;
-  font-family: var(--font-mono);
-  color: var(--accent);
-  opacity: 0.7;
+  font-size: 7px;
+  font-family: "JetBrains Mono", monospace;
+  line-height: 1;
+  color: #ff4f00;
+  pointer-events: none;
+}
+
+/* Invert badge on selected days so it stays legible */
+.rdp :global(.rdp-selected) .count {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .rdp {
+    --rdp-animation_duration: 0.01ms;
+  }
+
+  .rdp :global(.rdp-day_button) {
+    transition: none;
+  }
+
+  .rdp :global(.rdp-button_previous),
+  .rdp :global(.rdp-button_next) {
+    transition: none;
+  }
 }
