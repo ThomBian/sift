@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useProjectNav, SHOW_ARCHIVED_TOGGLE_ID } from "../hooks/useProjectNav";

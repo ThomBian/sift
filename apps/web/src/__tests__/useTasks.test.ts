@@ -1,3 +1,5 @@
+// @vitest-environment jsdom
+import "fake-indexeddb/auto";
 import { describe, it, expect, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
 import { db } from "../lib/db";
