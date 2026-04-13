@@ -3,18 +3,9 @@ import { useTodayTasks } from "../hooks/useTasks";
 import { useKeyboardNav } from "../hooks/useKeyboardNav";
 import TaskList from "../components/TaskList";
 import HintBar from "../components/layout/HintBar";
-import ViewHeader, { ViewHeaderCount } from "../components/layout/ViewHeader";
 import { db } from "../lib/db";
 import { requestSync } from "../lib/requestSync";
 import type { Task, ChipFocus } from "@sift/shared";
-
-function todayLabel(): string {
-  return new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  });
-}
 
 function dispatchEditTask(task: Task, chip: ChipFocus | null) {
   window.dispatchEvent(
@@ -114,18 +105,7 @@ export default function TodayView() {
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      <ViewHeader
-        title="Today"
-        trailing={
-          <>
-            <span className="text-muted">{todayLabel()}</span>
-            <span className="text-muted" aria-hidden>
-              ·
-            </span>
-            <ViewHeaderCount value={tasks.length} />
-          </>
-        }
-      />
+      <h1 className="sr-only">Today</h1>
 
       <div className="flex-1 overflow-y-auto min-h-0">
         <TaskList

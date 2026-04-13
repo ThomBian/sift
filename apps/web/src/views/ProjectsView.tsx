@@ -13,7 +13,6 @@ import { useKeyboardNav } from "../hooks/useKeyboardNav";
 import { useProjectNav, SHOW_ARCHIVED_TOGGLE_ID } from "../hooks/useProjectNav";
 import TaskRow from "../components/TaskRow";
 import HintBar from "../components/layout/HintBar";
-import ViewHeader, { ViewHeaderCount } from "../components/layout/ViewHeader";
 import ConfirmModal from "../components/ConfirmModal";
 import { db } from "../lib/db";
 import { requestSync } from "../lib/requestSync";
@@ -145,22 +144,6 @@ export default function ProjectsView() {
       total += g.archivedProjects.length;
     }
     return prefixes;
-  }, [groups]);
-
-  const viewHeaderStats = useMemo(() => {
-    let activeProjectCount = 0;
-    let openTaskCount = 0;
-    for (const g of groups) {
-      for (const { tasks } of g.projects) {
-        activeProjectCount += 1;
-        for (const t of tasks) {
-          if (t.status !== "done" && t.status !== "archived") {
-            openTaskCount += 1;
-          }
-        }
-      }
-    }
-    return { activeProjectCount, openTaskCount };
   }, [groups]);
 
   const visibleProjectsOrdered = useMemo(() => {
@@ -677,23 +660,7 @@ export default function ProjectsView() {
         />
       ) : null}
 
-      <ViewHeader
-        title="Projects"
-        trailing={
-          <>
-            <span className="text-muted tabular-nums">
-              {viewHeaderStats.activeProjectCount}{" "}
-              {viewHeaderStats.activeProjectCount === 1
-                ? "project"
-                : "projects"}
-            </span>
-            <span className="text-muted" aria-hidden>
-              ·
-            </span>
-            <ViewHeaderCount value={viewHeaderStats.openTaskCount} />
-          </>
-        }
-      />
+      <h1 className="sr-only">Projects</h1>
 
       <div className="flex-1 overflow-y-auto min-h-0">
         {groups.map(({ space, projects: ps }) => (
