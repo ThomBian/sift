@@ -1,26 +1,30 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "./contexts/AuthContext";
-import { useSync } from "./hooks/useSync";
-import AppLayout from "./components/layout/AppLayout";
-import AuthPage from "./pages/AuthPage";
-import InboxView from "./views/InboxView";
-import TodayView from "./views/TodayView";
-import ProjectsView from "./views/ProjectsView";
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/next';
+import { useAuth } from './contexts/AuthContext';
+import { useSync } from './hooks/useSync';
+import AppLayout from './components/layout/AppLayout';
+import AuthPage from './pages/AuthPage';
+import InboxView from './views/InboxView';
+import TodayView from './views/TodayView';
+import ProjectsView from './views/ProjectsView';
 
 export default function App() {
   const { user } = useAuth();
   const isSynced = useSync(user);
 
   return (
-    <Routes>
-      <Route path="/auth" element={<AuthPage />} />
-      <Route path="/" element={<AppLayout isSynced={isSynced} />}>
-        <Route index element={<Navigate to="/inbox" replace />} />
-        <Route path="inbox" element={<InboxView />} />
-        <Route path="today" element={<TodayView />} />
-        <Route path="projects" element={<ProjectsView />} />
-      </Route>
-      <Route path="*" element={<Navigate to="/inbox" replace />} />
-    </Routes>
+    <>
+      <Analytics />
+      <Routes>
+        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/" element={<AppLayout isSynced={isSynced} />}>
+          <Route index element={<Navigate to="/inbox" replace />} />
+          <Route path="inbox" element={<InboxView />} />
+          <Route path="today" element={<TodayView />} />
+          <Route path="projects" element={<ProjectsView />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/inbox" replace />} />
+      </Routes>
+    </>
   );
 }
