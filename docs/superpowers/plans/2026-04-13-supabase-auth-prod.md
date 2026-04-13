@@ -156,11 +156,37 @@ alter publication supabase_realtime add table public.tasks;
 
 - [ ] **Step 2: Apply in Supabase** _(operator — run migration in your Supabase project)_
 
-In **SQL Editor**, run the file contents once against the target project.
+**A. Open the right project**
 
-If `alter publication supabase_realtime add table public.tasks` errors because the table is already in the publication, skip that line or remove `tasks` from the publication in the Dashboard and re-add once.
+1. Go to [https://supabase.com/dashboard](https://supabase.com/dashboard) and sign in.
+2. Click the **organization** that owns your app (if you have more than one).
+3. Click the **project** whose URL matches `VITE_SUPABASE_URL` in your `apps/web/.env` (e.g. if the env is `https://abcdxyzcompany.supabase.co`, pick that project — the subdomain is the project ref).
 
-Alternative: **Database → Publications → supabase_realtime →** enable `tasks` in the UI instead of the `ALTER PUBLICATION` line.
+**B. Run the migration SQL**
+
+4. In the left sidebar, open **SQL Editor**.
+5. Click **New query** (empty editor).
+6. On your machine, open the file  
+   `supabase/migrations/20260413000000_init_sync.sql`  
+   in this repo, **select all**, copy.
+7. Paste into the Supabase SQL Editor.
+8. Click **Run** (or use the keyboard shortcut shown in the editor, often **Ctrl/Cmd + Enter**).
+
+**C. Confirm it worked**
+
+9. The bottom **Results** panel should show **Success** for the script (no red error). You may see multiple statement results; the important part is no failure.
+10. Optional sanity check: left sidebar **Table Editor** → you should see **`spaces`**, **`projects`**, and **`tasks`** under the `public` schema. Open `tasks` and confirm columns like `user_id`, `updated_at`, `status` exist.
+
+**D. If the last line fails (`alter publication …`)**
+
+Supabase may error with something like *relation "tasks" is already member of publication* or *already exists*.
+
+- **Option 1:** In **Database → Publications** (or **Realtime** settings, depending on dashboard version), open publication **`supabase_realtime`** and ensure table **`public.tasks`** is included. If it already is, **delete** the `alter publication supabase_realtime add table public.tasks;` line from your query, run **only** the rest of the file (only needed if you ever re-run from scratch on a DB that already had that line applied).
+- **Option 2:** Run everything **except** the final `alter publication` line once; then add `tasks` to the realtime publication via the **Dashboard UI** as documented in Supabase’s Realtime docs for your project version.
+
+**E. If tables already existed from an older attempt**
+
+`CREATE TABLE IF NOT EXISTS` and `CREATE INDEX IF NOT EXISTS` are safe. **Policies** are dropped and recreated by the script. If you customized RLS manually, back up those policies before re-running this file.
 
 - [x] **Step 3: Commit** (`3d515a5`)
 
@@ -175,7 +201,7 @@ git commit -m "chore(supabase): add schema, RLS, and realtime for sync tables"
 
 **Files:** none (dashboard only)
 
-- [ ] **Step 1: Site URL and redirect allowlist**
+- [x] **Step 1: Site URL and redirect allowlist** _(done)_
 
 In **Authentication → URL Configuration**:
 
@@ -189,11 +215,11 @@ In **Authentication → URL Configuration**:
 
 `AuthContext` uses `redirectTo: window.location.origin` and `emailRedirectTo: window.location.origin`, so the **exact origin** of the running app must be allowed.
 
-- [ ] **Step 2: Enable Email provider**
+- [x] **Step 2: Enable Email provider** _(done)_
 
 **Authentication → Providers → Email:** enable. Confirm magic-link / OTP email works (check spam; configure custom SMTP under Project Settings if needed).
 
-- [ ] **Step 3: Smoke-test magic link locally**
+- [x] **Step 3: Smoke-test magic link locally** _(done)_
 
 1. Create `apps/web/.env` with real `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
 2. `npm run dev` from repo root (or web workspace).
@@ -203,11 +229,11 @@ Expected: session present; network shows successful Supabase auth requests.
 
 ---
 
-### Task 4: Google OAuth
+### Task 4: Google OAuth ✅ (local)
 
 **Files:** none (Google Cloud Console + Supabase dashboard)
 
-- [ ] **Step 1: Google Cloud OAuth client**
+- [x] **Step 1: Google Cloud OAuth client** _(done)_
 
 In [Google Cloud Console](https://console.cloud.google.com/):
 
@@ -216,11 +242,11 @@ In [Google Cloud Console](https://console.cloud.google.com/):
    `https://<PROJECT_REF>.supabase.co/auth/v1/callback`  
    (copy from **Supabase → Authentication → Providers → Google**).
 
-- [ ] **Step 2: Enable Google in Supabase**
+- [x] **Step 2: Enable Google in Supabase** _(done)_
 
 Paste **Client ID** and **Client Secret** into Supabase Google provider settings; save.
 
-- [ ] **Step 3: Smoke-test Google sign-in**
+- [x] **Step 3: Smoke-test Google sign-in** _(done — local)_
 
 From local app `/auth`, click **Continue with Google**. Complete flow; expect redirect back to app origin with session.
 
