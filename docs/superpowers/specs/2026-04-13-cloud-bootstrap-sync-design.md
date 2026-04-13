@@ -81,6 +81,25 @@ async function initialize() {
 - Realtime `onChange` callback and `window.online` handler both call `syncService.sync(userId)` — bootstrap is one-shot only.
 - On sign-out (`user` becomes null): `clearLocalDB()` + `localStorage.removeItem(SIFT_USER_ID_KEY)`.
 
+### 5. Realtime subscription expansion
+
+`SyncService.subscribe` currently only watches the `tasks` table. Expand to subscribe to all three tables (`spaces`, `projects`, `tasks`) using the same `onChange` handler. This ensures project and space changes on Device A propagate immediately to Device B without waiting for the next task-triggered sync.
+
+```ts
+subscribe(userId: string, onChange: () => void): () => void {
+  const channel = this.supabase
+    .channel(`sift:user:${userId}`)
+    .on("postgres_changes", { event: "*", schema: "public", table: "spaces",   filter: `user_id=eq.${userId}` }, onChange)
+    .on("postgres_changes", { event: "*", schema: "public", table: "projects", filter: `user_id=eq.${userId}` }, onChange)
+    .on("postgres_changes", { event: "*", schema: "public", table: "tasks",    filter: `user_id=eq.${userId}` }, onChange)
+    .subscribe();
+
+  return () => { void this.supabase.removeChannel(channel); };
+}
+```
+
+All three listeners share one channel and one `onChange` → one incremental sync per batch of changes.
+
 ### 4. Files changed
 
 | File | Change |
@@ -88,6 +107,7 @@ async function initialize() {
 | `packages/shared/src/db.ts` | Add `clearLocalDB()` export |
 | `apps/web/src/services/SyncService.ts` | Add `bootstrap(userId)` method |
 | `apps/web/src/hooks/useSync.ts` | Replace initial sync with `initialize()`, handle sign-out wipe |
+| `apps/web/src/services/SyncService.ts` | Expand `subscribe()` to watch spaces, projects, tasks |
 
 No new Dexie version needed. No DB schema changes. No UI changes.
 
@@ -101,3 +121,4 @@ No new Dexie version needed. No DB schema changes. No UI changes.
 | Sign out | Data stays in IndexedDB | DB wiped |
 | Task created before sign-in | May push, may not | Pushed during bootstrap |
 | Offline with no account | Seed works as before | Unchanged |
+| New project on Device A | Device B misses it until task changes | Device B gets it immediately via realtime |
