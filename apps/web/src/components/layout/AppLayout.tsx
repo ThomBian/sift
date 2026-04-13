@@ -4,7 +4,6 @@ import Topbar from "./Topbar";
 import Sidebar from "./Sidebar";
 import CommandPalette from "../CommandPalette";
 import ProjectEditPalette from "../ProjectEditPalette";
-import { useSpacesProjects } from "../../hooks/useSpacesProjects";
 import type { SyncStatus } from "../../hooks/useSync";
 import type { Task, ChipFocus, Project } from "@sift/shared";
 
@@ -31,14 +30,8 @@ export default function AppLayout({ syncStatus }: AppLayoutProps) {
   const [focusedProjectId, setFocusedProjectId] = useState<string | null>(null);
   const [navDrawerOpen, setNavDrawerOpen] = useState(false);
 
-  const { spacesWithProjects } = useSpacesProjects();
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Fallback default project id when no project is keyboard-focused
-  const fallbackProjectId =
-    spacesWithProjects.flatMap((s) => s.projects)[0]?.id ?? "";
-  const defaultProjectId = focusedProjectId ?? fallbackProjectId;
 
   function openPalette(task?: Task | null, chip?: ChipFocus | null) {
     setEditTask(task ?? null);
@@ -206,7 +199,6 @@ export default function AppLayout({ syncStatus }: AppLayoutProps) {
       <CommandPalette
         isOpen={paletteOpen}
         onClose={closePalette}
-        defaultProjectId={defaultProjectId}
         prefillProjectId={focusedProjectId}
         editTask={editTask}
         editChip={editChip}

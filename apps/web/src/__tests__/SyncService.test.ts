@@ -140,6 +140,26 @@ describe("SyncService", () => {
       );
     });
 
+    it("pushes tasks with null project_id when unassigned", async () => {
+      await db.spaces.add(makeSpace({ synced: true }));
+      await db.projects.add(makeProject({ synced: true }));
+      await db.tasks.add(makeTask({ projectId: null, synced: false }));
+      const mockSupabase = createMockSupabase();
+
+      const svc = new SyncService(mockSupabase as never);
+      await svc.sync("user-1");
+
+      expect(mockUpsert).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: "task-1",
+            project_id: null,
+          }),
+        ]),
+        expect.objectContaining({ onConflict: "id" }),
+      );
+    });
+
     it("does not push when everything is already synced", async () => {
       await db.spaces.add(makeSpace({ synced: true }));
       const mockSupabase = createMockSupabase();
@@ -201,6 +221,39 @@ describe("SyncService", () => {
       const stored = await db.tasks.get("remote-task");
       expect(stored).toBeDefined();
       expect(stored!.title).toBe("From server");
+    });
+
+    it("maps null project_id from remote to Dexie", async () => {
+      mockGt
+        .mockResolvedValueOnce({ data: [], error: null })
+        .mockResolvedValueOnce({ data: [], error: null })
+        .mockResolvedValueOnce({
+          data: [
+            {
+              id: "no-project-task",
+              title: "Unassigned",
+              project_id: null,
+              status: "inbox",
+              working_date: null,
+              due_date: null,
+              created_at: now.toISOString(),
+              updated_at: new Date("2026-04-04T12:00:00Z").toISOString(),
+              completed_at: null,
+              url: null,
+              synced: true,
+              user_id: "user-1",
+            },
+          ],
+          error: null,
+        });
+
+      const mockSupabase = createMockSupabase();
+      const svc = new SyncService(mockSupabase as never);
+      await svc.sync("user-1");
+
+      const stored = await db.tasks.get("no-project-task");
+      expect(stored).toBeDefined();
+      expect(stored!.projectId).toBeNull();
     });
 
     it("keeps the local record when local updatedAt is newer", async () => {

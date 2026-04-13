@@ -8,9 +8,7 @@ import styles from "./SmartInput.module.css";
 interface SmartInputProps {
   projects: ProjectWithSpace[];
   onTaskReady: (
-    task: Pick<Task, "title" | "dueDate" | "workingDate" | "url"> & {
-      projectId?: string;
-    },
+    task: Pick<Task, "title" | "dueDate" | "workingDate" | "url" | "projectId">,
   ) => void;
   placeholder?: string;
   className?: string;

@@ -88,9 +88,7 @@ const EMPTY: SmartInputValues = {
 
 export function useSmartInput(
   onTaskReady: (
-    task: Pick<Task, "title" | "dueDate" | "workingDate" | "url"> & {
-      projectId?: string;
-    },
+    task: Pick<Task, "title" | "dueDate" | "workingDate" | "url" | "projectId">,
   ) => void,
   initialValues: Partial<SmartInputValues> = {},
   initialFocus: FocusTarget = "text",
@@ -120,7 +118,7 @@ export function useSmartInput(
     const trimmedUrl = values.url?.trim();
     onTaskReady({
       title: values.title.trim(),
-      ...(values.projectId ? { projectId: values.projectId } : {}),
+      projectId: values.projectId,
       dueDate: values.dueDate,
       workingDate: values.workingDate,
       url: trimmedUrl ? trimmedUrl : null,

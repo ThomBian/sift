@@ -185,23 +185,26 @@ export default function TaskRow({
       {showProject && (
         <span
           data-testid="project-label"
-          className="shrink-0 flex items-center gap-1 max-w-[10rem] min-w-0 text-muted"
+          className={`shrink-0 flex items-center gap-1.5 max-w-40 min-w-0 font-mono text-[10px] font-normal truncate ${
+            showDone ? "text-dim" : "text-muted"
+          }`}
         >
           {project.emoji ? (
-            <span className="shrink-0 text-sm leading-none" aria-hidden="true">
+            <span
+              className="shrink-0 text-[12px] leading-none font-sans"
+              aria-hidden="true"
+            >
               {project.emoji}
             </span>
           ) : null}
-          <em className="font-sans text-sm font-medium tracking-[-0.02em] italic truncate">
-            {project.name}
-          </em>
+          <span className="min-w-0 truncate">{project.name}</span>
         </span>
       )}
 
       {task.dueDate && (
         <span
           data-testid="due-date"
-          className={`text-xs shrink-0 tabular-nums font-mono inline-flex items-center gap-1 ${
+          className={`text-[10px] shrink-0 tabular-nums font-mono font-normal inline-flex items-center gap-1 ${
             late ? "text-red font-medium" : "text-muted"
           }`}
         >

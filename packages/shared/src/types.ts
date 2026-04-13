@@ -29,7 +29,8 @@ export type TaskStatus = "inbox" | "todo" | "done" | "archived";
 export interface Task {
   id: string;
   title: string;
-  projectId: string; // FK → Project; space derived via project.spaceId
+  /** null = unassigned (inbox/today only until user picks a project) */
+  projectId: string | null;
   status: TaskStatus;
   workingDate: Date | null; // drives Today view (workingDate <= today)
   dueDate: Date | null; // shows red when past + not done

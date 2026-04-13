@@ -8,21 +8,17 @@ import { useSpacesProjects } from "../hooks/useSpacesProjects";
 import { useTaskCounts } from "../hooks/useTasks";
 
 interface InputBarProps {
-  defaultProjectId: string;
   inputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
 async function handleTaskReady(
-  partial: Pick<Task, "title" | "dueDate" | "workingDate" | "url"> & {
-    projectId?: string;
-  },
-  defaultProjectId: string,
+  partial: Pick<Task, "title" | "dueDate" | "workingDate" | "url" | "projectId">,
 ): Promise<void> {
   const now = new Date();
   await db.tasks.add({
     id: nanoid(),
     title: partial.title,
-    projectId: partial.projectId ?? defaultProjectId,
+    projectId: partial.projectId,
     status: partial.workingDate ? "todo" : "inbox",
     workingDate: partial.workingDate ?? null,
     dueDate: partial.dueDate ?? null,
@@ -35,10 +31,7 @@ async function handleTaskReady(
   requestSync();
 }
 
-export default function InputBar({
-  defaultProjectId,
-  inputRef,
-}: InputBarProps) {
+export default function InputBar({ inputRef }: InputBarProps) {
   const { spacesWithProjects } = useSpacesProjects();
   const taskCounts = useTaskCounts();
 
@@ -54,7 +47,7 @@ export default function InputBar({
     <div className="border-b border-[0.5px] border-border bg-surface px-4 py-3">
       <SmartInput
         projects={projects}
-        onTaskReady={(partial) => handleTaskReady(partial, defaultProjectId)}
+        onTaskReady={(partial) => handleTaskReady(partial)}
         inputRef={inputRef}
         taskCounts={taskCounts}
       />

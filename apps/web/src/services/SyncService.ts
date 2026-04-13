@@ -71,7 +71,7 @@ function taskToRow(task: Task, userId: string) {
     id: task.id,
     user_id: userId,
     title: task.title,
-    project_id: task.projectId,
+    project_id: task.projectId ?? null,
     status: task.status,
     working_date: task.workingDate?.toISOString() ?? null,
     due_date: task.dueDate?.toISOString() ?? null,
@@ -84,10 +84,12 @@ function taskToRow(task: Task, userId: string) {
 }
 
 function rowToTask(row: Record<string, unknown>): Task {
+  const pid = row.project_id;
   return {
     id: row.id as string,
     title: row.title as string,
-    projectId: row.project_id as string,
+    projectId:
+      pid != null && String(pid).length > 0 ? (pid as string) : null,
     status: row.status as Task["status"],
     workingDate: row.working_date ? new Date(row.working_date as string) : null,
     dueDate: row.due_date ? new Date(row.due_date as string) : null,

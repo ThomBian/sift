@@ -3,6 +3,34 @@ import TaskRow from "./TaskRow";
 import { useSpacesProjects } from "../hooks/useSpacesProjects";
 import type { Task, Project, Space } from "@sift/shared";
 
+/** Shown when a task has no project or the project row is missing (e.g. sync race). */
+function orphanProjectContext(task: Task): { project: Project; space: Space } {
+  const now = new Date();
+  const unassigned = task.projectId == null;
+  return {
+    project: {
+      id: task.projectId ?? "__unassigned__",
+      name: unassigned ? "No project" : "Unknown project",
+      emoji: null,
+      spaceId: "__orphan__",
+      dueDate: null,
+      archived: false,
+      url: null,
+      createdAt: now,
+      updatedAt: now,
+      synced: true,
+    },
+    space: {
+      id: "__orphan__",
+      name: "Unknown",
+      color: "#888888",
+      createdAt: now,
+      updatedAt: now,
+      synced: true,
+    },
+  };
+}
+
 interface TaskListProps {
   tasks: Task[];
   focusedId: string | null;
@@ -21,7 +49,7 @@ export default function TaskList({
   emptyState,
 }: TaskListProps) {
   const [doneExpanded, setDoneExpanded] = useState(false);
-  const { spacesWithProjects } = useSpacesProjects();
+  const { spacesWithProjects, spacesProjectsReady } = useSpacesProjects();
 
   const activeTasks = tasks.filter(
     (t) => t.status !== "done" && t.status !== "archived",
@@ -38,6 +66,16 @@ export default function TaskList({
     return map;
   }, [spacesWithProjects]);
 
+  if (!spacesProjectsReady) {
+    return (
+      <div
+        className="flex-1 min-h-[120px]"
+        aria-busy="true"
+        aria-label="Loading tasks"
+      />
+    );
+  }
+
   return (
     <div className="flex-1">
       {activeTasks.length === 0 &&
@@ -51,14 +89,17 @@ export default function TaskList({
       {activeTasks.length > 0 ? (
         <div role="list">
           {activeTasks.map((task, i) => {
-            const ctx = projectMap.get(task.projectId);
-            if (!ctx) return null;
+            const ctx =
+              task.projectId != null
+                ? projectMap.get(task.projectId)
+                : undefined;
+            const resolved = ctx ?? orphanProjectContext(task);
             return (
               <TaskRow
                 key={task.id}
                 task={task}
-                project={ctx.project}
-                space={ctx.space}
+                project={resolved.project}
+                space={resolved.space}
                 isFocused={focusedId === task.id}
                 onFocus={() => onFocus(task.id)}
                 onToggle={onToggle ? () => onToggle(task) : undefined}
@@ -98,14 +139,17 @@ export default function TaskList({
           {doneExpanded ? (
             <div role="list">
               {doneTasks.map((task) => {
-                const ctx = projectMap.get(task.projectId);
-                if (!ctx) return null;
+                const ctx =
+                  task.projectId != null
+                    ? projectMap.get(task.projectId)
+                    : undefined;
+                const resolved = ctx ?? orphanProjectContext(task);
                 return (
                   <TaskRow
                     key={task.id}
                     task={task}
-                    project={ctx.project}
-                    space={ctx.space}
+                    project={resolved.project}
+                    space={resolved.space}
                     isFocused={focusedId === task.id}
                     onFocus={() => onFocus(task.id)}
                   />

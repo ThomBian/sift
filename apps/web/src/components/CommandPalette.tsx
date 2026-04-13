@@ -15,23 +15,19 @@ import { nanoid } from "nanoid";
 interface CommandPaletteProps {
   isOpen: boolean;
   onClose: () => void;
-  defaultProjectId: string;
   prefillProjectId?: string | null;
   editTask?: Task | null;
   editChip?: ChipFocus | null;
 }
 
 async function createTask(
-  partial: Pick<Task, "title" | "dueDate" | "workingDate" | "url"> & {
-    projectId?: string;
-  },
-  defaultProjectId: string,
+  partial: Pick<Task, "title" | "dueDate" | "workingDate" | "url" | "projectId">,
 ): Promise<void> {
   const now = new Date();
   await db.tasks.add({
     id: nanoid(),
     title: partial.title,
-    projectId: partial.projectId ?? defaultProjectId,
+    projectId: partial.projectId,
     status: partial.workingDate ? "todo" : "inbox",
     workingDate: partial.workingDate ?? null,
     dueDate: partial.dueDate ?? null,
@@ -46,19 +42,17 @@ async function createTask(
 
 async function updateTask(
   taskId: string,
-  partial: Pick<Task, "title" | "dueDate" | "workingDate" | "url"> & {
-    projectId?: string;
-  },
+  partial: Pick<Task, "title" | "dueDate" | "workingDate" | "url" | "projectId">,
 ): Promise<void> {
   const patch: Partial<Task> = {
     title: partial.title,
     dueDate: partial.dueDate,
     workingDate: partial.workingDate,
     url: partial.url ?? null,
+    projectId: partial.projectId,
     updatedAt: new Date(),
     synced: false,
   };
-  if (partial.projectId !== undefined) patch.projectId = partial.projectId;
   if (partial.workingDate !== undefined) {
     patch.status = partial.workingDate !== null ? "todo" : "inbox";
   }
@@ -69,7 +63,6 @@ async function updateTask(
 export default function CommandPalette({
   isOpen,
   onClose,
-  defaultProjectId,
   prefillProjectId,
   editTask,
   editChip,
@@ -146,7 +139,7 @@ export default function CommandPalette({
             if (isEditing) {
               await updateTask(editTask.id, partial);
             } else {
-              await createTask(partial, defaultProjectId);
+              await createTask(partial);
             }
             onClose();
           }}

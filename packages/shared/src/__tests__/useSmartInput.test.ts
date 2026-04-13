@@ -223,9 +223,30 @@ describe("useSmartInput — save", () => {
         cmdEnter as unknown as React.KeyboardEvent,
       ),
     );
-    expect(onTaskReady).toHaveBeenCalledWith(
-      expect.objectContaining({ title: "My task" }),
+    expect(onTaskReady).toHaveBeenCalledWith({
+      title: "My task",
+      projectId: null,
+      dueDate: null,
+      workingDate: null,
+      url: null,
+    });
+  });
+
+  it("⌘+Enter saves without a project when none selected", () => {
+    const { hook, onTaskReady } = make();
+    act(() =>
+      hook.result.current.handleTitleChange({
+        target: { value: "Inbox only" },
+      } as any),
     );
+    act(() => hook.result.current.handleTitleKeyDown(cmdEnter));
+    expect(onTaskReady).toHaveBeenCalledWith({
+      title: "Inbox only",
+      projectId: null,
+      dueDate: null,
+      workingDate: null,
+      url: null,
+    });
   });
 
   it("reset clears all values and returns focus to text", () => {

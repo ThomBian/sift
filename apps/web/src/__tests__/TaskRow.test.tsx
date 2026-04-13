@@ -216,7 +216,7 @@ describe("TaskRow", () => {
     expect(screen.queryByTestId("url-icon")).toBeNull();
   });
 
-  it("renders project label with emoji and italic project name when showProject is true", () => {
+  it("renders project label with emoji and mono metadata project name when showProject is true", () => {
     render(
       <TaskRow
         task={baseTask}
@@ -230,10 +230,13 @@ describe("TaskRow", () => {
     const label = screen.getByTestId("project-label");
     expect(label).toHaveTextContent("📚");
     expect(label).toHaveTextContent("General");
-    const em = label.querySelector("em");
-    expect(em).toBeTruthy();
-    expect(em?.textContent).toBe("General");
-    expect(em?.className).toMatch(/italic/);
+    expect(label.className).toMatch(/font-mono/);
+    expect(label.className).toMatch(/text-\[10px\]/);
+    const nameSpan = Array.from(label.querySelectorAll("span")).find(
+      (el) => el.textContent === "General",
+    );
+    expect(nameSpan).toBeTruthy();
+    expect(nameSpan?.className).toMatch(/truncate/);
   });
 
   it("hides project label when showProject is false", () => {

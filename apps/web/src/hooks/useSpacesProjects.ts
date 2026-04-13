@@ -9,28 +9,32 @@ export interface SpaceWithProjects {
 
 export function useSpacesProjects(): {
   spacesWithProjects: SpaceWithProjects[];
+  /** False until the first Dexie live query resolves; avoids TaskList mapping tasks before projects exist in memory. */
+  spacesProjectsReady: boolean;
 } {
-  const spacesWithProjects =
-    useLiveQuery(async () => {
-      const spaces = (await db.spaces.toArray()).sort((a, b) =>
-        a.name.localeCompare(b.name),
-      );
-      const projects = (await db.projects.toArray()).sort((a, b) =>
-        a.name.localeCompare(b.name),
-      );
+  const live = useLiveQuery(async () => {
+    const spaces = (await db.spaces.toArray()).sort((a, b) =>
+      a.name.localeCompare(b.name),
+    );
+    const projects = (await db.projects.toArray()).sort((a, b) =>
+      a.name.localeCompare(b.name),
+    );
 
-      const bySpace = new Map<string, Project[]>();
-      for (const p of projects) {
-        const arr = bySpace.get(p.spaceId) ?? [];
-        arr.push(p);
-        bySpace.set(p.spaceId, arr);
-      }
+    const bySpace = new Map<string, Project[]>();
+    for (const p of projects) {
+      const arr = bySpace.get(p.spaceId) ?? [];
+      arr.push(p);
+      bySpace.set(p.spaceId, arr);
+    }
 
-      return spaces.map((space) => ({
-        space,
-        projects: bySpace.get(space.id) ?? [],
-      }));
-    }, []) ?? [];
+    return spaces.map((space) => ({
+      space,
+      projects: bySpace.get(space.id) ?? [],
+    }));
+  }, []);
 
-  return { spacesWithProjects };
+  return {
+    spacesWithProjects: live ?? [],
+    spacesProjectsReady: live !== undefined,
+  };
 }
