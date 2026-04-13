@@ -313,50 +313,59 @@ describe("SyncService", () => {
   });
 
   describe("subscribe()", () => {
-    it("returns an unsubscribe function", () => {
-      const mockSupabase = {
-        from: vi.fn(),
-        channel: vi.fn(() => ({
-          on: vi.fn().mockReturnThis(),
-          subscribe: vi.fn(),
-        })),
-        removeChannel: vi.fn(),
-      };
-      const svc = new SyncService(mockSupabase as never);
-      const unsub = svc.subscribe("user-1", vi.fn());
-      expect(typeof unsub).toBe("function");
-    });
-
-    it("calls the onChange callback when Realtime fires", () => {
-      const onChange = vi.fn();
-      let capturedHandler: (() => void) | undefined;
-
-      const mockChannelObj: {
-        on: ReturnType<typeof vi.fn>;
-        subscribe: ReturnType<typeof vi.fn>;
-      } = {
+    function makeMockSupabaseWithCapture() {
+      const capturedHandlers: (() => void)[] = [];
+      const mockChannelObj = {
         on: vi.fn(),
         subscribe: vi.fn(),
       };
       mockChannelObj.on.mockImplementation(
         (_event: string, _filter: unknown, handler: () => void) => {
-          capturedHandler = handler;
+          capturedHandlers.push(handler);
           return mockChannelObj;
         },
       );
-
       const mockSupabase = {
         from: vi.fn(),
         channel: vi.fn(() => mockChannelObj),
         removeChannel: vi.fn(),
       };
+      return { mockSupabase, mockChannelObj, capturedHandlers };
+    }
+
+    it("returns an unsubscribe function", () => {
+      const { mockSupabase } = makeMockSupabaseWithCapture();
+      const svc = new SyncService(mockSupabase as never);
+      const unsub = svc.subscribe("user-1", vi.fn());
+      expect(typeof unsub).toBe("function");
+    });
+
+    it("subscribes to spaces, projects, and tasks tables", () => {
+      const { mockSupabase, mockChannelObj } = makeMockSupabaseWithCapture();
+      const svc = new SyncService(mockSupabase as never);
+      svc.subscribe("user-1", vi.fn());
+
+      expect(mockChannelObj.on).toHaveBeenCalledTimes(3);
+      const tables = mockChannelObj.on.mock.calls.map(
+        (c) => (c[1] as { table: string }).table,
+      );
+      expect(tables).toEqual(expect.arrayContaining(["spaces", "projects", "tasks"]));
+    });
+
+    it("calls onChange when any table fires a Realtime event", () => {
+      const onChange = vi.fn();
+      const { mockSupabase, capturedHandlers } = makeMockSupabaseWithCapture();
 
       const svc = new SyncService(mockSupabase as never);
       svc.subscribe("user-1", onChange);
 
-      expect(capturedHandler).toBeDefined();
-      capturedHandler!();
+      expect(capturedHandlers).toHaveLength(3);
+      capturedHandlers[0]();
       expect(onChange).toHaveBeenCalledTimes(1);
+      capturedHandlers[1]();
+      expect(onChange).toHaveBeenCalledTimes(2);
+      capturedHandlers[2]();
+      expect(onChange).toHaveBeenCalledTimes(3);
     });
   });
 });

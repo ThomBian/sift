@@ -285,15 +285,20 @@ export class SyncService {
 
   subscribe(userId: string, onChange: () => void): () => void {
     const channel = this.supabase
-      .channel(`tasks:user:${userId}`)
+      .channel(`sift:user:${userId}`)
       .on(
         "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "tasks",
-          filter: `user_id=eq.${userId}`,
-        },
+        { event: "*", schema: "public", table: "spaces", filter: `user_id=eq.${userId}` },
+        onChange,
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "projects", filter: `user_id=eq.${userId}` },
+        onChange,
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "tasks", filter: `user_id=eq.${userId}` },
         onChange,
       )
       .subscribe();
