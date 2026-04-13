@@ -3,6 +3,7 @@ import { useInboxTasks } from "../hooks/useTasks";
 import { useKeyboardNav } from "../hooks/useKeyboardNav";
 import TaskList from "../components/TaskList";
 import HintBar from "../components/layout/HintBar";
+import ViewHeader, { ViewHeaderCount } from "../components/layout/ViewHeader";
 import { db } from "../lib/db";
 import { requestSync } from "../lib/requestSync";
 import type { Task, ChipFocus } from "@sift/shared";
@@ -105,13 +106,10 @@ export default function InboxView() {
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      {tasks.length > 0 && (
-        <div className="px-4 py-2 flex items-baseline justify-end border-b border-[0.5px] border-border">
-          <span className="font-mono text-[10px] text-accent tabular-nums">
-            {tasks.length}
-          </span>
-        </div>
-      )}
+      <ViewHeader
+        title="Inbox"
+        trailing={<ViewHeaderCount value={tasks.length} />}
+      />
 
       <div className="flex-1 overflow-y-auto min-h-0">
         <TaskList

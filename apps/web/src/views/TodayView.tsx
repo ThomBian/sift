@@ -3,6 +3,7 @@ import { useTodayTasks } from "../hooks/useTasks";
 import { useKeyboardNav } from "../hooks/useKeyboardNav";
 import TaskList from "../components/TaskList";
 import HintBar from "../components/layout/HintBar";
+import ViewHeader, { ViewHeaderCount } from "../components/layout/ViewHeader";
 import { db } from "../lib/db";
 import { requestSync } from "../lib/requestSync";
 import type { Task, ChipFocus } from "@sift/shared";
@@ -113,14 +114,18 @@ export default function TodayView() {
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      <div className="px-4 py-2 flex items-baseline justify-between border-b border-[0.5px] border-border">
-        <p className="font-mono text-[10px] text-muted">{todayLabel()}</p>
-        {tasks.length > 0 && (
-          <span className="font-mono text-[10px] text-accent tabular-nums">
-            {tasks.length}
-          </span>
-        )}
-      </div>
+      <ViewHeader
+        title="Today"
+        trailing={
+          <>
+            <span className="text-muted">{todayLabel()}</span>
+            <span className="text-muted" aria-hidden>
+              ·
+            </span>
+            <ViewHeaderCount value={tasks.length} />
+          </>
+        }
+      />
 
       <div className="flex-1 overflow-y-auto min-h-0">
         <TaskList
