@@ -2,12 +2,16 @@ import { DayPicker, type DayButtonProps } from "react-day-picker";
 import "react-day-picker/style.css";
 import styles from "./Calendar.module.css";
 
+const SIFT_DEFAULT_CURSOR = "siftDefaultCursor";
+
 export interface CalendarProps {
   selected?: Date;
   onSelect: (date: Date) => void;
   taskCounts?: Record<string, number>;
   month?: Date;
   onMonthChange?: (month: Date) => void;
+  /** Visual-only “cursor” day when nothing is selected (e.g. today in SmartInput). Not a committed selection. */
+  defaultCursor?: Date;
 }
 
 function localDateKey(d: Date): string {
@@ -20,7 +24,10 @@ export function Calendar({
   taskCounts = {},
   month,
   onMonthChange,
+  defaultCursor,
 }: CalendarProps) {
+  const showDefaultCursor = !selected && defaultCursor != null;
+
   return (
     <DayPicker
       mode="single"
@@ -29,6 +36,16 @@ export function Calendar({
       month={month}
       onMonthChange={onMonthChange}
       className={styles.rdp}
+      modifiers={
+        showDefaultCursor
+          ? { [SIFT_DEFAULT_CURSOR]: defaultCursor }
+          : undefined
+      }
+      modifiersClassNames={
+        showDefaultCursor
+          ? { [SIFT_DEFAULT_CURSOR]: styles.defaultCursor }
+          : undefined
+      }
       components={{
         DayButton: ({
           day,

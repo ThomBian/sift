@@ -1,5 +1,6 @@
 // packages/shared/src/SmartInput/Dropdown.tsx
 import React, { useState, useEffect, useMemo, useRef, useId } from "react";
+import { startOfDay } from "date-fns";
 import { matchBestDate } from "../parseLooseDate";
 import { Calendar } from "../Calendar/Calendar";
 import type { Project, Space } from "../types";
@@ -19,6 +20,8 @@ interface DropdownProps {
   onSelect: (value: string | Date | null) => void;
   mode?: "floating" | "inline";
   taskCounts?: Record<string, number>;
+  /** Already-saved date for this chip (edit / reopen); keeps the grid in sync when the filter is empty. */
+  committedDate?: Date | null;
 }
 
 type FlatItem =
@@ -32,6 +35,7 @@ export function Dropdown({
   onSelect,
   mode = "floating",
   taskCounts,
+  committedDate = null,
 }: DropdownProps) {
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const dateTitleId = useId();
@@ -47,15 +51,22 @@ export function Dropdown({
   // localSelected tracks the calendar's visual selection. It starts from bestMatch
   // (the parsed query) but can be moved independently by arrow-key navigation.
   const [localSelected, setLocalSelected] = useState<Date | undefined>(
-    bestMatch ?? undefined,
+    () => bestMatch ?? committedDate ?? undefined,
   );
-  const [displayMonth, setDisplayMonth] = useState(bestMatch || new Date());
+  const [displayMonth, setDisplayMonth] = useState(
+    () => bestMatch ?? committedDate ?? new Date(),
+  );
 
   // When the user types and bestMatch changes, sync localSelected and the visible month.
   useEffect(() => {
-    setLocalSelected(bestMatch ?? undefined);
-    if (bestMatch) setDisplayMonth(bestMatch);
-  }, [bestMatch]);
+    if (bestMatch) {
+      setLocalSelected(bestMatch);
+      setDisplayMonth(bestMatch);
+      return;
+    }
+    setLocalSelected(committedDate ?? undefined);
+    if (committedDate) setDisplayMonth(committedDate);
+  }, [bestMatch, committedDate]);
 
   const flatItems = useMemo((): FlatItem[] => {
     if (type !== "project") return [];
@@ -237,6 +248,10 @@ export function Dropdown({
   // Date picker (dueDate or workingDate)
   if (!dateMeta) return null;
 
+  const showDefaultCursor =
+    !localSelected && !bestMatch && committedDate == null;
+  const defaultCursorDay = showDefaultCursor ? startOfDay(new Date()) : undefined;
+
   return (
     <div
       className={dropdownClass}
@@ -254,6 +269,7 @@ export function Dropdown({
       </header>
       <Calendar
         selected={localSelected}
+        defaultCursor={defaultCursorDay}
         onSelect={(date) => {
           setLocalSelected(date);
           setDisplayMonth(date);

@@ -114,8 +114,10 @@
     box-shadow var(--duration-palette) var(--ease-out);
 }
 
-/* Hover (non-selected focusable days) */
-.rdp :global(.rdp-focusable:not(.rdp-selected)):hover :global(.rdp-day_button) {
+/* Hover (non-selected focusable days; exclude visual-only default cursor cell) */
+.rdp
+  :global(.rdp-focusable:not(.rdp-selected)):not(.defaultCursor):hover
+  :global(.rdp-day_button) {
   background-color: var(--overlay-accent-hover);
   color: var(--color-text);
 }
@@ -132,8 +134,20 @@
   background-color: var(--color-accent-pressed);
 }
 
+/* ── Default keyboard cursor (visual only; matches selected look) ──────── */
+.rdp :global(.rdp-day).defaultCursor :global(.rdp-day_button) {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+  border-color: transparent;
+  box-shadow: var(--shadow-laser);
+}
+
+.rdp :global(.rdp-day).defaultCursor :global(.rdp-day_button:hover) {
+  background-color: var(--color-accent-pressed);
+}
+
 /* ── Today (not selected) ───────────────────────────────────────────────── */
-.rdp :global(.rdp-today:not(.rdp-selected)) :global(.rdp-day_button) {
+.rdp :global(.rdp-today:not(.rdp-selected)):not(.defaultCursor) :global(.rdp-day_button) {
   color: var(--color-accent);
   font-weight: 600;
 }
@@ -151,7 +165,8 @@
 }
 
 /* Invert badge on selected days so it stays legible */
-.rdp :global(.rdp-selected) .count {
+.rdp :global(.rdp-selected) .count,
+.rdp :global(.rdp-day).defaultCursor .count {
   color: rgba(255, 255, 255, 0.65);
 }
 

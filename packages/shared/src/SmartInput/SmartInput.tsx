@@ -278,6 +278,13 @@ export function SmartInput({
                     query={query}
                     onSelect={(val) => handleSelect(chip.key, val)}
                     taskCounts={taskCounts}
+                    committedDate={
+                      chip.key === "dueDate"
+                        ? values.dueDate
+                        : chip.key === "workingDate"
+                          ? values.workingDate
+                          : null
+                    }
                   />
                 )}
             </div>
@@ -292,6 +299,13 @@ export function SmartInput({
           onSelect={(val) => handleSelect(focus as ChipFocus, val)}
           mode="inline"
           taskCounts={taskCounts}
+          committedDate={
+            focus === "dueDate"
+              ? values.dueDate
+              : focus === "workingDate"
+                ? values.workingDate
+                : null
+          }
         />
       )}
     </div>
