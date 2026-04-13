@@ -9,6 +9,7 @@ import {
 import { useSpacesProjects } from "../hooks/useSpacesProjects";
 import { useTaskCounts } from "../hooks/useTasks";
 import { db } from "../lib/db";
+import { requestSync } from "../lib/requestSync";
 import { nanoid } from "nanoid";
 
 interface CommandPaletteProps {
@@ -40,6 +41,7 @@ async function createTask(
     completedAt: null,
     synced: false,
   });
+  requestSync();
 }
 
 async function updateTask(
@@ -61,6 +63,7 @@ async function updateTask(
     patch.status = partial.workingDate !== null ? "todo" : "inbox";
   }
   await db.tasks.update(taskId, patch);
+  requestSync();
 }
 
 export default function CommandPalette({

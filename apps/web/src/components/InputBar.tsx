@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import React from "react";
 import { SmartInput, type ProjectWithSpace, type Task } from "@sift/shared";
 import { db } from "../lib/db";
+import { requestSync } from "../lib/requestSync";
 import { nanoid } from "nanoid";
 import { useSpacesProjects } from "../hooks/useSpacesProjects";
 import { useTaskCounts } from "../hooks/useTasks";
@@ -31,6 +32,7 @@ async function handleTaskReady(
     completedAt: null,
     synced: false,
   });
+  requestSync();
 }
 
 export default function InputBar({

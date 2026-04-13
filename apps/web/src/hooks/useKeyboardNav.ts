@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { db } from "../lib/db";
+import { requestSync } from "../lib/requestSync";
 import type { Task } from "@sift/shared";
 
 export interface UseKeyboardNavReturn {
@@ -65,19 +66,23 @@ export function useKeyboardNav(
           } else {
             const now = new Date();
             if (task.status === "done") {
-              void db.tasks.update(focusedId, {
-                status: task.workingDate ? "todo" : "inbox",
-                completedAt: null,
-                updatedAt: now,
-                synced: false,
-              });
+              void db.tasks
+                .update(focusedId, {
+                  status: task.workingDate ? "todo" : "inbox",
+                  completedAt: null,
+                  updatedAt: now,
+                  synced: false,
+                })
+                .then(() => requestSync());
             } else {
-              void db.tasks.update(focusedId, {
-                status: "done",
-                completedAt: now,
-                updatedAt: now,
-                synced: false,
-              });
+              void db.tasks
+                .update(focusedId, {
+                  status: "done",
+                  completedAt: now,
+                  updatedAt: now,
+                  synced: false,
+                })
+                .then(() => requestSync());
             }
           }
           // Advance selection when marking done (task will leave the active list)
@@ -99,11 +104,13 @@ export function useKeyboardNav(
           const task = currentIndex !== -1 ? tasks[currentIndex] : undefined;
           if (task?.status === "archived") break;
           const now = new Date();
-          void db.tasks.update(focusedId, {
-            status: "archived",
-            updatedAt: now,
-            synced: false,
-          });
+          void db.tasks
+            .update(focusedId, {
+              status: "archived",
+              updatedAt: now,
+              synced: false,
+            })
+            .then(() => requestSync());
           if (currentIndex > 0) {
             setFocusedId(tasks[currentIndex - 1].id);
           } else if (tasks.length > 1) {

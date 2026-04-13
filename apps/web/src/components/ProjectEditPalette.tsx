@@ -7,6 +7,7 @@ import {
 } from "react";
 import { nanoid } from "nanoid";
 import { db } from "../lib/db";
+import { requestSync } from "../lib/requestSync";
 import { useTaskCounts } from "../hooks/useTasks";
 import { Dropdown, EmojiPicker, getRandomEmoji } from "@sift/shared";
 import type { Project } from "@sift/shared";
@@ -122,6 +123,7 @@ export default function ProjectEditPalette({
         synced: false,
       });
     }
+    requestSync();
     onClose();
   }
 

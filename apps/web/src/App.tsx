@@ -8,6 +8,7 @@ import TodayView from "./views/TodayView";
 import ProjectsView from "./views/ProjectsView";
 import { SyncService } from "./services/SyncService";
 import { supabase } from "./lib/supabase";
+import { registerSyncRunner } from "./lib/requestSync";
 
 export default function App() {
   const { user } = useAuth();
@@ -33,6 +34,7 @@ export default function App() {
     }
 
     void runSync();
+    registerSyncRunner(() => void runSync());
 
     function handleOnline() {
       void runSync();
@@ -44,6 +46,7 @@ export default function App() {
     });
 
     return () => {
+      registerSyncRunner(null);
       window.removeEventListener("online", handleOnline);
       unsubscribeRealtime?.();
     };

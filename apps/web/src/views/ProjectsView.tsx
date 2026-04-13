@@ -15,6 +15,7 @@ import TaskRow from "../components/TaskRow";
 import HintBar from "../components/layout/HintBar";
 import ConfirmModal from "../components/ConfirmModal";
 import { db } from "../lib/db";
+import { requestSync } from "../lib/requestSync";
 import type { Task, Project, Space, ChipFocus } from "@sift/shared";
 import type { SpaceGroup } from "../hooks/useTasks";
 
@@ -180,22 +181,26 @@ export default function ProjectsView() {
       if (task.status === "archived") return;
       if (task.status === "done") {
         const now = new Date();
-        void db.tasks.update(task.id, {
-          status: task.workingDate ? "todo" : "inbox",
-          completedAt: null,
-          updatedAt: now,
-          synced: false,
-        });
+        void db.tasks
+          .update(task.id, {
+            status: task.workingDate ? "todo" : "inbox",
+            completedAt: null,
+            updatedAt: now,
+            synced: false,
+          })
+          .then(() => requestSync());
       } else {
         setExitingIds((prev) => new Set([...prev, task.id]));
         scheduleExit(() => {
           const now = new Date();
-          void db.tasks.update(task.id, {
-            status: "done",
-            completedAt: now,
-            updatedAt: now,
-            synced: false,
-          });
+          void db.tasks
+            .update(task.id, {
+              status: "done",
+              completedAt: now,
+              updatedAt: now,
+              synced: false,
+            })
+            .then(() => requestSync());
           setExitingIds((prev) => {
             const n = new Set(prev);
             n.delete(task.id);
@@ -239,7 +244,7 @@ export default function ProjectsView() {
     const idsSnapshot = [...orderedProjectIdsRef.current];
     setExitingProjectIds((prev) => new Set(prev).add(id));
     scheduleExit(() => {
-      void archiveProject(id);
+      void archiveProject(id).then(() => requestSync());
       setExitingProjectIds((prev) => {
         const n = new Set(prev);
         n.delete(id);
@@ -255,7 +260,7 @@ export default function ProjectsView() {
     if (!p) return;
     setDeleteConfirmProject(null);
     const idsSnapshot = [...orderedProjectIdsRef.current];
-    void deleteProject(p.id);
+    void deleteProject(p.id).then(() => requestSync());
     const next = nextFocusAfterRemove(idsSnapshot, p.id);
     setFocusedProjectId(next);
   }, [setFocusedProjectId]);
@@ -418,7 +423,9 @@ export default function ProjectsView() {
             if (e.key === "a" || e.key === "A") {
               e.preventDefault();
               if (focusedProject.archived) {
-                void unarchiveProject(focusedProject.id);
+                void unarchiveProject(focusedProject.id).then(() =>
+                  requestSync(),
+                );
               } else {
                 setArchiveConfirmProject(focusedProject);
               }

@@ -4,6 +4,7 @@ import { useKeyboardNav } from "../hooks/useKeyboardNav";
 import TaskList from "../components/TaskList";
 import HintBar from "../components/layout/HintBar";
 import { db } from "../lib/db";
+import { requestSync } from "../lib/requestSync";
 import type { Task, ChipFocus } from "@sift/shared";
 
 function dispatchEditTask(task: Task, chip: ChipFocus | null) {
@@ -18,21 +19,25 @@ export default function InboxView() {
 
   const handleToggle = useCallback((task: Task) => {
     if (task.status === "done") {
-      void db.tasks.update(task.id, {
-        status: "inbox",
-        completedAt: null,
-        updatedAt: new Date(),
-        synced: false,
-      });
+      void db.tasks
+        .update(task.id, {
+          status: "inbox",
+          completedAt: null,
+          updatedAt: new Date(),
+          synced: false,
+        })
+        .then(() => requestSync());
     } else {
       setExitingIds((prev) => new Set([...prev, task.id]));
       setTimeout(() => {
-        void db.tasks.update(task.id, {
-          status: "done",
-          completedAt: new Date(),
-          updatedAt: new Date(),
-          synced: false,
-        });
+        void db.tasks
+          .update(task.id, {
+            status: "done",
+            completedAt: new Date(),
+            updatedAt: new Date(),
+            synced: false,
+          })
+          .then(() => requestSync());
         setExitingIds((prev) => {
           const n = new Set(prev);
           n.delete(task.id);
