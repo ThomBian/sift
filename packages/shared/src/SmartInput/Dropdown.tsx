@@ -1,5 +1,5 @@
 // packages/shared/src/SmartInput/Dropdown.tsx
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef, useId } from "react";
 import { matchBestDate } from "../parseLooseDate";
 import { Calendar } from "../Calendar/Calendar";
 import type { Project, Space } from "../types";
@@ -34,6 +34,8 @@ export function Dropdown({
   taskCounts,
 }: DropdownProps) {
   const [focusedIndex, setFocusedIndex] = useState(-1);
+  const dateTitleId = useId();
+  const dateHintId = useId();
 
   // Reset focused item when query changes
   useEffect(() => {
@@ -174,6 +176,21 @@ export function Dropdown({
   const dropdownClass =
     mode === "inline" ? styles.dropdownInline : styles.dropdown;
 
+  const dateMeta =
+    type === "dueDate"
+      ? {
+          title: "Due date",
+          hint: "When this must be finished.",
+          headerClass: styles.dateHeaderDue,
+        }
+      : type === "workingDate"
+        ? {
+            title: "Working date",
+            hint: "The day it appears on Today.",
+            headerClass: styles.dateHeaderWorking,
+          }
+        : null;
+
   if (type === "project") {
     return (
       <div className={dropdownClass} role="listbox">
@@ -218,8 +235,23 @@ export function Dropdown({
   }
 
   // Date picker (dueDate or workingDate)
+  if (!dateMeta) return null;
+
   return (
-    <div className={dropdownClass}>
+    <div
+      className={dropdownClass}
+      role="region"
+      aria-labelledby={dateTitleId}
+      aria-describedby={dateHintId}
+    >
+      <header className={`${styles.dateHeader} ${dateMeta.headerClass}`}>
+        <h2 id={dateTitleId} className={styles.dateTitle}>
+          {dateMeta.title}
+        </h2>
+        <p id={dateHintId} className={styles.dateHint}>
+          {dateMeta.hint}
+        </p>
+      </header>
       <Calendar
         selected={localSelected}
         onSelect={(date) => {

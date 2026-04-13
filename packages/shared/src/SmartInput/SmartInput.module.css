@@ -1,4 +1,6 @@
-/* packages/shared/src/SmartInput/SmartInput.module.css */
+/* packages/shared/src/SmartInput/SmartInput.module.css
+   Uses tokens from packages/shared/src/design-tokens.css */
+
 .wrapper {
   /* container for bar + optional inline dropdown */
 }
@@ -9,18 +11,18 @@
   gap: 8px;
   padding: 0 12px;
   height: 44px;
-  background: #ffffff;
-  border: 0.5px solid #e2e2e2;
+  background: var(--color-bg);
+  border: 0.5px solid var(--color-border);
   border-radius: 0;
-  transition: border-color 150ms cubic-bezier(0.23, 1, 0.32, 1);
+  transition: border-color var(--duration-palette) var(--ease-out);
 }
 
 .bar:focus-within {
-  border-color: #ff4f00;
+  border-color: var(--color-accent);
 }
 
 .icon {
-  color: #bbbbbb;
+  color: var(--color-dim);
   font-size: 15px;
   flex-shrink: 0;
   user-select: none;
@@ -31,7 +33,7 @@
   background: none;
   border: none;
   outline: none;
-  color: #111111;
+  color: var(--color-text);
   font-size: 13.5px;
   font-family: "Geist", system-ui, sans-serif;
   letter-spacing: -0.1px;
@@ -43,7 +45,7 @@
 }
 
 .input::placeholder {
-  color: #bbbbbb;
+  color: var(--color-dim);
 }
 
 .chips {
@@ -63,18 +65,18 @@
   gap: 4px;
   padding: 3px 9px;
   border-radius: 0;
-  border: 0.5px solid #e2e2e2;
-  background: #fafafa;
-  color: #888888;
+  border: 0.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-muted);
   font-size: 11.5px;
   font-weight: 500;
   font-family: "JetBrains Mono", monospace;
   cursor: pointer;
   white-space: nowrap;
   transition:
-    background-color 100ms cubic-bezier(0.23, 1, 0.32, 1),
-    color 100ms cubic-bezier(0.23, 1, 0.32, 1),
-    border-color 100ms cubic-bezier(0.23, 1, 0.32, 1);
+    background-color var(--duration-micro) var(--ease-out),
+    color var(--duration-micro) var(--ease-out),
+    border-color var(--duration-micro) var(--ease-out);
 }
 
 .chip:focus {
@@ -92,92 +94,92 @@
 
 /* @p — project: orange accent when active */
 .chipProject {
-  background: #fafafa;
-  color: #888888;
-  border-color: #e2e2e2;
+  background: var(--color-surface);
+  color: var(--color-muted);
+  border-color: var(--color-border);
 }
 .chipProject.active {
-  background: #fff5f2;
-  color: #ff4f00;
-  border-color: #ff4f00;
+  background: var(--color-chip-project-bg);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 .chipProject.set {
-  background: #fff5f2;
-  color: #ff4f00;
-  border-color: #ffcdb8;
+  background: var(--color-chip-project-bg);
+  color: var(--color-accent);
+  border-color: var(--color-chip-project-border-muted);
 }
 
 /* @d — due date: red tint when active */
 .chipDue {
-  background: #fafafa;
-  color: #888888;
-  border-color: #e2e2e2;
+  background: var(--color-surface);
+  color: var(--color-muted);
+  border-color: var(--color-border);
 }
 .chipDue.active {
-  background: #fff0f0;
-  color: #e60000;
-  border-color: #e60000;
+  background: var(--color-chip-due-bg);
+  color: var(--color-red);
+  border-color: var(--color-red);
 }
 .chipDue.set {
-  background: #fff0f0;
-  color: #e60000;
-  border-color: #ffbdbd;
+  background: var(--color-chip-due-bg);
+  color: var(--color-red);
+  border-color: var(--color-chip-due-border-muted);
 }
 
 /* @w — working date: green tint when active */
 .chipWorking {
-  background: #fafafa;
-  color: #888888;
-  border-color: #e2e2e2;
+  background: var(--color-surface);
+  color: var(--color-muted);
+  border-color: var(--color-border);
 }
 .chipWorking.active {
-  background: #f0fff4;
-  color: #16a34a;
-  border-color: #16a34a;
+  background: var(--color-chip-working-bg);
+  color: var(--color-green);
+  border-color: var(--color-green);
 }
 .chipWorking.set {
-  background: #f0fff4;
-  color: #16a34a;
-  border-color: #bbf7d0;
+  background: var(--color-chip-working-bg);
+  color: var(--color-green);
+  border-color: var(--color-chip-working-border-muted);
 }
 
 /* Standalone active variants for CSS Modules compatibility */
 .chipProjectActive {
-  background: #fff5f2;
-  color: #ff4f00;
-  border-color: #ff4f00;
+  background: var(--color-chip-project-bg);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 .chipDueActive {
-  background: #fff0f0;
-  color: #e60000;
-  border-color: #e60000;
+  background: var(--color-chip-due-bg);
+  color: var(--color-red);
+  border-color: var(--color-red);
 }
 .chipWorkingActive {
-  background: #f0fff4;
-  color: #16a34a;
-  border-color: #16a34a;
+  background: var(--color-chip-working-bg);
+  color: var(--color-green);
+  border-color: var(--color-green);
 }
 
 /* @u — link: accent when active / set */
 .chipUrl {
-  background: #fafafa;
-  color: #888888;
-  border-color: #e2e2e2;
+  background: var(--color-surface);
+  color: var(--color-muted);
+  border-color: var(--color-border);
 }
 .chipUrl.active {
-  background: #fff5f2;
-  color: #ff4f00;
-  border-color: #ff4f00;
+  background: var(--color-chip-project-bg);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 .chipUrl.set {
-  background: #fff5f2;
-  color: #ff4f00;
-  border-color: #ffcdb8;
+  background: var(--color-chip-project-bg);
+  color: var(--color-accent);
+  border-color: var(--color-chip-project-border-muted);
 }
 .chipUrlActive {
-  background: #fff5f2;
-  color: #ff4f00;
-  border-color: #ff4f00;
+  background: var(--color-chip-project-bg);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 .chipDot {
@@ -185,4 +187,52 @@
   height: 6px;
   border-radius: 0;
   flex-shrink: 0;
+}
+
+/* Subtle “saved” pulse — delight without ceremony (.impeccable: motion confirms intent) */
+@keyframes chip-commit-project {
+  from {
+    box-shadow: var(--shadow-laser-soft);
+  }
+  to {
+    box-shadow: none;
+  }
+}
+
+@keyframes chip-commit-due {
+  from {
+    box-shadow: var(--shadow-commit-due);
+  }
+  to {
+    box-shadow: none;
+  }
+}
+
+@keyframes chip-commit-working {
+  from {
+    box-shadow: var(--shadow-commit-working);
+  }
+  to {
+    box-shadow: none;
+  }
+}
+
+.chipCommitFlashProject {
+  animation: chip-commit-project var(--duration-palette) var(--ease-out) both;
+}
+
+.chipCommitFlashDue {
+  animation: chip-commit-due var(--duration-palette) var(--ease-out) both;
+}
+
+.chipCommitFlashWorking {
+  animation: chip-commit-working var(--duration-palette) var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chipCommitFlashProject,
+  .chipCommitFlashDue,
+  .chipCommitFlashWorking {
+    animation: none;
+  }
 }

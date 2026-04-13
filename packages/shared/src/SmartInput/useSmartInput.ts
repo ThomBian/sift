@@ -1,5 +1,5 @@
 // packages/shared/src/SmartInput/useSmartInput.ts
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import type { Task } from "../types";
 
 export type ChipFocus = "project" | "dueDate" | "workingDate" | "url";
@@ -74,6 +74,8 @@ export interface UseSmartInputReturn {
   handleSelect: (chip: ChipFocus, value: string | Date | null) => void;
   cancelChipSelection: () => void;
   reset: () => void;
+  /** Brief post-commit highlight on project / date chips (empty when idle). */
+  commitFlash: ChipFocus | null;
 }
 
 const EMPTY: SmartInputValues = {
@@ -98,8 +100,20 @@ export function useSmartInput(
     ...initialValues,
   }));
   const [focus, setFocus] = useState<FocusTarget>(initialFocus);
+  const [commitFlash, setCommitFlash] = useState<ChipFocus | null>(null);
+  const commitFlashTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
   /** After Tab advances workingDate → text, next Tab from title should walk all chips, not only empty ones. */
   const afterFullChipRingRef = useRef(false);
+
+  useEffect(() => {
+    return () => {
+      if (commitFlashTimeoutRef.current !== null) {
+        clearTimeout(commitFlashTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleSave = useCallback(() => {
     if (!values.title.trim()) return;
@@ -111,6 +125,11 @@ export function useSmartInput(
       workingDate: values.workingDate,
       url: trimmedUrl ? trimmedUrl : null,
     });
+    if (commitFlashTimeoutRef.current !== null) {
+      clearTimeout(commitFlashTimeoutRef.current);
+      commitFlashTimeoutRef.current = null;
+    }
+    setCommitFlash(null);
     setValues(EMPTY);
     afterFullChipRingRef.current = false;
     setFocus("text");
@@ -212,23 +231,36 @@ export function useSmartInput(
     setFocus(chip);
   }, []);
 
-  const handleSelect = useCallback(
-    (chip: ChipFocus, value: string | Date | null) => {
-      const key = chip === "project" ? "projectId" : chip;
-      setValues((v) => {
-        const updated = { ...v, [key]: value };
-        // Advance to next unfilled chip, or back to text if this was the last one
-        const chipIndex = FOCUS_CYCLE.indexOf(chip);
-        const remaining = (
-          FOCUS_CYCLE.slice(chipIndex + 1) as ChipFocus[]
-        ).filter((c) => !isFilled(c, updated));
-        afterFullChipRingRef.current = false;
-        setFocus(remaining.length > 0 ? remaining[0] : "text");
-        return updated;
-      });
-    },
-    [],
-  );
+  const handleSelect = useCallback((chip: ChipFocus, value: string | Date | null) => {
+    const shouldFlash =
+      value != null &&
+      (chip === "project" ||
+        ((chip === "dueDate" || chip === "workingDate") && value instanceof Date));
+
+    if (shouldFlash) {
+      if (commitFlashTimeoutRef.current !== null) {
+        clearTimeout(commitFlashTimeoutRef.current);
+      }
+      setCommitFlash(chip);
+      commitFlashTimeoutRef.current = setTimeout(() => {
+        setCommitFlash(null);
+        commitFlashTimeoutRef.current = null;
+      }, 220);
+    }
+
+    const key = chip === "project" ? "projectId" : chip;
+    setValues((v) => {
+      const updated = { ...v, [key]: value };
+      // Advance to next unfilled chip, or back to text if this was the last one
+      const chipIndex = FOCUS_CYCLE.indexOf(chip);
+      const remaining = (
+        FOCUS_CYCLE.slice(chipIndex + 1) as ChipFocus[]
+      ).filter((c) => !isFilled(c, updated));
+      afterFullChipRingRef.current = false;
+      setFocus(remaining.length > 0 ? remaining[0] : "text");
+      return updated;
+    });
+  }, []);
 
   const cancelChipSelection = useCallback(() => {
     afterFullChipRingRef.current = false;
@@ -236,6 +268,11 @@ export function useSmartInput(
   }, []);
 
   const reset = useCallback(() => {
+    if (commitFlashTimeoutRef.current !== null) {
+      clearTimeout(commitFlashTimeoutRef.current);
+      commitFlashTimeoutRef.current = null;
+    }
+    setCommitFlash(null);
     afterFullChipRingRef.current = false;
     setValues(EMPTY);
     setFocus("text");
@@ -253,5 +290,6 @@ export function useSmartInput(
     handleSelect,
     cancelChipSelection,
     reset,
+    commitFlash,
   };
 }

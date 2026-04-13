@@ -1,0 +1,47 @@
+/* Canonical design tokens for Sift — consumed by apps/web and @sift/shared CSS modules.
+ * Keep `apps/web/tailwind.config.ts` theme.extend.colors in sync with --color-* below. */
+
+:root {
+  --color-bg: #ffffff;
+  --color-surface: #fafafa;
+  --color-surface-2: #f0f0f0;
+  --color-border: #e2e2e2;
+  --color-border-2: #cccccc;
+  --color-text: #111111;
+  --color-muted: #888888;
+  --color-dim: #bbbbbb;
+  --color-accent: #ff4f00;
+  /* Darker accent for pressed / selected hover (Calendar, controls) */
+  --color-accent-pressed: #e64500;
+  --color-red: #e60000;
+  --color-green: #16a34a;
+
+  --shadow-panel: 0 8px 32px rgba(17, 17, 17, 0.12);
+  --shadow-laser: 0 0 8px rgba(255, 79, 0, 0.4);
+  --shadow-laser-soft: 0 0 8px rgba(255, 79, 0, 0.2);
+  --shadow-laser-archive: 0 0 8px rgba(255, 79, 0, 0.15);
+  --shadow-hotkey: 0 0 4px rgba(255, 79, 0, 0.2);
+  /* One-shot chip “heard you” pulse (SmartInput) — same family as laser, hue-matched */
+  --shadow-commit-due: 0 0 8px rgba(230, 0, 0, 0.28);
+  --shadow-commit-working: 0 0 8px rgba(22, 163, 74, 0.28);
+
+  /* Motion — .impeccable.md */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --duration-palette: 150ms;
+  --duration-micro: 100ms;
+
+  /* SmartInput chip tinted surfaces (palette-adjacent; not in Tailwind extend) */
+  --color-chip-project-bg: #fff5f2;
+  --color-chip-project-border-muted: #ffcdb8;
+  --color-chip-due-bg: #fff0f0;
+  --color-chip-due-border-muted: #ffbdbd;
+  --color-chip-working-bg: #f0fff4;
+  --color-chip-working-border-muted: #bbf7d0;
+
+  --overlay-accent-subtle: rgba(255, 79, 0, 0.05);
+  --overlay-accent-hover: rgba(255, 79, 0, 0.06);
+
+  /* Typography — section labels (.impeccable.md) */
+  --tracking-section-label: 0.2em;
+}

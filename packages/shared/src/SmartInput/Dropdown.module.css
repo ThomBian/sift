@@ -1,4 +1,5 @@
-/* packages/shared/src/SmartInput/Dropdown.module.css */
+/* packages/shared/src/SmartInput/Dropdown.module.css
+   Uses tokens from packages/shared/src/design-tokens.css */
 
 /* ── Entrance animations ────────────────────────────────────────────────── */
 @keyframes dropdown-enter {
@@ -30,26 +31,26 @@
   right: 0;
   left: auto;
   z-index: 100;
-  background: #ffffff;
-  border: 0.5px solid #e2e2e2;
+  background: var(--color-bg);
+  border: 0.5px solid var(--color-border);
   border-radius: 0;
   padding: 4px;
   min-width: 180px;
-  animation: dropdown-enter 150ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation: dropdown-enter var(--duration-palette) var(--ease-spring) both;
 }
 
 /* ── Inline variant: expands the palette panel downward ─────────────────── */
 .dropdownInline {
-  background: #ffffff;
-  border-top: 0.5px solid #e2e2e2;
-  animation: dropdown-enter-inline 120ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  background: var(--color-bg);
+  border-top: 0.5px solid var(--color-border);
+  animation: dropdown-enter-inline var(--duration-palette) var(--ease-spring) both;
 }
 
 /* ── Project list items ─────────────────────────────────────────────────── */
 .groupLabel {
   font-size: 10px;
   font-weight: 600;
-  color: #bbbbbb;
+  color: var(--color-dim);
   text-transform: uppercase;
   letter-spacing: 0.07em;
   padding: 6px 10px 3px;
@@ -65,31 +66,31 @@
   border-radius: 0;
   background: none;
   border: none;
-  color: #888888;
+  color: var(--color-muted);
   font-size: 12px;
   font-family: "JetBrains Mono", monospace;
   cursor: pointer;
   text-align: left;
   transition:
-    background-color 100ms cubic-bezier(0.23, 1, 0.32, 1),
-    color 100ms cubic-bezier(0.23, 1, 0.32, 1);
+    background-color var(--duration-micro) var(--ease-out),
+    color var(--duration-micro) var(--ease-out);
 }
 
 .item:hover,
 .itemFocused {
-  background: rgba(255, 79, 0, 0.05);
-  color: #111111;
+  background: var(--overlay-accent-subtle);
+  color: var(--color-text);
 }
 
 .itemFocused.newItem {
-  color: #ff4f00;
+  color: var(--color-accent);
 }
 
 .newItem {
-  color: #bbbbbb;
+  color: var(--color-dim);
   font-style: italic;
   margin-top: 2px;
-  border-top: 0.5px solid #e2e2e2;
+  border-top: 0.5px solid var(--color-border);
 }
 
 .dot {
@@ -97,6 +98,42 @@
   height: 7px;
   border-radius: 0;
   flex-shrink: 0;
+}
+
+/* ── Date picker header (due vs working) ───────────────────────────────── */
+.dateHeader {
+  padding: 8px 10px;
+  border-bottom: 0.5px solid var(--color-border);
+  background: var(--color-surface);
+  border-inline-start: 0.5px solid transparent;
+}
+
+.dateHeaderDue {
+  border-inline-start-color: var(--color-red);
+}
+
+.dateHeaderWorking {
+  border-inline-start-color: var(--color-green);
+}
+
+.dateTitle {
+  margin: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-section-label);
+  color: var(--color-text);
+}
+
+.dateHint {
+  margin: 6px 0 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: normal;
+  color: var(--color-muted);
 }
 
 /* ── Reduced motion ─────────────────────────────────────────────────────── */

@@ -59,6 +59,7 @@ export function SmartInput({
     handleChipClick,
     handleSelect,
     cancelChipSelection,
+    commitFlash,
   } = useSmartInput(onTaskReady, initialValues ?? {}, initialFocus ?? "text");
 
   // Reset query whenever the active chip changes
@@ -189,8 +190,29 @@ export function SmartInput({
       ? "Filter projects…"
       : activeChip === "url"
         ? "Add a link…"
-        : "Pick a date…"
+        : activeChip === "dueDate"
+          ? "Due date — type or pick below…"
+          : "Working date — type or pick below…"
     : (placeholder ?? "Add a task… type @p, @w, @d, @u or use Tab");
+
+  const inputAriaLabel =
+    focus === "text"
+      ? "Task title"
+      : focus === "project"
+        ? "Filter projects"
+        : focus === "url"
+          ? "Task link URL"
+          : focus === "dueDate"
+            ? "Due date"
+            : "Working date";
+
+  const commitFlashClass = (key: ChipFocus): string => {
+    if (commitFlash !== key) return "";
+    if (key === "dueDate") return styles.chipCommitFlashDue;
+    if (key === "workingDate") return styles.chipCommitFlashWorking;
+    if (key === "project") return styles.chipCommitFlashProject;
+    return "";
+  };
 
   return (
     <div className={`${styles.wrapper} ${className ?? ""}`}>
@@ -205,7 +227,7 @@ export function SmartInput({
           onChange={handleInputChange}
           onKeyDown={handleInputKeyDown}
           placeholder={inputPlaceholder}
-          aria-label="Task title"
+          aria-label={inputAriaLabel}
         />
         <div className={styles.chips}>
           {chips.map((chip) => (
@@ -216,12 +238,21 @@ export function SmartInput({
                   chip.chipClass,
                   focus === chip.key ? chip.activeClass : "",
                   chip.value ? styles.set : "",
+                  commitFlashClass(chip.key),
                 ].join(" ")}
                 onClick={() => handleChipClick(chip.key)}
                 onKeyDown={(e) => handleChipKeyDown(chip.key, e)}
                 tabIndex={-1}
                 type="button"
-                aria-label={chip.key}
+                aria-label={
+                  chip.key === "project"
+                    ? "Project (@p)"
+                    : chip.key === "dueDate"
+                      ? "Due date (@d)"
+                      : chip.key === "workingDate"
+                        ? "Working date (@w)"
+                        : "Link (@u)"
+                }
               >
                 {chip.value ? (
                   <>

@@ -37,28 +37,28 @@ describe("Dropdown Keyboard Navigation", () => {
     render(<SmartInput projects={mockProjects} onTaskReady={onTaskReady} />);
 
     // 1. Open date dropdown (query is empty)
-    fireEvent.click(screen.getByRole("button", { name: "dueDate" }));
+    fireEvent.click(screen.getByRole("button", { name: "Due date (@d)" }));
 
     // Press ArrowRight (today April 10 + 1 = April 11) — navigates only
     fireEvent.keyDown(window, { key: "ArrowRight" });
     // Arrow keys move the calendar cursor but do NOT commit — chip unchanged yet
-    expect(screen.getByRole("button", { name: "dueDate" })).not.toHaveTextContent(
+    expect(screen.getByRole("button", { name: "Due date (@d)" })).not.toHaveTextContent(
       "11/04/2026",
     );
     // Enter commits the highlighted date
     fireEvent.keyDown(window, { key: "Enter" });
-    expect(screen.getByRole("button", { name: "dueDate" })).toHaveTextContent(
+    expect(screen.getByRole("button", { name: "Due date (@d)" })).toHaveTextContent(
       "11/04/2026",
     );
 
     // 2. Open it again (query is reset to empty)
-    fireEvent.click(screen.getByRole("button", { name: "dueDate" }));
+    fireEvent.click(screen.getByRole("button", { name: "Due date (@d)" }));
 
     // Press ArrowDown (today April 10 + 7 = April 17) — navigates only
     fireEvent.keyDown(window, { key: "ArrowDown" });
     // Enter commits
     fireEvent.keyDown(window, { key: "Enter" });
-    expect(screen.getByRole("button", { name: "dueDate" })).toHaveTextContent(
+    expect(screen.getByRole("button", { name: "Due date (@d)" })).toHaveTextContent(
       "17/04/2026",
     );
   });

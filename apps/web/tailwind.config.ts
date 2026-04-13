@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-/** Palette hex values mirror `src/index.css` :root — update both when tokens change. */
+/** Palette hex values mirror `packages/shared/src/design-tokens.css` — update both when tokens change. */
 const config: Config = {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
