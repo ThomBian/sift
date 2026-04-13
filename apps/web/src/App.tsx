@@ -1,56 +1,15 @@
-import { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
+import { useSync } from "./hooks/useSync";
 import AppLayout from "./components/layout/AppLayout";
 import AuthPage from "./pages/AuthPage";
 import InboxView from "./views/InboxView";
 import TodayView from "./views/TodayView";
 import ProjectsView from "./views/ProjectsView";
-import { SyncService } from "./services/SyncService";
-import { supabase } from "./lib/supabase";
-import { registerSyncRunner } from "./lib/requestSync";
 
 export default function App() {
   const { user } = useAuth();
-  const [isSynced, setIsSynced] = useState(false);
-
-  useEffect(() => {
-    if (!user || !supabase) {
-      setIsSynced(false);
-      return;
-    }
-
-    const userId = user.id;
-    const syncService = new SyncService(supabase);
-    let unsubscribeRealtime: (() => void) | undefined;
-
-    async function runSync() {
-      try {
-        await syncService.sync(userId);
-        setIsSynced(true);
-      } catch {
-        setIsSynced(false);
-      }
-    }
-
-    void runSync();
-    registerSyncRunner(() => void runSync());
-
-    function handleOnline() {
-      void runSync();
-    }
-    window.addEventListener("online", handleOnline);
-
-    unsubscribeRealtime = syncService.subscribe(userId, () => {
-      void runSync();
-    });
-
-    return () => {
-      registerSyncRunner(null);
-      window.removeEventListener("online", handleOnline);
-      unsubscribeRealtime?.();
-    };
-  }, [user]);
+  const isSynced = useSync(user);
 
   return (
     <Routes>
