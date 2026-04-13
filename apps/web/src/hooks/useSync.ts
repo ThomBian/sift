@@ -4,12 +4,14 @@ import { supabase } from "../lib/supabase";
 import { registerSyncRunner } from "../lib/requestSync";
 import type { User } from "@supabase/supabase-js";
 
-export function useSync(user: User | null): boolean {
-  const [isSynced, setIsSynced] = useState(false);
+export type SyncStatus = "local" | "syncing" | "synced";
+
+export function useSync(user: User | null): SyncStatus {
+  const [status, setStatus] = useState<SyncStatus>("local");
 
   useEffect(() => {
     if (!user || !supabase) {
-      setIsSynced(false);
+      setStatus("local");
       return;
     }
 
@@ -18,11 +20,12 @@ export function useSync(user: User | null): boolean {
     let unsubscribeRealtime: (() => void) | undefined;
 
     async function runSync() {
+      setStatus("syncing");
       try {
         await syncService.sync(userId);
-        setIsSynced(true);
+        setStatus("synced");
       } catch {
-        setIsSynced(false);
+        setStatus("local");
       }
     }
 
@@ -45,5 +48,5 @@ export function useSync(user: User | null): boolean {
     };
   }, [user]);
 
-  return isSynced;
+  return status;
 }
