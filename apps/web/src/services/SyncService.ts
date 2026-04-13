@@ -225,6 +225,11 @@ export class SyncService {
       this.supabase.from("tasks").select("*").eq("user_id", userId),
     ]);
 
+    // Error checks before any writes
+    if (spacesRes.error) throw new Error(`bootstrap: spaces — ${spacesRes.error.message}`);
+    if (projectsRes.error) throw new Error(`bootstrap: projects — ${projectsRes.error.message}`);
+    if (tasksRes.error) throw new Error(`bootstrap: tasks — ${tasksRes.error.message}`);
+
     // Write cloud data to Dexie
     const cloudSpaces = spacesRes.data
       ? (spacesRes.data as Record<string, unknown>[]).map(rowToSpace)

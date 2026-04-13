@@ -462,6 +462,13 @@ describe("bootstrap()", () => {
     await svc.bootstrap("user-1");
     expect(localStorage.getItem("speedy_last_synced_at")).not.toBeNull();
   });
+
+  it("throws when a Supabase pull returns an error", async () => {
+    mockEq.mockResolvedValueOnce({ data: null, error: { message: "500 Internal Server Error" } });
+
+    const svc = new SyncService(createMockSupabase() as never);
+    await expect(svc.bootstrap("user-1")).rejects.toThrow("bootstrap: spaces");
+  });
 });
 
 describe("clearLocalDB()", () => {
