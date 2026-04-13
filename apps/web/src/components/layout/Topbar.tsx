@@ -3,13 +3,19 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useTasks } from "../../hooks/useTasks";
 import type { SyncStatus } from "../../hooks/useSync";
 
-function SyncIcon({ status }: { status: SyncStatus }) {
+const SYNC_LABEL: Record<SyncStatus, string> = {
+  local: "Local",
+  syncing: "Syncing",
+  synced: "Synced",
+};
+
+function SyncGlyph({ status }: { status: SyncStatus }) {
   if (status === "synced") {
     return (
       <span
         data-sync-status="synced"
         className="w-2 h-2 shrink-0 bg-green"
-        aria-label="Synced"
+        aria-hidden
       />
     );
   }
@@ -17,8 +23,8 @@ function SyncIcon({ status }: { status: SyncStatus }) {
     return (
       <span
         data-sync-status="syncing"
-        className="w-2 h-2 shrink-0 border border-accent animate-spin"
-        aria-label="Syncing"
+        className="w-2 h-2 shrink-0 border border-accent animate-spin motion-reduce:animate-none motion-reduce:border-border-2"
+        aria-hidden
       />
     );
   }
@@ -26,8 +32,25 @@ function SyncIcon({ status }: { status: SyncStatus }) {
     <span
       data-sync-status="local"
       className="w-2 h-2 shrink-0 border border-dim"
-      aria-label="Local"
+      aria-hidden
     />
+  );
+}
+
+function SyncStatus({ status }: { status: SyncStatus }) {
+  const label = SYNC_LABEL[status];
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      aria-label={label}
+      className="flex items-center gap-1.5 shrink-0 min-w-0"
+    >
+      <SyncGlyph status={status} />
+      <span className="hidden sm:inline font-mono text-[10px] uppercase tracking-[0.12em] text-muted whitespace-nowrap leading-none">
+        {label}
+      </span>
+    </div>
   );
 }
 
@@ -136,8 +159,8 @@ export default function Topbar({
             Sign in
           </button>
         )}
-        <div className="flex items-center justify-center w-11 h-11 md:w-7 md:h-7 shrink-0">
-          <SyncIcon status={syncStatus} />
+        <div className="flex items-center justify-center w-11 h-11 sm:w-auto sm:h-auto sm:min-h-7 shrink-0">
+          <SyncStatus status={syncStatus} />
         </div>
         {user ? (
           <button

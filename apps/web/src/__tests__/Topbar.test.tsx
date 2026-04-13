@@ -59,4 +59,9 @@ describe("Topbar", () => {
     const icon = container.querySelector("[data-sync-status='synced']");
     expect(icon).toBeInTheDocument();
   });
+
+  it("exposes sync state for assistive tech", () => {
+    renderTopbar(null, "syncing");
+    expect(screen.getByRole("status", { name: /syncing/i })).toBeInTheDocument();
+  });
 });
