@@ -215,6 +215,69 @@ export class SyncService {
     if (toUpsert.length > 0) await db.tasks.bulkPut(toUpsert);
   }
 
+  async bootstrap(userId: string): Promise<void> {
+    const syncStartedAt = new Date();
+
+    // Full pull — no updated_at filter, get everything for this user
+    const [spacesRes, projectsRes, tasksRes] = await Promise.all([
+      this.supabase.from("spaces").select("*").eq("user_id", userId),
+      this.supabase.from("projects").select("*").eq("user_id", userId),
+      this.supabase.from("tasks").select("*").eq("user_id", userId),
+    ]);
+
+    // Write cloud data to Dexie
+    const cloudSpaces = spacesRes.data
+      ? (spacesRes.data as Record<string, unknown>[]).map(rowToSpace)
+      : [];
+    const cloudProjects = projectsRes.data
+      ? (projectsRes.data as Record<string, unknown>[]).map(rowToProject)
+      : [];
+    const cloudTasks = tasksRes.data
+      ? (tasksRes.data as Record<string, unknown>[]).map(rowToTask)
+      : [];
+
+    if (cloudSpaces.length > 0) await db.spaces.bulkPut(cloudSpaces);
+    if (cloudProjects.length > 0) await db.projects.bulkPut(cloudProjects);
+    if (cloudTasks.length > 0) await db.tasks.bulkPut(cloudTasks);
+
+    // Prune orphan seeds: unsynced projects with no tasks
+    const unsyncedProjects = await db.projects.filter((p) => !p.synced).toArray();
+    for (const project of unsyncedProjects) {
+      const taskCount = await db.tasks
+        .where("projectId")
+        .equals(project.id)
+        .count();
+      if (taskCount === 0) await db.projects.delete(project.id);
+    }
+
+    // Prune orphan seeds: unsynced spaces with no remaining projects
+    const unsyncedSpaces = await db.spaces.filter((s) => !s.synced).toArray();
+    for (const space of unsyncedSpaces) {
+      const projectCount = await db.projects
+        .where("spaceId")
+        .equals(space.id)
+        .count();
+      if (projectCount === 0) await db.spaces.delete(space.id);
+    }
+
+    // Push unsynced local tasks (created before sign-in)
+    const unsyncedTasks = await db.tasks.filter((t) => !t.synced).toArray();
+    if (unsyncedTasks.length > 0) {
+      const { error } = await this.supabase
+        .from("tasks")
+        .upsert(unsyncedTasks.map((t) => taskToRow(t, userId)), {
+          onConflict: "id",
+        });
+      if (!error) {
+        await db.tasks.bulkPut(
+          unsyncedTasks.map((t) => ({ ...t, synced: true })),
+        );
+      }
+    }
+
+    setLastSyncedAt(syncStartedAt);
+  }
+
   subscribe(userId: string, onChange: () => void): () => void {
     const channel = this.supabase
       .channel(`tasks:user:${userId}`)

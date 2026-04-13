@@ -6,12 +6,13 @@ import { SyncService } from "../services/SyncService";
 import type { Space, Project, Task } from "@sift/shared";
 
 const mockUpsert = vi.fn().mockResolvedValue({ error: null });
-
 const mockGt = vi.fn();
+const mockEq = vi.fn();
 
 function createMockSupabase() {
   const mockSelect = vi.fn(() => ({
     gt: (_col: string, _v: string) => mockGt(),
+    eq: (_col: string, _v: string) => mockEq(),
   }));
 
   return {
@@ -19,7 +20,10 @@ function createMockSupabase() {
       upsert: mockUpsert,
       select: mockSelect,
     })),
-    channel: vi.fn(),
+    channel: vi.fn(() => ({
+      on: vi.fn().mockReturnThis(),
+      subscribe: vi.fn(),
+    })),
     removeChannel: vi.fn(),
   };
 }
@@ -75,10 +79,13 @@ beforeEach(async () => {
   await db.tasks.clear();
   await db.projects.clear();
   await db.spaces.clear();
+  localStorage.clear();
   vi.clearAllMocks();
   mockUpsert.mockResolvedValue({ error: null });
   mockGt.mockReset();
   mockGt.mockResolvedValue({ data: [], error: null });
+  mockEq.mockReset();
+  mockEq.mockResolvedValue({ data: [], error: null });
 });
 
 afterEach(() => {
@@ -351,6 +358,109 @@ describe("SyncService", () => {
       capturedHandler!();
       expect(onChange).toHaveBeenCalledTimes(1);
     });
+  });
+});
+
+describe("bootstrap()", () => {
+  it("writes all cloud spaces/projects/tasks to Dexie", async () => {
+    const remoteSpace = makeSpace({ id: "cloud-space", synced: true });
+    const remoteProject = makeProject({ id: "cloud-project", spaceId: "cloud-space", synced: true });
+    const remoteTask = makeTask({ id: "cloud-task", projectId: "cloud-project", synced: true });
+
+    mockEq
+      .mockResolvedValueOnce({
+        data: [{
+          id: remoteSpace.id, name: remoteSpace.name, color: remoteSpace.color,
+          created_at: remoteSpace.createdAt.toISOString(),
+          updated_at: remoteSpace.updatedAt.toISOString(),
+          user_id: "user-1",
+        }],
+        error: null,
+      })
+      .mockResolvedValueOnce({
+        data: [{
+          id: remoteProject.id, name: remoteProject.name, emoji: remoteProject.emoji,
+          space_id: remoteProject.spaceId, archived: false, url: null,
+          due_date: null,
+          created_at: remoteProject.createdAt.toISOString(),
+          updated_at: remoteProject.updatedAt.toISOString(),
+          user_id: "user-1",
+        }],
+        error: null,
+      })
+      .mockResolvedValueOnce({
+        data: [{
+          id: remoteTask.id, title: remoteTask.title,
+          project_id: remoteTask.projectId, status: remoteTask.status,
+          working_date: null, due_date: null, completed_at: null, url: null,
+          created_at: remoteTask.createdAt.toISOString(),
+          updated_at: remoteTask.updatedAt.toISOString(),
+          user_id: "user-1",
+        }],
+        error: null,
+      });
+
+    const svc = new SyncService(createMockSupabase() as never);
+    await svc.bootstrap("user-1");
+
+    expect(await db.spaces.get("cloud-space")).toBeDefined();
+    expect(await db.projects.get("cloud-project")).toBeDefined();
+    expect(await db.tasks.get("cloud-task")).toBeDefined();
+  });
+
+  it("prunes unsynced seed space and project when they have no tasks", async () => {
+    await db.spaces.add(makeSpace({ id: "seed-space", synced: false }));
+    await db.projects.add(makeProject({ id: "seed-project", spaceId: "seed-space", synced: false }));
+    // mockEq returns empty cloud data (new user, nothing in cloud yet)
+
+    const svc = new SyncService(createMockSupabase() as never);
+    await svc.bootstrap("user-1");
+
+    expect(await db.spaces.get("seed-space")).toBeUndefined();
+    expect(await db.projects.get("seed-project")).toBeUndefined();
+  });
+
+  it("keeps unsynced project that has a task (not a seed)", async () => {
+    await db.spaces.add(makeSpace({ id: "real-space", synced: false }));
+    await db.projects.add(makeProject({ id: "real-project", spaceId: "real-space", synced: false }));
+    await db.tasks.add(makeTask({ id: "real-task", projectId: "real-project", synced: false }));
+
+    const svc = new SyncService(createMockSupabase() as never);
+    await svc.bootstrap("user-1");
+
+    expect(await db.projects.get("real-project")).toBeDefined();
+    expect(await db.spaces.get("real-space")).toBeDefined();
+  });
+
+  it("pushes unsynced local tasks to Supabase", async () => {
+    await db.tasks.add(makeTask({ id: "pre-login-task", projectId: null, synced: false }));
+
+    const mockSupabase = createMockSupabase();
+    const svc = new SyncService(mockSupabase as never);
+    await svc.bootstrap("user-1");
+
+    expect(mockUpsert).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "pre-login-task", user_id: "user-1" }),
+      ]),
+      expect.objectContaining({ onConflict: "id" }),
+    );
+  });
+
+  it("marks pushed pre-login tasks as synced", async () => {
+    await db.tasks.add(makeTask({ id: "pre-login-task", projectId: null, synced: false }));
+
+    const svc = new SyncService(createMockSupabase() as never);
+    await svc.bootstrap("user-1");
+
+    const stored = await db.tasks.get("pre-login-task");
+    expect(stored!.synced).toBe(true);
+  });
+
+  it("sets speedy_last_synced_at after bootstrap", async () => {
+    const svc = new SyncService(createMockSupabase() as never);
+    await svc.bootstrap("user-1");
+    expect(localStorage.getItem("speedy_last_synced_at")).not.toBeNull();
   });
 });
 
