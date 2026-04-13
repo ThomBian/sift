@@ -93,9 +93,11 @@ Each view registers its own `window.keydown` listener that skips events when `e.
 
 Create `apps/web/.env` from `.env.example`:
 ```
-VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key-here
 ```
+Run `supabase/migrations/20260413000000_init_sync.sql` in the Supabase SQL Editor before cloud sync (tables, RLS, Realtime on `tasks`). **Vercel:** set the same `VITE_*` keys on the project (inlined at build time).
+
 Vitest injects stub values automatically via `vite.config.ts`.
 
 ## Testing
