@@ -5,7 +5,11 @@ import dts from "vite-plugin-dts";
 export default defineConfig({
   plugins: [
     react(),
-    dts({ include: ["src/**/*.ts", "src/**/*.tsx"], rollupTypes: true }),
+    dts({
+      include: ["src/**/*.ts", "src/**/*.tsx"],
+      exclude: ["src/**/__tests__/**"],
+      rollupTypes: true,
+    }),
   ],
   build: {
     lib: {

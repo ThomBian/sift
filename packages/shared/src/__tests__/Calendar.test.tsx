@@ -21,7 +21,7 @@ describe("Calendar", () => {
     // Find a day button. Buttons are usually labeled by the date.
     // We can find any button that has text content (day number)
     const dayButtons = screen.getAllByRole("button");
-    const firstDayButton = dayButtons.find((btn) =>
+    const firstDayButton = dayButtons.find((btn: HTMLElement) =>
       /\d+/.test(btn.textContent || ""),
     );
 

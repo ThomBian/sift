@@ -74,6 +74,8 @@ describe("HintBar", () => {
   it("default keys do not have accent class", () => {
     const { container } = render(<HintBar />);
     const kbds = container.querySelectorAll("kbd");
-    kbds.forEach((k) => expect(k.className).not.toMatch(/accent/));
+    kbds.forEach((k: Element) =>
+      expect(k.className).not.toMatch(/accent/),
+    );
   });
 });

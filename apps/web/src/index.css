@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.ts";
 
 /* Canonical palette — keep apps/web/tailwind.config.ts `theme.extend.colors` in sync */
 :root {

@@ -1,4 +1,5 @@
 // packages/shared/src/__tests__/SmartInput.test.tsx
+import { type ComponentProps } from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -48,11 +49,13 @@ const mockProjects: ProjectWithSpace[] = [
   },
 ];
 
+type SmartInputProps = ComponentProps<typeof SmartInput>;
+
 describe("SmartInput", () => {
-  let onTaskReady: ReturnType<typeof vi.fn>;
+  let onTaskReady: SmartInputProps["onTaskReady"];
 
   beforeEach(() => {
-    onTaskReady = vi.fn();
+    onTaskReady = vi.fn() as SmartInputProps["onTaskReady"];
   });
 
   it("renders the input and four chip buttons", () => {
@@ -100,9 +103,6 @@ describe("SmartInput", () => {
   it("clicking the @d chip opens the date dropdown", async () => {
     render(<SmartInput projects={mockProjects} onTaskReady={onTaskReady} />);
     await userEvent.click(screen.getByRole("button", { name: "dueDate" }));
-
-    // Debugging: Print the DOM structure to understand why gridcell is not found.
-    screen.debug();
 
     // Instead of looking for role="option", check for visible date cells (td elements with role="gridcell")
     // rendered by the Calendar component within the dropdown.
