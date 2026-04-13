@@ -1,15 +1,16 @@
 // packages/shared/src/SmartInput/SmartInput.tsx
-import React, { useRef, useEffect, useState, useCallback } from "react";
-import { useSmartInput, type ChipFocus } from "./useSmartInput";
+import React, { useRef, useEffect, useCallback } from "react";
+import {
+  useSmartInput,
+  type ChipFocus,
+  type TaskDraftPayload,
+} from "./useSmartInput";
 import { Dropdown, type DropdownChip, type ProjectWithSpace } from "./Dropdown";
-import type { Task } from "../types";
 import styles from "./SmartInput.module.css";
 
 interface SmartInputProps {
   projects: ProjectWithSpace[];
-  onTaskReady: (
-    task: Pick<Task, "title" | "dueDate" | "workingDate" | "url" | "projectId">,
-  ) => void;
+  onTaskReady: (task: TaskDraftPayload) => void;
   placeholder?: string;
   className?: string;
   /** Optional external ref to the underlying <input> for programmatic focus from the parent. */
@@ -44,11 +45,12 @@ export function SmartInput({
 
   const isFirstRender = useRef(true);
 
-  const [query, setQuery] = useState("");
-
   const {
     values,
     focus,
+    chipQuery,
+    setChipQuery,
+    pendingNewProjectName,
     handleTitleChange,
     handleTitleKeyDown,
     handleUrlChange,
@@ -56,14 +58,15 @@ export function SmartInput({
     handleChipKeyDown,
     handleChipClick,
     handleSelect,
+    handleProjectPick,
     cancelChipSelection,
     commitFlash,
-  } = useSmartInput(onTaskReady, initialValues ?? {}, initialFocus ?? "text");
-
-  // Reset query whenever the active chip changes
-  useEffect(() => {
-    setQuery("");
-  }, [focus]);
+  } = useSmartInput(
+    onTaskReady,
+    initialValues ?? {},
+    initialFocus ?? "text",
+    projects,
+  );
 
   // Focus the input whenever focus changes (any chip or text).
   // Skip on initial mount so the task list can receive keyboard nav immediately.
@@ -122,6 +125,11 @@ export function SmartInput({
   const projectForId = (id: string | null) =>
     id ? projects.find((p) => p.id === id) : undefined;
 
+  const projectChipLabel =
+    projectForId(values.projectId)?.name ?? pendingNewProjectName ?? null;
+  const projectDotColor =
+    projectForId(values.projectId)?.space?.color ?? projects[0]?.space?.color;
+
   const chips: Array<{
     key: ChipFocus;
     chipClass: string;
@@ -137,8 +145,8 @@ export function SmartInput({
       activeClass: styles.chipProjectActive,
       label: "@p",
       sublabel: "project",
-      value: projectForId(values.projectId)?.name ?? null,
-      dotColor: projectForId(values.projectId)?.space?.color,
+      value: projectChipLabel,
+      dotColor: projectDotColor,
     },
     {
       key: "dueDate",
@@ -175,12 +183,13 @@ export function SmartInput({
   const inputValue = activeChip
     ? activeChip === "url"
       ? (values.url ?? "")
-      : query
+      : chipQuery
     : values.title;
   const handleInputChange = activeChip
     ? activeChip === "url"
       ? handleUrlChange
-      : (e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)
+      : (e: React.ChangeEvent<HTMLInputElement>) =>
+          setChipQuery(e.target.value)
     : handleTitleChange;
 
   const inputPlaceholder = activeChip
@@ -275,8 +284,19 @@ export function SmartInput({
                   <Dropdown
                     type={chip.key as DropdownChip}
                     projects={projects}
-                    query={query}
-                    onSelect={(val) => handleSelect(chip.key, val)}
+                    query={chipQuery}
+                    onProjectPick={
+                      chip.key === "project" ? handleProjectPick : undefined
+                    }
+                    onSelect={
+                      chip.key !== "project"
+                        ? (val) =>
+                            handleSelect(
+                              chip.key as "dueDate" | "workingDate",
+                              val,
+                            )
+                        : undefined
+                    }
                     taskCounts={taskCounts}
                     committedDate={
                       chip.key === "dueDate"
@@ -295,8 +315,16 @@ export function SmartInput({
         <Dropdown
           type={focus as DropdownChip}
           projects={projects}
-          query={query}
-          onSelect={(val) => handleSelect(focus as ChipFocus, val)}
+          query={chipQuery}
+          onProjectPick={
+            focus === "project" ? handleProjectPick : undefined
+          }
+          onSelect={
+            focus !== "project"
+              ? (val) =>
+                  handleSelect(focus as "dueDate" | "workingDate", val)
+              : undefined
+          }
           mode="inline"
           taskCounts={taskCounts}
           committedDate={

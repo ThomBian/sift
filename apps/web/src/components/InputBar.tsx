@@ -1,28 +1,37 @@
 import { useMemo } from "react";
 import React from "react";
-import { SmartInput, type ProjectWithSpace, type Task } from "@sift/shared";
+import {
+  SmartInput,
+  type ProjectWithSpace,
+  type TaskDraftPayload,
+} from "@sift/shared";
 import { db } from "../lib/db";
 import { requestSync } from "../lib/requestSync";
 import { nanoid } from "nanoid";
 import { useSpacesProjects } from "../hooks/useSpacesProjects";
 import { useTaskCounts } from "../hooks/useTasks";
+import { resolveTaskProjectId } from "../lib/createProjectForTask";
+import type { SpaceWithProjects } from "../hooks/useSpacesProjects";
 
 interface InputBarProps {
   inputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
 async function handleTaskReady(
-  partial: Pick<Task, "title" | "dueDate" | "workingDate" | "url" | "projectId">,
+  partial: TaskDraftPayload,
+  spacesWithProjects: SpaceWithProjects[],
 ): Promise<void> {
+  const projectId = await resolveTaskProjectId(partial, spacesWithProjects);
+  const { newProjectName: _np, ...fields } = partial;
   const now = new Date();
   await db.tasks.add({
     id: nanoid(),
-    title: partial.title,
-    projectId: partial.projectId,
-    status: partial.workingDate ? "todo" : "inbox",
-    workingDate: partial.workingDate ?? null,
-    dueDate: partial.dueDate ?? null,
-    url: partial.url ?? null,
+    title: fields.title,
+    projectId,
+    status: fields.workingDate ? "todo" : "inbox",
+    workingDate: fields.workingDate ?? null,
+    dueDate: fields.dueDate ?? null,
+    url: fields.url ?? null,
     createdAt: now,
     updatedAt: now,
     completedAt: null,
@@ -47,7 +56,9 @@ export default function InputBar({ inputRef }: InputBarProps) {
     <div className="border-b border-[0.5px] border-border bg-surface px-4 py-3">
       <SmartInput
         projects={projects}
-        onTaskReady={(partial) => handleTaskReady(partial)}
+        onTaskReady={(partial) =>
+          handleTaskReady(partial, spacesWithProjects)
+        }
         inputRef={inputRef}
         taskCounts={taskCounts}
       />

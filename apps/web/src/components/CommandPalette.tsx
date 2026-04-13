@@ -5,11 +5,13 @@ import {
   type Task,
   type ChipFocus,
   type SmartInputValues,
+  type TaskDraftPayload,
 } from "@sift/shared";
 import { useSpacesProjects } from "../hooks/useSpacesProjects";
 import { useTaskCounts } from "../hooks/useTasks";
 import { db } from "../lib/db";
 import { requestSync } from "../lib/requestSync";
+import { resolveTaskProjectId } from "../lib/createProjectForTask";
 import { nanoid } from "nanoid";
 
 interface CommandPaletteProps {
@@ -135,11 +137,16 @@ export default function CommandPalette({
         <SmartInput
           key={isEditing ? editTask.id : "new"}
           projects={projects}
-          onTaskReady={async (partial) => {
+          onTaskReady={async (partial: TaskDraftPayload) => {
+            const projectId = await resolveTaskProjectId(
+              partial,
+              spacesWithProjects,
+            );
+            const { newProjectName: _np, ...fields } = partial;
             if (isEditing) {
-              await updateTask(editTask.id, partial);
+              await updateTask(editTask.id, { ...fields, projectId });
             } else {
-              await createTask(partial);
+              await createTask({ ...fields, projectId });
             }
             onClose();
           }}

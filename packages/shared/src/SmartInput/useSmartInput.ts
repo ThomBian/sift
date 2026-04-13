@@ -5,6 +5,17 @@ import type { Task } from "../types";
 export type ChipFocus = "project" | "dueDate" | "workingDate" | "url";
 export type FocusTarget = "text" | ChipFocus;
 
+export type ProjectPickResult =
+  | { kind: "existing"; id: string }
+  | { kind: "new"; name: string };
+
+export type TaskDraftPayload = Pick<
+  Task,
+  "title" | "dueDate" | "workingDate" | "url" | "projectId"
+> & {
+  newProjectName?: string;
+};
+
 const FOCUS_CYCLE: FocusTarget[] = [
   "text",
   "project",
@@ -28,11 +39,33 @@ export interface SmartInputValues {
   url: string | null;
 }
 
-function isFilled(chip: ChipFocus, values: SmartInputValues): boolean {
-  if (chip === "project") return values.projectId !== null;
+function projectChipFilled(
+  projectId: string | null,
+  pendingNewProjectName: string | null,
+): boolean {
+  return (
+    projectId !== null || (pendingNewProjectName?.trim().length ?? 0) > 0
+  );
+}
+
+function isFilled(
+  chip: ChipFocus,
+  values: SmartInputValues,
+  pendingNewProjectName: string | null,
+): boolean {
+  if (chip === "project")
+    return projectChipFilled(values.projectId, pendingNewProjectName);
   if (chip === "dueDate") return values.dueDate !== null;
   if (chip === "workingDate") return values.workingDate !== null;
   return values.url != null && values.url.trim() !== "";
+}
+
+function projectFilterMatches(
+  projects: readonly { name: string }[],
+  q: string,
+): boolean {
+  const lower = q.toLowerCase();
+  return projects.some((p) => p.name.toLowerCase().includes(lower));
 }
 
 // Forward Tab: from text → first unfilled chip (or full cycle restart — see ref below); from chip → one step
@@ -40,6 +73,7 @@ function nextFocus(
   current: FocusTarget,
   values: SmartInputValues,
   fullCycleFromText: boolean,
+  pendingNewProjectName: string | null,
 ): FocusTarget {
   if (current === "text") {
     if (fullCycleFromText) {
@@ -48,7 +82,7 @@ function nextFocus(
     }
     // First Tab from title (after select / escape / initial): jump to first unfilled chip, or project if all filled
     const first = (FOCUS_CYCLE.slice(1) as ChipFocus[]).find(
-      (c) => !isFilled(c, values),
+      (c) => !isFilled(c, values, pendingNewProjectName),
     );
     return first ?? FOCUS_CYCLE[1];
   }
@@ -65,13 +99,18 @@ function prevFocus(current: FocusTarget): FocusTarget {
 export interface UseSmartInputReturn {
   values: SmartInputValues;
   focus: FocusTarget;
+  /** Filter text while project / date chip is active (shared field, cleared on chip change). */
+  chipQuery: string;
+  setChipQuery: (q: string) => void;
+  pendingNewProjectName: string | null;
   handleTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleTitleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   handleUrlChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleUrlKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   handleChipKeyDown: (chip: ChipFocus, e: React.KeyboardEvent) => void;
   handleChipClick: (chip: ChipFocus) => void;
-  handleSelect: (chip: ChipFocus, value: string | Date | null) => void;
+  handleSelect: (chip: "dueDate" | "workingDate", value: Date | null) => void;
+  handleProjectPick: (result: ProjectPickResult) => void;
   cancelChipSelection: () => void;
   reset: () => void;
   /** Brief post-commit highlight on project / date chips (empty when idle). */
@@ -87,17 +126,20 @@ const EMPTY: SmartInputValues = {
 };
 
 export function useSmartInput(
-  onTaskReady: (
-    task: Pick<Task, "title" | "dueDate" | "workingDate" | "url" | "projectId">,
-  ) => void,
+  onTaskReady: (task: TaskDraftPayload) => void,
   initialValues: Partial<SmartInputValues> = {},
   initialFocus: FocusTarget = "text",
+  projects: readonly { name: string }[] = [],
 ): UseSmartInputReturn {
   const [values, setValues] = useState<SmartInputValues>(() => ({
     ...EMPTY,
     ...initialValues,
   }));
   const [focus, setFocus] = useState<FocusTarget>(initialFocus);
+  const [chipQuery, setChipQuery] = useState("");
+  const [pendingNewProjectName, setPendingNewProjectName] = useState<
+    string | null
+  >(null);
   const [commitFlash, setCommitFlash] = useState<ChipFocus | null>(null);
   const commitFlashTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
@@ -113,25 +155,59 @@ export function useSmartInput(
     };
   }, []);
 
+  useEffect(() => {
+    setChipQuery("");
+  }, [focus]);
+
   const handleSave = useCallback(() => {
     if (!values.title.trim()) return;
     const trimmedUrl = values.url?.trim();
-    onTaskReady({
+
+    let newProjectName: string | undefined;
+    let projectId = values.projectId;
+    if (projectId == null) {
+      const pending = pendingNewProjectName?.trim();
+      const q = chipQuery.trim();
+      const implicitNew =
+        focus === "project" &&
+        q.length > 0 &&
+        !projectFilterMatches(projects, q);
+      const resolved = pending || (implicitNew ? q : undefined);
+      if (resolved?.length) {
+        newProjectName = resolved;
+      }
+    }
+
+    const payload: TaskDraftPayload = {
       title: values.title.trim(),
-      projectId: values.projectId,
+      projectId,
       dueDate: values.dueDate,
       workingDate: values.workingDate,
       url: trimmedUrl ? trimmedUrl : null,
-    });
+    };
+    if (newProjectName !== undefined) {
+      payload.newProjectName = newProjectName;
+    }
+
+    onTaskReady(payload);
     if (commitFlashTimeoutRef.current !== null) {
       clearTimeout(commitFlashTimeoutRef.current);
       commitFlashTimeoutRef.current = null;
     }
     setCommitFlash(null);
     setValues(EMPTY);
+    setChipQuery("");
+    setPendingNewProjectName(null);
     afterFullChipRingRef.current = false;
     setFocus("text");
-  }, [values, onTaskReady]);
+  }, [
+    values,
+    focus,
+    chipQuery,
+    pendingNewProjectName,
+    projects,
+    onTaskReady,
+  ]);
 
   const handleTitleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -160,13 +236,18 @@ export function useSmartInput(
         fullCycleFromText = afterFullChipRingRef.current;
         afterFullChipRingRef.current = false;
       }
-      const next = nextFocus(f, values, fullCycleFromText);
+      const next = nextFocus(
+        f,
+        values,
+        fullCycleFromText,
+        pendingNewProjectName,
+      );
       if (f === "url" && next === "text") {
         afterFullChipRingRef.current = true;
       }
       return next;
     },
-    [values],
+    [values, pendingNewProjectName],
   );
 
   const handleTitleKeyDown = useCallback(
@@ -229,36 +310,71 @@ export function useSmartInput(
     setFocus(chip);
   }, []);
 
-  const handleSelect = useCallback((chip: ChipFocus, value: string | Date | null) => {
-    const shouldFlash =
-      value != null &&
-      (chip === "project" ||
-        ((chip === "dueDate" || chip === "workingDate") && value instanceof Date));
-
-    if (shouldFlash) {
-      if (commitFlashTimeoutRef.current !== null) {
-        clearTimeout(commitFlashTimeoutRef.current);
-      }
-      setCommitFlash(chip);
-      commitFlashTimeoutRef.current = setTimeout(() => {
-        setCommitFlash(null);
-        commitFlashTimeoutRef.current = null;
-      }, 220);
+  const flashChip = useCallback((chip: ChipFocus) => {
+    if (commitFlashTimeoutRef.current !== null) {
+      clearTimeout(commitFlashTimeoutRef.current);
     }
-
-    const key = chip === "project" ? "projectId" : chip;
-    setValues((v) => {
-      const updated = { ...v, [key]: value };
-      // Advance to next unfilled chip, or back to text if this was the last one
-      const chipIndex = FOCUS_CYCLE.indexOf(chip);
-      const remaining = (
-        FOCUS_CYCLE.slice(chipIndex + 1) as ChipFocus[]
-      ).filter((c) => !isFilled(c, updated));
-      afterFullChipRingRef.current = false;
-      setFocus(remaining.length > 0 ? remaining[0] : "text");
-      return updated;
-    });
+    setCommitFlash(chip);
+    commitFlashTimeoutRef.current = setTimeout(() => {
+      setCommitFlash(null);
+      commitFlashTimeoutRef.current = null;
+    }, 220);
   }, []);
+
+  const handleSelect = useCallback(
+    (chip: "dueDate" | "workingDate", value: Date | null) => {
+      if (value != null) {
+        flashChip(chip);
+      }
+
+      setValues((v) => {
+        const updated = { ...v, [chip]: value };
+        const chipIndex = FOCUS_CYCLE.indexOf(chip);
+        const remaining = (
+          FOCUS_CYCLE.slice(chipIndex + 1) as ChipFocus[]
+        ).filter((c) => !isFilled(c, updated, pendingNewProjectName));
+        afterFullChipRingRef.current = false;
+        setFocus(remaining.length > 0 ? remaining[0] : "text");
+        return updated;
+      });
+    },
+    [flashChip, pendingNewProjectName],
+  );
+
+  const handleProjectPick = useCallback(
+    (result: ProjectPickResult) => {
+      if (result.kind === "existing") {
+        flashChip("project");
+        setPendingNewProjectName(null);
+        setValues((v) => {
+          const updated = { ...v, projectId: result.id };
+          const chipIndex = FOCUS_CYCLE.indexOf("project");
+          const remaining = (
+            FOCUS_CYCLE.slice(chipIndex + 1) as ChipFocus[]
+          ).filter((c) => !isFilled(c, updated, null));
+          afterFullChipRingRef.current = false;
+          setFocus(remaining.length > 0 ? remaining[0] : "text");
+          return updated;
+        });
+        return;
+      }
+
+      const name = result.name.trim() || "New project";
+      flashChip("project");
+      setPendingNewProjectName(name);
+      setValues((v) => {
+        const updated = { ...v, projectId: null };
+        const chipIndex = FOCUS_CYCLE.indexOf("project");
+        const remaining = (
+          FOCUS_CYCLE.slice(chipIndex + 1) as ChipFocus[]
+        ).filter((c) => !isFilled(c, updated, name));
+        afterFullChipRingRef.current = false;
+        setFocus(remaining.length > 0 ? remaining[0] : "text");
+        return updated;
+      });
+    },
+    [flashChip],
+  );
 
   const cancelChipSelection = useCallback(() => {
     afterFullChipRingRef.current = false;
@@ -273,12 +389,17 @@ export function useSmartInput(
     setCommitFlash(null);
     afterFullChipRingRef.current = false;
     setValues(EMPTY);
+    setChipQuery("");
+    setPendingNewProjectName(null);
     setFocus("text");
   }, []);
 
   return {
     values,
     focus,
+    chipQuery,
+    setChipQuery,
+    pendingNewProjectName,
     handleTitleChange,
     handleTitleKeyDown,
     handleUrlChange,
@@ -286,6 +407,7 @@ export function useSmartInput(
     handleChipKeyDown,
     handleChipClick,
     handleSelect,
+    handleProjectPick,
     cancelChipSelection,
     reset,
     commitFlash,

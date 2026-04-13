@@ -4,7 +4,7 @@ import { startOfDay } from "date-fns";
 import { matchBestDate } from "../parseLooseDate";
 import { Calendar } from "../Calendar/Calendar";
 import type { Project, Space } from "../types";
-import type { ChipFocus } from "./useSmartInput";
+import type { ChipFocus, ProjectPickResult } from "./useSmartInput";
 import styles from "./Dropdown.module.css";
 
 export type DropdownChip = Exclude<ChipFocus, "url">;
@@ -13,11 +13,16 @@ export interface ProjectWithSpace extends Project {
   space: Space;
 }
 
+export type { ProjectPickResult };
+
 interface DropdownProps {
   type: DropdownChip;
   projects: ProjectWithSpace[];
   query: string;
-  onSelect: (value: string | Date | null) => void;
+  /** Due / working date picker only. */
+  onSelect?: (value: Date | null) => void;
+  /** Project list only. */
+  onProjectPick?: (result: ProjectPickResult) => void;
   mode?: "floating" | "inline";
   taskCounts?: Record<string, number>;
   /** Already-saved date for this chip (edit / reopen); keeps the grid in sync when the filter is empty. */
@@ -28,11 +33,14 @@ type FlatItem =
   | { kind: "project"; p: ProjectWithSpace; groupLabel?: string }
   | { kind: "new" };
 
+const DEFAULT_NEW_PROJECT_NAME = "New project";
+
 export function Dropdown({
   type,
   projects,
   query,
   onSelect,
+  onProjectPick,
   mode = "floating",
   taskCounts,
   committedDate = null,
@@ -112,6 +120,14 @@ export function Dropdown({
   useEffect(() => {
     onSelectRef.current = onSelect;
   }, [onSelect]);
+  const onProjectPickRef = useRef(onProjectPick);
+  useEffect(() => {
+    onProjectPickRef.current = onProjectPick;
+  }, [onProjectPick]);
+  const queryRef = useRef(query);
+  useEffect(() => {
+    queryRef.current = query;
+  }, [query]);
   const bestMatchRef = useRef(bestMatch);
   useEffect(() => {
     bestMatchRef.current = bestMatch;
@@ -124,6 +140,10 @@ export function Dropdown({
   useEffect(() => {
     typeRef.current = type;
   }, [type]);
+  const committedDateRef = useRef(committedDate);
+  useEffect(() => {
+    committedDateRef.current = committedDate;
+  }, [committedDate]);
 
   // Capture-phase listener fires before view bubble listeners and before React's synthetic events
   useEffect(() => {
@@ -169,15 +189,25 @@ export function Dropdown({
         e.stopImmediatePropagation();
         e.preventDefault();
         if (typeRef.current !== "project") {
-          const toConfirm = localSelectedRef.current ?? bestMatchRef.current;
-          if (toConfirm) onSelectRef.current(toConfirm);
+          let toConfirm =
+            localSelectedRef.current ?? bestMatchRef.current ?? undefined;
+          // Match Calendar defaultCursor: today is highlighted but not in `selected` until confirmed.
+          if (toConfirm == null && committedDateRef.current == null) {
+            toConfirm = startOfDay(new Date());
+          }
+          if (toConfirm) onSelectRef.current?.(toConfirm);
           return;
         }
         const idx = focusedIndexRef.current >= 0 ? focusedIndexRef.current : 0;
         const item = flatItemsRef.current[idx];
         if (!item) return;
-        if (item.kind === "project") onSelectRef.current(item.p.id);
-        else if (item.kind === "new") onSelectRef.current(null);
+        if (item.kind === "project")
+          onProjectPickRef.current?.({ kind: "existing", id: item.p.id });
+        else if (item.kind === "new") {
+          const raw = queryRef.current.trim();
+          const name = raw || DEFAULT_NEW_PROJECT_NAME;
+          onProjectPickRef.current?.({ kind: "new", name });
+        }
       }
     }
     window.addEventListener("keydown", onKey, true);
@@ -211,7 +241,12 @@ export function Dropdown({
               <button
                 key="new"
                 className={`${styles.item} ${styles.newItem} ${idx === focusedIndex ? styles.itemFocused : ""}`}
-                onClick={() => onSelect(null)}
+                onClick={() =>
+                  onProjectPick?.({
+                    kind: "new",
+                    name: query.trim() || DEFAULT_NEW_PROJECT_NAME,
+                  })
+                }
                 type="button"
               >
                 + New project…
@@ -226,7 +261,9 @@ export function Dropdown({
                 )}
                 <button
                   className={`${styles.item} ${idx === focusedIndex ? styles.itemFocused : ""}`}
-                  onClick={() => onSelect(item.p.id)}
+                  onClick={() =>
+                    onProjectPick?.({ kind: "existing", id: item.p.id })
+                  }
                   role="option"
                   type="button"
                 >
@@ -273,7 +310,7 @@ export function Dropdown({
         onSelect={(date) => {
           setLocalSelected(date);
           setDisplayMonth(date);
-          onSelect(date);
+          onSelect?.(date);
         }}
         taskCounts={taskCounts}
         month={displayMonth}

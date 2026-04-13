@@ -25,9 +25,13 @@ const cmdEnter = {
   preventDefault: vi.fn(),
 } as unknown as React.KeyboardEvent<HTMLInputElement>;
 
-function make() {
+const mockProjects = [{ name: "General" }, { name: "Auth PR" }];
+
+function make(projects: { name: string }[] = mockProjects) {
   const onTaskReady = vi.fn();
-  const hook = renderHook(() => useSmartInput(onTaskReady));
+  const hook = renderHook(() =>
+    useSmartInput(onTaskReady, {}, "text", projects),
+  );
   return { hook, onTaskReady };
 }
 
@@ -63,29 +67,28 @@ describe("useSmartInput — Tab rotation", () => {
     expect(hook.result.current.focus).toBe("text");
   });
 
-  it("handleSelect on project advances focus to next unfilled chip (dueDate)", () => {
+  it("handleProjectPick existing advances focus to next unfilled chip (dueDate)", () => {
     const { hook } = make();
-    // Selecting project should auto-advance focus to next unfilled chip (dueDate)
-    act(() => hook.result.current.handleSelect("project", "proj-1"));
+    act(() =>
+      hook.result.current.handleProjectPick({ kind: "existing", id: "proj-1" }),
+    );
     expect(hook.result.current.focus).toBe("dueDate");
-    // Tab from dueDate should cycle normally to workingDate
     act(() => hook.result.current.handleChipKeyDown("dueDate", tab));
     expect(hook.result.current.focus).toBe("workingDate");
   });
 
   it("after full chip ring completes back to title, next Tab from title visits first unfilled chip", () => {
     const { hook } = make();
-    // Select project — auto-advances to dueDate
-    act(() => hook.result.current.handleSelect("project", "proj-1"));
+    act(() =>
+      hook.result.current.handleProjectPick({ kind: "existing", id: "proj-1" }),
+    );
     expect(hook.result.current.focus).toBe("dueDate");
-    // Tab through dueDate → workingDate → url → text (completes chip ring)
     act(() => hook.result.current.handleChipKeyDown("dueDate", tab));
     expect(hook.result.current.focus).toBe("workingDate");
     act(() => hook.result.current.handleChipKeyDown("workingDate", tab));
     expect(hook.result.current.focus).toBe("url");
     act(() => hook.result.current.handleChipKeyDown("url", tab));
     expect(hook.result.current.focus).toBe("text");
-    // First Tab from text after full ring: skip project (filled), land on first unfilled
     act(() => hook.result.current.handleTitleKeyDown(tab as any));
     expect(hook.result.current.focus).toBe("project");
     act(() => hook.result.current.handleChipKeyDown("project", tab));
@@ -162,18 +165,21 @@ describe("useSmartInput — chip interaction", () => {
     expect(hook.result.current.focus).toBe("dueDate");
   });
 
-  it("handleSelect sets value and advances focus to next unfilled chip", () => {
+  it("handleProjectPick existing sets value and advances focus to next unfilled chip", () => {
     const { hook } = make();
     act(() => hook.result.current.handleChipClick("project"));
-    act(() => hook.result.current.handleSelect("project", "proj-123"));
+    act(() =>
+      hook.result.current.handleProjectPick({ kind: "existing", id: "proj-123" }),
+    );
     expect(hook.result.current.values.projectId).toBe("proj-123");
-    // project is the first chip; next unfilled chip is dueDate
     expect(hook.result.current.focus).toBe("dueDate");
   });
 
   it("Escape on chip returns focus to text without clearing value", () => {
     const { hook } = make();
-    act(() => hook.result.current.handleSelect("project", "proj-123"));
+    act(() =>
+      hook.result.current.handleProjectPick({ kind: "existing", id: "proj-123" }),
+    );
     act(() => hook.result.current.handleChipClick("project"));
     act(() => hook.result.current.handleChipKeyDown("project", esc));
     expect(hook.result.current.focus).toBe("text");
@@ -189,7 +195,9 @@ describe("useSmartInput — save", () => {
         target: { value: "  My task  " },
       } as any),
     );
-    act(() => hook.result.current.handleSelect("project", "proj-abc"));
+    act(() =>
+      hook.result.current.handleProjectPick({ kind: "existing", id: "proj-abc" }),
+    );
     act(() => hook.result.current.handleTitleKeyDown(cmdEnter));
 
     expect(onTaskReady).toHaveBeenCalledWith({
@@ -249,6 +257,59 @@ describe("useSmartInput — save", () => {
     });
   });
 
+  it("⌘+Enter from project chip with unmatched filter includes newProjectName", () => {
+    const { hook, onTaskReady } = make();
+    act(() =>
+      hook.result.current.handleTitleChange({
+        target: { value: "Task title" },
+      } as any),
+    );
+    act(() => hook.result.current.handleChipClick("project"));
+    act(() => hook.result.current.setChipQuery("BrandNewThing"));
+    act(() =>
+      hook.result.current.handleChipKeyDown(
+        "project",
+        cmdEnter as unknown as React.KeyboardEvent,
+      ),
+    );
+    expect(onTaskReady).toHaveBeenCalledWith({
+      title: "Task title",
+      projectId: null,
+      newProjectName: "BrandNewThing",
+      dueDate: null,
+      workingDate: null,
+      url: null,
+    });
+  });
+
+  it("handleProjectPick new then ⌘+Enter includes newProjectName", () => {
+    const { hook, onTaskReady } = make();
+    act(() =>
+      hook.result.current.handleTitleChange({
+        target: { value: "Do thing" },
+      } as any),
+    );
+    act(() => hook.result.current.handleChipClick("project"));
+    act(() => hook.result.current.setChipQuery("MyProj"));
+    act(() =>
+      hook.result.current.handleProjectPick({ kind: "new", name: "MyProj" }),
+    );
+    act(() =>
+      hook.result.current.handleChipKeyDown(
+        "dueDate",
+        cmdEnter as unknown as React.KeyboardEvent,
+      ),
+    );
+    expect(onTaskReady).toHaveBeenCalledWith({
+      title: "Do thing",
+      projectId: null,
+      newProjectName: "MyProj",
+      dueDate: null,
+      workingDate: null,
+      url: null,
+    });
+  });
+
   it("reset clears all values and returns focus to text", () => {
     const { hook } = make();
     act(() =>
@@ -256,7 +317,9 @@ describe("useSmartInput — save", () => {
         target: { value: "task" },
       } as any),
     );
-    act(() => hook.result.current.handleSelect("project", "proj-1"));
+    act(() =>
+      hook.result.current.handleProjectPick({ kind: "existing", id: "proj-1" }),
+    );
     act(() => hook.result.current.reset());
     expect(hook.result.current.values.title).toBe("");
     expect(hook.result.current.values.projectId).toBeNull();

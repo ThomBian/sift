@@ -21,6 +21,8 @@ export type {
   SmartInputValues,
   ChipFocus,
   FocusTarget,
+  TaskDraftPayload,
+  ProjectPickResult,
 } from "./SmartInput/useSmartInput";
 export type { ProjectWithSpace, DropdownChip } from "./SmartInput/Dropdown";
 export { Dropdown } from "./SmartInput/Dropdown";

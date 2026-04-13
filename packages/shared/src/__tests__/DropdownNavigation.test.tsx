@@ -83,7 +83,7 @@ describe("Dropdown Keyboard Navigation", () => {
     expect(cursorCell).toBeTruthy();
   });
 
-  it("does not commit a date on Enter when nothing was typed or moved", () => {
+  it("commits today on Enter when the default cursor highlights today", () => {
     vi.setSystemTime(new Date(2026, 3, 10));
 
     render(<SmartInput projects={mockProjects} onTaskReady={vi.fn()} />);
@@ -91,9 +91,7 @@ describe("Dropdown Keyboard Navigation", () => {
     fireEvent.keyDown(window, { key: "Enter" });
 
     const dueChip = screen.getByRole("button", { name: "Due date (@d)" });
-    expect(dueChip).toHaveTextContent("@d");
-    expect(dueChip).toHaveTextContent("due");
-    expect(dueChip).not.toHaveTextContent("04/2026");
+    expect(dueChip).toHaveTextContent("10/04/2026");
   });
 
   it("does not commit a date when tabbing away from the due date chip", () => {
