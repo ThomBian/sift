@@ -12,7 +12,7 @@ import ProjectsView from './views/ProjectsView';
 
 export default function App() {
   const { user } = useAuth();
-  const isSynced = useSync(user);
+  const syncStatus = useSync(user);
 
   return (
     <>
@@ -20,7 +20,7 @@ export default function App() {
       <SpeedInsights />
       <Routes>
         <Route path="/auth" element={<AuthPage />} />
-        <Route path="/" element={<AppLayout isSynced={isSynced} />}>
+        <Route path="/" element={<AppLayout syncStatus={syncStatus} />}>
           <Route index element={<Navigate to="/inbox" replace />} />
           <Route path="inbox" element={<InboxView />} />
           <Route path="today" element={<TodayView />} />

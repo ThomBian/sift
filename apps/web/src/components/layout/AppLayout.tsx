@@ -5,6 +5,7 @@ import Sidebar from "./Sidebar";
 import CommandPalette from "../CommandPalette";
 import ProjectEditPalette from "../ProjectEditPalette";
 import { useSpacesProjects } from "../../hooks/useSpacesProjects";
+import type { SyncStatus } from "../../hooks/useSync";
 import type { Task, ChipFocus, Project } from "@sift/shared";
 
 const VIEWS = ["/inbox", "/today", "/projects"];
@@ -16,10 +17,10 @@ interface ProjectPaletteState {
 }
 
 interface AppLayoutProps {
-  isSynced: boolean;
+  syncStatus: SyncStatus;
 }
 
-export default function AppLayout({ isSynced }: AppLayoutProps) {
+export default function AppLayout({ syncStatus }: AppLayoutProps) {
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [editTask, setEditTask] = useState<Task | null>(null);
   const [editChip, setEditChip] = useState<ChipFocus | null>(null);
@@ -172,7 +173,7 @@ export default function AppLayout({ isSynced }: AppLayoutProps) {
   return (
     <div className="flex flex-col h-full bg-bg min-h-0">
       <Topbar
-        isSynced={isSynced}
+        syncStatus={syncStatus}
         onMenuClick={() => setNavDrawerOpen((o) => !o)}
         menuOpen={navDrawerOpen}
       />

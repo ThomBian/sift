@@ -1,18 +1,33 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTasks } from "../../hooks/useTasks";
+import type { SyncStatus } from "../../hooks/useSync";
 
-function SyncBadge({ isSynced }: { isSynced: boolean }) {
-  const label = isSynced ? "Synced" : "Local";
-  return (
-    <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.15em] text-muted">
+function SyncIcon({ status }: { status: SyncStatus }) {
+  if (status === "synced") {
+    return (
       <span
-        className={`w-1.5 h-1.5 shrink-0 ${isSynced ? "bg-green" : "bg-dim animate-pulse"}`}
-        aria-hidden
+        data-sync-status="synced"
+        className="w-2 h-2 shrink-0 bg-green"
+        aria-label="Synced"
       />
-      <span className="hidden sm:inline">{label}</span>
-      <span className="sr-only">{label}</span>
-    </div>
+    );
+  }
+  if (status === "syncing") {
+    return (
+      <span
+        data-sync-status="syncing"
+        className="w-2 h-2 shrink-0 border border-accent animate-spin"
+        aria-label="Syncing"
+      />
+    );
+  }
+  return (
+    <span
+      data-sync-status="local"
+      className="w-2 h-2 shrink-0 border border-dim"
+      aria-label="Local"
+    />
   );
 }
 
@@ -48,17 +63,18 @@ function NavTab({
 }
 
 export interface TopbarProps {
-  isSynced: boolean;
+  syncStatus: SyncStatus;
   onMenuClick?: () => void;
   menuOpen?: boolean;
 }
 
 export default function Topbar({
-  isSynced,
+  syncStatus,
   onMenuClick,
   menuOpen,
 }: TopbarProps) {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const inboxTasks = useTasks("inbox");
   const todayTasks = useTasks("today");
 
@@ -110,7 +126,19 @@ export default function Topbar({
       </nav>
 
       <div className="flex items-center gap-2 sm:gap-4 shrink-0 justify-end">
-        <SyncBadge isSynced={isSynced} />
+        {!user && (
+          <button
+            type="button"
+            onClick={() => void navigate("/auth")}
+            className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted hover:text-text transition-colors duration-150"
+            aria-label="Sign in"
+          >
+            Sign in
+          </button>
+        )}
+        <div className="flex items-center justify-center w-11 h-11 md:w-7 md:h-7 shrink-0">
+          <SyncIcon status={syncStatus} />
+        </div>
         {user ? (
           <button
             type="button"
