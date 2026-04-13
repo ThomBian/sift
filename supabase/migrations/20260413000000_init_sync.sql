@@ -1,6 +1,6 @@
 -- Sift / Speedy Tasks — tables for SyncService (push/pull + tasks Realtime)
 -- Run in Supabase SQL Editor or via supabase db push if CLI linked.
--- If `alter publication` errors (table already in publication), skip that line or use Dashboard → Publications.
+-- Realtime add is conditional so re-runs / db push do not error if tasks is already published.
 
 create table if not exists public.spaces (
   id text primary key,
@@ -88,4 +88,16 @@ create policy "tasks_update_own" on public.tasks
   for update using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
 
-alter publication supabase_realtime add table public.tasks;
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'tasks'
+  ) then
+    alter publication supabase_realtime add table public.tasks;
+  end if;
+end;
+$$;
