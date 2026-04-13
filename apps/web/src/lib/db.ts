@@ -1,1 +1,1 @@
-export { db } from "@sift/shared";
+export { db, clearLocalDB } from "@sift/shared";

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { db } from "../lib/db";
+import { db, clearLocalDB } from "../lib/db";
 import { SyncService } from "../services/SyncService";
 import type { Space, Project, Task } from "@sift/shared";
 
@@ -349,5 +349,23 @@ describe("SyncService", () => {
       capturedHandler!();
       expect(onChange).toHaveBeenCalledTimes(1);
     });
+  });
+});
+
+describe("clearLocalDB()", () => {
+  it("clears all spaces, projects, and tasks", async () => {
+    await db.spaces.add(makeSpace());
+    await db.projects.add(makeProject());
+    await db.tasks.add(makeTask());
+
+    await clearLocalDB();
+
+    expect(await db.spaces.count()).toBe(0);
+    expect(await db.projects.count()).toBe(0);
+    expect(await db.tasks.count()).toBe(0);
+  });
+
+  it("is idempotent on empty db", async () => {
+    await expect(clearLocalDB()).resolves.toBeUndefined();
   });
 });

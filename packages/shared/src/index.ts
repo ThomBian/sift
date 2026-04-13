@@ -5,6 +5,7 @@ export {
   archiveProject,
   unarchiveProject,
   deleteProject,
+  clearLocalDB,
 } from "./db";
 export {
   EMOJI_POOL,
