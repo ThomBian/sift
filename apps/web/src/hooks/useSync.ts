@@ -25,10 +25,14 @@ export function useSync(user: User | null): SyncStatus {
     if (!user) {
       // Only wipe if a previous user session existed on this device
       if (localStorage.getItem(SIFT_USER_ID_KEY) !== null) {
-        void clearLocalDB().then(() => {
-          localStorage.removeItem(SIFT_USER_ID_KEY);
-          localStorage.removeItem(LAST_SYNC_KEY);
-        });
+        // Always remove keys regardless of DB success — stale keys cause
+        // incorrect sync-path selection on next sign-in
+        void clearLocalDB()
+          .catch(console.error)
+          .finally(() => {
+            localStorage.removeItem(SIFT_USER_ID_KEY);
+            localStorage.removeItem(LAST_SYNC_KEY);
+          });
       }
       setStatus("local");
       return;
@@ -58,6 +62,9 @@ export function useSync(user: User | null): SyncStatus {
         if (userChanged) {
           await clearLocalDB();
           localStorage.removeItem(LAST_SYNC_KEY);
+          // sift_user_id still holds the old userId here; it is overwritten on
+          // success below. A refresh during bootstrap sees storedUserId !== userId
+          // which triggers another bootstrap — fully recoverable.
         }
 
         if (userChanged || isFirstSync) {
