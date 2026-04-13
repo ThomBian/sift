@@ -61,11 +61,11 @@ export function useSync(user: User | null): SyncStatus {
         }
 
         if (userChanged || isFirstSync) {
-          localStorage.setItem(SIFT_USER_ID_KEY, userId);
           await syncService.bootstrap(userId);
         } else {
           await syncService.sync(userId);
         }
+        localStorage.setItem(SIFT_USER_ID_KEY, userId);
         setStatus("synced");
       } catch {
         setStatus("local");

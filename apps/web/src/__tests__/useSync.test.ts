@@ -71,6 +71,7 @@ describe("useSync", () => {
     await waitFor(() => expect(result.current).toBe("synced"));
     expect(mockBootstrap).toHaveBeenCalledWith("user-1");
     expect(mockSync).not.toHaveBeenCalled();
+    expect(localStorage.getItem("sift_user_id")).toBe("user-1");
   });
 
   it("calls sync when same user and cursor already exists", async () => {
@@ -107,5 +108,6 @@ describe("useSync", () => {
     mockBootstrap.mockRejectedValue(new Error("network error"));
     const { result } = renderHook(() => useSync(fakeUser));
     await waitFor(() => expect(result.current).toBe("local"));
+    expect(localStorage.getItem("sift_user_id")).toBeNull();
   });
 });
