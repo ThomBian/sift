@@ -1,5 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+
 import { useAuth } from './contexts/AuthContext';
 import { useSync } from './hooks/useSync';
 import AppLayout from './components/layout/AppLayout';
@@ -15,6 +17,7 @@ export default function App() {
   return (
     <>
       <Analytics />
+      <SpeedInsights />
       <Routes>
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/" element={<AppLayout isSynced={isSynced} />}>
