@@ -125,6 +125,21 @@ describe("useTodayTasks", () => {
     const ids = result.current.map((t) => t.id).sort();
     expect(ids).toEqual(["t1", "t2"]);
   });
+
+  it("includes tasks whose workingDate is later same calendar day than midnight (not only midnight)", async () => {
+    const noonToday = new Date();
+    noonToday.setHours(14, 51, 43, 441);
+
+    await db.tasks.bulkAdd([
+      makeTask({ id: "t-midday", status: "todo", workingDate: noonToday }),
+      makeTask({ id: "t-tomorrow", status: "todo", workingDate: tomorrow() }),
+    ]);
+
+    const { result } = renderHook(() => useTodayTasks());
+    await waitFor(() => expect(result.current.length).toBeGreaterThan(0));
+
+    expect(result.current.map((t) => t.id).sort()).toEqual(["t-midday"]);
+  });
 });
 
 describe("useProjectTasks", () => {

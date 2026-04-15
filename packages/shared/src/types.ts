@@ -32,7 +32,7 @@ export interface Task {
   /** null = unassigned (inbox/today only until user picks a project) */
   projectId: string | null;
   status: TaskStatus;
-  workingDate: Date | null; // drives Today view (workingDate <= today)
+  workingDate: Date | null; // drives Today view (local calendar day <= today)
   dueDate: Date | null; // shows red when past + not done
   createdAt: Date;
   updatedAt: Date; // last-write-wins sync key

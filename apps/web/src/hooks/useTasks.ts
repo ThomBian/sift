@@ -1,8 +1,35 @@
+import { useEffect, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
+import { startOfDay } from "date-fns";
 import { db } from "../lib/db";
 import type { Task, Space, Project } from "@sift/shared";
 
 const TERMINAL_STATUSES = ["done", "archived"] as const;
+
+/** YYYY-MM-DD in local time — bumps when the calendar day changes (for live-query deps). */
+function localCalendarDayKey(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function useLocalCalendarDayKey(): string {
+  const [key, setKey] = useState(() => localCalendarDayKey(new Date()));
+  useEffect(() => {
+    const sync = () => {
+      const next = localCalendarDayKey(new Date());
+      setKey((prev) => (prev === next ? prev : next));
+    };
+    const id = window.setInterval(sync, 60_000);
+    const onVis = () => {
+      if (document.visibilityState === "visible") sync();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      window.clearInterval(id);
+      document.removeEventListener("visibilitychange", onVis);
+    };
+  }, []);
+  return key;
+}
 
 /** Inbox: workingDate === null AND status not in done/archived */
 export function useInboxTasks(): Task[] {
@@ -23,25 +50,28 @@ export function useInboxTasks(): Task[] {
   );
 }
 
-/** Today: workingDate <= today AND status not in done/archived */
+/** Today: local calendar day(workingDate) <= local today AND status not in done/archived */
 export function useTodayTasks(): Task[] {
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
+  const calendarDayKey = useLocalCalendarDayKey();
 
   return (
     useLiveQuery(
-      () =>
-        db.tasks
-          .filter(
-            (t) =>
-              t.workingDate !== null &&
-              t.workingDate <= todayStart &&
-              !TERMINAL_STATUSES.includes(
+      () => {
+        const today = startOfDay(new Date());
+        return db.tasks
+          .filter((t) => {
+            if (t.workingDate === null) return false;
+            if (
+              TERMINAL_STATUSES.includes(
                 t.status as (typeof TERMINAL_STATUSES)[number],
-              ),
-          )
-          .toArray(),
-      [],
+              )
+            )
+              return false;
+            return startOfDay(t.workingDate).getTime() <= today.getTime();
+          })
+          .toArray();
+      },
+      [calendarDayKey],
     ) ?? []
   );
 }
