@@ -279,6 +279,24 @@ export default function ProjectsView() {
           setExpandedProjectId(null);
           return;
         }
+        if (e.key === "n" || e.key === "N") {
+          const group = expandedProjectId
+            ? findProjectGroupInSpace(groups, expandedProjectId)
+            : null;
+          const spaceId =
+            group?.space.id ??
+            visibleProjectsOrdered[0]?.spaceId ??
+            groups[0]?.space.id;
+          if (spaceId) {
+            e.preventDefault();
+            window.dispatchEvent(
+              new CustomEvent("sift:new-project", {
+                detail: { spaceId },
+              }),
+            );
+          }
+          return;
+        }
         const focused =
           focusedId !== null
             ? (expandedTasks.find((t) => t.id === focusedId) ?? null)
