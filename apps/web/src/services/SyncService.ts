@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { db } from "../lib/db";
+import { flushPendingProjectDeletes } from "../lib/syncDeletionOutbox";
 import type { Space, Project, Task } from "@sift/shared";
 
 const LAST_SYNC_KEY = "speedy_last_synced_at";
@@ -112,6 +113,8 @@ export class SyncService {
     const syncStartedAt = new Date();
     const lastSyncedAt = getLastSyncedAt();
 
+    await flushPendingProjectDeletes(this.supabase, userId);
+
     await Promise.all([
       this.syncSpaces(userId, lastSyncedAt),
       this.syncProjects(userId, lastSyncedAt),
@@ -217,6 +220,8 @@ export class SyncService {
 
   async bootstrap(userId: string): Promise<void> {
     const syncStartedAt = new Date();
+
+    await flushPendingProjectDeletes(this.supabase, userId);
 
     // Full pull — no updated_at filter, get everything for this user
     const [spacesRes, projectsRes, tasksRes] = await Promise.all([

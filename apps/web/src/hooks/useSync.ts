@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { SyncService } from "../services/SyncService";
 import { supabase } from "../lib/supabase";
 import { clearLocalDB } from "../lib/db";
+import { clearPendingProjectDeletes } from "../lib/syncDeletionOutbox";
 import { registerSyncRunner } from "../lib/requestSync";
 import type { User } from "@supabase/supabase-js";
 
@@ -30,6 +31,7 @@ export function useSync(user: User | null): SyncStatus {
         void clearLocalDB()
           .catch(console.error)
           .finally(() => {
+            clearPendingProjectDeletes();
             localStorage.removeItem(SIFT_USER_ID_KEY);
             localStorage.removeItem(LAST_SYNC_KEY);
           });
@@ -61,6 +63,7 @@ export function useSync(user: User | null): SyncStatus {
 
         if (userChanged) {
           await clearLocalDB();
+          clearPendingProjectDeletes();
           localStorage.removeItem(LAST_SYNC_KEY);
           // sift_user_id still holds the old userId here; it is overwritten on
           // success below. A refresh during bootstrap sees storedUserId !== userId

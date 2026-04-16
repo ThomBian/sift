@@ -132,11 +132,19 @@ export async function archiveProject(projectId: string): Promise<void> {
   });
 }
 
-export async function deleteProject(projectId: string): Promise<void> {
+export async function deleteProject(
+  projectId: string,
+): Promise<{ projectId: string; taskIds: string[] }> {
+  let taskIds: string[] = [];
   await db.transaction("rw", db.projects, db.tasks, async () => {
+    taskIds = (await db.tasks
+      .where("projectId")
+      .equals(projectId)
+      .primaryKeys()) as string[];
     await db.tasks.where("projectId").equals(projectId).delete();
     await db.projects.delete(projectId);
   });
+  return { projectId, taskIds };
 }
 
 export async function unarchiveProject(projectId: string): Promise<void> {

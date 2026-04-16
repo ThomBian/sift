@@ -8,6 +8,12 @@ import type { Space, Project, Task } from "@sift/shared";
 const mockUpsert = vi.fn().mockResolvedValue({ error: null });
 const mockGt = vi.fn();
 const mockEq = vi.fn();
+const mockDelete = vi.fn(() => ({
+  eq: vi.fn(() => ({
+    in: vi.fn(() => Promise.resolve({ error: null })),
+    eq: vi.fn(() => Promise.resolve({ error: null })),
+  })),
+}));
 
 function createMockSupabase() {
   const mockSelect = vi.fn(() => ({
@@ -19,6 +25,7 @@ function createMockSupabase() {
     from: vi.fn(() => ({
       upsert: mockUpsert,
       select: mockSelect,
+      delete: mockDelete,
     })),
     channel: vi.fn(() => ({
       on: vi.fn().mockReturnThis(),
@@ -82,6 +89,13 @@ beforeEach(async () => {
   localStorage.clear();
   vi.clearAllMocks();
   mockUpsert.mockResolvedValue({ error: null });
+  mockDelete.mockClear();
+  mockDelete.mockImplementation(() => ({
+    eq: vi.fn(() => ({
+      in: vi.fn(() => Promise.resolve({ error: null })),
+      eq: vi.fn(() => Promise.resolve({ error: null })),
+    })),
+  }));
   mockGt.mockReset();
   mockGt.mockResolvedValue({ data: [], error: null });
   mockEq.mockReset();
@@ -177,6 +191,27 @@ describe("SyncService", () => {
       await svc.sync("user-1");
 
       expect(mockUpsert).not.toHaveBeenCalled();
+    });
+
+    it("flushes pending project deletions to Supabase before push", async () => {
+      localStorage.setItem(
+        "speedy_pending_project_deletes",
+        JSON.stringify([
+          { projectId: "gone-project", taskIds: ["t1", "t2"] },
+        ]),
+      );
+      await db.spaces.add(makeSpace({ synced: true }));
+      const mockSupabase = createMockSupabase();
+
+      const svc = new SyncService(mockSupabase as never);
+      await svc.sync("user-1");
+
+      const tables = (mockSupabase.from as ReturnType<typeof vi.fn>).mock.calls.map(
+        (c) => c[0] as string,
+      );
+      expect(tables.slice(0, 2)).toEqual(["tasks", "projects"]);
+      expect(mockDelete).toHaveBeenCalled();
+      expect(localStorage.getItem("speedy_pending_project_deletes")).toBeNull();
     });
 
     it("marks records synced=true after successful push", async () => {

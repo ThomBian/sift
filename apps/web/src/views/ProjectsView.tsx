@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { archiveProject, unarchiveProject, deleteProject } from "@sift/shared";
+import { enqueuePendingProjectDeletion } from "../lib/syncDeletionOutbox";
 import { useProjectTasks } from "../hooks/useTasks";
 import { useTrackedTimeouts } from "../hooks/useTrackedTimeouts";
 import { useKeyboardNav } from "../hooks/useKeyboardNav";
@@ -260,7 +261,10 @@ export default function ProjectsView() {
     if (!p) return;
     setDeleteConfirmProject(null);
     const idsSnapshot = [...orderedProjectIdsRef.current];
-    void deleteProject(p.id).then(() => requestSync());
+    void deleteProject(p.id).then((meta) => {
+      enqueuePendingProjectDeletion(meta);
+      requestSync();
+    });
     const next = nextFocusAfterRemove(idsSnapshot, p.id);
     setFocusedProjectId(next);
   }, [setFocusedProjectId]);
