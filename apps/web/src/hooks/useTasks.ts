@@ -69,7 +69,8 @@ export function useTodayTasks(): Task[] {
               return false;
             return startOfDay(t.workingDate).getTime() <= today.getTime();
           })
-          .toArray();
+          .toArray()
+          .then((rows) => rows.sort(compareByDueDateNullsLast));
       },
       [calendarDayKey],
     ) ?? []
@@ -93,6 +94,14 @@ function taskCountsAsDone(t: Task): boolean {
   );
 }
 
+/** Ascending by due date; tasks without a due date sort after those with one. */
+function compareByDueDateNullsLast(a: Task, b: Task): number {
+  if (!a.dueDate && !b.dueDate) return 0;
+  if (!a.dueDate) return 1;
+  if (!b.dueDate) return -1;
+  return a.dueDate.getTime() - b.dueDate.getTime();
+}
+
 function tasksForProject(tasks: Task[], project: Project): Task[] {
   return tasks
     .filter((t) => {
@@ -104,10 +113,7 @@ function tasksForProject(tasks: Task[], project: Project): Task[] {
       const aDone = taskCountsAsDone(a) ? 1 : 0;
       const bDone = taskCountsAsDone(b) ? 1 : 0;
       if (aDone !== bDone) return aDone - bDone;
-      if (!a.dueDate && !b.dueDate) return 0;
-      if (!a.dueDate) return 1;
-      if (!b.dueDate) return -1;
-      return a.dueDate.getTime() - b.dueDate.getTime();
+      return compareByDueDateNullsLast(a, b);
     });
 }
 

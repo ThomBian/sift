@@ -140,6 +140,45 @@ describe("useTodayTasks", () => {
 
     expect(result.current.map((t) => t.id).sort()).toEqual(["t-midday"]);
   });
+
+  it("orders by dueDate ascending, null due dates last", async () => {
+    const d1 = new Date();
+    d1.setDate(d1.getDate() + 3);
+    d1.setHours(0, 0, 0, 0);
+    const d2 = new Date();
+    d2.setDate(d2.getDate() + 1);
+    d2.setHours(0, 0, 0, 0);
+
+    await db.tasks.bulkAdd([
+      makeTask({
+        id: "t-later",
+        status: "todo",
+        workingDate: today(),
+        dueDate: d1,
+      }),
+      makeTask({
+        id: "t-soon",
+        status: "todo",
+        workingDate: today(),
+        dueDate: d2,
+      }),
+      makeTask({
+        id: "t-none",
+        status: "todo",
+        workingDate: today(),
+        dueDate: null,
+      }),
+    ]);
+
+    const { result } = renderHook(() => useTodayTasks());
+    await waitFor(() => expect(result.current.length).toBe(3));
+
+    expect(result.current.map((t) => t.id)).toEqual([
+      "t-soon",
+      "t-later",
+      "t-none",
+    ]);
+  });
 });
 
 describe("useProjectTasks", () => {
