@@ -213,6 +213,45 @@ describe("useTodayTasks", () => {
     expect(result.current.map((t) => t.id)).toEqual(["t-a", "t-z"]);
   });
 
+  it("when due dates differ across projects, orders by due date before project name", async () => {
+    const soon = new Date();
+    soon.setDate(soon.getDate() + 1);
+    soon.setHours(0, 0, 0, 0);
+    const late = new Date();
+    late.setDate(late.getDate() + 10);
+    late.setHours(0, 0, 0, 0);
+
+    await db.projects.bulkAdd([
+      makeProject({ id: "proj-apple", name: "Apple" }),
+      makeProject({ id: "proj-banana", name: "Banana" }),
+    ]);
+
+    await db.tasks.bulkAdd([
+      makeTask({
+        id: "t-banana-soon",
+        projectId: "proj-banana",
+        status: "todo",
+        workingDate: today(),
+        dueDate: soon,
+      }),
+      makeTask({
+        id: "t-apple-late",
+        projectId: "proj-apple",
+        status: "todo",
+        workingDate: today(),
+        dueDate: late,
+      }),
+    ]);
+
+    const { result } = renderHook(() => useTodayTasks());
+    await waitFor(() => expect(result.current.length).toBe(2));
+
+    expect(result.current.map((t) => t.id)).toEqual([
+      "t-banana-soon",
+      "t-apple-late",
+    ]);
+  });
+
   it("ties on dueDate place tasks without a project after those with one", async () => {
     const sameDue = new Date();
     sameDue.setDate(sameDue.getDate() + 5);

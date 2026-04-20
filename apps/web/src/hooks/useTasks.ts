@@ -118,6 +118,7 @@ function projectCollateKey(
   return p.name;
 }
 
+/** Due date ascending (no due last); ties broken by project name (unassigned last). */
 function compareByDueDateThenProject(
   a: Task,
   b: Task,
