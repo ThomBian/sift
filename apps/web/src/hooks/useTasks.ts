@@ -58,19 +58,24 @@ export function useTodayTasks(): Task[] {
     useLiveQuery(
       () => {
         const today = startOfDay(new Date());
-        return db.tasks
-          .filter((t) => {
-            if (t.workingDate === null) return false;
-            if (
-              TERMINAL_STATUSES.includes(
-                t.status as (typeof TERMINAL_STATUSES)[number],
+        return Promise.all([
+          db.tasks
+            .filter((t) => {
+              if (t.workingDate === null) return false;
+              if (
+                TERMINAL_STATUSES.includes(
+                  t.status as (typeof TERMINAL_STATUSES)[number],
+                )
               )
-            )
-              return false;
-            return startOfDay(t.workingDate).getTime() <= today.getTime();
-          })
-          .toArray()
-          .then((rows) => rows.sort(compareByDueDateNullsLast));
+                return false;
+              return startOfDay(t.workingDate).getTime() <= today.getTime();
+            })
+            .toArray(),
+          db.projects.toArray(),
+        ]).then(([rows, projects]) => {
+          const byId = new Map(projects.map((p) => [p.id, p]));
+          return rows.sort((a, b) => compareByDueDateThenProject(a, b, byId));
+        });
       },
       [calendarDayKey],
     ) ?? []
@@ -100,6 +105,31 @@ function compareByDueDateNullsLast(a: Task, b: Task): number {
   if (!a.dueDate) return 1;
   if (!b.dueDate) return -1;
   return a.dueDate.getTime() - b.dueDate.getTime();
+}
+
+/** Sort key for project when breaking ties (case-insensitive name); unassigned last. */
+function projectCollateKey(
+  projectId: string | null,
+  projectsById: Map<string, Project>,
+): string {
+  if (projectId === null) return "\uffff\uffff\uffff";
+  const p = projectsById.get(projectId);
+  if (!p) return `\uffff\uffff\ufffe_${projectId}`;
+  return p.name;
+}
+
+function compareByDueDateThenProject(
+  a: Task,
+  b: Task,
+  projectsById: Map<string, Project>,
+): number {
+  const byDue = compareByDueDateNullsLast(a, b);
+  if (byDue !== 0) return byDue;
+  return projectCollateKey(a.projectId, projectsById).localeCompare(
+    projectCollateKey(b.projectId, projectsById),
+    undefined,
+    { sensitivity: "base" },
+  );
 }
 
 function tasksForProject(tasks: Task[], project: Project): Task[] {

@@ -179,6 +179,67 @@ describe("useTodayTasks", () => {
       "t-none",
     ]);
   });
+
+  it("ties on dueDate break by project name", async () => {
+    const sameDue = new Date();
+    sameDue.setDate(sameDue.getDate() + 2);
+    sameDue.setHours(0, 0, 0, 0);
+
+    await db.projects.bulkAdd([
+      makeProject({ id: "proj-zebra", name: "Zebra" }),
+      makeProject({ id: "proj-ant", name: "Ant Farm" }),
+    ]);
+
+    await db.tasks.bulkAdd([
+      makeTask({
+        id: "t-z",
+        projectId: "proj-zebra",
+        status: "todo",
+        workingDate: today(),
+        dueDate: sameDue,
+      }),
+      makeTask({
+        id: "t-a",
+        projectId: "proj-ant",
+        status: "todo",
+        workingDate: today(),
+        dueDate: sameDue,
+      }),
+    ]);
+
+    const { result } = renderHook(() => useTodayTasks());
+    await waitFor(() => expect(result.current.length).toBe(2));
+
+    expect(result.current.map((t) => t.id)).toEqual(["t-a", "t-z"]);
+  });
+
+  it("ties on dueDate place tasks without a project after those with one", async () => {
+    const sameDue = new Date();
+    sameDue.setDate(sameDue.getDate() + 5);
+    sameDue.setHours(0, 0, 0, 0);
+
+    await db.tasks.bulkAdd([
+      makeTask({
+        id: "t-unn",
+        projectId: null,
+        status: "todo",
+        workingDate: today(),
+        dueDate: sameDue,
+      }),
+      makeTask({
+        id: "t-gen",
+        projectId: "project-1",
+        status: "todo",
+        workingDate: today(),
+        dueDate: sameDue,
+      }),
+    ]);
+
+    const { result } = renderHook(() => useTodayTasks());
+    await waitFor(() => expect(result.current.length).toBe(2));
+
+    expect(result.current.map((t) => t.id)).toEqual(["t-gen", "t-unn"]);
+  });
 });
 
 describe("useProjectTasks", () => {
