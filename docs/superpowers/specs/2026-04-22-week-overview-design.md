@@ -35,7 +35,7 @@
 
 ### Tasks without a date for the active mode
 
-- **`workingDate === null`** in Working mode, or **`dueDate === null`** in Due mode: show in a single **"Unscheduled"** (Working) or **"No due date"** (Due) section **below** the 7-day grid (full width), same **active-then-completed** ordering inside that section.
+- Tasks with no date for the active mode are **not shown** in week view (v1).
 
 ### Terminal / completed
 
@@ -59,10 +59,6 @@
 - Each column: **day label** (weekday + date), then **active** tasks, then **completed** tasks (spacing separator only — no new tokens).
 - **Today's column:** day label in `#FF4F00` with a 4×4px dot (`box-shadow: 0 0 4px rgba(255,79,0,0.5)`) + column background `#111` (vs default `#0a0a0a`).
 
-### Unscheduled section
-
-Full-width row below the grid. Label: **"Unscheduled"** (Working mode) or **"No due date"** (Due mode). Same active-then-completed layout as day columns. Uses `TaskRow` with `showProject={true}`.
-
 ### Reuse
 
 `TaskRow`, project line, late-due styling, focus ring / laser-focus rules from `CLAUDE.md`.
@@ -83,7 +79,6 @@ WeekView                          apps/web/src/views/WeekView.tsx
   │         ├─ active TaskRow ×n
   │         └─ completed TaskRow ×n
   │
-  └─ UnscheduledSection           components/week/UnscheduledSection.tsx
 ```
 
 ## Data hook
@@ -101,7 +96,6 @@ interface DayBucket {
 
 interface WeekTasksResult {
   days: DayBucket[];  // always 7, Mon → Sun
-  unscheduled: { active: Task[]; completed: Task[] };
 }
 
 function useWeekTasks(anchorMonday: Date, mode: WeekMode): WeekTasksResult
