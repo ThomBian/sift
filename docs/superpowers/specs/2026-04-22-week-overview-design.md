@@ -1,7 +1,7 @@
 # Week overview — design spec
 
 **Date:** 2026-04-22  
-**Status:** Draft for review  
+**Status:** Approved  
 **Scope:** Web app (`apps/web`), local-first Dexie data (existing `Task` model).
 
 ## Goals
@@ -9,25 +9,23 @@
 1. **Dedicated route** `/week` — calendar week as the primary lens.
 2. **Per day:** show **all** tasks that belong to that day for the active grouping (no hiding completed items).
 3. **Within each day:** **active** tasks first (not `done` / not terminal), **completed** second (`status === "done"` or archived-with-completion per existing `taskCountsAsDone` semantics in `useTasks.ts`).
-4. **Mode toggle:** switch grouping between **`workingDate`** and **`dueDate`** (shortcut + visible control).
+4. **Mode toggle:** switch grouping between **`workingDate`** and **`dueDate`** — toggle switch UI with `#FF4F00` knob and laser-focus glow; `M` key cycles it.
 5. **Week boundaries:** **Monday–Sunday**, local timezone, using the same local-day spirit as `useTodayTasks` (`startOfDay` / `date-fns`).
-6. **Keyboard:**
-   - When **week range header** is focused: **`ArrowLeft` / `ArrowRight`** → previous / next week (same Monday-start rule).
-   - When focus is in the **day grid / task rows**: arrow keys drive **task and day navigation** (see below); they **must not** trigger the global **view-switch** (←/→ between Inbox / Today / Projects / Week).
-7. **Navigation:** user can move to **any** week via header arrows (increment/decrement by 7 days from current week start); no requirement for “today only” lock.
+6. **Keyboard:** full vertical spine — Topbar nav ↕ week header ↕ task grid; `T` jumps to current week.
+7. **Navigation:** user can move to **any** week via header arrows; `/week` is part of the global view cycle.
 
 ## Non-goals (v1)
 
-- Historical “what was true last week if I moved dates” — cohorts reflect **current** DB fields only.
+- Historical "what was true last week if I moved dates" — cohorts reflect **current** DB fields only.
 - Sync/schema changes — reuse existing `Task` fields.
-- Extension / mobile-specific layouts beyond responsive stacking if needed.
+- Extension / mobile-specific layouts beyond horizontal scroll on narrow viewports.
 
 ## Data rules
 
 ### Week window
 
-- `weekStart = startOfWeek(todayOrAnchor, { weekStartsOn: 1 })` (Monday).
-- `weekEnd = endOfWeek(anchor, { weekStartsOn: 1 })` (Sunday end of day).
+- `weekStart = startOfWeek(anchorMonday, { weekStartsOn: 1 })` (Monday).
+- `weekEnd = endOfWeek(anchorMonday, { weekStartsOn: 1 })` (Sunday end of day).
 - **Anchor:** the Monday 00:00 local of the week being viewed (state in `WeekView`).
 
 ### Grouping mode
@@ -37,81 +35,126 @@
 
 ### Tasks without a date for the active mode
 
-- **`workingDate === null`** in Working mode, or **`dueDate === null`** in Due mode: show in a single **“Unscheduled”** (Working) or **“No due date”** (Due) section **below** the 7-day grid (full width), same **active-then-completed** ordering inside that section.
+- **`workingDate === null`** in Working mode, or **`dueDate === null`** in Due mode: show in a single **"Unscheduled"** (Working) or **"No due date"** (Due) section **below** the 7-day grid (full width), same **active-then-completed** ordering inside that section.
 
 ### Terminal / completed
 
-- **Active bucket:** `status` not in `done` / `archived` (align with other views).
-- **Completed bucket:** `status === "done"` **or** (`status === "archived"` && `completedAt != null`) — match `taskCountsAsDone` / product consistency.
+- **Active bucket:** `status` not in `done` / `archived`.
+- **Completed bucket:** `status === "done"` **or** (`status === "archived"` && `completedAt != null`) — matches `taskCountsAsDone` in `useTasks.ts`.
 
 ### Archived without completion
 
-- Treat as **active** for ordering unless product elsewhere treats them as done; if ambiguous, match **Projects** list behavior for archived tasks. (Implementation: follow the same rule as `taskCountsAsDone` inverse for “active” lists.)
+- Treat as **active** for ordering. Follows the same rule as `taskCountsAsDone` inverse.
 
 ## UI structure
 
-1. **Top bar (within view):**
-   - **Week range header** (focusable): e.g. `Mon Apr 14 – Sun Apr 20, 2026` (locale-formatted).
-   - **Mode control:** segmented or toggle — labels **Working** / **Due**.
-   - Optional: subtle **“This week”** jump control (button or `T`) — nice-to-have; not required for v1 if week arrows suffice.
+### Top bar (within view)
 
-2. **Grid:**
-   - **Seven columns** Mon → Sun (responsive: horizontal scroll on narrow viewports, or stacked days — implementation chooses minimal viable **scroll horizontally** to preserve “divided by days”).
-   - Each column: **day label** (weekday + date), then **active** tasks, then **completed** tasks (visual separator optional: hairline or spacing only; no new border-radius tokens).
+- **Week range header** (focusable div): e.g. `Mon Apr 14 – Sun Apr 20, 2026`.
+- **Mode toggle:** toggle switch — `#FF4F00` knob with `box-shadow: 0 0 6px rgba(255,79,0,0.4)` glow. Labels **WORKING** / **DUE** flank the switch. Left = Working (knob left), Right = Due (knob right).
+- **No "This week" button** — `T` key serves this purpose.
 
-3. **Reuse:** `TaskRow`, project line, late-due styling, focus ring / laser-focus rules from `CLAUDE.md`.
+### Grid
+
+- **Seven columns** Mon → Sun.
+- Desktop: equal-height columns (all stretch to tallest), whole page scrolls vertically.
+- Narrow viewports: horizontal scroll to preserve the 7-column division.
+- Each column: **day label** (weekday + date), then **active** tasks, then **completed** tasks (spacing separator only — no new tokens).
+- **Today's column:** day label in `#FF4F00` with a 4×4px dot (`box-shadow: 0 0 4px rgba(255,79,0,0.5)`) + column background `#111` (vs default `#0a0a0a`).
+
+### Unscheduled section
+
+Full-width row below the grid. Label: **"Unscheduled"** (Working mode) or **"No due date"** (Due mode). Same active-then-completed layout as day columns. Uses `TaskRow` with `showProject={true}`.
+
+### Reuse
+
+`TaskRow`, project line, late-due styling, focus ring / laser-focus rules from `CLAUDE.md`.
+
+## Component tree
+
+```
+WeekView                          apps/web/src/views/WeekView.tsx
+  data-week-view-root             ← boundary for capture listener
+  │
+  ├─ WeekTopBar                   components/week/WeekTopBar.tsx
+  │    ├─ WeekRangeHeader         focusable div — ←/→ change week, ↑ → Topbar nav, ↓ → first task
+  │    └─ ModeToggle              toggle switch, M key cycles
+  │
+  ├─ WeekGrid                     components/week/WeekGrid.tsx
+  │    └─ DayColumn ×7            components/week/DayColumn.tsx
+  │         ├─ DayHeader          date label; orange dot + #111 bg if today
+  │         ├─ active TaskRow ×n
+  │         └─ completed TaskRow ×n
+  │
+  └─ UnscheduledSection           components/week/UnscheduledSection.tsx
+```
+
+## Data hook
+
+New file: `apps/web/src/hooks/useWeekTasks.ts`
+
+```ts
+type WeekMode = "working" | "due";
+
+interface DayBucket {
+  date: Date;        // midnight local, Mon–Sun
+  active: Task[];
+  completed: Task[];
+}
+
+interface WeekTasksResult {
+  days: DayBucket[];  // always 7, Mon → Sun
+  unscheduled: { active: Task[]; completed: Task[] };
+}
+
+function useWeekTasks(anchorMonday: Date, mode: WeekMode): WeekTasksResult
+```
+
+- Single `useLiveQuery` over `db.tasks` + `db.projects` (for sort tie-breaking).
+- Active/completed split via `taskCountsAsDone` (copy or extract from `useTasks.ts`).
+- Sort within each bucket: `compareByDueDateThenProject`.
 
 ## Keyboard model
 
-### Conflicts with global `AppLayout`
+| Context | Key | Action |
+|---|---|---|
+| Topbar nav focused | `↓` | Focus week range header |
+| Week header focused | `↑` | Focus Topbar nav |
+| Week header focused | `↓` | Focus first task in first non-empty day |
+| Week header focused | `←` / `→` | Previous / next week (`anchorMonday ± 7 days`) |
+| Task focused | `↑` / `↓` | Move within current day's list (active first, completed after) |
+| Task focused | `Tab` / `Shift+Tab` | Next / previous day column (first task, or day header if empty) |
+| Task focused | `Enter` | Toggle done |
+| Task focused | `Backspace` / `Delete` | Archive |
+| Task focused | `D/W/P/E` | Open CommandPalette pre-focused on that chip |
+| Anywhere (not input, palette closed) | `M` | Cycle Working → Due → Working |
+| Anywhere (not input, palette closed) | `T` | Reset `anchorMonday` to current week |
+| Conflict guard | `←/→` capture | `WeekView` stops propagation when `activeElement` is inside `[data-week-view-root]` |
 
-- Today, **`ArrowLeft` / `ArrowRight`** switch routes. **Week view** must **take precedence** when:
-  - focus is on the **week header**, or
-  - focus is inside the **week grid** (task list / day column).
-- Mechanism (implementation detail): e.g. `WeekView` registers a capture listener, or `AppLayout` excludes `/week` when `document.activeElement` is inside a marked container `[data-week-view-root]` — pick one pattern and use consistently.
+## AppLayout changes
 
-### Week header (focused)
+- `VIEWS` becomes `["/inbox", "/today", "/projects", "/week"]`.
+- `Topbar` gets a `Week` `NavTab` (no count badge).
+- `Topbar` `↓` handler: when a tab inside the main nav is focused and `location.pathname === "/week"`, dispatch focus to `[data-week-header]`.
 
-- **`ArrowLeft`:** previous week (`anchorMonday -= 7 days`).
-- **`ArrowRight`:** next week (`anchorMonday += 7 days`).
-- **`Tab`:** move focus into the day grid (first focusable task or first day column per defined order).
+## HintBar
 
-### Day grid / tasks (focused)
-
-- **`ArrowUp` / `ArrowDown`** (and **`j` / `k`** if other views use them): move **within** the current day’s list order — **all active tasks** (top to bottom), then **completed** (top to bottom).
-- **`ArrowLeft` / `ArrowRight`:** move focus to the **same logical index** in the **previous / next day’s** column (Mon ↔ Tue ↔ … ↔ Sun). If the target day has **fewer** tasks, clamp to **last** task or **no focus** fallback (implementation: clamp to last index; if column empty, skip to next day with tasks or land on day header — choose **clamp to nearest task in that direction** for predictability).
-- **`Enter` / `Backspace` / `Delete` / `D` / `W` / `P` / `E`:** match **Today** / **Inbox** task row behavior (dispatch `sift:edit-task`, toggle done, archive).
-
-### Mode shortcut
-
-- **`M`** (when not typing in an input): cycle **Working → Due → Working** (only when Week view is active and palette closed). Document in `HintBar` for Week view.
-
-## Data loading
-
-- New hook e.g. `useWeekTasks(anchorMonday, mode)`:
-  - `useLiveQuery` on `db.tasks` (and projects if sort needs names), filter tasks that intersect the week **or** the unscheduled bucket for the mode.
-  - Derive seven day keys + one overflow list client-side; sort inside buckets: existing `compareByDueDateThenProject` or day-local variant.
+New `focusState: "week"` variant — shows: `← → week · M mode · T today`.
 
 ## Testing
 
-- Unit tests: week boundary (Monday start), task in both modes, unscheduled bucket, ordering active-before-done, `completedAt` archived case.
-- Keyboard: header week change does not navigate route; grid arrows do not navigate route.
+- Unit: week boundary (Monday start), task in both modes, unscheduled bucket, active-before-completed ordering, `completedAt` archived case.
+- Keyboard: header `←/→` does not navigate route; `T` resets anchor to current week; `↑` from header reaches Topbar nav; `↓` from header reaches first task.
 
-## Open decisions (resolved for v1)
+## Implementation touchpoints
 
-| Topic | Decision |
-|--------|-----------|
-| Week start | Monday (`weekStartsOn: 1`) |
-| Duplicate task in week | Same task appears **once** per day for the **active** date field only; mode switch changes placement |
-| “Last week” retrospective block | **Removed** in favor of header navigation to any week |
-
-## Implementation touchpoints (reference)
-
-- `apps/web/src/components/layout/AppLayout.tsx` — `VIEWS` + global arrow handling interaction.
-- `apps/web/src/components/layout/Sidebar.tsx` — add **Week** link.
-- `apps/web/src/hooks/useTasks.ts` — patterns for `useLiveQuery`, sorting, terminal statuses.
-- Router: register `/week` route + `WeekView` component.
+- `apps/web/src/App.tsx` — register `/week` route + `WeekView`.
+- `apps/web/src/components/layout/AppLayout.tsx` — add `/week` to `VIEWS`.
+- `apps/web/src/components/layout/Topbar.tsx` — add `Week` `NavTab`; add `↓` keydown handler to nav.
+- `apps/web/src/hooks/useWeekTasks.ts` — new hook.
+- `apps/web/src/views/WeekView.tsx` — new view.
+- `apps/web/src/components/week/` — `WeekTopBar`, `WeekGrid`, `DayColumn`, `UnscheduledSection`.
 
 ---
 
-**Self-review:** No TBD placeholders left for v1 scope; global ←/→ conflict explicitly addressed; null-date bucket specified; Monday week start explicit.
+**Self-review:** No TBD placeholders. Keyboard model complete with bidirectional vertical nav. Grid layout, toggle style, today highlight all explicit. Cross-column Left/Right dropped in favour of Tab/Shift+Tab. `/week` in global route cycle confirmed.
