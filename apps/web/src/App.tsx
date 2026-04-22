@@ -9,6 +9,7 @@ import AuthPage from './pages/AuthPage';
 import InboxView from './views/InboxView';
 import TodayView from './views/TodayView';
 import ProjectsView from './views/ProjectsView';
+import WeekView from './views/WeekView';
 
 export default function App() {
   const { user } = useAuth();
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="inbox" element={<InboxView />} />
           <Route path="today" element={<TodayView />} />
           <Route path="projects" element={<ProjectsView />} />
+          <Route path="week" element={<WeekView />} />
         </Route>
         <Route path="*" element={<Navigate to="/inbox" replace />} />
       </Routes>

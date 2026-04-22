@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTasks } from "../../hooks/useTasks";
@@ -103,6 +104,37 @@ export default function Topbar({
   const inboxTasks = useTasks("inbox");
   const todayTasks = useTasks("today");
 
+  useEffect(() => {
+    if (!location.pathname.startsWith("/week")) return;
+    function onKeyCapture(e: KeyboardEvent) {
+      if (e.key !== "ArrowDown") return;
+      const ae = document.activeElement;
+      if (!(ae instanceof HTMLElement)) return;
+      const mainNav = document.querySelector(
+        'nav[aria-label="Main views"]',
+      ) as HTMLElement | null;
+      if (!mainNav || !mainNav.contains(ae)) return;
+      const tabLink = ae.closest("a");
+      if (!(tabLink instanceof HTMLAnchorElement)) return;
+      if (!mainNav.contains(tabLink)) return;
+      const weekHeader = document.querySelector("[data-week-header]");
+      if (!(weekHeader instanceof HTMLElement)) {
+        requestAnimationFrame(() => {
+          const next = document.querySelector("[data-week-header]");
+          if (next instanceof HTMLElement) next.focus();
+        });
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      e.preventDefault();
+      e.stopPropagation();
+      weekHeader.focus();
+    }
+    window.addEventListener("keydown", onKeyCapture, true);
+    return () => window.removeEventListener("keydown", onKeyCapture, true);
+  }, [location.pathname]);
+
   return (
     <header className="flex items-center gap-2 h-12 min-h-12 px-2 sm:px-4 border-b border-[0.5px] border-border bg-surface shrink-0">
       <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
@@ -142,16 +174,6 @@ export default function Topbar({
       <nav
         className="flex-1 min-w-0 flex items-stretch justify-center overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:thin]"
         aria-label="Main views"
-        onKeyDown={(e) => {
-          if (e.key !== "ArrowDown") return;
-          if (location.pathname !== "/week") return;
-          const target = e.target as HTMLElement;
-          if (!target.closest("[data-main-nav-tab]")) return;
-          const weekHeader = document.querySelector("[data-week-header]");
-          if (!(weekHeader instanceof HTMLElement)) return;
-          e.preventDefault();
-          weekHeader.focus();
-        }}
       >
         <div className="flex items-stretch gap-0 mx-auto">
           <NavTab to="/inbox" label="Inbox" count={inboxTasks.length} />

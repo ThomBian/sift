@@ -1,21 +1,42 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useSpacesProjects } from "../../hooks/useSpacesProjects";
+
+function focusWeekHeaderSoon(): boolean {
+  const weekHeader = document.querySelector("[data-week-header]");
+  if (weekHeader instanceof HTMLElement) {
+    weekHeader.focus();
+    return true;
+  }
+  requestAnimationFrame(() => {
+    const next = document.querySelector("[data-week-header]");
+    if (next instanceof HTMLElement) next.focus();
+  });
+  return false;
+}
 
 function SidebarLink({
   to,
   label,
   onNavigate,
+  enableWeekHeaderJump,
 }: {
   to: string;
   label: string;
   onNavigate?: () => void;
+  enableWeekHeaderJump?: boolean;
 }) {
   return (
     <NavLink
       to={to}
       onClick={() => onNavigate?.()}
+      onKeyDown={(e) => {
+        if (!enableWeekHeaderJump) return;
+        if (e.key !== "ArrowDown") return;
+        e.preventDefault();
+        focusWeekHeaderSoon();
+      }}
       className={({ isActive }) =>
         `flex items-center px-3 py-2.5 md:py-1.5 font-mono text-[11px] transition-colors duration-150 min-h-11 md:min-h-0 ${
           isActive
@@ -37,7 +58,9 @@ export interface SidebarProps {
 export default function Sidebar({ className = "", onNavigate }: SidebarProps) {
   const { spacesWithProjects } = useSpacesProjects();
   const { user } = useAuth();
+  const location = useLocation();
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
+  const enableWeekHeaderJump = location.pathname.startsWith("/week");
 
   function toggleSpace(spaceId: string) {
     setCollapsed((prev) => {
@@ -58,9 +81,30 @@ export default function Sidebar({ className = "", onNavigate }: SidebarProps) {
         <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-dim px-3 pb-1.5">
           Views
         </p>
-        <SidebarLink to="/inbox" label="Inbox" onNavigate={onNavigate} />
-        <SidebarLink to="/today" label="Today" onNavigate={onNavigate} />
-        <SidebarLink to="/projects" label="Projects" onNavigate={onNavigate} />
+        <SidebarLink
+          to="/inbox"
+          label="Inbox"
+          onNavigate={onNavigate}
+          enableWeekHeaderJump={enableWeekHeaderJump}
+        />
+        <SidebarLink
+          to="/today"
+          label="Today"
+          onNavigate={onNavigate}
+          enableWeekHeaderJump={enableWeekHeaderJump}
+        />
+        <SidebarLink
+          to="/projects"
+          label="Projects"
+          onNavigate={onNavigate}
+          enableWeekHeaderJump={enableWeekHeaderJump}
+        />
+        <SidebarLink
+          to="/week"
+          label="Week"
+          onNavigate={onNavigate}
+          enableWeekHeaderJump={enableWeekHeaderJump}
+        />
       </div>
 
       <div className="h-[0.5px] min-h-[0.5px] bg-border mx-2 my-1" />

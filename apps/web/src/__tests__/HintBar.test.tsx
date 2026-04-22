@@ -46,6 +46,14 @@ describe("HintBar", () => {
     expect(screen.queryByText("Done")).toBeNull();
   });
 
+  it("shows week-focused hints when focusState is week", () => {
+    render(<HintBar focusState="week" />);
+    expect(screen.getByText("week")).toBeInTheDocument();
+    expect(screen.getByText("mode")).toBeInTheDocument();
+    expect(screen.getByText("today")).toBeInTheDocument();
+    expect(screen.queryByText("New task")).toBeNull();
+  });
+
   it("shows Close for Space when project is expanded", () => {
     render(<HintBar focusState="project" projectExpanded />);
     expect(screen.getByText("Close")).toBeInTheDocument();

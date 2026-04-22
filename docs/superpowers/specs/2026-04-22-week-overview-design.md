@@ -9,7 +9,7 @@
 1. **Dedicated route** `/week` — calendar week as the primary lens.
 2. **Per day:** show **all** tasks that belong to that day for the active grouping (no hiding completed items).
 3. **Within each day:** **active** tasks first (not `done` / not terminal), **completed** second (`status === "done"` or archived-with-completion per existing `taskCountsAsDone` semantics in `useTasks.ts`).
-4. **Mode toggle:** switch grouping between `**workingDate`** and `**dueDate**` — toggle switch UI with `#FF4F00` knob and laser-focus glow; `M` key cycles it.
+4. **Mode toggle:** switch grouping between `**workingDate`** and `**dueDate`** — toggle switch UI with `#FF4F00` knob and laser-focus glow; `M` key cycles it.
 5. **Week boundaries:** **Monday–Sunday**, local timezone, using the same local-day spirit as `useTodayTasks` (`startOfDay` / `date-fns`).
 6. **Keyboard:** full vertical spine — Topbar nav ↕ week header ↕ task grid; `T` jumps to current week.
 7. **Navigation:** user can move to **any** week via header arrows; `/week` is part of the global view cycle.
@@ -128,7 +128,7 @@ function useWeekTasks(anchorMonday: Date, mode: WeekMode): WeekTasksResult
 
 ## AppLayout changes
 
-- `VIEWS` becomes `["/inbox", "/today", "/week", "/projects"]`.
+- `VIEWS` becomes `["/inbox", "/today", "/projects", "/week"]`.
 - `Topbar` gets a `Week` `NavTab` (no count badge).
 - `Topbar` `↓` handler: when a tab inside the main nav is focused and `location.pathname === "/week"`, dispatch focus to `[data-week-header]`.
 

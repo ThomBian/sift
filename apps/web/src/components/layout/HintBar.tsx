@@ -1,4 +1,4 @@
-type FocusState = "none" | "project" | "task";
+type FocusState = "none" | "project" | "task" | "week";
 
 interface Hint {
   keys: string[];
@@ -49,6 +49,12 @@ const TASK_HINTS: Hint[] = [
   { keys: ["Esc"], label: "Back" },
 ];
 
+const WEEK_HINTS: Hint[] = [
+  { keys: ["← →"], label: "week" },
+  { keys: ["M"], label: "mode", hot: true },
+  { keys: ["T"], label: "today", hot: true },
+];
+
 function Key({ label, hot }: { label: string; hot?: boolean }) {
   return (
     <kbd
@@ -77,6 +83,8 @@ export default function HintBar({
       ? TASK_HINTS
       : focusState === "project"
         ? buildProjectHints(archiveHint, projectExpanded)
+        : focusState === "week"
+          ? WEEK_HINTS
         : NONE_HINTS;
 
   return (

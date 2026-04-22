@@ -39,7 +39,7 @@ export default function WeekTopBar({
           tabIndex={0}
           data-week-header
           aria-label={label}
-          className="outline-none focus-visible:ring-1 focus-visible:ring-accent px-2 py-1 font-mono text-[11px] uppercase tracking-[0.1em] text-muted select-none cursor-default"
+          className="outline-none focus:text-accent px-2 py-1 font-mono text-[11px] uppercase tracking-[0.1em] text-muted select-none cursor-default transition-colors duration-150"
         >
           {label}
         </div>

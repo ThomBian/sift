@@ -114,6 +114,7 @@ export default function WeekView() {
 
     function onKey(e: KeyboardEvent) {
       const target = e.target as HTMLElement | null;
+
       const tag = target?.tagName ?? "";
       if (tag === "INPUT" || tag === "TEXTAREA") return;
       if (target?.isContentEditable) return;

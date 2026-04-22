@@ -2,7 +2,7 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import type { User } from "@supabase/supabase-js";
 
@@ -43,6 +43,18 @@ function renderTopbar(user: User | null, syncStatus: "local" | "syncing" | "sync
   );
 }
 
+function renderTopbarAtWeek(user: User | null) {
+  mockAuth(user);
+  return render(
+    <MemoryRouter initialEntries={["/week"]}>
+      <Topbar syncStatus="local" />
+      <div data-week-header tabIndex={0}>
+        Week Header
+      </div>
+    </MemoryRouter>
+  );
+}
+
 describe("Topbar", () => {
   it("shows sign-in button when user is null", () => {
     renderTopbar(null);
@@ -63,5 +75,16 @@ describe("Topbar", () => {
   it("exposes sync state for assistive tech", () => {
     renderTopbar(null, "syncing");
     expect(screen.getByRole("status", { name: /syncing/i })).toBeInTheDocument();
+  });
+
+  it("ArrowDown on week nav tab focuses week header", () => {
+    renderTopbarAtWeek(null);
+    const weekTab = screen.getByRole("link", { name: /week/i });
+    const header = screen.getByText("Week Header");
+    weekTab.focus();
+
+    fireEvent.keyDown(weekTab, { key: "ArrowDown" });
+
+    expect(header).toHaveFocus();
   });
 });

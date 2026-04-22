@@ -27,7 +27,11 @@ function TaskItem({
   onTaskFocus: (id: string) => void;
 }) {
   return (
-    <div data-week-task-id={task.id} data-week-day-index={dayIndex}>
+    <div
+      className="min-w-0 max-w-full"
+      data-week-task-id={task.id}
+      data-week-day-index={dayIndex}
+    >
       <TaskRow
         task={task}
         project={ctx.project}
@@ -35,6 +39,7 @@ function TaskItem({
         isFocused={focusedTaskId === task.id}
         onFocus={() => onTaskFocus(task.id)}
         index={index}
+        layout="week"
       />
     </div>
   );
@@ -51,7 +56,7 @@ export default function DayColumn({
 
   return (
     <section
-      className={`flex-1 border-r border-[0.5px] border-border last:border-r-0 ${today ? "bg-surface" : "bg-bg"}`}
+      className={`min-w-0 flex-1 border-r border-[0.5px] border-border last:border-r-0 ${today ? "bg-surface" : "bg-bg"}`}
       aria-label={format(bucket.date, "EEEE, MMMM d")}
     >
       <div
@@ -59,7 +64,7 @@ export default function DayColumn({
         tabIndex={0}
         data-week-day-header={dayIndex}
       >
-        <div className="flex items-center gap-1.5">
+        <div className="flex min-w-0 items-center gap-1.5">
           {today && (
             <span
               aria-hidden
@@ -68,14 +73,14 @@ export default function DayColumn({
             />
           )}
           <span
-            className={`font-mono text-[10px] uppercase tracking-[0.12em] ${today ? "text-accent" : "text-muted"}`}
+            className={`min-w-0 truncate font-mono text-[10px] uppercase tracking-[0.12em] ${today ? "text-accent" : "text-muted"}`}
           >
             {format(bucket.date, "EEE MMM d")}
           </span>
         </div>
       </div>
 
-      <div role="list">
+      <div className="min-w-0" role="list">
         {bucket.active.map((task, i) => (
           <TaskItem
             key={task.id}
