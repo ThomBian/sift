@@ -39,12 +39,9 @@
 
 ### Terminal / completed
 
-- **Active bucket:** `status` not in `done` / `archived`.
-- **Completed bucket:** `status === "done"` **or** (`status === "archived"` && `completedAt != null`) — matches `taskCountsAsDone` in `useTasks.ts`.
-
-### Archived without completion
-
-- Treat as **active** for ordering. Follows the same rule as `taskCountsAsDone` inverse.
+- **Active bucket:** `status === "inbox"` or `status === "todo"`.
+- **Completed bucket:** `status === "done"`.
+- **Archived tasks (`status === "archived"`):** excluded entirely from week view — not shown in any bucket.
 
 ## UI structure
 
@@ -111,7 +108,7 @@ function useWeekTasks(anchorMonday: Date, mode: WeekMode): WeekTasksResult
 ```
 
 - Single `useLiveQuery` over `db.tasks` + `db.projects` (for sort tie-breaking).
-- Active/completed split via `taskCountsAsDone` (copy or extract from `useTasks.ts`).
+- Active: `status === "inbox" | "todo"`. Completed: `status === "done"`. Archived excluded entirely.
 - Sort within each bucket: `compareByDueDateThenProject`.
 
 ## Keyboard model
