@@ -122,7 +122,9 @@ function useWeekTasks(anchorMonday: Date, mode: WeekMode): WeekTasksResult
 | Week header focused | `↑` | Focus Topbar nav |
 | Week header focused | `↓` | Focus first task in first non-empty day |
 | Week header focused | `←` / `→` | Previous / next week (`anchorMonday ± 7 days`) |
-| Task focused | `↑` / `↓` | Move within current day's list (active first, completed after) |
+| First task of any day focused | `↑` | Focus week range header |
+| 2nd+ task of any day focused | `↑` | Move up within current day's list |
+| Any task focused | `↓` | Move down within current day's list (active first, completed after) |
 | Task focused | `Tab` / `Shift+Tab` | Next / previous day column (first task, or day header if empty) |
 | Task focused | `Enter` | Toggle done |
 | Task focused | `Backspace` / `Delete` | Archive |
@@ -144,7 +146,7 @@ New `focusState: "week"` variant — shows: `← → week · M mode · T today`.
 ## Testing
 
 - Unit: week boundary (Monday start), task in both modes, unscheduled bucket, active-before-completed ordering, `completedAt` archived case.
-- Keyboard: header `←/→` does not navigate route; `T` resets anchor to current week; `↑` from header reaches Topbar nav; `↓` from header reaches first task.
+- Keyboard: header `←/→` does not navigate route; `T` resets anchor to current week; `↑` from header reaches Topbar nav; `↓` from header reaches first task; `↑` from first task of any day reaches header.
 
 ## Implementation touchpoints
 
