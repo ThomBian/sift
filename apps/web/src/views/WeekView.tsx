@@ -143,11 +143,37 @@ export default function WeekView() {
       return taskId;
     }
 
-    function focusDayHeader(dayIndex: number): boolean {
-      const el = document.querySelector(`[data-week-day-header="${dayIndex}"]`);
-      if (!(el instanceof HTMLElement)) return false;
-      el.focus();
-      return true;
+    function dayHasTasks(dayIndex: number): boolean {
+      const day = days[dayIndex];
+      return day != null && day.active.length + day.completed.length > 0;
+    }
+
+    function focusFirstTaskInDay(dayIndex: number): string | null {
+      const day = days[dayIndex];
+      if (!day) return null;
+      const ids = [...day.active, ...day.completed].map((t) => t.id);
+      if (ids.length === 0) return null;
+      const id = ids[0]!;
+      document
+        .querySelector<HTMLElement>(
+          `[data-week-task-id="${id}"] [role="listitem"]`,
+        )
+        ?.focus();
+      return id;
+    }
+
+    function focusLastTaskInDay(dayIndex: number): string | null {
+      const day = days[dayIndex];
+      if (!day) return null;
+      const ids = [...day.active, ...day.completed].map((t) => t.id);
+      if (ids.length === 0) return null;
+      const id = ids[ids.length - 1]!;
+      document
+        .querySelector<HTMLElement>(
+          `[data-week-task-id="${id}"] [role="listitem"]`,
+        )
+        ?.focus();
+      return id;
     }
 
     function focusTopbarCurrentTab(): void {
@@ -216,6 +242,60 @@ export default function WeekView() {
       }
 
       const taskWrapper = active?.closest("[data-week-task-id]");
+      const dayHeaderEl = active?.closest("[data-week-day-header]");
+
+      if (e.key === "Tab") {
+        let tabDay: number | null = null;
+        if (taskWrapper instanceof HTMLElement && taskWrapper.dataset.weekDayIndex != null) {
+          tabDay = Number(taskWrapper.dataset.weekDayIndex);
+        } else if (dayHeaderEl instanceof HTMLElement) {
+          const raw = dayHeaderEl.getAttribute("data-week-day-header");
+          tabDay = raw != null ? Number(raw) : null;
+        }
+        if (tabDay !== null && !Number.isNaN(tabDay)) {
+          e.preventDefault();
+          const forward = !e.shiftKey;
+          if (forward) {
+            let found: number | null = null;
+            for (let step = 1; step <= 6; step += 1) {
+              const j = (tabDay + step) % 7;
+              if (dayHasTasks(j)) {
+                found = j;
+                break;
+              }
+            }
+            if (found !== null) {
+              const id = focusFirstTaskInDay(found);
+              if (id) setFocusedTaskId(id);
+              return;
+            }
+            if (dayHasTasks(tabDay)) {
+              const id = focusFirstTaskInDay(tabDay);
+              if (id) setFocusedTaskId(id);
+            }
+            return;
+          }
+          let found: number | null = null;
+          for (let step = 1; step <= 6; step += 1) {
+            const j = (tabDay - step + 7) % 7;
+            if (dayHasTasks(j)) {
+              found = j;
+              break;
+            }
+          }
+          if (found !== null) {
+            const id = focusLastTaskInDay(found);
+            if (id) setFocusedTaskId(id);
+            return;
+          }
+          if (dayHasTasks(tabDay)) {
+            const id = focusLastTaskInDay(tabDay);
+            if (id) setFocusedTaskId(id);
+          }
+          return;
+        }
+      }
+
       if (!(taskWrapper instanceof HTMLElement)) return;
       const taskId = taskWrapper.dataset.weekTaskId;
       const dayIndexRaw = taskWrapper.dataset.weekDayIndex;
@@ -253,17 +333,6 @@ export default function WeekView() {
         document.querySelector<HTMLElement>(
           `[data-week-task-id="${nextId}"] [role="listitem"]`,
         )?.focus();
-        return;
-      }
-
-      if (e.key === "Tab") {
-        e.preventDefault();
-        const nextDay = e.shiftKey ? dayIndex - 1 : dayIndex + 1;
-        if (nextDay < 0 || nextDay >= days.length) return;
-        const nextTaskId = focusTaskInDay(nextDay);
-        if (nextTaskId) { setFocusedTaskId(nextTaskId); return; }
-        setFocusedTaskId(null);
-        focusDayHeader(nextDay);
         return;
       }
 
