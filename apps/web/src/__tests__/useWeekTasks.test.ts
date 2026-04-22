@@ -180,6 +180,76 @@ describe("useWeekTasks", () => {
     ]);
   });
 
+  it("in working/due mode, done tasks follow working or due date, not completedAt", async () => {
+    const anchorMonday = mondayOf(new Date("2026-04-22T08:00:00"));
+    const monday = taskDateForWeek(anchorMonday, 0);
+    const wednesday = taskDateForWeek(anchorMonday, 2);
+
+    await db.tasks.add(
+      makeTask({
+        id: "done-wed",
+        status: "done",
+        projectId: "project-a",
+        workingDate: monday,
+        dueDate: null,
+        completedAt: wednesday,
+      }),
+    );
+
+    const { result } = useWeek(anchorMonday, "working");
+    await waitFor(() =>
+      expect(result.current.days[0].completed.map((t) => t.id)).toEqual([
+        "done-wed",
+      ]),
+    );
+    expect(result.current.days[2].completed.map((t) => t.id)).toEqual([]);
+  });
+
+  it("completed mode buckets only done tasks by completedAt day", async () => {
+    const anchorMonday = mondayOf(new Date("2026-04-22T08:00:00"));
+    const monday = taskDateForWeek(anchorMonday, 0);
+    const wednesday = taskDateForWeek(anchorMonday, 2);
+
+    await db.tasks.bulkAdd([
+      makeTask({
+        id: "active-only",
+        status: "todo",
+        projectId: "project-a",
+        workingDate: monday,
+        dueDate: null,
+      }),
+      makeTask({
+        id: "done-wed",
+        status: "done",
+        projectId: "project-a",
+        workingDate: monday,
+        dueDate: null,
+        completedAt: wednesday,
+      }),
+      makeTask({
+        id: "done-no-time",
+        status: "done",
+        projectId: "project-z",
+        workingDate: monday,
+        dueDate: null,
+        completedAt: null,
+      }),
+    ]);
+
+    const { result } = useWeek(anchorMonday, "completed");
+    await waitFor(() =>
+      expect(result.current.days[2].completed.map((t) => t.id)).toEqual([
+        "done-wed",
+      ]),
+    );
+    expect(result.current.days[0].active.map((t) => t.id)).toEqual([]);
+    expect(result.current.days[0].completed.map((t) => t.id)).toEqual([]);
+    const allActive = result.current.days.flatMap((d) => d.active);
+    expect(allActive.map((t) => t.id)).not.toContain("active-only");
+    const allDone = result.current.days.flatMap((d) => d.completed);
+    expect(allDone.map((t) => t.id)).not.toContain("done-no-time");
+  });
+
   it("excludes archived tasks and tasks outside the viewed week", async () => {
     const anchorMonday = mondayOf(new Date("2026-04-22T08:00:00"));
     const monday = taskDateForWeek(anchorMonday, 0);

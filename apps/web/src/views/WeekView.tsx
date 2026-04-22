@@ -198,7 +198,9 @@ export default function WeekView() {
 
       if (!e.metaKey && !e.ctrlKey && !e.altKey && (e.key === "m" || e.key === "M")) {
         e.preventDefault();
-        setMode((prev) => (prev === "working" ? "due" : "working"));
+        setMode((prev) =>
+          prev === "working" ? "due" : prev === "due" ? "completed" : "working",
+        );
         return;
       }
       if (!e.metaKey && !e.ctrlKey && !e.altKey && (e.key === "t" || e.key === "T")) {

@@ -133,6 +133,30 @@ export function compareByDueDateThenProject(
   );
 }
 
+/** Completed-at ascending (no timestamp last); ties broken by project name. */
+export function compareByCompletedAtThenProject(
+  a: Task,
+  b: Task,
+  projectsById: Map<string, Project>,
+): number {
+  if (!a.completedAt && !b.completedAt) {
+    return projectCollateKey(a.projectId, projectsById).localeCompare(
+      projectCollateKey(b.projectId, projectsById),
+      undefined,
+      { sensitivity: "base" },
+    );
+  }
+  if (!a.completedAt) return 1;
+  if (!b.completedAt) return -1;
+  const byTime = a.completedAt.getTime() - b.completedAt.getTime();
+  if (byTime !== 0) return byTime;
+  return projectCollateKey(a.projectId, projectsById).localeCompare(
+    projectCollateKey(b.projectId, projectsById),
+    undefined,
+    { sensitivity: "base" },
+  );
+}
+
 function tasksForProject(tasks: Task[], project: Project): Task[] {
   return tasks
     .filter((t) => {

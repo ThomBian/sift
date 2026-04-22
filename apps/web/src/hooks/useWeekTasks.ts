@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { endOfWeek, startOfDay, startOfWeek } from "date-fns";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../lib/db";
-import { compareByDueDateThenProject } from "./useTasks";
+import {
+  compareByCompletedAtThenProject,
+  compareByDueDateThenProject,
+} from "./useTasks";
 import type { Task, Project } from "@sift/shared";
 
-export type WeekMode = "working" | "due";
+export type WeekMode = "working" | "due" | "completed";
 
 export interface DayBucket {
   date: Date;
@@ -50,10 +53,32 @@ function buildWeekDays(anchorMonday: Date): Date[] {
   });
 }
 
-function taskDayKey(task: Task, mode: WeekMode): number | null {
+function taskDayKeyWorkingOrDue(
+  task: Task,
+  mode: "working" | "due",
+): number | null {
   const date = mode === "working" ? task.workingDate : task.dueDate;
   if (date === null) return null;
   return startOfDay(date).getTime();
+}
+
+/** Calendar column for this task in the given week mode (local day in week, or null). */
+function placementDayKey(
+  task: Task,
+  mode: WeekMode,
+  weekStart: Date,
+  weekEnd: Date,
+): number | null {
+  if (mode === "completed") {
+    if (task.status !== "done" || task.completedAt == null) return null;
+    const key = startOfDay(task.completedAt).getTime();
+    if (key < weekStart.getTime() || key > weekEnd.getTime()) return null;
+    return key;
+  }
+  const key = taskDayKeyWorkingOrDue(task, mode);
+  if (key === null) return null;
+  if (key < weekStart.getTime() || key > weekEnd.getTime()) return null;
+  return key;
 }
 
 export function useWeekTasks(
@@ -83,12 +108,13 @@ export function useWeekTasks(
 
       for (const task of tasks) {
         if (task.status === "archived") continue;
-        const key = taskDayKey(task, mode);
+        const key = placementDayKey(task, mode, weekStart, weekEnd);
         if (key === null) continue;
-        if (key < weekStart.getTime() || key > weekEnd.getTime()) continue;
         const bucket = byDay.get(key);
         if (!bucket) continue;
-        if (task.status === "done") {
+        if (mode === "completed") {
+          bucket.completed.push(task);
+        } else if (task.status === "done") {
           bucket.completed.push(task);
         } else if (task.status === "inbox" || task.status === "todo") {
           bucket.active.push(task);
@@ -102,7 +128,9 @@ export function useWeekTasks(
           compareByDueDateThenProject(a, b, projectsById),
         );
         bucket.completed.sort((a, b) =>
-          compareByDueDateThenProject(a, b, projectsById),
+          mode === "completed"
+            ? compareByCompletedAtThenProject(a, b, projectsById)
+            : compareByDueDateThenProject(a, b, projectsById),
         );
       }
 

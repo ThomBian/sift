@@ -53,14 +53,23 @@ export default function DayColumn({
   onTaskFocus,
 }: DayColumnProps) {
   const today = isToday(bucket.date);
+  const hasTasks = bucket.active.length + bucket.completed.length > 0;
 
   return (
     <section
       className={`min-w-0 flex-1 border-r border-[0.5px] border-border last:border-r-0 ${today ? "bg-surface" : "bg-bg"}`}
-      aria-label={format(bucket.date, "EEEE, MMMM d")}
+      aria-label={
+        hasTasks
+          ? format(bucket.date, "EEEE, MMMM d")
+          : `${format(bucket.date, "EEEE, MMMM d")} — no tasks`
+      }
     >
       <div
-        className="px-3 py-2 border-b border-[0.5px] border-border outline-none focus-visible:ring-1 focus-visible:ring-accent"
+        className={`px-3 py-2 border-b border-[0.5px] border-border outline-none transition-colors duration-150 focus-visible:ring-1 focus-visible:ring-accent ${
+          today
+            ? "hover:bg-accent/[0.04]"
+            : "hover:bg-surface-2"
+        }`}
         tabIndex={0}
         data-week-day-header={dayIndex}
       >
@@ -68,8 +77,7 @@ export default function DayColumn({
           {today && (
             <span
               aria-hidden
-              className="w-1 h-1 shrink-0 bg-accent"
-              style={{ boxShadow: "0 0 4px rgba(255,79,0,0.5)" }}
+              className="h-1 w-1 shrink-0 bg-accent shadow-hotkey motion-reduce:animate-none motion-safe:animate-week-today-glow"
             />
           )}
           <span
@@ -80,35 +88,41 @@ export default function DayColumn({
         </div>
       </div>
 
-      <div className="min-w-0" role="list">
-        {bucket.active.map((task, i) => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            dayIndex={dayIndex}
-            index={i}
-            ctx={resolveTaskContext(task)}
-            focusedTaskId={focusedTaskId}
-            onTaskFocus={onTaskFocus}
-          />
-        ))}
+      {hasTasks ? (
+        <div className="min-w-0" role="list">
+          {bucket.active.map((task, i) => (
+            <TaskItem
+              key={task.id}
+              task={task}
+              dayIndex={dayIndex}
+              index={i}
+              ctx={resolveTaskContext(task)}
+              focusedTaskId={focusedTaskId}
+              onTaskFocus={onTaskFocus}
+            />
+          ))}
 
-        {bucket.active.length > 0 && bucket.completed.length > 0 && (
-          <div className="border-t border-[0.5px] border-border mx-3 my-1" />
-        )}
+          {bucket.active.length > 0 && bucket.completed.length > 0 && (
+            <div className="mx-3 my-1 border-t border-[0.5px] border-border" />
+          )}
 
-        {bucket.completed.map((task, i) => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            dayIndex={dayIndex}
-            index={bucket.active.length + i}
-            ctx={resolveTaskContext(task)}
-            focusedTaskId={focusedTaskId}
-            onTaskFocus={onTaskFocus}
-          />
-        ))}
-      </div>
+          {bucket.completed.map((task, i) => (
+            <TaskItem
+              key={task.id}
+              task={task}
+              dayIndex={dayIndex}
+              index={bucket.active.length + i}
+              ctx={resolveTaskContext(task)}
+              focusedTaskId={focusedTaskId}
+              onTaskFocus={onTaskFocus}
+            />
+          ))}
+        </div>
+      ) : (
+        <p className="motion-safe:animate-week-nudge px-3 py-10 text-center font-mono text-[10px] uppercase tracking-[0.12em] text-dim">
+          Nothing here
+        </p>
+      )}
     </section>
   );
 }
