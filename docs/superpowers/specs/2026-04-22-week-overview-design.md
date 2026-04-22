@@ -9,7 +9,7 @@
 1. **Dedicated route** `/week` — calendar week as the primary lens.
 2. **Per day:** show **all** tasks that belong to that day for the active grouping (no hiding completed items).
 3. **Within each day:** **active** tasks first (not `done` / not terminal), **completed** second (`status === "done"` or archived-with-completion per existing `taskCountsAsDone` semantics in `useTasks.ts`).
-4. **Mode toggle:** switch grouping between **`workingDate`** and **`dueDate`** — toggle switch UI with `#FF4F00` knob and laser-focus glow; `M` key cycles it.
+4. **Mode toggle:** switch grouping between `**workingDate`** and `**dueDate**` — toggle switch UI with `#FF4F00` knob and laser-focus glow; `M` key cycles it.
 5. **Week boundaries:** **Monday–Sunday**, local timezone, using the same local-day spirit as `useTodayTasks` (`startOfDay` / `date-fns`).
 6. **Keyboard:** full vertical spine — Topbar nav ↕ week header ↕ task grid; `T` jumps to current week.
 7. **Navigation:** user can move to **any** week via header arrows; `/week` is part of the global view cycle.
@@ -107,26 +107,28 @@ function useWeekTasks(anchorMonday: Date, mode: WeekMode): WeekTasksResult
 
 ## Keyboard model
 
-| Context | Key | Action |
-|---|---|---|
-| Topbar nav focused | `↓` | Focus week range header |
-| Week header focused | `↑` | Focus Topbar nav |
-| Week header focused | `↓` | Focus first task in first non-empty day |
-| Week header focused | `←` / `→` | Previous / next week (`anchorMonday ± 7 days`) |
-| First task of any day focused | `↑` | Focus week range header |
-| 2nd+ task of any day focused | `↑` | Move up within current day's list |
-| Any task focused | `↓` | Move down within current day's list (active first, completed after) |
-| Task focused | `Tab` / `Shift+Tab` | Next / previous day column (first task, or day header if empty) |
-| Task focused | `Enter` | Toggle done |
-| Task focused | `Backspace` / `Delete` | Archive |
-| Task focused | `D/W/P/E` | Open CommandPalette pre-focused on that chip |
-| Anywhere (not input, palette closed) | `M` | Cycle Working → Due → Working |
-| Anywhere (not input, palette closed) | `T` | Reset `anchorMonday` to current week |
-| Conflict guard | `←/→` capture | `WeekView` stops propagation when `activeElement` is inside `[data-week-view-root]` |
+
+| Context                              | Key                    | Action                                                                              |
+| ------------------------------------ | ---------------------- | ----------------------------------------------------------------------------------- |
+| Topbar nav focused                   | `↓`                    | Focus week range header                                                             |
+| Week header focused                  | `↑`                    | Focus Topbar nav                                                                    |
+| Week header focused                  | `↓`                    | Focus first task in first non-empty day                                             |
+| Week header focused                  | `←` / `→`              | Previous / next week (`anchorMonday ± 7 days`)                                      |
+| First task of any day focused        | `↑`                    | Focus week range header                                                             |
+| 2nd+ task of any day focused         | `↑`                    | Move up within current day's list                                                   |
+| Any task focused                     | `↓`                    | Move down within current day's list (active first, completed after)                 |
+| Task focused                         | `Tab` / `Shift+Tab`    | Next / previous day column (first task, or day header if empty)                     |
+| Task focused                         | `Enter`                | Toggle done                                                                         |
+| Task focused                         | `Backspace` / `Delete` | Archive                                                                             |
+| Task focused                         | `D/W/P/E`              | Open CommandPalette pre-focused on that chip                                        |
+| Anywhere (not input, palette closed) | `M`                    | Cycle Working → Due → Working                                                       |
+| Anywhere (not input, palette closed) | `T`                    | Reset `anchorMonday` to current week                                                |
+| Conflict guard                       | `←/→` capture          | `WeekView` stops propagation when `activeElement` is inside `[data-week-view-root]` |
+
 
 ## AppLayout changes
 
-- `VIEWS` becomes `["/inbox", "/today", "/projects", "/week"]`.
+- `VIEWS` becomes `["/inbox", "/today", "/week", "/projects"]`.
 - `Topbar` gets a `Week` `NavTab` (no count badge).
 - `Topbar` `↓` handler: when a tab inside the main nav is focused and `location.pathname === "/week"`, dispatch focus to `[data-week-header]`.
 
