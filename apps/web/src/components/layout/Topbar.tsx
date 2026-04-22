@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTasks } from "../../hooks/useTasks";
 import type { SyncStatus } from "../../hooks/useSync";
@@ -66,7 +66,8 @@ function NavTab({
   return (
     <NavLink
       to={to}
-      tabIndex={-1}
+      tabIndex={0}
+      data-main-nav-tab
       className={({ isActive }) =>
         `flex items-center gap-2 shrink-0 px-3 min-h-11 md:min-h-0 py-2.5 md:py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] border-b-2 transition-colors duration-150 ${
           isActive
@@ -98,6 +99,7 @@ export default function Topbar({
 }: TopbarProps) {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const inboxTasks = useTasks("inbox");
   const todayTasks = useTasks("today");
 
@@ -140,10 +142,21 @@ export default function Topbar({
       <nav
         className="flex-1 min-w-0 flex items-stretch justify-center overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:thin]"
         aria-label="Main views"
+        onKeyDown={(e) => {
+          if (e.key !== "ArrowDown") return;
+          if (location.pathname !== "/week") return;
+          const target = e.target as HTMLElement;
+          if (!target.closest("[data-main-nav-tab]")) return;
+          const weekHeader = document.querySelector("[data-week-header]");
+          if (!(weekHeader instanceof HTMLElement)) return;
+          e.preventDefault();
+          weekHeader.focus();
+        }}
       >
         <div className="flex items-stretch gap-0 mx-auto">
           <NavTab to="/inbox" label="Inbox" count={inboxTasks.length} />
           <NavTab to="/today" label="Today" count={todayTasks.length} />
+          <NavTab to="/week" label="Week" count={0} />
           <NavTab to="/projects" label="Projects" count={0} />
         </div>
       </nav>

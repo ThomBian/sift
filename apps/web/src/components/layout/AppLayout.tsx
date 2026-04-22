@@ -7,7 +7,7 @@ import ProjectEditPalette from "../ProjectEditPalette";
 import type { SyncStatus } from "../../hooks/useSync";
 import type { Task, ChipFocus, Project } from "@sift/shared";
 
-const VIEWS = ["/inbox", "/today", "/projects"];
+const VIEWS = ["/inbox", "/today", "/week", "/projects"];
 
 interface ProjectPaletteState {
   spaceId?: string;
@@ -148,6 +148,13 @@ export default function AppLayout({ syncStatus }: AppLayoutProps) {
         !projectPaletteOpen &&
         (e.key === "ArrowLeft" || e.key === "ArrowRight")
       ) {
+        if (location.pathname.startsWith("/week")) {
+          const active = document.activeElement;
+          const root = document.querySelector("[data-week-view-root]");
+          if (root instanceof HTMLElement && active && root.contains(active)) {
+            return;
+          }
+        }
         e.preventDefault();
         const curr = VIEWS.findIndex((v) => location.pathname.startsWith(v));
         if (curr === -1) return;
