@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { addDays, endOfWeek, startOfDay, startOfWeek } from "date-fns";
 import WeekTopBar from "../components/week/WeekTopBar";
 import WeekGrid from "../components/week/WeekGrid";
@@ -44,6 +44,8 @@ export default function WeekView() {
   const [anchorMonday, setAnchorMonday] = useState<Date>(() => thisWeekMonday());
   const [mode, setMode] = useState<WeekMode>("working");
   const [focusedTaskId, setFocusedTaskId] = useState<string | null>(null);
+  const weekRootRef = useRef<HTMLDivElement>(null);
+  const weekTaskRefocusId = useRef<string | null>(null);
   const { spacesWithProjects, spacesProjectsReady } = useSpacesProjects();
   const { days } = useWeekTasks(anchorMonday, mode);
 
@@ -80,6 +82,36 @@ export default function WeekView() {
       setFocusedTaskId(null);
     }
   }, [focusedTaskId, tasksById]);
+
+  /** Enter toggles done moves the row in the DOM; restore focus so keyboard nav keeps working. */
+  useLayoutEffect(() => {
+    const id = weekTaskRefocusId.current;
+    if (id === null) return;
+    const row = document.querySelector<HTMLElement>(
+      `[data-week-task-id="${id}"] [role="listitem"]`,
+    );
+    if (!row?.isConnected) {
+      if (!tasksById.has(id)) weekTaskRefocusId.current = null;
+      return;
+    }
+    weekTaskRefocusId.current = null;
+    row.focus();
+  }, [days, tasksById]);
+
+  useEffect(() => {
+    const root = weekRootRef.current;
+    if (!root) return;
+    function onFocusIn(e: FocusEvent) {
+      const t = e.target as HTMLElement | null;
+      if (!t) return;
+      const wrap = t.closest("[data-week-task-id]");
+      setFocusedTaskId(
+        wrap instanceof HTMLElement ? (wrap.dataset.weekTaskId ?? null) : null,
+      );
+    }
+    root.addEventListener("focusin", onFocusIn);
+    return () => root.removeEventListener("focusin", onFocusIn);
+  }, []);
 
   useEffect(() => {
     function focusTaskInDay(dayIndex: number): string | null {
@@ -218,6 +250,7 @@ export default function WeekView() {
 
       if (e.key === "Enter") {
         e.preventDefault();
+        weekTaskRefocusId.current = task.id;
         if (task.status === "done") {
           updateTask(task, {
             status: task.workingDate ? "todo" : "inbox",
@@ -269,7 +302,11 @@ export default function WeekView() {
   }, [days, tasksById]);
 
   return (
-    <div className="h-full flex flex-col" data-week-view-root>
+    <div
+      ref={weekRootRef}
+      className="h-full flex flex-col"
+      data-week-view-root
+    >
       <WeekTopBar
         weekStart={weekStart}
         weekEnd={weekEnd}
