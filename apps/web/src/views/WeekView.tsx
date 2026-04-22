@@ -113,6 +113,25 @@ export default function WeekView() {
     return () => root.removeEventListener("focusin", onFocusIn);
   }, []);
 
+  /**
+   * After load, focus is usually on body. Focusing the week *header* trapped
+   * focus inside data-week-view-root so global ←/→ could not reach Projects
+   * without ArrowUp to the top nav first. Land on the active main-nav tab
+   * instead so view cycling works; use Topbar ArrowDown (spec) to enter the
+   * week header / week keyboard layer.
+   */
+  useEffect(() => {
+    if (!spacesProjectsReady) return;
+    const root = weekRootRef.current;
+    if (!root) return;
+    const ae = document.activeElement;
+    if (ae instanceof Node && root.contains(ae)) return;
+    const navTab = document.querySelector<HTMLElement>(
+      'nav[aria-label="Main views"] a[aria-current="page"]',
+    );
+    navTab?.focus();
+  }, [spacesProjectsReady]);
+
   useEffect(() => {
     function focusTaskInDay(dayIndex: number): string | null {
       const wrapper = document.querySelector<HTMLElement>(
