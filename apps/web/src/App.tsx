@@ -10,6 +10,7 @@ import InboxView from './views/InboxView';
 import TodayView from './views/TodayView';
 import ProjectsView from './views/ProjectsView';
 import WeekView from './views/WeekView';
+import MonthView from './views/MonthView';
 
 export default function App() {
   const { user } = useAuth();
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="today" element={<TodayView />} />
           <Route path="projects" element={<ProjectsView />} />
           <Route path="week" element={<WeekView />} />
+          <Route path="month" element={<MonthView />} />
         </Route>
         <Route path="*" element={<Navigate to="/inbox" replace />} />
       </Routes>

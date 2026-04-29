@@ -3,14 +3,14 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useSpacesProjects } from "../../hooks/useSpacesProjects";
 
-function focusWeekHeaderSoon(): boolean {
-  const weekHeader = document.querySelector("[data-week-header]");
-  if (weekHeader instanceof HTMLElement) {
-    weekHeader.focus();
+function focusCalendarHeaderSoon(): boolean {
+  const header = document.querySelector("[data-calendar-header]");
+  if (header instanceof HTMLElement) {
+    header.focus();
     return true;
   }
   requestAnimationFrame(() => {
-    const next = document.querySelector("[data-week-header]");
+    const next = document.querySelector("[data-calendar-header]");
     if (next instanceof HTMLElement) next.focus();
   });
   return false;
@@ -20,22 +20,22 @@ function SidebarLink({
   to,
   label,
   onNavigate,
-  enableWeekHeaderJump,
+  enableCalendarHeaderJump,
 }: {
   to: string;
   label: string;
   onNavigate?: () => void;
-  enableWeekHeaderJump?: boolean;
+  enableCalendarHeaderJump?: boolean;
 }) {
   return (
     <NavLink
       to={to}
       onClick={() => onNavigate?.()}
       onKeyDown={(e) => {
-        if (!enableWeekHeaderJump) return;
+        if (!enableCalendarHeaderJump) return;
         if (e.key !== "ArrowDown") return;
         e.preventDefault();
-        focusWeekHeaderSoon();
+        focusCalendarHeaderSoon();
       }}
       className={({ isActive }) =>
         `flex items-center px-3 py-2.5 md:py-1.5 font-mono text-[11px] transition-colors duration-150 min-h-11 md:min-h-0 ${
@@ -60,7 +60,9 @@ export default function Sidebar({ className = "", onNavigate }: SidebarProps) {
   const { user } = useAuth();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
-  const enableWeekHeaderJump = location.pathname.startsWith("/week");
+  const enableCalendarHeaderJump =
+    location.pathname.startsWith("/week") ||
+    location.pathname.startsWith("/month");
 
   function toggleSpace(spaceId: string) {
     setCollapsed((prev) => {
@@ -85,25 +87,25 @@ export default function Sidebar({ className = "", onNavigate }: SidebarProps) {
           to="/inbox"
           label="Inbox"
           onNavigate={onNavigate}
-          enableWeekHeaderJump={enableWeekHeaderJump}
+          enableCalendarHeaderJump={enableCalendarHeaderJump}
         />
         <SidebarLink
           to="/today"
           label="Today"
           onNavigate={onNavigate}
-          enableWeekHeaderJump={enableWeekHeaderJump}
+          enableCalendarHeaderJump={enableCalendarHeaderJump}
         />
         <SidebarLink
           to="/projects"
           label="Projects"
           onNavigate={onNavigate}
-          enableWeekHeaderJump={enableWeekHeaderJump}
+          enableCalendarHeaderJump={enableCalendarHeaderJump}
         />
         <SidebarLink
           to="/week"
-          label="Week"
+          label="Calendar"
           onNavigate={onNavigate}
-          enableWeekHeaderJump={enableWeekHeaderJump}
+          enableCalendarHeaderJump={enableCalendarHeaderJump}
         />
       </div>
 

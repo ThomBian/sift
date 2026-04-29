@@ -8,6 +8,7 @@ import type { SyncStatus } from "../../hooks/useSync";
 import type { Task, ChipFocus, Project } from "@sift/shared";
 
 const VIEWS = ["/inbox", "/today", "/week", "/projects"];
+const CALENDAR_VIEWS = new Set(["/week", "/month"]);
 
 interface ProjectPaletteState {
   spaceId?: string;
@@ -146,11 +147,37 @@ export default function AppLayout({ syncStatus }: AppLayoutProps) {
         !isInput &&
         !paletteOpen &&
         !projectPaletteOpen &&
-        (e.key === "ArrowLeft" || e.key === "ArrowRight")
+        (e.key === "v" || e.key === "V") &&
+        !e.metaKey &&
+        !e.ctrlKey &&
+        !e.altKey
       ) {
         if (location.pathname.startsWith("/week")) {
+          e.preventDefault();
+          void navigate("/month");
+          return;
+        }
+        if (location.pathname.startsWith("/month")) {
+          e.preventDefault();
+          void navigate("/week");
+          return;
+        }
+      }
+
+      if (
+        !isInput &&
+        !paletteOpen &&
+        !projectPaletteOpen &&
+        (e.key === "ArrowLeft" || e.key === "ArrowRight")
+      ) {
+        const onCalendar = [...CALENDAR_VIEWS].some((p) =>
+          location.pathname.startsWith(p),
+        );
+        if (onCalendar) {
           const active = document.activeElement;
-          const root = document.querySelector("[data-week-view-root]");
+          const root =
+            document.querySelector("[data-week-view-root]") ??
+            document.querySelector("[data-month-view-root]");
           if (root instanceof HTMLElement && active && root.contains(active)) {
             return;
           }

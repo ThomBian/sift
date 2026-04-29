@@ -1,4 +1,10 @@
-type FocusState = "none" | "project" | "task" | "week";
+type FocusState =
+  | "none"
+  | "project"
+  | "task"
+  | "week"
+  | "month"
+  | "month-task";
 
 interface Hint {
   keys: string[];
@@ -55,6 +61,24 @@ const WEEK_HINTS: Hint[] = [
   { keys: ["T"], label: "today", hot: true },
 ];
 
+const MONTH_HINTS: Hint[] = [
+  { keys: ["↑↓←→"], label: "navigate" },
+  { keys: ["Enter"], label: "open day", hot: true },
+  { keys: ["M"], label: "mode", hot: true },
+  { keys: ["T"], label: "today", hot: true },
+  { keys: ["V"], label: "week", hot: true },
+];
+
+const MONTH_TASK_HINTS: Hint[] = [
+  { keys: ["Enter"], label: "Done", hot: true },
+  { keys: ["D"], label: "Due date", hot: true },
+  { keys: ["W"], label: "Today", hot: true },
+  { keys: ["P"], label: "Project", hot: true },
+  { keys: ["U"], label: "Link", hot: true },
+  { keys: ["⌫"], label: "Archive" },
+  { keys: ["↑"], label: "back to day" },
+];
+
 function Key({ label, hot }: { label: string; hot?: boolean }) {
   return (
     <kbd
@@ -85,7 +109,11 @@ export default function HintBar({
         ? buildProjectHints(archiveHint, projectExpanded)
         : focusState === "week"
           ? WEEK_HINTS
-        : NONE_HINTS;
+          : focusState === "month"
+            ? MONTH_HINTS
+            : focusState === "month-task"
+              ? MONTH_TASK_HINTS
+              : NONE_HINTS;
 
   return (
     <div className="flex items-center gap-4 sm:gap-6 px-4 py-2.5 md:py-2 border-t border-[0.5px] border-border bg-surface shrink-0 overflow-x-auto pb-[max(0.5rem,env(safe-area-inset-bottom,0px))]">
