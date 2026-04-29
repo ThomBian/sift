@@ -6,7 +6,7 @@ import MonthGrid from "../components/month/MonthGrid";
 import MonthTaskPanel from "../components/month/MonthTaskPanel";
 import HintBar from "../components/layout/HintBar";
 import { useSpacesProjects } from "../hooks/useSpacesProjects";
-import { useMonthTasks } from "../hooks/useMonthTasks";
+import { useMonthTasks, buildMonthDays } from "../hooks/useMonthTasks";
 import type { WeekMode } from "../hooks/useWeekTasks";
 import { db } from "../lib/db";
 import { requestSync } from "../lib/requestSync";
@@ -53,6 +53,20 @@ function readMonthDayIndex(cell: HTMLElement): number {
   return Number(raw);
 }
 
+/** Index of the cell that shows local "today", including leading/trailing month cells. */
+function findTodayCellIndex(
+  days: { date: Date; isCurrentMonth: boolean }[],
+): number {
+  if (days.length !== 42) return 0;
+  const today = startOfDay(new Date());
+  const t = today.getTime();
+  const byDay = days.findIndex((d) => startOfDay(d.date).getTime() === t);
+  if (byDay !== -1) return byDay;
+  const firstIn = days.findIndex((d) => d.isCurrentMonth);
+  if (firstIn !== -1) return firstIn;
+  return 0;
+}
+
 export default function MonthView() {
   const navigate = useNavigate();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -93,12 +107,7 @@ export default function MonthView() {
         .filter((x) => x.d.isCurrentMonth);
       idx = inMonth.length ? inMonth[inMonth.length - 1].i : 41;
     } else {
-      const today = startOfDay(new Date());
-      idx = days.findIndex(
-        (d) => d.isCurrentMonth && d.date.getTime() === today.getTime(),
-      );
-      if (idx === -1) idx = days.findIndex((d) => d.isCurrentMonth);
-      if (idx === -1) idx = 0;
+      idx = findTodayCellIndex(days);
     }
     pendingEdgeFocus.current = null;
     setFocusedIndex(idx);
@@ -106,14 +115,7 @@ export default function MonthView() {
       const cell = document.querySelector<HTMLElement>(
         `[data-month-day-index="${idx}"]`,
       );
-      const ae = document.activeElement;
-      if (
-        cell &&
-        ae instanceof HTMLElement &&
-        (ae.dataset.monthDayIndex != null || ae === document.body)
-      ) {
-        cell.focus();
-      }
+      cell?.focus();
     });
   }, [anchorMonth, days.length]);
 
@@ -201,7 +203,17 @@ export default function MonthView() {
         }
         if (e.key === "t" || e.key === "T") {
           e.preventDefault();
-          setAnchorMonth(startOfMonth(new Date()));
+          const month = startOfMonth(new Date());
+          const idx = findTodayCellIndex(buildMonthDays(month));
+          setAnchorMonth(month);
+          setFocusedIndex(idx);
+          requestAnimationFrame(() => {
+            document
+              .querySelector<HTMLElement>(
+                `[data-month-day-index="${idx}"]`,
+              )
+              ?.focus();
+          });
           return;
         }
         if (e.key === "v" || e.key === "V") {
