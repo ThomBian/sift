@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-04-22T20:23:27.611Z
-> Files: 191 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-04-29T12:42:22.706Z
+> Files: 207 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -94,6 +94,17 @@
 - `server.log` (~403 tok)
 - `server.pid` (~2 tok)
 
+## .superpowers/brainstorm/83231-1777446435/content/
+
+- `month-layouts.html` (~4011 tok)
+- `waiting.html` (~39 tok)
+
+## .superpowers/brainstorm/83231-1777446435/state/
+
+- `server-stopped` (~14 tok)
+- `server.log` (~164 tok)
+- `server.pid` (~2 tok)
+
 ## .superpowers/brainstorm/84073-1775634208/content/
 
 - `approaches.html` (~884 tok)
@@ -134,19 +145,22 @@
 
 ## apps/web/src/
 
-- `App.tsx` — App (~362 tok)
+- `App.tsx` — App (~390 tok)
 - `index.css` — Styles: 8 rules, 2 media queries (~542 tok)
 - `main.tsx` (~123 tok)
 - `vite-env.d.ts` — / <reference types="vite/client" /> (~11 tok)
 
 ## apps/web/src/__tests__/
 
+- `AppLayoutViewNav.test.tsx` — actual (~959 tok)
 - `HintBar.test.tsx` — / <reference types="vitest" /> (~1064 tok)
+- `MonthView.test.tsx` — makeSpace (~1968 tok)
 - `setup.ts` (~81 tok)
 - `SyncService.test.ts` — @vitest-environment jsdom (~4982 tok)
 - `TaskRow.test.tsx` — @vitest-environment jsdom (~1808 tok)
-- `Topbar.test.tsx` — / <reference types="vitest" /> (~754 tok)
+- `Topbar.test.tsx` — / <reference types="vitest" /> (~768 tok)
 - `useKeyboardNav.test.ts` — @vitest-environment jsdom (~2123 tok)
+- `useMonthTasks.test.ts` — @vitest-environment jsdom (~1830 tok)
 - `useProjectNav.test.ts` — @vitest-environment jsdom (~2252 tok)
 - `useSync.test.ts` — / <reference types="vitest" /> (~1172 tok)
 - `useTasks.test.ts` — @vitest-environment jsdom (~3234 tok)
@@ -163,16 +177,23 @@
 
 ## apps/web/src/components/layout/
 
-- `AppLayout.tsx` — VIEWS — uses useState, useNavigate, useEffect (~2038 tok)
-- `HintBar.tsx` — NONE_HINTS (~911 tok)
-- `Sidebar.tsx` — focusWeekHeaderSoon (~2002 tok)
-- `Topbar.tsx` — SYNC_LABEL — uses useNavigate, useEffect (~1958 tok)
+- `AppLayout.tsx` — Linear ←/→ order; navigating from `/week` or `/month` lands on inbox/today/projects. (~2386 tok)
+- `HintBar.tsx` — NONE_HINTS (~1140 tok)
+- `Sidebar.tsx` — focusCalendarHeaderSoon (~2053 tok)
+- `Topbar.tsx` — SYNC_LABEL (~2029 tok)
+
+## apps/web/src/components/month/
+
+- `MonthDayCell.tsx` — pipWidthClass (~473 tok)
+- `MonthGrid.tsx` — WEEKDAY_HEADERS (~331 tok)
+- `MonthTaskPanel.tsx` — MonthTaskPanel (~853 tok)
+- `MonthTopBar.tsx` — MODE_OPTIONS (~1024 tok)
 
 ## apps/web/src/components/week/
 
 - `DayColumn.tsx` — TaskItem (~1046 tok)
 - `WeekGrid.tsx` — WeekGrid (~278 tok)
-- `WeekTopBar.tsx` — MODE_OPTIONS (~1053 tok)
+- `WeekTopBar.tsx` — MODE_OPTIONS (~1062 tok)
 
 ## apps/web/src/contexts/
 
@@ -181,6 +202,7 @@
 ## apps/web/src/hooks/
 
 - `useKeyboardNav.ts` — Exports UseKeyboardNavReturn, useKeyboardNav (~1133 tok)
+- `useMonthTasks.ts` — Exports MonthDay, MonthTasksResult, buildMonthDays, useMonthTasks (~1266 tok)
 - `useProjectNav.ts` — Ids in focus/DOM order: active projects, then `SHOW_ARCHIVED_TOGGLE_ID` when shown, (~658 tok)
 - `useSpacesProjects.ts` — False until the first Dexie live query resolves; avoids TaskList mapping tasks before projects exist in memory. (~319 tok)
 - `useSync.ts` — Exports SyncStatus, useSync (~947 tok)
@@ -207,6 +229,7 @@
 ## apps/web/src/views/
 
 - `InboxView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1189 tok)
+- `MonthView.tsx` — Index of the cell that shows local "today", including leading/trailing month cells. (~5589 tok)
 - `ProjectsView.tsx` — ProgressBar (~7463 tok)
 - `TodayView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1182 tok)
 - `WeekView.tsx` — Enter toggles done moves the row in the DOM; restore focus so keyboard nav keeps working. (~4036 tok)
@@ -232,6 +255,7 @@
 - `2026-04-13-cloud-bootstrap-sync.md` — Cloud Bootstrap Sync Implementation Plan (~6316 tok)
 - `2026-04-13-supabase-auth-prod.md` — Supabase sign-in + production sync — implementation plan (~3656 tok)
 - `2026-04-22-week-overview.md` — Week Overview Implementation Plan (~8156 tok)
+- `2026-04-29-month-view.md` — Month View Implementation Plan (~14647 tok)
 
 ## docs/superpowers/specs/
 
@@ -245,6 +269,7 @@
 - `2026-04-13-auth-gate-sync-indicator-design.md` — Auth Gate + Sync Indicator (~612 tok)
 - `2026-04-13-cloud-bootstrap-sync-design.md` — Cloud Bootstrap Sync Design (~1408 tok)
 - `2026-04-22-week-overview-design.md` — Week overview — design spec (~2100 tok)
+- `2026-04-29-month-view-design.md` — Month View — Design Spec (~1705 tok)
 
 ## packages/shared/
 

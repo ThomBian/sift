@@ -1,0 +1,1266 @@
+{
+  "session_id": "session-2026-04-29-0908",
+  "started": "2026-04-29T07:08:33.072Z",
+  "files_read": {
+    "/Users/tbianchini/workspace/sift/apps/web/src/hooks/useWeekTasks.ts": {
+      "count": 3,
+      "tokens": 1260,
+      "first_read": "2026-04-29T07:31:25.895Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/components/week/WeekTopBar.tsx": {
+      "count": 4,
+      "tokens": 1062,
+      "first_read": "2026-04-29T07:31:29.142Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/components/week/WeekGrid.tsx": {
+      "count": 2,
+      "tokens": 278,
+      "first_read": "2026-04-29T07:31:31.469Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/AppLayout.tsx": {
+      "count": 15,
+      "tokens": 2412,
+      "first_read": "2026-04-29T07:31:33.926Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/App.tsx": {
+      "count": 4,
+      "tokens": 390,
+      "first_read": "2026-04-29T07:31:36.810Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/HintBar.tsx": {
+      "count": 5,
+      "tokens": 1099,
+      "first_read": "2026-04-29T07:31:39.272Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/Sidebar.tsx": {
+      "count": 9,
+      "tokens": 2053,
+      "first_read": "2026-04-29T07:31:41.670Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/Topbar.tsx": {
+      "count": 12,
+      "tokens": 2020,
+      "first_read": "2026-04-29T07:31:45.275Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/components/week/DayColumn.tsx": {
+      "count": 1,
+      "tokens": 1046,
+      "first_read": "2026-04-29T07:31:47.966Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/useWeekTasks.test.ts": {
+      "count": 2,
+      "tokens": 2318,
+      "first_read": "2026-04-29T07:32:22.542Z"
+    },
+    "/Users/tbianchini/workspace/sift/docs/superpowers/plans/2026-04-29-month-view.md": {
+      "count": 1,
+      "tokens": 14647,
+      "first_read": "2026-04-29T07:39:23.222Z"
+    },
+    "/Users/tbianchini/.cursor/skills/using-git-worktrees/SKILL.md": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-04-29T07:39:23.579Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/hooks/useTasks.ts": {
+      "count": 1,
+      "tokens": 2128,
+      "first_read": "2026-04-29T07:39:33.947Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/components/TaskRow.tsx": {
+      "count": 3,
+      "tokens": 2367,
+      "first_read": "2026-04-29T07:39:33.963Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/Topbar.test.tsx": {
+      "count": 6,
+      "tokens": 768,
+      "first_read": "2026-04-29T07:39:39.686Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/useMonthTasks.test.ts": {
+      "count": 4,
+      "tokens": 1832,
+      "first_read": "2026-04-29T07:39:56.523Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/hooks/useMonthTasks.ts": {
+      "count": 7,
+      "tokens": 1266,
+      "first_read": "2026-04-29T07:40:03.798Z"
+    },
+    "/Users/tbianchini/workspace/sift/node_modules/dexie-react-hooks/package.json": {
+      "count": 1,
+      "tokens": 221,
+      "first_read": "2026-04-29T07:40:30.184Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/components/month/MonthDayCell.tsx": {
+      "count": 6,
+      "tokens": 473,
+      "first_read": "2026-04-29T07:40:50.481Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/components/month/MonthGrid.tsx": {
+      "count": 5,
+      "tokens": 331,
+      "first_read": "2026-04-29T07:40:51.385Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/components/month/MonthTaskPanel.tsx": {
+      "count": 3,
+      "tokens": 853,
+      "first_read": "2026-04-29T07:40:53.371Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/components/month/MonthTopBar.tsx": {
+      "count": 7,
+      "tokens": 1016,
+      "first_read": "2026-04-29T07:40:56.800Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/views/WeekView.tsx": {
+      "count": 7,
+      "tokens": 4036,
+      "first_read": "2026-04-29T07:41:17.335Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx": {
+      "count": 130,
+      "tokens": 5589,
+      "first_read": "2026-04-29T07:41:32.897Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/hooks/useSpacesProjects.ts": {
+      "count": 2,
+      "tokens": 319,
+      "first_read": "2026-04-29T07:42:40.269Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx": {
+      "count": 64,
+      "tokens": 1966,
+      "first_read": "2026-04-29T07:42:49.187Z"
+    },
+    "/Users/tbianchini/.cursor/skills/finishing-a-development-branch/SKILL.md": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-04-29T07:44:12.769Z"
+    },
+    "/Users/tbianchini/.cursor/projects/Users-tbianchini-workspace-sift/terminals/345978.txt": {
+      "count": 3,
+      "tokens": 0,
+      "first_read": "2026-04-29T08:02:10.389Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/vite.config.ts": {
+      "count": 3,
+      "tokens": 311,
+      "first_read": "2026-04-29T08:04:36.221Z"
+    },
+    "/Users/tbianchini/workspace/sift/package.json": {
+      "count": 1,
+      "tokens": 221,
+      "first_read": "2026-04-29T08:05:27.405Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/setup.ts": {
+      "count": 1,
+      "tokens": 81,
+      "first_read": "2026-04-29T08:06:17.295Z"
+    },
+    "/Users/tbianchini/.cursor/projects/Users-tbianchini-workspace-sift/terminals/526198.txt": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-04-29T08:13:35.496Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/package.json": {
+      "count": 1,
+      "tokens": 221,
+      "first_read": "2026-04-29T08:28:26.191Z"
+    },
+    "/Users/tbianchini/.cursor/projects/Users-tbianchini-workspace-sift/terminals/346750.txt": {
+      "count": 3,
+      "tokens": 0,
+      "first_read": "2026-04-29T08:29:26.839Z"
+    },
+    "/Users/tbianchini/.cursor/projects/Users-tbianchini-workspace-sift/terminals/863360.txt": {
+      "count": 4,
+      "tokens": 0,
+      "first_read": "2026-04-29T08:37:03.717Z"
+    },
+    "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/AppLayoutViewNav.test.tsx": {
+      "count": 11,
+      "tokens": 600,
+      "first_read": "2026-04-29T09:22:49.186Z"
+    }
+  },
+  "files_written": [
+    {
+      "file": "/Users/tbianchini/workspace/sift/.superpowers/brainstorm/83231-1777446435/content/month-layouts.html",
+      "action": "create",
+      "tokens": 4297,
+      "at": "2026-04-29T07:08:51.919Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/.superpowers/brainstorm/83231-1777446435/content/waiting.html",
+      "action": "create",
+      "tokens": 42,
+      "at": "2026-04-29T07:09:16.582Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/docs/superpowers/specs/2026-04-29-month-view-design.md",
+      "action": "create",
+      "tokens": 1949,
+      "at": "2026-04-29T07:18:35.905Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/docs/superpowers/plans/2026-04-29-month-view.md",
+      "action": "create",
+      "tokens": 16480,
+      "at": "2026-04-29T07:36:16.064Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/docs/superpowers/plans/2026-04-29-month-view.md",
+      "action": "edit",
+      "tokens": 74,
+      "at": "2026-04-29T07:36:35.825Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/docs/superpowers/plans/2026-04-29-month-view.md",
+      "action": "edit",
+      "tokens": 330,
+      "at": "2026-04-29T07:36:46.962Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/docs/superpowers/plans/2026-04-29-month-view.md",
+      "action": "edit",
+      "tokens": 193,
+      "at": "2026-04-29T07:36:54.284Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/useMonthTasks.test.ts",
+      "action": "create",
+      "tokens": 1799,
+      "at": "2026-04-29T07:39:57.859Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/hooks/useMonthTasks.ts",
+      "action": "create",
+      "tokens": 1266,
+      "at": "2026-04-29T07:40:05.120Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/useMonthTasks.test.ts",
+      "action": "create",
+      "tokens": 1816,
+      "at": "2026-04-29T07:40:37.735Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/useMonthTasks.test.ts",
+      "action": "create",
+      "tokens": 1832,
+      "at": "2026-04-29T07:40:39.093Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/useMonthTasks.test.ts",
+      "action": "create",
+      "tokens": 1830,
+      "at": "2026-04-29T07:40:40.699Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/month/MonthDayCell.tsx",
+      "action": "create",
+      "tokens": 473,
+      "at": "2026-04-29T07:40:51.968Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/month/MonthGrid.tsx",
+      "action": "create",
+      "tokens": 331,
+      "at": "2026-04-29T07:40:52.830Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/month/MonthTaskPanel.tsx",
+      "action": "create",
+      "tokens": 853,
+      "at": "2026-04-29T07:40:54.799Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/month/MonthTopBar.tsx",
+      "action": "create",
+      "tokens": 1007,
+      "at": "2026-04-29T07:40:58.391Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/week/WeekTopBar.tsx",
+      "action": "create",
+      "tokens": 1062,
+      "at": "2026-04-29T07:40:58.849Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/HintBar.tsx",
+      "action": "create",
+      "tokens": 922,
+      "at": "2026-04-29T07:41:11.082Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/HintBar.tsx",
+      "action": "create",
+      "tokens": 1099,
+      "at": "2026-04-29T07:41:12.406Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/HintBar.tsx",
+      "action": "create",
+      "tokens": 1140,
+      "at": "2026-04-29T07:41:13.715Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 3569,
+      "at": "2026-04-29T07:41:34.564Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 3570,
+      "at": "2026-04-29T07:41:39.369Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/App.tsx",
+      "action": "create",
+      "tokens": 374,
+      "at": "2026-04-29T07:41:42.807Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/AppLayout.tsx",
+      "action": "create",
+      "tokens": 2053,
+      "at": "2026-04-29T07:41:43.367Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/App.tsx",
+      "action": "create",
+      "tokens": 390,
+      "at": "2026-04-29T07:41:44.493Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/AppLayout.tsx",
+      "action": "create",
+      "tokens": 2243,
+      "at": "2026-04-29T07:41:45.050Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/Topbar.tsx",
+      "action": "create",
+      "tokens": 1983,
+      "at": "2026-04-29T07:41:49.896Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/Topbar.tsx",
+      "action": "create",
+      "tokens": 1983,
+      "at": "2026-04-29T07:41:51.761Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/Topbar.tsx",
+      "action": "create",
+      "tokens": 1982,
+      "at": "2026-04-29T07:41:59.340Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/Topbar.tsx",
+      "action": "create",
+      "tokens": 2020,
+      "at": "2026-04-29T07:42:01.325Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/Sidebar.tsx",
+      "action": "create",
+      "tokens": 2006,
+      "at": "2026-04-29T07:42:08.955Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/Sidebar.tsx",
+      "action": "create",
+      "tokens": 2022,
+      "at": "2026-04-29T07:42:14.484Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/Sidebar.tsx",
+      "action": "create",
+      "tokens": 2032,
+      "at": "2026-04-29T07:42:16.452Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/Topbar.test.tsx",
+      "action": "create",
+      "tokens": 762,
+      "at": "2026-04-29T07:42:22.761Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/Topbar.test.tsx",
+      "action": "create",
+      "tokens": 768,
+      "at": "2026-04-29T07:42:30.863Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1615,
+      "at": "2026-04-29T07:42:51.110Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1618,
+      "at": "2026-04-29T07:43:05.732Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1624,
+      "at": "2026-04-29T07:43:36.708Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1608,
+      "at": "2026-04-29T07:43:37.979Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1602,
+      "at": "2026-04-29T07:43:41.088Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1614,
+      "at": "2026-04-29T07:43:48.718Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 3570,
+      "at": "2026-04-29T07:48:05.438Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 3822,
+      "at": "2026-04-29T07:48:07.945Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 3862,
+      "at": "2026-04-29T07:48:09.408Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 3873,
+      "at": "2026-04-29T07:48:12.044Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4010,
+      "at": "2026-04-29T07:48:27.872Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4014,
+      "at": "2026-04-29T07:50:07.820Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4160,
+      "at": "2026-04-29T07:50:09.225Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4157,
+      "at": "2026-04-29T07:50:10.672Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4103,
+      "at": "2026-04-29T07:50:12.113Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4043,
+      "at": "2026-04-29T07:50:16.123Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4140,
+      "at": "2026-04-29T07:50:17.552Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4261,
+      "at": "2026-04-29T07:54:41.905Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4282,
+      "at": "2026-04-29T07:54:43.330Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4240,
+      "at": "2026-04-29T07:54:56.311Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4245,
+      "at": "2026-04-29T07:54:57.667Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4308,
+      "at": "2026-04-29T07:55:10.829Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4280,
+      "at": "2026-04-29T07:55:21.495Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4101,
+      "at": "2026-04-29T07:55:43.021Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4445,
+      "at": "2026-04-29T07:55:54.897Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4440,
+      "at": "2026-04-29T07:55:56.281Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4377,
+      "at": "2026-04-29T07:56:17.973Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4342,
+      "at": "2026-04-29T07:56:21.234Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4336,
+      "at": "2026-04-29T07:56:22.748Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4385,
+      "at": "2026-04-29T07:57:54.159Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4393,
+      "at": "2026-04-29T07:57:55.613Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4396,
+      "at": "2026-04-29T07:57:57.095Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4409,
+      "at": "2026-04-29T07:57:58.568Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4406,
+      "at": "2026-04-29T07:58:00.064Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4409,
+      "at": "2026-04-29T07:58:03.212Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4414,
+      "at": "2026-04-29T08:00:22.980Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4554,
+      "at": "2026-04-29T08:00:24.408Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4511,
+      "at": "2026-04-29T08:00:25.930Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4568,
+      "at": "2026-04-29T08:00:51.890Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1614,
+      "at": "2026-04-29T08:01:25.471Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1616,
+      "at": "2026-04-29T08:04:52.709Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1609,
+      "at": "2026-04-29T08:04:54.026Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1613,
+      "at": "2026-04-29T08:04:55.453Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/vite.config.ts",
+      "action": "create",
+      "tokens": 311,
+      "at": "2026-04-29T08:05:32.632Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4564,
+      "at": "2026-04-29T08:06:24.996Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4593,
+      "at": "2026-04-29T08:06:26.610Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4582,
+      "at": "2026-04-29T08:06:29.842Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4573,
+      "at": "2026-04-29T08:06:31.380Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1627,
+      "at": "2026-04-29T08:06:35.091Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1640,
+      "at": "2026-04-29T08:06:36.603Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1719,
+      "at": "2026-04-29T08:09:15.544Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1729,
+      "at": "2026-04-29T08:09:23.985Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1731,
+      "at": "2026-04-29T08:09:25.516Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1732,
+      "at": "2026-04-29T08:09:31.504Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1741,
+      "at": "2026-04-29T08:09:34.616Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1743,
+      "at": "2026-04-29T08:09:36.069Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4585,
+      "at": "2026-04-29T08:10:28.026Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4625,
+      "at": "2026-04-29T08:10:45.779Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4600,
+      "at": "2026-04-29T08:10:51.299Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4660,
+      "at": "2026-04-29T08:11:42.011Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1824,
+      "at": "2026-04-29T08:12:23.531Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1878,
+      "at": "2026-04-29T08:12:59.084Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1701,
+      "at": "2026-04-29T08:13:46.764Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1693,
+      "at": "2026-04-29T08:13:50.981Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1642,
+      "at": "2026-04-29T08:13:58.065Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4574,
+      "at": "2026-04-29T08:16:57.915Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4612,
+      "at": "2026-04-29T08:17:08.260Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/vite.config.ts",
+      "action": "create",
+      "tokens": 277,
+      "at": "2026-04-29T08:17:14.010Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4647,
+      "at": "2026-04-29T08:19:27.441Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4650,
+      "at": "2026-04-29T08:19:31.865Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1722,
+      "at": "2026-04-29T08:21:08.510Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1648,
+      "at": "2026-04-29T08:21:55.693Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4560,
+      "at": "2026-04-29T08:23:03.810Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1651,
+      "at": "2026-04-29T08:25:02.266Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1446,
+      "at": "2026-04-29T08:25:04.044Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1473,
+      "at": "2026-04-29T08:25:05.718Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1472,
+      "at": "2026-04-29T08:25:07.163Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4624,
+      "at": "2026-04-29T08:25:11.087Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1487,
+      "at": "2026-04-29T08:25:42.001Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1488,
+      "at": "2026-04-29T08:25:43.655Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1503,
+      "at": "2026-04-29T08:25:52.386Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1502,
+      "at": "2026-04-29T08:25:53.903Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4638,
+      "at": "2026-04-29T08:26:25.867Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1500,
+      "at": "2026-04-29T08:26:31.981Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1457,
+      "at": "2026-04-29T08:26:33.343Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4654,
+      "at": "2026-04-29T08:28:48.998Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4659,
+      "at": "2026-04-29T08:28:50.502Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4595,
+      "at": "2026-04-29T08:32:59.457Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4641,
+      "at": "2026-04-29T08:33:29.104Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4627,
+      "at": "2026-04-29T08:35:13.785Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1147,
+      "at": "2026-04-29T08:35:25.037Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1145,
+      "at": "2026-04-29T08:35:28.521Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4616,
+      "at": "2026-04-29T08:35:32.267Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4611,
+      "at": "2026-04-29T08:35:33.739Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4606,
+      "at": "2026-04-29T08:35:35.344Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4670,
+      "at": "2026-04-29T08:35:49.097Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4653,
+      "at": "2026-04-29T08:35:53.188Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1267,
+      "at": "2026-04-29T08:36:14.234Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4788,
+      "at": "2026-04-29T08:40:05.900Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4756,
+      "at": "2026-04-29T08:40:11.321Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 4753,
+      "at": "2026-04-29T08:40:15.664Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5005,
+      "at": "2026-04-29T08:51:06.092Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5132,
+      "at": "2026-04-29T08:51:43.220Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5146,
+      "at": "2026-04-29T08:51:44.723Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5131,
+      "at": "2026-04-29T08:51:52.746Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5146,
+      "at": "2026-04-29T08:51:54.172Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1488,
+      "at": "2026-04-29T08:51:59.109Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/AppLayout.tsx",
+      "action": "create",
+      "tokens": 2357,
+      "at": "2026-04-29T09:22:45.379Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5219,
+      "at": "2026-04-29T09:22:46.710Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/AppLayout.tsx",
+      "action": "create",
+      "tokens": 2367,
+      "at": "2026-04-29T09:22:46.868Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/AppLayoutViewNav.test.tsx",
+      "action": "create",
+      "tokens": 385,
+      "at": "2026-04-29T09:22:50.583Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/AppLayoutViewNav.test.tsx",
+      "action": "create",
+      "tokens": 538,
+      "at": "2026-04-29T09:23:10.010Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/AppLayoutViewNav.test.tsx",
+      "action": "create",
+      "tokens": 534,
+      "at": "2026-04-29T09:23:15.518Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/AppLayoutViewNav.test.tsx",
+      "action": "create",
+      "tokens": 570,
+      "at": "2026-04-29T09:23:25.804Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/AppLayoutViewNav.test.tsx",
+      "action": "create",
+      "tokens": 593,
+      "at": "2026-04-29T09:23:35.809Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/AppLayout.tsx",
+      "action": "create",
+      "tokens": 2412,
+      "at": "2026-04-29T12:26:36.914Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/Topbar.tsx",
+      "action": "create",
+      "tokens": 2029,
+      "at": "2026-04-29T12:26:37.149Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/Sidebar.tsx",
+      "action": "create",
+      "tokens": 2053,
+      "at": "2026-04-29T12:26:38.481Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/AppLayout.tsx",
+      "action": "create",
+      "tokens": 2386,
+      "at": "2026-04-29T12:26:45.373Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/AppLayoutViewNav.test.tsx",
+      "action": "create",
+      "tokens": 591,
+      "at": "2026-04-29T12:27:04.222Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/AppLayoutViewNav.test.tsx",
+      "action": "create",
+      "tokens": 600,
+      "at": "2026-04-29T12:27:05.593Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/AppLayoutViewNav.test.tsx",
+      "action": "create",
+      "tokens": 959,
+      "at": "2026-04-29T12:27:06.885Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5195,
+      "at": "2026-04-29T12:27:13.515Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/month/MonthTopBar.tsx",
+      "action": "create",
+      "tokens": 1016,
+      "at": "2026-04-29T12:39:20.848Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5200,
+      "at": "2026-04-29T12:39:22.107Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/month/MonthTopBar.tsx",
+      "action": "create",
+      "tokens": 1024,
+      "at": "2026-04-29T12:39:22.360Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5412,
+      "at": "2026-04-29T12:39:23.621Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5404,
+      "at": "2026-04-29T12:39:34.810Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5402,
+      "at": "2026-04-29T12:39:36.309Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5514,
+      "at": "2026-04-29T12:39:38.484Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5428,
+      "at": "2026-04-29T12:39:46.312Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5576,
+      "at": "2026-04-29T12:39:54.176Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5576,
+      "at": "2026-04-29T12:39:55.855Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5579,
+      "at": "2026-04-29T12:39:57.378Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5582,
+      "at": "2026-04-29T12:39:58.968Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/MonthView.tsx",
+      "action": "create",
+      "tokens": 5589,
+      "at": "2026-04-29T12:40:05.784Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1904,
+      "at": "2026-04-29T12:40:15.411Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1930,
+      "at": "2026-04-29T12:40:28.456Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1966,
+      "at": "2026-04-29T12:42:08.863Z"
+    },
+    {
+      "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/MonthView.test.tsx",
+      "action": "create",
+      "tokens": 1968,
+      "at": "2026-04-29T12:42:22.715Z"
+    }
+  ],
+  "edit_counts": {
+    ".superpowers/brainstorm/83231-1777446435/content/month-layouts.html": 1,
+    ".superpowers/brainstorm/83231-1777446435/content/waiting.html": 1,
+    "docs/superpowers/specs/2026-04-29-month-view-design.md": 1,
+    "docs/superpowers/plans/2026-04-29-month-view.md": 4,
+    "apps/web/src/__tests__/useMonthTasks.test.ts": 4,
+    "apps/web/src/hooks/useMonthTasks.ts": 1,
+    "apps/web/src/components/month/MonthDayCell.tsx": 1,
+    "apps/web/src/components/month/MonthGrid.tsx": 1,
+    "apps/web/src/components/month/MonthTaskPanel.tsx": 1,
+    "apps/web/src/components/month/MonthTopBar.tsx": 3,
+    "apps/web/src/components/week/WeekTopBar.tsx": 1,
+    "apps/web/src/components/layout/HintBar.tsx": 3,
+    "apps/web/src/views/MonthView.tsx": 81,
+    "apps/web/src/App.tsx": 2,
+    "apps/web/src/components/layout/AppLayout.tsx": 6,
+    "apps/web/src/components/layout/Topbar.tsx": 5,
+    "apps/web/src/components/layout/Sidebar.tsx": 4,
+    "apps/web/src/__tests__/Topbar.test.tsx": 2,
+    "apps/web/src/__tests__/MonthView.test.tsx": 43,
+    "apps/web/vite.config.ts": 2,
+    "apps/web/src/__tests__/AppLayoutViewNav.test.tsx": 8
+  },
+  "anatomy_hits": 20,
+  "anatomy_misses": 15,
+  "repeated_reads_warned": 298,
+  "cerebrum_warnings": 0,
+  "stop_count": 26
+}

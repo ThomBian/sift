@@ -1,4 +1,21 @@
 {
   "version": 1,
-  "bugs": []
+  "bugs": [
+    {
+      "id": "bug-001",
+      "timestamp": "2026-04-29T07:36:46.963Z",
+      "error_message": "Null/undefined access in ",
+      "file": "docs/superpowers/plans/2026-04-29-month-view.md",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-04-29T07:36:46.963Z"
+    }
+  ]
 }
