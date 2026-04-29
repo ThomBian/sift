@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addMonths, startOfDay, startOfMonth } from "date-fns";
 import MonthTopBar from "../components/month/MonthTopBar";
@@ -39,8 +39,23 @@ function orphanCtx(task: Task): { project: Project; space: Space } {
   };
 }
 
+function monthDayCellFromEventTarget(
+  target: EventTarget | null,
+): HTMLElement | null {
+  if (!(target instanceof Element)) return null;
+  const el = target.closest("[data-month-day-index]");
+  return el instanceof HTMLElement ? el : null;
+}
+
+function readMonthDayIndex(cell: HTMLElement): number {
+  const raw = cell.getAttribute("data-month-day-index");
+  if (raw == null || raw === "") return NaN;
+  return Number(raw);
+}
+
 export default function MonthView() {
   const navigate = useNavigate();
+  const rootRef = useRef<HTMLDivElement>(null);
   const [anchorMonth, setAnchorMonth] = useState<Date>(() =>
     startOfMonth(new Date()),
   );
@@ -143,6 +158,32 @@ export default function MonthView() {
       .then(() => requestSync());
   }
 
+  /** Stop the scrollable main column from eating ArrowUp/ArrowDown before we handle grid nav. */
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    function onCapture(e: KeyboardEvent) {
+      if (
+        e.key !== "ArrowUp" &&
+        e.key !== "ArrowDown" &&
+        e.key !== "ArrowLeft" &&
+        e.key !== "ArrowRight"
+      ) {
+        return;
+      }
+      const fromTarget = monthDayCellFromEventTarget(e.target);
+      const fromActive =
+        document.activeElement instanceof Element
+          ? document.activeElement.closest("[data-month-day-index]")
+          : null;
+      if (fromTarget instanceof HTMLElement || fromActive instanceof HTMLElement) {
+        e.preventDefault();
+      }
+    }
+    root.addEventListener("keydown", onCapture, true);
+    return () => root.removeEventListener("keydown", onCapture, true);
+  }, []);
+
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const target = e.target as HTMLElement | null;
@@ -202,11 +243,13 @@ export default function MonthView() {
         }
       }
 
-      const cell = (active as HTMLElement | null)?.closest(
+      const cellFromEvent = monthDayCellFromEventTarget(e.target);
+      const cellFromActive = (active as HTMLElement | null)?.closest(
         "[data-month-day-index]",
       );
+      const cell = (cellFromEvent ?? cellFromActive) as HTMLElement | null;
       if (cell instanceof HTMLElement) {
-        const idx = Number(cell.dataset.monthDayIndex);
+        const idx = readMonthDayIndex(cell);
         if (Number.isNaN(idx)) return;
 
         if (e.key === "ArrowLeft") {
@@ -359,7 +402,11 @@ export default function MonthView() {
   }, [days, focusedIndex, navigate, tasksByDay]);
 
   return (
-    <div className="h-full flex flex-col" data-month-view-root>
+    <div
+      ref={rootRef}
+      className="h-full flex flex-col"
+      data-month-view-root
+    >
       <MonthTopBar
         anchorMonth={anchorMonth}
         mode={mode}
