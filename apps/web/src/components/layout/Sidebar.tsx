@@ -79,7 +79,11 @@ export default function Sidebar({ className = "", onNavigate }: SidebarProps) {
     >
       <div className="h-[2px] bg-accent shrink-0" />
 
-      <div className="p-2 pt-3 space-y-0.5">
+      <nav
+        data-sift-main-view-nav
+        className="p-2 pt-3 space-y-0.5"
+        aria-label="Views"
+      >
         <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-dim px-3 pb-1.5">
           Views
         </p>
@@ -107,7 +111,7 @@ export default function Sidebar({ className = "", onNavigate }: SidebarProps) {
           onNavigate={onNavigate}
           enableCalendarHeaderJump={enableCalendarHeaderJump}
         />
-      </div>
+      </nav>
 
       <div className="h-[0.5px] min-h-[0.5px] bg-border mx-2 my-1" />
 

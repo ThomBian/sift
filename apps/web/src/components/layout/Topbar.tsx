@@ -175,6 +175,7 @@ export default function Topbar({
       </div>
 
       <nav
+        data-sift-main-view-nav
         className="flex-1 min-w-0 flex items-stretch justify-center overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:thin]"
         aria-label="Main views"
       >

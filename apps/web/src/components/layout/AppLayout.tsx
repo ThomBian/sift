@@ -7,8 +7,17 @@ import ProjectEditPalette from "../ProjectEditPalette";
 import type { SyncStatus } from "../../hooks/useSync";
 import type { Task, ChipFocus, Project } from "@sift/shared";
 
-const VIEWS = ["/inbox", "/today", "/week", "/projects"];
+/** Linear ←/→ order; navigating from `/week` or `/month` lands on inbox/today/projects. */
+const VIEW_NAV_ORDER = ["/inbox", "/today", "/week", "/projects"] as const;
 const CALENDAR_VIEWS = new Set(["/week", "/month"]);
+
+function mainViewCursor(pathname: string): number {
+  if (pathname.startsWith("/inbox")) return 0;
+  if (pathname.startsWith("/today")) return 1;
+  if (pathname.startsWith("/week") || pathname.startsWith("/month")) return 2;
+  if (pathname.startsWith("/projects")) return 3;
+  return -1;
+}
 
 interface ProjectPaletteState {
   spaceId?: string;
@@ -173,23 +182,24 @@ export default function AppLayout({ syncStatus }: AppLayoutProps) {
         const onCalendar = [...CALENDAR_VIEWS].some((p) =>
           location.pathname.startsWith(p),
         );
+        /** On week/month, ←/→ only change views when focus is in the explicit view nav (top bar or sidebar). */
         if (onCalendar) {
           const active = document.activeElement;
-          const root =
-            document.querySelector("[data-week-view-root]") ??
-            document.querySelector("[data-month-view-root]");
-          if (root instanceof HTMLElement && active && root.contains(active)) {
+          const focusInMainViewNav =
+            active instanceof HTMLElement &&
+            active.closest("[data-sift-main-view-nav]") != null;
+          if (!focusInMainViewNav) {
             return;
           }
         }
         e.preventDefault();
-        const curr = VIEWS.findIndex((v) => location.pathname.startsWith(v));
+        const curr = mainViewCursor(location.pathname);
         if (curr === -1) return;
-        const next =
+        const nextRoute =
           e.key === "ArrowRight"
-            ? VIEWS[(curr + 1) % VIEWS.length]
-            : VIEWS[(curr - 1 + VIEWS.length) % VIEWS.length];
-        void navigate(next);
+            ? VIEW_NAV_ORDER[(curr + 1) % VIEW_NAV_ORDER.length]
+            : VIEW_NAV_ORDER[(curr - 1 + VIEW_NAV_ORDER.length) % VIEW_NAV_ORDER.length];
+        void navigate(nextRoute);
       }
     }
 

@@ -29,6 +29,7 @@ export default function MonthTopBar({
       <div className="flex min-w-0 items-center gap-2">
         <button
           type="button"
+          data-month-nav-prev
           onClick={onPrevMonth}
           aria-label="Previous month"
           className="w-9 h-9 border-[0.5px] border-border text-muted transition-[color,border-color,box-shadow] duration-150 shrink-0 hover:border-accent/40 hover:text-accent hover:shadow-hotkey"
@@ -51,6 +52,7 @@ export default function MonthTopBar({
         </div>
         <button
           type="button"
+          data-month-nav-next
           onClick={onNextMonth}
           aria-label="Next month"
           className="w-9 h-9 border-[0.5px] border-border text-muted transition-[color,border-color,box-shadow] duration-150 shrink-0 hover:border-accent/40 hover:text-accent hover:shadow-hotkey"

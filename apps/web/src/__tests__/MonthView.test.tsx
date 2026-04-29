@@ -114,7 +114,28 @@ describe("MonthView", () => {
     );
   });
 
-  it("ArrowRight moves focus to next day", async () => {
+  it("ArrowRight moves focus to next day after load without manually focusing a cell", async () => {
+    renderMonth();
+    await waitFor(() =>
+      expect(document.querySelectorAll("[data-month-day-index]").length).toBe(
+        42,
+      ),
+    );
+    await waitFor(() => {
+      const active = document.activeElement as HTMLElement | null;
+      expect(active?.dataset.monthDayIndex).toBeDefined();
+    });
+    const startIdx = Number(
+      (document.activeElement as HTMLElement).dataset.monthDayIndex,
+    );
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+    await waitFor(() => {
+      const active = document.activeElement as HTMLElement | null;
+      expect(active?.dataset.monthDayIndex).toBe(String(startIdx + 1));
+    });
+  });
+
+  it("ArrowRight moves focus to next day when today is focused", async () => {
     renderMonth();
     await waitFor(() =>
       expect(document.querySelectorAll("[data-month-day-index]").length).toBe(
@@ -153,48 +174,63 @@ describe("MonthView", () => {
     });
   });
 
-  it("Enter on a day descends focus into the tasks panel", async () => {
-    const apr15 = new Date(2026, 3, 15, 10, 0, 0);
-    await db.tasks.add(
-      makeTask({ id: "panel-task", status: "todo", workingDate: apr15 }),
-    );
+  it("ArrowRight on month header advances month, keeps header focus, preserves day-of-month", async () => {
     renderMonth();
     await waitFor(() =>
-      expect(
-        document.querySelectorAll("[data-month-task-id]").length,
-      ).toBeGreaterThan(0),
+      expect(document.querySelectorAll("[data-month-day-index]").length).toBe(
+        42,
+      ),
     );
-    const today = document.querySelector<HTMLElement>("[aria-current='date']");
-    today!.focus();
-    fireEvent.keyDown(window, { key: "Enter" });
+    const header = document.querySelector<HTMLElement>("[data-month-header]");
+    expect(header).not.toBeNull();
+    header!.focus();
+    expect(document.activeElement).toBe(header);
+
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+
     await waitFor(() => {
-      const active = document.activeElement as HTMLElement | null;
-      expect(active?.closest("[data-month-task-id]")).not.toBeNull();
+      const h = document.querySelector<HTMLElement>("[data-month-header]");
+      expect(document.activeElement).toBe(h);
+      expect(h?.getAttribute("aria-label")).toMatch(/May 2026/i);
+      const sel = document.querySelector<HTMLElement>(
+        '[data-month-grid] [data-month-day-index][tabindex="0"]',
+      );
+      expect(sel?.getAttribute("aria-label")).toContain("May 15 2026");
     });
   });
 
-  it("ArrowUp from first task returns to the selected day", async () => {
-    const apr15 = new Date(2026, 3, 15, 10, 0, 0);
-    await db.tasks.add(
-      makeTask({ id: "panel-task", status: "todo", workingDate: apr15 }),
-    );
+  it("month header preserves last valid day (Mar 31 → Apr 30)", async () => {
+    vi.setSystemTime(new Date(2026, 2, 31, 9, 0, 0));
     renderMonth();
     await waitFor(() =>
-      expect(
-        document.querySelectorAll("[data-month-task-id]").length,
-      ).toBeGreaterThan(0),
+      expect(document.querySelectorAll("[data-month-day-index]").length).toBe(
+        42,
+      ),
     );
-    const today = document.querySelector<HTMLElement>("[aria-current='date']");
-    today!.focus();
-    fireEvent.keyDown(window, { key: "Enter" });
+    const header = document.querySelector<HTMLElement>("[data-month-header]");
+    header!.focus();
+    fireEvent.keyDown(window, { key: "ArrowRight" });
     await waitFor(() => {
-      const active = document.activeElement as HTMLElement | null;
-      expect(active?.closest("[data-month-task-id]")).not.toBeNull();
+      expect(header!.getAttribute("aria-label")).toMatch(/April 2026/i);
+      const sel = document.querySelector<HTMLElement>(
+        '[data-month-grid] [data-month-day-index][tabindex="0"]',
+      );
+      expect(sel?.getAttribute("aria-label")).toContain("Apr 30 2026");
     });
-    fireEvent.keyDown(window, { key: "ArrowUp" });
-    await waitFor(() => {
-      const active = document.activeElement as HTMLElement | null;
-      expect(active?.dataset.monthDayIndex).toBeDefined();
-    });
+  });
+
+  it("lists a task under the month panel when a task exists for that day", async () => {
+    await db.tasks.add(
+      makeTask({
+        id: "panel-task",
+        status: "todo",
+        workingDate: new Date(2026, 3, 15, 10, 0, 0),
+      }),
+    );
+    renderMonth();
+    await screen.findByText("Test task");
+    await waitFor(() =>
+      expect(document.querySelector("[data-month-panel]")).not.toBeNull(),
+    );
   });
 });

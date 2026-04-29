@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addMonths, startOfDay, startOfMonth } from "date-fns";
+import { addMonths, getDaysInMonth, startOfDay, startOfMonth } from "date-fns";
 import MonthTopBar from "../components/month/MonthTopBar";
 import MonthGrid from "../components/month/MonthGrid";
 import MonthTaskPanel from "../components/month/MonthTaskPanel";
@@ -67,6 +67,52 @@ function findTodayCellIndex(
   return 0;
 }
 
+function firstDayCellIndexInGrid(
+  cells: { date: Date; isCurrentMonth: boolean }[],
+): number {
+  const i = cells.findIndex((d) => d.isCurrentMonth);
+  return i === -1 ? 0 : i;
+}
+
+function lastDayCellIndexInGrid(
+  cells: { date: Date; isCurrentMonth: boolean }[],
+): number {
+  let last = -1;
+  for (let i = 0; i < cells.length; i++) {
+    if (cells[i].isCurrentMonth) last = i;
+  }
+  return last === -1 ? 41 : last;
+}
+
+function cellIndexForDayInMonth(
+  anchorMonth: Date,
+  dayOfMonth: number,
+): number {
+  const cells = buildMonthDays(anchorMonth);
+  const max = getDaysInMonth(anchorMonth);
+  const d = Math.min(Math.max(1, Math.floor(dayOfMonth)), max);
+  const i = cells.findIndex(
+    (c) => c.isCurrentMonth && c.date.getDate() === d,
+  );
+  return i === -1 ? firstDayCellIndexInGrid(cells) : i;
+}
+
+function dayOfMonthFromCellIndex(
+  prevAnchor: Date,
+  prevFocusedIndex: number,
+): number {
+  const prevCells = buildMonthDays(prevAnchor);
+  const sel = prevCells[prevFocusedIndex];
+  if (sel) return sel.date.getDate();
+  return new Date().getDate();
+}
+
+type MonthPageFocusTarget =
+  | "grid"
+  | "monthHeader"
+  | "monthNavPrev"
+  | "monthNavNext";
+
 export default function MonthView() {
   const navigate = useNavigate();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -74,14 +120,49 @@ export default function MonthView() {
     startOfMonth(new Date()),
   );
   const [mode, setMode] = useState<WeekMode>("working");
-  const [focusedIndex, setFocusedIndex] = useState<number>(0);
+  const [focusedIndex, setFocusedIndex] = useState<number>(() =>
+    findTodayCellIndex(buildMonthDays(startOfMonth(new Date()))),
+  );
   const [focusedTaskId, setFocusedTaskId] = useState<string | null>(null);
   const taskRefocusId = useRef<string | null>(null);
-  const pendingEdgeFocus = useRef<"first-in-month" | "last-in-month" | null>(
-    null,
-  );
+
+  /** Always points at the latest anchored month — used by keyboard navigators called in one tick. */
+  const anchorMonthRef = useRef(anchorMonth);
+  anchorMonthRef.current = anchorMonth;
+
+  /**
+   * `applyAnchorMonthFocus` sets month + selection then restores focus; skipping avoids
+   * the snap effect overwriting that focus when `anchorMonth` changes.
+   */
+  const skipSnapFocusOutsideRootRef = useRef(false);
+
   const { spacesWithProjects, spacesProjectsReady } = useSpacesProjects();
   const { days } = useMonthTasks(anchorMonth, mode);
+
+  /**
+   * When focus is outside this view (sidebar, prior view, body), Arrow keys never reach synthetic
+   * grid handling and would switch main views or do nothing. After load or when the grid first
+   * stabilizes, snap focus to today's cell so day arrows work — mirrors the old
+   * [anchorMonth, days.length] autofocus without clobbering `applyAnchorMonthFocus` (see skip
+   * ref above) or running on every live-query `days` refresh.
+   */
+  useEffect(() => {
+    if (!spacesProjectsReady || days.length !== 42) return;
+    const root = rootRef.current;
+    if (!root) return;
+    if (skipSnapFocusOutsideRootRef.current) {
+      return;
+    }
+    const ae = document.activeElement;
+    if (ae instanceof Node && root.contains(ae)) return;
+    const idx = findTodayCellIndex(days);
+    setFocusedIndex(idx);
+    requestAnimationFrame(() => {
+      document
+        .querySelector<HTMLElement>(`[data-month-day-index="${idx}"]`)
+        ?.focus();
+    });
+  }, [spacesProjectsReady, anchorMonth, days.length]);
 
   const projectMap = useMemo(() => {
     const map = new Map<string, { project: Project; space: Space }>();
@@ -96,28 +177,47 @@ export default function MonthView() {
     return projectMap.get(task.projectId) ?? orphanCtx(task);
   }
 
-  useEffect(() => {
-    if (days.length !== 42) return;
-    let idx: number;
-    if (pendingEdgeFocus.current === "first-in-month") {
-      idx = days.findIndex((d) => d.isCurrentMonth);
-    } else if (pendingEdgeFocus.current === "last-in-month") {
-      const inMonth = days
-        .map((d, i) => ({ d, i }))
-        .filter((x) => x.d.isCurrentMonth);
-      idx = inMonth.length ? inMonth[inMonth.length - 1].i : 41;
-    } else {
-      idx = findTodayCellIndex(days);
-    }
-    pendingEdgeFocus.current = null;
-    setFocusedIndex(idx);
+  function applyAnchorMonthFocus(
+    nextAnchor: Date,
+    cellIndex: number,
+    focus: MonthPageFocusTarget,
+  ) {
+    skipSnapFocusOutsideRootRef.current = true;
+    setAnchorMonth(nextAnchor);
+    setFocusedIndex(cellIndex);
     requestAnimationFrame(() => {
-      const cell = document.querySelector<HTMLElement>(
-        `[data-month-day-index="${idx}"]`,
-      );
-      cell?.focus();
+      if (focus === "grid") {
+        document
+          .querySelector<HTMLElement>(
+            `[data-month-day-index="${cellIndex}"]`,
+          )
+          ?.focus();
+      } else if (focus === "monthHeader") {
+        document.querySelector<HTMLElement>("[data-month-header]")?.focus();
+      } else if (focus === "monthNavPrev") {
+        document.querySelector<HTMLElement>("[data-month-nav-prev]")?.focus();
+      } else if (focus === "monthNavNext") {
+        document.querySelector<HTMLElement>("[data-month-nav-next]")?.focus();
+      }
+      skipSnapFocusOutsideRootRef.current = false;
     });
-  }, [anchorMonth, days.length]);
+  }
+
+  /** First/last column crosses to adjacent month — first or last day of that month row. */
+  function navigateMonthFromOppositeGridEdge(
+    monthDelta: -1 | 1,
+    edge: "first" | "last",
+  ) {
+    const nextAnchor = startOfMonth(
+      addMonths(anchorMonthRef.current, monthDelta),
+    );
+    const cells = buildMonthDays(nextAnchor);
+    const idx =
+      edge === "first"
+        ? firstDayCellIndexInGrid(cells)
+        : lastDayCellIndexInGrid(cells);
+    applyAnchorMonthFocus(nextAnchor, idx, "grid");
+  }
 
   const selectedDay = days[focusedIndex];
 
@@ -126,11 +226,37 @@ export default function MonthView() {
     return [...selectedDay.active, ...selectedDay.completed];
   }, [selectedDay]);
 
-  useEffect(() => {
-    if (focusedTaskId == null) return;
-    if (!tasksByDay.some((t) => t.id === focusedTaskId))
-      setFocusedTaskId(null);
-  }, [focusedTaskId, tasksByDay]);
+  const tasksByDayRef = useRef<Task[]>([]);
+  tasksByDayRef.current = tasksByDay;
+  const focusedIndexRef = useRef(focusedIndex);
+  focusedIndexRef.current = focusedIndex;
+
+  /** Month chrome (← buttons / title): same day-of-month in the new month; keep focus on chrome. */
+  function navigateMonthByDelta(
+    monthDelta: number,
+    focusAfter: MonthPageFocusTarget,
+  ) {
+    const prevAnchor = anchorMonthRef.current;
+    const dom = dayOfMonthFromCellIndex(prevAnchor, focusedIndexRef.current);
+    const nextAnchor = startOfMonth(addMonths(prevAnchor, monthDelta));
+    const idx = cellIndexForDayInMonth(nextAnchor, dom);
+    applyAnchorMonthFocus(nextAnchor, idx, focusAfter);
+  }
+
+  /** Move focus after paint to the descended task row. */
+  function focusDomForTask(taskId: string) {
+    const safe =
+      typeof CSS !== "undefined" && typeof CSS.escape === "function"
+        ? CSS.escape(taskId)
+        : taskId.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    requestAnimationFrame(() => {
+      document
+        .querySelector<HTMLElement>(
+          `[data-month-task-id="${safe}"] [role="listitem"]`,
+        )
+        ?.focus();
+    });
+  }
 
   function focusCalendarCell(index: number) {
     const cell = document.querySelector<HTMLElement>(
@@ -140,13 +266,13 @@ export default function MonthView() {
   }
 
   function focusFirstTaskInPanel(): string | null {
-    if (tasksByDay.length === 0) return null;
-    const id = tasksByDay[0].id;
+    const list = tasksByDayRef.current;
+    if (list.length > 0) return list[0].id;
     const el = document.querySelector<HTMLElement>(
-      `[data-month-task-id="${id}"] [role="listitem"]`,
+      "[data-month-panel] [data-month-task-id]",
     );
-    el?.focus();
-    return id;
+    const fromDom = el?.dataset.monthTaskId;
+    return fromDom ?? null;
   }
 
   function focusMonthHeader() {
@@ -159,6 +285,13 @@ export default function MonthView() {
       .update(task.id, { ...patch, updatedAt: new Date(), synced: false })
       .then(() => requestSync());
   }
+
+  useEffect(() => {
+    if (focusedTaskId == null) return;
+    if (tasksByDay.length === 0) return;
+    if (!tasksByDay.some((t) => t.id === focusedTaskId))
+      setFocusedTaskId(null);
+  }, [focusedTaskId, tasksByDay]);
 
   /** Stop the scrollable main column from eating ArrowUp/ArrowDown before we handle grid nav. */
   useEffect(() => {
@@ -205,15 +338,7 @@ export default function MonthView() {
           e.preventDefault();
           const month = startOfMonth(new Date());
           const idx = findTodayCellIndex(buildMonthDays(month));
-          setAnchorMonth(month);
-          setFocusedIndex(idx);
-          requestAnimationFrame(() => {
-            document
-              .querySelector<HTMLElement>(
-                `[data-month-day-index="${idx}"]`,
-              )
-              ?.focus();
-          });
+          applyAnchorMonthFocus(month, idx, "grid");
           return;
         }
         if (e.key === "v" || e.key === "V") {
@@ -231,13 +356,13 @@ export default function MonthView() {
         if (e.key === "ArrowLeft") {
           e.preventDefault();
           e.stopPropagation();
-          setAnchorMonth((p) => addMonths(p, -1));
+          navigateMonthByDelta(-1, "monthHeader");
           return;
         }
         if (e.key === "ArrowRight") {
           e.preventDefault();
           e.stopPropagation();
-          setAnchorMonth((p) => addMonths(p, 1));
+          navigateMonthByDelta(1, "monthHeader");
           return;
         }
         if (e.key === "ArrowUp") {
@@ -250,7 +375,7 @@ export default function MonthView() {
         }
         if (e.key === "ArrowDown") {
           e.preventDefault();
-          focusCalendarCell(focusedIndex);
+          focusCalendarCell(focusedIndexRef.current);
           return;
         }
       }
@@ -259,7 +384,26 @@ export default function MonthView() {
       const cellFromActive = (active as HTMLElement | null)?.closest(
         "[data-month-day-index]",
       );
-      const cell = (cellFromEvent ?? cellFromActive) as HTMLElement | null;
+      let cell = (cellFromEvent ?? cellFromActive) as HTMLElement | null;
+      /** Synthetic cell focus when focus is inside the month root but not on a cell (e.g. panel chrome). */
+      if (!(cell instanceof HTMLElement) && rootRef.current != null) {
+        const ae = document.activeElement;
+        const synthetic = document.querySelector<HTMLElement>(
+          `[data-month-day-index="${focusedIndexRef.current}"]`,
+        );
+        const focusLostToDocumentRoot =
+          ae === document.body || ae === document.documentElement;
+        const focusOnTask =
+          ae instanceof Element &&
+          ae.closest("[data-month-task-id]") != null;
+        if (synthetic instanceof HTMLElement && !focusOnTask) {
+          if (focusLostToDocumentRoot) {
+            cell = synthetic;
+          } else if (ae instanceof Node && rootRef.current.contains(ae)) {
+            cell = synthetic;
+          }
+        }
+      }
       if (cell instanceof HTMLElement) {
         const idx = readMonthDayIndex(cell);
         if (Number.isNaN(idx)) return;
@@ -267,8 +411,7 @@ export default function MonthView() {
         if (e.key === "ArrowLeft") {
           e.preventDefault();
           if (idx === 0) {
-            pendingEdgeFocus.current = "last-in-month";
-            setAnchorMonth((p) => addMonths(p, -1));
+            navigateMonthFromOppositeGridEdge(-1, "last");
             return;
           }
           setFocusedIndex(idx - 1);
@@ -278,8 +421,7 @@ export default function MonthView() {
         if (e.key === "ArrowRight") {
           e.preventDefault();
           if (idx === 41) {
-            pendingEdgeFocus.current = "first-in-month";
-            setAnchorMonth((p) => addMonths(p, 1));
+            navigateMonthFromOppositeGridEdge(1, "first");
             return;
           }
           setFocusedIndex(idx + 1);
@@ -300,7 +442,10 @@ export default function MonthView() {
           e.preventDefault();
           if (idx >= 35) {
             const taskId = focusFirstTaskInPanel();
-            if (taskId) setFocusedTaskId(taskId);
+            if (taskId) {
+              setFocusedTaskId(taskId);
+              focusDomForTask(taskId);
+            }
             return;
           }
           setFocusedIndex(idx + 7);
@@ -311,7 +456,10 @@ export default function MonthView() {
           if (e.key === "Tab" && e.shiftKey) return;
           e.preventDefault();
           const taskId = focusFirstTaskInPanel();
-          if (taskId) setFocusedTaskId(taskId);
+          if (taskId) {
+            setFocusedTaskId(taskId);
+            focusDomForTask(taskId);
+          }
           return;
         }
       }
@@ -325,17 +473,18 @@ export default function MonthView() {
       if (!taskId || taskIdxRaw == null) return;
       const taskIdx = Number(taskIdxRaw);
       if (Number.isNaN(taskIdx)) return;
-      const task = tasksByDay[taskIdx];
+      const byDay = tasksByDayRef.current;
+      const task = byDay[taskIdx];
       if (!task) return;
 
       if (e.key === "ArrowUp") {
         e.preventDefault();
         if (taskIdx === 0) {
           setFocusedTaskId(null);
-          focusCalendarCell(focusedIndex);
+          focusCalendarCell(focusedIndexRef.current);
           return;
         }
-        const prev = tasksByDay[taskIdx - 1];
+        const prev = byDay[taskIdx - 1];
         setFocusedTaskId(prev.id);
         document
           .querySelector<HTMLElement>(
@@ -346,8 +495,8 @@ export default function MonthView() {
       }
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        if (taskIdx >= tasksByDay.length - 1) return;
-        const next = tasksByDay[taskIdx + 1];
+        if (taskIdx >= byDay.length - 1) return;
+        const next = byDay[taskIdx + 1];
         setFocusedTaskId(next.id);
         document
           .querySelector<HTMLElement>(
@@ -359,7 +508,7 @@ export default function MonthView() {
       if (e.key === "Tab" && e.shiftKey) {
         e.preventDefault();
         setFocusedTaskId(null);
-        focusCalendarCell(focusedIndex);
+        focusCalendarCell(focusedIndexRef.current);
         return;
       }
       if (e.key === "Enter") {
@@ -423,8 +572,8 @@ export default function MonthView() {
         anchorMonth={anchorMonth}
         mode={mode}
         onModeChange={setMode}
-        onPrevMonth={() => setAnchorMonth((p) => addMonths(p, -1))}
-        onNextMonth={() => setAnchorMonth((p) => addMonths(p, 1))}
+        onPrevMonth={() => navigateMonthByDelta(-1, "monthNavPrev")}
+        onNextMonth={() => navigateMonthByDelta(1, "monthNavNext")}
       />
       <div className="flex flex-col flex-1 min-h-0">
         {!spacesProjectsReady ? (
