@@ -105,7 +105,10 @@ export default function Topbar({
   const todayTasks = useTasks("today");
 
   useEffect(() => {
-    if (!location.pathname.startsWith("/week")) return;
+    const onCalendar =
+      location.pathname.startsWith("/week") ||
+      location.pathname.startsWith("/month");
+    if (!onCalendar) return;
     function onKeyCapture(e: KeyboardEvent) {
       if (e.key !== "ArrowDown") return;
       const ae = document.activeElement;
@@ -117,10 +120,10 @@ export default function Topbar({
       const tabLink = ae.closest("a");
       if (!(tabLink instanceof HTMLAnchorElement)) return;
       if (!mainNav.contains(tabLink)) return;
-      const weekHeader = document.querySelector("[data-week-header]");
-      if (!(weekHeader instanceof HTMLElement)) {
+      const header = document.querySelector("[data-calendar-header]");
+      if (!(header instanceof HTMLElement)) {
         requestAnimationFrame(() => {
-          const next = document.querySelector("[data-week-header]");
+          const next = document.querySelector("[data-calendar-header]");
           if (next instanceof HTMLElement) next.focus();
         });
         e.preventDefault();
@@ -129,7 +132,7 @@ export default function Topbar({
       }
       e.preventDefault();
       e.stopPropagation();
-      weekHeader.focus();
+      header.focus();
     }
     window.addEventListener("keydown", onKeyCapture, true);
     return () => window.removeEventListener("keydown", onKeyCapture, true);
@@ -172,13 +175,20 @@ export default function Topbar({
       </div>
 
       <nav
+        data-sift-main-view-nav
         className="flex-1 min-w-0 flex items-stretch justify-center overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:thin]"
         aria-label="Main views"
       >
         <div className="flex items-stretch gap-0 mx-auto">
           <NavTab to="/inbox" label="Inbox" count={inboxTasks.length} />
           <NavTab to="/today" label="Today" count={todayTasks.length} />
-          <NavTab to="/week" label="Week" count={0} />
+          <NavTab
+            to={
+              location.pathname.startsWith("/month") ? "/month" : "/week"
+            }
+            label="Calendar"
+            count={0}
+          />
           <NavTab to="/projects" label="Projects" count={0} />
         </div>
       </nav>

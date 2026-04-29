@@ -48,7 +48,7 @@ function renderTopbarAtWeek(user: User | null) {
   return render(
     <MemoryRouter initialEntries={["/week"]}>
       <Topbar syncStatus="local" />
-      <div data-week-header tabIndex={0}>
+      <div data-week-header data-calendar-header tabIndex={0}>
         Week Header
       </div>
     </MemoryRouter>
@@ -77,13 +77,13 @@ describe("Topbar", () => {
     expect(screen.getByRole("status", { name: /syncing/i })).toBeInTheDocument();
   });
 
-  it("ArrowDown on week nav tab focuses week header", () => {
+  it("ArrowDown on calendar nav tab focuses calendar header", () => {
     renderTopbarAtWeek(null);
-    const weekTab = screen.getByRole("link", { name: /week/i });
+    const calendarTab = screen.getByRole("link", { name: /^calendar$/i });
     const header = screen.getByText("Week Header");
-    weekTab.focus();
+    calendarTab.focus();
 
-    fireEvent.keyDown(weekTab, { key: "ArrowDown" });
+    fireEvent.keyDown(calendarTab, { key: "ArrowDown" });
 
     expect(header).toHaveFocus();
   });
