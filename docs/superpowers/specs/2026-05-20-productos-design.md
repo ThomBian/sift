@@ -110,6 +110,16 @@ Artifacts follow the same push/pull pattern as tasks:
 | `S` | Open skill picker |
 | `ESC` | Close drawer if open; else back to ProjectsView (focused on same project) |
 
+### Empty state
+
+When a project has no artifacts, the grid area shows a single muted line:
+
+```
+No artifacts yet. Press N to start writing, or S to generate one from a skill.
+```
+
+JetBrains Mono 10px, `#888888`, left-aligned under the ARTIFACTS label. No illustration, no large icon.
+
 ### Token counter
 
 Displayed inline with the ARTIFACTS section label: `ARTIFACTS (3) · ~1,240 tok`
@@ -120,7 +130,7 @@ Computed as `Math.ceil(totalContentLength / 4)` across all artifacts. Updates re
 
 ## Artifact Drawer
 
-Opens over the project page (right side, ~55% width). Project page dims to ~40% opacity behind it.
+Opens over the project page (right side, ~55% width). A backdrop sits between the drawer and the page: `opacity-40` + `backdrop-filter: blur(12px)`. Drawer background is `#FFFFFF` (`bg` token), defined by `border-[0.5px] border-accent` on all sides.
 
 ### Drawer anatomy
 
@@ -140,7 +150,7 @@ Opens over the project page (right side, ~55% width). Project page dims to ~40% 
 
 ### Editor behavior
 
-- **Default state: VIEW mode** — artifact content rendered as markdown (Geist Sans, background `#F9F9FB`)
+- **Default state: VIEW mode** — artifact content rendered as markdown (Geist Sans 15px, background `#FAFAFA` — `surface` token)
 - **Click anywhere on the document** or press `E` → switches to EDIT mode (raw markdown textarea, JetBrains Mono)
 - **ESC from EDIT mode** → returns to VIEW mode
 - EDIT/VIEW buttons in the drawer toolbar reflect current mode and act as a secondary toggle
@@ -150,7 +160,7 @@ Opens over the project page (right side, ~55% width). Project page dims to ~40% 
 
 ### Drawer border
 
-Left border of drawer uses `#FF4F00` (1px) to signal active focus context.
+Full `border-[0.5px] border-accent` (`#FF4F00`) on all sides. A left-only colored border wider than 0.5px is banned per the design system ("AI design tell").
 
 ---
 
@@ -253,12 +263,21 @@ Save → upsert to Supabase. Cancel → `ESC`. No Dexie involvement.
 
 ## Design Tokens (unchanged)
 
-Follows the existing Sift design system:
-- `#FF4F00` — focus accent, active borders, key highlights
-- `0.5px solid #E2E2E2` — pane borders (light) / `0.5px solid #2a2a2a` (dark)
-- `border-radius: 0` everywhere
-- Geist Sans for prose, JetBrains Mono for metadata/code/status
-- 150ms spring transitions on drawer open/close
+Follows the existing Sift design system. All light-mode — dark mode is a future consideration.
+
+| Token | Value | Role |
+|-------|-------|------|
+| `bg` | `#FFFFFF` | Drawer editor background (EDIT mode) |
+| `surface` | `#FAFAFA` | Drawer viewer background (VIEW mode), project page |
+| `border` | `#E2E2E2` | Pane borders at `0.5px` |
+| `accent` | `#FF4F00` | Focus borders, active states, key hints |
+| `text` | `#111111` | Primary content |
+| `muted` | `#888888` | Metadata, section labels, token counter |
+
+- `border-radius: 0` everywhere — non-negotiable
+- 150ms spring on drawer open (`cubic-bezier(0.34, 1.56, 0.64, 1)`), ease-out on close (`cubic-bezier(0.23, 1, 0.32, 1)`)
+- Artifact body: Geist Sans 15px weight 400 (VIEW), JetBrains Mono 13px (EDIT textarea)
+- Section labels: JetBrains Mono 10px uppercase, `#888888`, `letter-spacing: 0.12em`
 
 ---
 
