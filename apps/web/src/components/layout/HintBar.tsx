@@ -29,7 +29,8 @@ function buildProjectHints(
     { keys: ["C"], label: "Icon", hot: true },
     { keys: ["U"], label: "Link", hot: true },
     { keys: ["⌘O"], label: "Open link", hot: true },
-    { keys: ["Space"], label: projectExpanded ? "Close" : "Open", hot: true },
+    { keys: ["O"], label: "Open workspace", hot: true },
+    { keys: ["Space"], label: projectExpanded ? "Close" : "Expand", hot: true },
   ];
   if (archiveHint) {
     base.push({

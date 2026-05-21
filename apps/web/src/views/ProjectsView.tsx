@@ -6,6 +6,7 @@ import {
   useRef,
   type ReactNode,
 } from "react";
+import { useNavigate } from "react-router-dom";
 import { archiveProject, unarchiveProject, deleteProject } from "@sift/shared";
 import { enqueuePendingProjectDeletion } from "../lib/syncDeletionOutbox";
 import { useProjectTasks } from "../hooks/useTasks";
@@ -99,6 +100,7 @@ export default function ProjectsView() {
     useState<Project | null>(null);
   const deleteConfirmRef = useRef<Project | null>(null);
   deleteConfirmRef.current = deleteConfirmProject;
+  const navigate = useNavigate();
   const { focusedProjectId, setFocusedProjectId, handleProjectKeyDown } =
     useProjectNav();
 
@@ -429,6 +431,11 @@ export default function ProjectsView() {
                   "_blank",
                   "noopener,noreferrer",
                 );
+              return;
+            }
+            if (e.key === "o" || e.key === "O") {
+              e.preventDefault();
+              navigate(`/project/${focusedProjectId}`);
               return;
             }
             if (e.key === " ") {

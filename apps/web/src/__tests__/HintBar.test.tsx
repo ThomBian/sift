@@ -39,7 +39,8 @@ describe("HintBar", () => {
     expect(screen.getByText("Icon")).toBeInTheDocument();
     expect(screen.getByText("Link")).toBeInTheDocument();
     expect(screen.getByText("Open link")).toBeInTheDocument();
-    expect(screen.getByText("Open", { exact: true })).toBeInTheDocument();
+    expect(screen.getByText("Open workspace", { exact: true })).toBeInTheDocument();
+    expect(screen.getByText("Expand", { exact: true })).toBeInTheDocument();
     expect(screen.getByText("Delete")).toBeInTheDocument();
     expect(screen.getByText("Deselect")).toBeInTheDocument();
     expect(screen.queryByText("New task")).toBeNull();
@@ -57,7 +58,7 @@ describe("HintBar", () => {
   it("shows Close for Space when project is expanded", () => {
     render(<HintBar focusState="project" projectExpanded />);
     expect(screen.getByText("Close")).toBeInTheDocument();
-    expect(screen.queryByText("Open", { exact: true })).toBeNull();
+    expect(screen.queryByText("Expand", { exact: true })).toBeNull();
   });
 
   it("defaults to none hints when no prop given", () => {
