@@ -3,7 +3,7 @@ import "fake-indexeddb/auto";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { db, clearLocalDB } from "../lib/db";
 import { SyncService } from "../services/SyncService";
-import type { Space, Project, Task } from "@sift/shared";
+import type { Space, Project, Task, Artifact } from "@sift/shared";
 
 const mockUpsert = vi.fn().mockResolvedValue({ error: null });
 const mockGt = vi.fn();
@@ -53,6 +53,7 @@ function makeProject(overrides?: Partial<Project>): Project {
   return {
     id: "project-1",
     name: "General",
+    description: "",
     emoji: "📚",
     spaceId: "space-1",
     dueDate: null,

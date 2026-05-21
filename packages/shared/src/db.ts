@@ -1,13 +1,14 @@
 // packages/shared/src/db.ts
 import Dexie, { type Table } from "dexie";
 import { nanoid } from "nanoid";
-import type { Space, Project, Task } from "./types";
+import type { Space, Project, Task, Artifact } from "./types";
 import { getRandomEmoji } from "./emojiPool";
 
 export class AppDatabase extends Dexie {
   spaces!: Table<Space>;
   projects!: Table<Project>;
   tasks!: Table<Task>;
+  artifacts!: Table<Artifact>;
 
   constructor(name = "speedy-tasks") {
     super(name);
@@ -70,6 +71,21 @@ export class AppDatabase extends Dexie {
         ]);
       });
 
+    this.version(6)
+      .stores({
+        artifacts: "id, projectId, updatedAt, synced",
+      })
+      .upgrade((tx) => {
+        return tx
+          .table("projects")
+          .toCollection()
+          .modify((project: any) => {
+            if (project.description === undefined) {
+              project.description = "";
+            }
+          });
+      });
+
     this.on("ready", () => this._seed());
   }
 
@@ -92,6 +108,7 @@ export class AppDatabase extends Dexie {
     await this.projects.add({
       id: nanoid(),
       name: "General",
+      description: "",
       emoji: getRandomEmoji(),
       spaceId,
       dueDate: null,
@@ -109,8 +126,8 @@ export const db = new AppDatabase();
 
 /** Wipes all local IndexedDB data. Call before bootstrap when user identity changes. */
 export async function clearLocalDB(): Promise<void> {
-  await db.transaction("rw", db.spaces, db.projects, db.tasks, async () => {
-    await Promise.all([db.spaces.clear(), db.projects.clear(), db.tasks.clear()]);
+  await db.transaction("rw", db.spaces, db.projects, db.tasks, db.artifacts, async () => {
+    await Promise.all([db.spaces.clear(), db.projects.clear(), db.tasks.clear(), db.artifacts.clear()]);
   });
 }
 

@@ -1,4 +1,4 @@
-export type { Space, Project, Task, TaskStatus } from "./types";
+export type { Space, Project, Task, TaskStatus, Artifact, PromptTemplate } from "./types";
 export {
   AppDatabase,
   db,

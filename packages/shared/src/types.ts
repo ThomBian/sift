@@ -12,6 +12,7 @@ export interface Space {
 export interface Project {
   id: string;
   name: string;
+  description: string;
   emoji: string | null; // single emoji character
   spaceId: string; // FK → Space
   dueDate: Date | null;
@@ -39,4 +40,24 @@ export interface Task {
   completedAt: Date | null;
   url: string | null;
   synced: boolean;
+}
+
+export interface Artifact {
+  id: string;
+  projectId: string;
+  title: string;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+  synced: boolean;
+}
+
+export interface PromptTemplate {
+  id: string;
+  name: string;
+  emoji: string;
+  description: string;
+  systemPrompt: string;
+  userPromptTemplate: string;
+  createdAt: string;
 }
