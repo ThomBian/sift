@@ -11,6 +11,7 @@ import { injectContext } from "@sift/shared";
 import { useSkills } from "../contexts/SkillsContext";
 import type { Project, Task, Artifact } from "@sift/shared";
 import PaletteShell, { usePaletteClose } from "./PaletteShell";
+import PaletteInputRow from "./PaletteInputRow";
 
 export interface SkillPickerProps {
   project: Project;
@@ -114,15 +115,13 @@ export default function SkillPicker({
       aria-label="Skill picker"
     >
       {/* Search input */}
-      <div className="flex items-center px-3 py-2 border-b border-[0.5px] border-border">
-        <input
-          ref={inputRef}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Filter skills..."
-          className="flex-1 bg-transparent outline-none font-sans text-sm text-text placeholder:text-dim"
-        />
-      </div>
+      <PaletteInputRow
+        inputRef={inputRef}
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Filter skills..."
+        icon={null}
+      />
 
       {/* Skill list */}
       <div className="flex flex-col max-h-72 overflow-y-auto">

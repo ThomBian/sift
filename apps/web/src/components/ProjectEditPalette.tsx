@@ -5,6 +5,7 @@ import {
   type ChangeEvent,
 } from "react";
 import PaletteShell, { usePaletteClose } from "./PaletteShell";
+import PaletteInputRow from "./PaletteInputRow";
 import { nanoid } from "nanoid";
 import { db } from "../lib/db";
 import { requestSync } from "../lib/requestSync";
@@ -218,18 +219,13 @@ export default function ProjectEditPalette({
     >
 
         {/* Input row */}
-        <div className="flex items-center h-11 px-3 gap-2 border-[0.5px] border-transparent focus-within:border-accent transition-colors duration-150">
-          <span className="text-dim text-[15px] shrink-0 select-none">+</span>
-          <input
-            ref={inputRef}
-            value={inputValue}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            placeholder={inputPlaceholder}
-            aria-label={inputPlaceholder}
-            className="flex-1 bg-transparent border-none text-[13.5px] text-text font-sans min-w-0"
-            style={{ outline: "none", letterSpacing: "-0.1px" }}
-          />
+        <PaletteInputRow
+          inputRef={inputRef}
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          placeholder={inputPlaceholder}
+        >
           <button
             type="button"
             onClick={() => handleChipClick("emoji")}
@@ -276,7 +272,7 @@ export default function ProjectEditPalette({
               </>
             )}
           </button>
-        </div>
+        </PaletteInputRow>
 
         {/* Emoji picker — inline below input */}
         {activeChip === "emoji" && (
