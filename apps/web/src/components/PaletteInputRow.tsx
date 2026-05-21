@@ -24,7 +24,7 @@ export default function PaletteInputRow({
   children,
 }: PaletteInputRowProps) {
   return (
-    <div className="flex items-center h-11 px-3 gap-2 border-[0.5px] border-border bg-bg focus-within:border-accent transition-colors duration-150">
+    <div className="flex items-center h-11 px-3 gap-2 border-[0.5px] border-border bg-bg">
       {icon}
       <input
         ref={inputRef}
