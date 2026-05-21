@@ -25,6 +25,7 @@ function orphanProjectContext(task: Task): { project: Project; space: Space } {
       dueDate: null,
       archived: false,
       url: null,
+      description: "",
       createdAt: now,
       updatedAt: now,
       synced: true,

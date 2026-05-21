@@ -35,6 +35,7 @@ function makeProject(): Project {
     dueDate: null,
     archived: false,
     url: null,
+    description: "",
     createdAt: now,
     updatedAt: now,
     synced: true,

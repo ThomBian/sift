@@ -207,6 +207,7 @@ export default function SkillsView() {
                 {showEmojiPicker && (
                   <div className="absolute top-full left-0 mt-1 z-50">
                     <EmojiPicker
+                      query=""
                       onSelect={(emoji) => {
                         setForm((f) => f ? { ...f, emoji } : f);
                         setShowEmojiPicker(false);

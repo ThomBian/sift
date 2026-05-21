@@ -118,6 +118,7 @@ export default function ProjectEditPalette({
         dueDate,
         url: null,
         archived: false,
+        description: "",
         createdAt: now,
         updatedAt: now,
         synced: false,

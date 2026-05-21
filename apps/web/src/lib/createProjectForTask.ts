@@ -25,6 +25,7 @@ export async function resolveTaskProjectId(
     dueDate: null,
     url: null,
     archived: false,
+    description: "",
     createdAt: now,
     updatedAt: now,
     synced: false,
