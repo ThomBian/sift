@@ -66,6 +66,19 @@ function makeProject(overrides?: Partial<Project>): Project {
   };
 }
 
+function makeArtifact(overrides?: Partial<Artifact>): Artifact {
+  return {
+    id: "artifact-1",
+    projectId: "project-1",
+    title: "Discovery Notes",
+    content: "Some content",
+    createdAt: now,
+    updatedAt: now,
+    synced: false,
+    ...overrides,
+  };
+}
+
 function makeTask(overrides?: Partial<Task>): Task {
   return {
     id: "task-1",
@@ -87,6 +100,7 @@ beforeEach(async () => {
   await db.tasks.clear();
   await db.projects.clear();
   await db.spaces.clear();
+  await db.artifacts.clear();
   localStorage.clear();
   vi.clearAllMocks();
   mockUpsert.mockResolvedValue({ error: null });
@@ -194,6 +208,21 @@ describe("SyncService", () => {
       expect(mockUpsert).not.toHaveBeenCalled();
     });
 
+    it("pushes unsynced artifacts to Supabase", async () => {
+      await db.artifacts.add(makeArtifact());
+      mockGt.mockResolvedValue({ data: [], error: null });
+
+      const service = new SyncService(createMockSupabase() as any);
+      await service.sync("user-1");
+
+      expect(mockUpsert).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({ id: "artifact-1", title: "Discovery Notes" }),
+        ]),
+        { onConflict: "id" },
+      );
+    });
+
     it("flushes pending project deletions to Supabase before push", async () => {
       localStorage.setItem(
         "speedy_pending_project_deletes",
@@ -257,7 +286,8 @@ describe("SyncService", () => {
             },
           ],
           error: null,
-        });
+        })
+        .mockResolvedValueOnce({ data: [], error: null });
 
       const mockSupabase = createMockSupabase();
       const svc = new SyncService(mockSupabase as never);
@@ -290,7 +320,8 @@ describe("SyncService", () => {
             },
           ],
           error: null,
-        });
+        })
+        .mockResolvedValueOnce({ data: [], error: null });
 
       const mockSupabase = createMockSupabase();
       const svc = new SyncService(mockSupabase as never);
@@ -337,7 +368,8 @@ describe("SyncService", () => {
             },
           ],
           error: null,
-        });
+        })
+        .mockResolvedValueOnce({ data: [], error: null });
 
       const mockSupabase = createMockSupabase();
       const svc = new SyncService(mockSupabase as never);
@@ -376,16 +408,16 @@ describe("SyncService", () => {
       expect(typeof unsub).toBe("function");
     });
 
-    it("subscribes to spaces, projects, and tasks tables", () => {
+    it("subscribes to spaces, projects, tasks, and artifacts tables", () => {
       const { mockSupabase, mockChannelObj } = makeMockSupabaseWithCapture();
       const svc = new SyncService(mockSupabase as never);
       svc.subscribe("user-1", vi.fn());
 
-      expect(mockChannelObj.on).toHaveBeenCalledTimes(3);
+      expect(mockChannelObj.on).toHaveBeenCalledTimes(4);
       const tables = mockChannelObj.on.mock.calls.map(
         (c) => (c[1] as { table: string }).table,
       );
-      expect(tables).toEqual(expect.arrayContaining(["spaces", "projects", "tasks"]));
+      expect(tables).toEqual(expect.arrayContaining(["spaces", "projects", "tasks", "artifacts"]));
     });
 
     it("calls onChange when any table fires a Realtime event", () => {
@@ -395,13 +427,15 @@ describe("SyncService", () => {
       const svc = new SyncService(mockSupabase as never);
       svc.subscribe("user-1", onChange);
 
-      expect(capturedHandlers).toHaveLength(3);
+      expect(capturedHandlers).toHaveLength(4);
       capturedHandlers[0]();
       expect(onChange).toHaveBeenCalledTimes(1);
       capturedHandlers[1]();
       expect(onChange).toHaveBeenCalledTimes(2);
       capturedHandlers[2]();
       expect(onChange).toHaveBeenCalledTimes(3);
+      capturedHandlers[3]();
+      expect(onChange).toHaveBeenCalledTimes(4);
     });
   });
 });
@@ -443,7 +477,8 @@ describe("bootstrap()", () => {
           user_id: "user-1",
         }],
         error: null,
-      });
+      })
+      .mockResolvedValueOnce({ data: [], error: null });
 
     const svc = new SyncService(createMockSupabase() as never);
     await svc.bootstrap("user-1");
