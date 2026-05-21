@@ -4,6 +4,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 
 import { useAuth } from './contexts/AuthContext';
 import { useSync } from './hooks/useSync';
+import { SkillsProvider } from './contexts/SkillsContext';
 import AppLayout from './components/layout/AppLayout';
 import AuthPage from './pages/AuthPage';
 import InboxView from './views/InboxView';
@@ -11,13 +12,15 @@ import TodayView from './views/TodayView';
 import ProjectsView from './views/ProjectsView';
 import WeekView from './views/WeekView';
 import MonthView from './views/MonthView';
+import ProjectWorkspaceView from './views/ProjectWorkspaceView';
+import SkillsView from './views/SkillsView';
 
 export default function App() {
   const { user } = useAuth();
   const syncStatus = useSync(user);
 
   return (
-    <>
+    <SkillsProvider>
       <Analytics />
       <SpeedInsights />
       <Routes>
@@ -30,8 +33,10 @@ export default function App() {
           <Route path="week" element={<WeekView />} />
           <Route path="month" element={<MonthView />} />
         </Route>
+        <Route path="/project/:id" element={<ProjectWorkspaceView />} />
+        <Route path="/skills" element={<SkillsView />} />
         <Route path="*" element={<Navigate to="/inbox" replace />} />
       </Routes>
-    </>
+    </SkillsProvider>
   );
 }
