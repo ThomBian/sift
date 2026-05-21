@@ -11,6 +11,7 @@ import { db } from "../lib/db";
 import { useArtifacts } from "../hooks/useArtifacts";
 import ArtifactDrawer from "../components/ArtifactDrawer";
 import ConfirmModal from "../components/ConfirmModal";
+import SkillPicker from "../components/SkillPicker";
 import type { Artifact, Task } from "@sift/shared";
 
 type FocusZone = "tasks" | "artifacts";
@@ -418,6 +419,20 @@ export default function ProjectWorkspaceView() {
           ))
         )}
       </footer>
+
+      {skillPickerOpen && project && tasks && (
+        <SkillPicker
+          project={project}
+          tasks={tasks}
+          artifacts={artifacts}
+          onClose={() => setSkillPickerOpen(false)}
+          onArtifactCreated={(artifact) => {
+            setSkillPickerOpen(false);
+            setOpenArtifact(artifact);
+            showSkillHint();
+          }}
+        />
+      )}
 
       {openArtifact && (
         <ArtifactDrawer
