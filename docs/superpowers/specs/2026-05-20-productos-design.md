@@ -50,7 +50,7 @@ export type PromptTemplate = {
 
 1. `ALTER TABLE projects ADD COLUMN description text NOT NULL DEFAULT ''`
 2. New `artifacts` table — mirrors Dexie fields, RLS (user owns rows), Realtime enabled
-3. New `prompt_templates` table — Supabase-only (no Dexie store), RLS per user
+3. New `prompt_templates` table — Supabase-only (no Dexie store), RLS per user (`user_id` column, policies filter by `auth.uid()`). Each user owns their own skill list; a new user starts with an empty list.
 
 ### SyncService extension
 
@@ -140,9 +140,11 @@ Opens over the project page (right side, ~55% width). Project page dims to ~40% 
 
 ### Editor behavior
 
-- **EDIT mode**: raw markdown textarea, JetBrains Mono, auto-save with 1000ms debounce
-- **VIEW mode**: rendered markdown, Geist Sans, background shifts to `#F9F9FB`
-- Toggle between modes with `Cmd+E` or clicking the mode buttons
+- **Default state: VIEW mode** — artifact content rendered as markdown (Geist Sans, background `#F9F9FB`)
+- **Click anywhere on the document** or press `E` → switches to EDIT mode (raw markdown textarea, JetBrains Mono)
+- **ESC from EDIT mode** → returns to VIEW mode
+- EDIT/VIEW buttons in the drawer toolbar reflect current mode and act as a secondary toggle
+- Auto-save fires on 1000ms debounce while in EDIT mode
 - Save status: `[ SAVING... ]` while debounce pending → `[ SAVED ]` on confirm
 - Offline: writes to IndexedDB immediately, status shows `[ CACHED ]` until sync
 
