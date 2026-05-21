@@ -34,7 +34,7 @@ export default function PaletteInputRow({
         placeholder={placeholder}
         aria-label={ariaLabel ?? placeholder}
         className="flex-1 bg-transparent border-none outline-none text-[13.5px] text-text font-sans min-w-0 placeholder:text-dim"
-        style={{ letterSpacing: "-0.1px" }}
+        style={{ letterSpacing: "-0.1px", outline: "none" }}
       />
       {children}
     </div>
