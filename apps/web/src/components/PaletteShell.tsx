@@ -50,7 +50,7 @@ export default function PaletteShell({
       }}
     >
       <div
-        className={`${isClosing ? "animate-palette-out" : "animate-palette-in"} w-full max-w-[min(820px,calc(100vw-1.5rem))] border-[0.5px] border-border bg-bg/95 floating-panel shadow-panel focus-within:border-accent transition-colors duration-150`}
+        className={`${isClosing ? "animate-palette-out" : "animate-palette-in"} w-full max-w-[min(820px,calc(100vw-1.5rem))] border-[0.5px] border-border bg-bg/95 floating-panel shadow-panel focus-within:border-accent transition-colors duration-150 [&_input:focus-visible]:outline-none`}
         role={role}
         aria-label={ariaLabel}
       >
