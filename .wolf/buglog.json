@@ -16,6 +16,390 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-04-29T07:36:46.963Z"
+    },
+    {
+      "id": "bug-002",
+      "timestamp": "2026-05-21T07:25:02.185Z",
+      "error_message": "Significant refactor of ",
+      "file": "docs/superpowers/specs/2026-05-20-productos-design.md",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 7→9 lines (3 removed) | Also: Follows the existing Sift design system:; - `#FF4F00` — focus accent, active borders, key hi",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-05-21T07:28:21.454Z"
+    },
+    {
+      "id": "bug-003",
+      "timestamp": "2026-05-21T07:28:07.211Z",
+      "error_message": "Incorrect value in code",
+      "file": "docs/superpowers/specs/2026-05-20-productos-design.md",
+      "root_cause": "Had `#FF4F00`",
+      "fix": "Changed to `border-[0.5px] border-accent`",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-05-21T07:28:10.823Z"
+    },
+    {
+      "id": "bug-004",
+      "timestamp": "2026-05-21T07:40:02.527Z",
+      "error_message": "Type error",
+      "file": "packages/shared/src/db.ts",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T07:40:02.527Z"
+    },
+    {
+      "id": "bug-005",
+      "timestamp": "2026-05-21T07:46:49.199Z",
+      "error_message": "Null/undefined access in ",
+      "file": "apps/web/src/services/SyncService.ts",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T07:46:49.199Z"
+    },
+    {
+      "id": "bug-006",
+      "timestamp": "2026-05-21T07:47:01.575Z",
+      "error_message": "Missing guard clause",
+      "file": "apps/web/src/services/SyncService.ts",
+      "root_cause": "No early return/throw for edge case: unsynced.length > 0",
+      "fix": "Added guard clause: if (unsynced.length > 0)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T07:47:01.575Z"
+    },
+    {
+      "id": "bug-007",
+      "timestamp": "2026-05-21T07:50:49.838Z",
+      "error_message": "CSS fix: keys",
+      "file": "apps/web/src/components/layout/HintBar.tsx",
+      "root_cause": "keys: [\"Space\"], label: projectExpanded ? \"Close\" : \"Open\", hot: true → [\"Space\"], label: projectExpanded ? \"Close\" : \"Expand\", hot: true",
+      "fix": "Changed keys: [\"Space\"], label: projectExpanded ? \"Close\" : \"Open\", hot: true → [\"Space\"], label: projectExpanded ? \"Close\" : \"Expand\", hot: true",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T07:50:49.838Z"
+    },
+    {
+      "id": "bug-008",
+      "timestamp": "2026-05-21T07:50:53.987Z",
+      "error_message": "Incorrect value in code",
+      "file": "apps/web/src/__tests__/HintBar.test.tsx",
+      "root_cause": "Had \"Open\"",
+      "fix": "Changed to \"Open workspace\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T07:50:53.987Z"
+    },
+    {
+      "id": "bug-009",
+      "timestamp": "2026-05-21T07:58:42.267Z",
+      "error_message": "Missing guard clause",
+      "file": "apps/web/src/components/layout/Topbar.tsx",
+      "root_cause": "No early return/throw for edge case: !dropdownOpen",
+      "fix": "Added guard clause: if (!dropdownOpen)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T07:58:42.267Z"
+    },
+    {
+      "id": "bug-010",
+      "timestamp": "2026-05-21T07:58:51.891Z",
+      "error_message": "Significant refactor of ",
+      "file": "apps/web/src/components/layout/Topbar.tsx",
+      "root_cause": "4 lines replaced/restructured",
+      "fix": "Rewrote 12→33 lines (4 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T07:58:51.891Z"
+    },
+    {
+      "id": "bug-011",
+      "timestamp": "2026-05-21T13:28:28.591Z",
+      "error_message": "Wrong reference: 5173 should be 5174",
+      "file": "apps/web/vite.config.ts",
+      "root_cause": "Used \"5173\" instead of \"5174\"",
+      "fix": "Changed 5173 → 5174",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T13:28:28.591Z"
+    },
+    {
+      "id": "bug-012",
+      "timestamp": "2026-05-21T13:31:35.477Z",
+      "error_message": "Wrong condition in logic",
+      "file": "apps/web/src/views/ProjectWorkspaceView.tsx",
+      "root_cause": "Condition was: if (e.key === \"n\" || e.key === \"N\")",
+      "fix": "Changed to: if (e.key === \"e\" || e.key === \"E\")",
+      "tags": [
+        "auto-detected",
+        "logic-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T13:31:35.477Z"
+    },
+    {
+      "id": "bug-013",
+      "timestamp": "2026-05-21T13:52:39.203Z",
+      "error_message": "Null/undefined access in ",
+      "file": "apps/web/src/views/ProjectWorkspaceView.tsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T13:52:39.203Z"
+    },
+    {
+      "id": "bug-014",
+      "timestamp": "2026-05-21T13:53:19.604Z",
+      "error_message": "Type error",
+      "file": "apps/web/src/components/SkillPicker.tsx",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T13:53:19.604Z"
+    },
+    {
+      "id": "bug-015",
+      "timestamp": "2026-05-21T14:00:30.257Z",
+      "error_message": "Significant refactor of ",
+      "file": "apps/web/src/components/CommandPalette.tsx",
+      "root_cause": "28 lines replaced/restructured",
+      "fix": "Rewrote 98→74 lines (28 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T14:00:30.257Z"
+    },
+    {
+      "id": "bug-016",
+      "timestamp": "2026-05-21T14:00:41.632Z",
+      "error_message": "Significant refactor of ",
+      "file": "apps/web/src/components/ProjectEditPalette.tsx",
+      "root_cause": "13 lines replaced/restructured",
+      "fix": "Rewrote 27→16 lines (13 removed) | Also: <div; className=\"fixed inset-0 z-50 flex items-start jus",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-05-21T14:00:49.878Z"
+    },
+    {
+      "id": "bug-017",
+      "timestamp": "2026-05-21T14:01:11.185Z",
+      "error_message": "Significant refactor of ",
+      "file": "apps/web/src/components/SkillPicker.tsx",
+      "root_cause": "7 lines replaced/restructured",
+      "fix": "Rewrote 23→15 lines (7 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T14:01:11.185Z"
+    },
+    {
+      "id": "bug-018",
+      "timestamp": "2026-05-21T14:07:34.986Z",
+      "error_message": "Significant refactor of ",
+      "file": "apps/web/src/components/ProjectEditPalette.tsx",
+      "root_cause": "8 lines replaced/restructured",
+      "fix": "Rewrote 18→13 lines (8 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T14:07:34.986Z"
+    },
+    {
+      "id": "bug-019",
+      "timestamp": "2026-05-21T14:07:48.378Z",
+      "error_message": "Significant refactor of ",
+      "file": "apps/web/src/components/SkillPicker.tsx",
+      "root_cause": "5 lines replaced/restructured",
+      "fix": "Rewrote 10→8 lines (5 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T14:07:48.378Z"
+    },
+    {
+      "id": "bug-020",
+      "timestamp": "2026-05-21T14:15:01.026Z",
+      "error_message": "Incorrect value in code",
+      "file": "apps/web/src/components/PaletteShell.tsx",
+      "root_cause": "Had \"} w-full max-w-[min(820px,calc(100vw-1.5rem))] bo",
+      "fix": "Changed to \"} w-full max-w-[min(820px,calc(100vw-1.5rem))] bo",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T14:15:01.026Z"
+    },
+    {
+      "id": "bug-021",
+      "timestamp": "2026-05-21T14:15:05.209Z",
+      "error_message": "Incorrect value in code",
+      "file": "apps/web/src/components/PaletteInputRow.tsx",
+      "root_cause": "Had \"flex items-center h-11 px-3 gap-2 border-[0.5px] ",
+      "fix": "Changed to \"flex items-center h-11 px-3 gap-2 border-[0.5px] ",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-05-21T14:18:11.032Z"
+    },
+    {
+      "id": "bug-022",
+      "timestamp": "2026-05-21T14:48:57.206Z",
+      "error_message": "Incorrect value in code",
+      "file": "apps/web/src/components/PaletteShell.tsx",
+      "root_cause": "Had \"} w-full max-w-[min(820px,calc(100vw-1.5rem))] bo",
+      "fix": "Changed to \"} w-full max-w-[min(820px,calc(100vw-1.5rem))] bo",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T14:48:57.206Z"
+    },
+    {
+      "id": "bug-023",
+      "timestamp": "2026-05-21T14:50:21.254Z",
+      "error_message": "CSS fix: letterSpacing",
+      "file": "apps/web/src/components/PaletteInputRow.tsx",
+      "root_cause": "letterSpacing: \"-0.1px\" → \"-0.1px\", outline: \"none\"",
+      "fix": "Changed letterSpacing: \"-0.1px\" → \"-0.1px\", outline: \"none\"",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T14:50:21.254Z"
+    },
+    {
+      "id": "bug-024",
+      "timestamp": "2026-05-21T14:50:25.690Z",
+      "error_message": "CSS fix: focus-within",
+      "file": "apps/web/src/components/PaletteShell.tsx",
+      "root_cause": "focus-within: border-accent transition-colors duration-150 [&_input:focus-visible]:outline-none` → border-accent transition-colors duration-150`",
+      "fix": "Changed focus-within: border-accent transition-colors duration-150 [&_input:focus-visible]:outline-none` → border-accent transition-colors duration-150`",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T14:50:25.690Z"
+    },
+    {
+      "id": "bug-025",
+      "timestamp": "2026-05-21T14:53:35.184Z",
+      "error_message": "Incorrect value in code",
+      "file": "apps/web/src/components/PaletteInputRow.tsx",
+      "root_cause": "Had \"flex items-center h-11 px-3 gap-2 border-b border",
+      "fix": "Changed to \"flex items-center h-11 px-3 gap-2 border-[0.5px] ",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-21T14:53:35.184Z"
     }
   ]
 }

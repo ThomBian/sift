@@ -56,8 +56,8 @@ export function useKeyboardNav(
           if (focusedId === null) break;
           const task = currentIndex !== -1 ? tasks[currentIndex] : undefined;
           if (!task) break;
+          e.preventDefault();
           if (task.status === "archived") {
-            e.preventDefault();
             break;
           }
 

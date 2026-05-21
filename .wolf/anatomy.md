@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-04-29T12:42:22.706Z
-> Files: 207 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-21T16:00:00.454Z
+> Files: 233 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -11,7 +11,7 @@
 - `.prettierrc` — Prettier configuration (~34 tok)
 - `CLAUDE.md` — OpenWolf (~1800 tok)
 - `GEMINI.md` — CLAUDE.md (~1736 tok)
-- `package-lock.json` — npm lock file (~139904 tok)
+- `package-lock.json` — npm lock file (~152690 tok)
 - `package.json` — Node.js package manifest (~221 tok)
 - `README.md` — Project documentation (~189 tok)
 - `skills-lock.json` (~65 tok)
@@ -59,6 +59,18 @@
 - `server.log` (~557 tok)
 - `server.pid` (~2 tok)
 
+## .superpowers/brainstorm/4309-1779262729/content/
+
+- `drawer-layout.html` — Drawer Layout (~3291 tok)
+- `right-panel-states.html` — Right Panel States (~4352 tok)
+- `right-panel-task-focus.html` — Right Panel — Tasks Focused (~3989 tok)
+
+## .superpowers/brainstorm/4309-1779262729/state/
+
+- `server-stopped` (~16 tok)
+- `server.log` (~206 tok)
+- `server.pid` (~2 tok)
+
 ## .superpowers/brainstorm/4826-1775289285/content/
 
 - `backend.html` (~311 tok)
@@ -80,6 +92,18 @@
 
 - `server-stopped` (~14 tok)
 - `server.log` (~907 tok)
+- `server.pid` (~2 tok)
+
+## .superpowers/brainstorm/76994-1779258801/content/
+
+- `right-panel-states.html` — Right Panel States (~4352 tok)
+- `waiting-1.html` (~39 tok)
+- `workspace-layouts.html` — ProductOS — Workspace Layout Options (~5137 tok)
+
+## .superpowers/brainstorm/76994-1779258801/state/
+
+- `server-stopped` (~14 tok)
+- `server.log` (~131 tok)
 - `server.pid` (~2 tok)
 
 ## .superpowers/brainstorm/80278-1775544731/content/
@@ -136,7 +160,7 @@
 ## apps/web/
 
 - `index.html` — Sift (~187 tok)
-- `package.json` — Node.js package manifest (~447 tok)
+- `package.json` — Node.js package manifest (~457 tok)
 - `postcss.config.js` — PostCSS configuration (~18 tok)
 - `tailwind.config.ts` — Tailwind CSS configuration (~963 tok)
 - `tsconfig.json` — TypeScript configuration (~139 tok)
@@ -145,42 +169,47 @@
 
 ## apps/web/src/
 
-- `App.tsx` — App (~390 tok)
+- `App.tsx` — App (~484 tok)
 - `index.css` — Styles: 8 rules, 2 media queries (~542 tok)
 - `main.tsx` (~123 tok)
 - `vite-env.d.ts` — / <reference types="vite/client" /> (~11 tok)
 
 ## apps/web/src/__tests__/
 
-- `AppLayoutViewNav.test.tsx` — actual (~959 tok)
-- `HintBar.test.tsx` — / <reference types="vitest" /> (~1064 tok)
-- `MonthView.test.tsx` — makeSpace (~1968 tok)
+- `AppLayoutViewNav.test.tsx` — @vitest-environment jsdom (~959 tok)
+- `HintBar.test.tsx` — / <reference types="vitest" /> (~1090 tok)
+- `MonthView.test.tsx` — @vitest-environment jsdom (~1974 tok)
 - `setup.ts` (~81 tok)
-- `SyncService.test.ts` — @vitest-environment jsdom (~4982 tok)
-- `TaskRow.test.tsx` — @vitest-environment jsdom (~1808 tok)
+- `SyncService.test.ts` — @vitest-environment jsdom (~5313 tok)
+- `TaskRow.test.tsx` — @vitest-environment jsdom (~1814 tok)
 - `Topbar.test.tsx` — / <reference types="vitest" /> (~768 tok)
-- `useKeyboardNav.test.ts` — @vitest-environment jsdom (~2123 tok)
-- `useMonthTasks.test.ts` — @vitest-environment jsdom (~1830 tok)
+- `useArtifacts.test.ts` — @vitest-environment jsdom (~539 tok)
+- `useKeyboardNav.test.ts` — @vitest-environment jsdom (~2156 tok)
+- `useMonthTasks.test.ts` — @vitest-environment jsdom (~1836 tok)
 - `useProjectNav.test.ts` — @vitest-environment jsdom (~2252 tok)
 - `useSync.test.ts` — / <reference types="vitest" /> (~1172 tok)
-- `useTasks.test.ts` — @vitest-environment jsdom (~3234 tok)
-- `useWeekTasks.test.ts` — @vitest-environment jsdom (~2318 tok)
+- `useTasks.test.ts` — @vitest-environment jsdom (~3240 tok)
+- `useWeekTasks.test.ts` — @vitest-environment jsdom (~2324 tok)
 
 ## apps/web/src/components/
 
-- `CommandPalette.tsx` — createTask — uses useState, useMemo, useCallback, useEffect (~1406 tok)
+- `ArtifactDrawer.tsx` — ArtifactDrawer — uses useState, useEffect, useCallback (~1904 tok)
+- `CommandPalette.tsx` — createTask — uses useMemo, useEffect (~1118 tok)
 - `ConfirmModal.tsx` — EXIT_MS — uses useState, useRef, useCallback, useEffect (~1576 tok)
 - `InputBar.tsx` — handleTaskReady — uses useMemo (~550 tok)
-- `ProjectEditPalette.tsx` — formatDate — uses useState, useCallback, useEffect (~3156 tok)
-- `TaskList.tsx` — Shown when a task has no project or the project row is missing (e.g. sync race). (~1367 tok)
+- `PaletteInputRow.tsx` — Leading icon. Pass null to omit. Defaults to the "+" creation marker. (~394 tok)
+- `PaletteShell.tsx` — usePaletteClose — uses useState, useCallback (~547 tok)
+- `ProjectEditPalette.tsx` — formatDate — uses useState, useEffect (~2774 tok)
+- `SkillPicker.tsx` — SkillPicker — uses useState, useEffect, useMemo, useCallback (~1357 tok)
+- `TaskList.tsx` — Shown when a task has no project or the project row is missing (e.g. sync race). (~1374 tok)
 - `TaskRow.tsx` — Narrow columns: title on first line, project + due stacked with truncation. (~2367 tok)
 
 ## apps/web/src/components/layout/
 
 - `AppLayout.tsx` — Linear ←/→ order; navigating from `/week` or `/month` lands on inbox/today/projects. (~2386 tok)
-- `HintBar.tsx` — NONE_HINTS (~1140 tok)
+- `HintBar.tsx` — NONE_HINTS (~1156 tok)
 - `Sidebar.tsx` — focusCalendarHeaderSoon (~2053 tok)
-- `Topbar.tsx` — SYNC_LABEL (~2029 tok)
+- `Topbar.tsx` — SYNC_LABEL — uses useNavigate, useState, useEffect (~2558 tok)
 
 ## apps/web/src/components/month/
 
@@ -198,9 +227,11 @@
 ## apps/web/src/contexts/
 
 - `AuthContext.tsx` — False until the first getSession finishes so OAuth hash is not stripped by a child <Navigate> first. (~736 tok)
+- `SkillsContext.tsx` — SkillsContext — uses useCallback, useEffect, useContext (~424 tok)
 
 ## apps/web/src/hooks/
 
+- `useArtifacts.ts` — Exports UseArtifactsResult, useArtifacts (~193 tok)
 - `useKeyboardNav.ts` — Exports UseKeyboardNavReturn, useKeyboardNav (~1133 tok)
 - `useMonthTasks.ts` — Exports MonthDay, MonthTasksResult, buildMonthDays, useMonthTasks (~1266 tok)
 - `useProjectNav.ts` — Ids in focus/DOM order: active projects, then `SHOW_ARCHIVED_TOGGLE_ID` when shown, (~658 tok)
@@ -212,7 +243,7 @@
 
 ## apps/web/src/lib/
 
-- `createProjectForTask.ts` — Returns project id for the task, creating a project first when `newProjectName` is set. (~291 tok)
+- `createProjectForTask.ts` — Returns project id for the task, creating a project first when `newProjectName` is set. (~297 tok)
 - `db.ts` (~14 tok)
 - `requestSync.ts` — Registered from App when the user is signed in and Supabase is configured. (~110 tok)
 - `supabase.ts` — Null when env vars are missing — app stays local-first without throwing at import. (~155 tok)
@@ -224,15 +255,17 @@
 
 ## apps/web/src/services/
 
-- `SyncService.ts` — Exports SyncService (~3017 tok)
+- `SyncService.ts` — Exports SyncService (~3746 tok)
 
 ## apps/web/src/views/
 
 - `InboxView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1189 tok)
-- `MonthView.tsx` — Index of the cell that shows local "today", including leading/trailing month cells. (~5589 tok)
-- `ProjectsView.tsx` — ProgressBar (~7463 tok)
+- `MonthView.tsx` — Index of the cell that shows local "today", including leading/trailing month cells. (~5634 tok)
+- `ProjectsView.tsx` — ProgressBar (~7537 tok)
+- `ProjectWorkspaceView.tsx` — ProjectWorkspaceView — uses useNavigate, useState, useEffect, useCallback (~4916 tok)
+- `SkillsView.tsx` — VARIABLES — renders form — uses useNavigate, useState, useCallback, useEffect (~3570 tok)
 - `TodayView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1182 tok)
-- `WeekView.tsx` — Enter toggles done moves the row in the DOM; restore focus so keyboard nav keeps working. (~4036 tok)
+- `WeekView.tsx` — Enter toggles done moves the row in the DOM; restore focus so keyboard nav keeps working. (~4043 tok)
 
 ## docs/
 
@@ -256,6 +289,7 @@
 - `2026-04-13-supabase-auth-prod.md` — Supabase sign-in + production sync — implementation plan (~3656 tok)
 - `2026-04-22-week-overview.md` — Week Overview Implementation Plan (~8156 tok)
 - `2026-04-29-month-view.md` — Month View Implementation Plan (~14647 tok)
+- `2026-05-20-productos.md` — ProductOS Implementation Plan (~20162 tok)
 
 ## docs/superpowers/specs/
 
@@ -270,6 +304,7 @@
 - `2026-04-13-cloud-bootstrap-sync-design.md` — Cloud Bootstrap Sync Design (~1408 tok)
 - `2026-04-22-week-overview-design.md` — Week overview — design spec (~2100 tok)
 - `2026-04-29-month-view-design.md` — Month View — Design Spec (~1705 tok)
+- `2026-05-20-productos-design.md` — ProductOS — Design Spec (~2494 tok)
 
 ## packages/shared/
 
@@ -279,12 +314,13 @@
 
 ## packages/shared/src/
 
-- `db.ts` — Wipes all local IndexedDB data. Call before bootstrap when user identity changes. (~1382 tok)
+- `db.ts` — Wipes all local IndexedDB data. Call before bootstrap when user identity changes. (~1516 tok)
 - `design-tokens.css` — Styles: 32 vars (~502 tok)
 - `emojiPool.ts` — Exports EmojiCategory, EMOJI_POOL, ALL_EMOJIS, getRandomEmoji, searchEmojis (~990 tok)
-- `index.ts` (~255 tok)
+- `index.ts` (~276 tok)
+- `injectContext.ts` — Exports injectContext (~221 tok)
 - `parseLooseDate.ts` — Detects an explicit calendar year in typed date strings (4-digit year, or m/d/y with a year segment). (~534 tok)
-- `types.ts` — null = unassigned (inbox/today only until user picks a project) (~310 tok)
+- `types.ts` — null = unassigned (inbox/today only until user picks a project) (~414 tok)
 - `vite-env.d.ts` — / <reference types="vite/client" /> (~11 tok)
 
 ## packages/shared/src/Calendar/
@@ -314,6 +350,7 @@
 - `EmojiPicker.test.tsx` — onSelect (~726 tok)
 - `emojiPool.test.ts` — Declares cat (~376 tok)
 - `gridNav.test.ts` — Declares workThenCreative (~376 tok)
+- `injectContext.test.ts` — Declares now (~674 tok)
 - `parseLooseDate.test.ts` — Declares ref (~791 tok)
 - `setup.ts` (~65 tok)
 - `SmartInput.test.tsx` — packages/shared/src/__tests__/SmartInput.test.tsx (~1772 tok)
@@ -326,14 +363,14 @@
 
 ## supabase/.temp/
 
-- `cli-latest` (~2 tok)
+- `cli-latest` (~0 tok)
 - `gotrue-version` (~3 tok)
-- `linked-project.json` (~39 tok)
+- `linked-project.json` (~37 tok)
 - `pooler-url` (~25 tok)
 - `postgres-version` (~3 tok)
 - `project-ref` (~6 tok)
 - `rest-version` (~2 tok)
-- `storage-migration` (~6 tok)
+- `storage-migration` (~9 tok)
 - `storage-version` (~3 tok)
 
 ## supabase/migrations/
@@ -341,3 +378,4 @@
 - `20260413000000_init_sync.sql` — Sift / Speedy Tasks — tables for SyncService (push/pull + tasks Realtime) (~1189 tok)
 - `20260413140000_tasks_project_nullable.sql` — Allow tasks without a project (local-first inbox capture before @p). (~39 tok)
 - `20260416120000_delete_policies.sql` — Allow authenticated users to delete their own rows (project delete sync + future space/task deletes) (~164 tok)
+- `20260520000000_productos.sql` — supabase/migrations/20260520000000_productos.sql (~904 tok)

@@ -3,242 +3,223 @@
 > Chronological action log. Hooks and AI append to this file automatically.
 > Old sessions are consolidated by the daemon weekly.
 
-## Session: 2026-04-26 03:00
+## Session: 2026-05-20 (ProductOS implementation)
 
-| Time | Action | File(s) | Outcome | ~Tokens |
-|------|--------|---------|---------|--------|
+| session | ProductOS Slice 1+2 complete — 14 tasks, 15 commits | all new files + modified SyncService, App.tsx, Topbar, ProjectsView | 0 TS errors, 123/124 tests pass (1 pre-existing MonthView failure) | ~15k tok |
+
+| session | Task 1: types + Dexie v6 | packages/shared/src/types.ts, db.ts, index.ts | committed 1a0512b | ~500 |
+| session | Task 2: Supabase migration SQL | supabase/migrations/20260520000000_productos.sql | committed 428ca27 | ~200 |
+| session | Task 3: injectContext utility + tests | packages/shared/src/injectContext.ts + tests | committed 5f81e33 | ~400 |
+| session | Task 4: useArtifacts hook + tests | apps/web/src/hooks/useArtifacts.ts + tests | committed 8fca505 | ~400 |
+| session | Task 5: SyncService artifact sync | apps/web/src/services/SyncService.ts | committed aa7228c | ~600 |
+| session | Task 6: SkillsContext | apps/web/src/contexts/SkillsContext.tsx | committed 3d092e7 | ~300 |
+| session | Task 7: ProjectsView O→navigate | apps/web/src/views/ProjectsView.tsx | committed 6ccdc92 | ~300 |
+| session | Task 8: react-markdown | apps/web/package.json | committed 890cfe5 | ~100 |
+| session | Task 9: ArtifactDrawer | apps/web/src/components/ArtifactDrawer.tsx | committed | ~600 |
+| session | Task 10: ProjectWorkspaceView | apps/web/src/views/ProjectWorkspaceView.tsx | committed d969ef5 | ~800 |
+| session | Task 11: SkillPicker | apps/web/src/components/SkillPicker.tsx | committed ef6e9d6 | ~500 |
+| session | Task 12: Avatar dropdown | apps/web/src/components/layout/Topbar.tsx | committed 96f8f7d | ~400 |
+| session | Task 13: SkillsView CRUD | apps/web/src/views/SkillsView.tsx | committed 98a3c9d | ~600 |
+| session | Task 14: App.tsx routes | apps/web/src/App.tsx | committed 29de174 | ~300 |
+| session | Fix: TS errors — description field + EmojiPicker query prop | 12 files | committed fea73d0 | ~400 |
+
+## Session: 2026-04-26 03:00
+> Consolidated session (0 actions)
 
 ## Session: 2026-04-26 14:44
-
-| Time | Action | File(s) | Outcome | ~Tokens |
-|------|--------|---------|---------|--------|
+> Consolidated session (0 actions)
 
 ## Session: 2026-04-26 14:45
-
-| Time | Action | File(s) | Outcome | ~Tokens |
-|------|--------|---------|---------|--------|
+> Consolidated session (0 actions)
 
 ## Session: 2026-04-29 09:03
-
-| Time | Action | File(s) | Outcome | ~Tokens |
-|------|--------|---------|---------|--------|
+> Consolidated session (0 actions)
 
 ## Session: 2026-04-29 09:08
-
-| Time | Action | File(s) | Outcome | ~Tokens |
-|------|--------|---------|---------|--------|
+> Consolidated session (0 actions)
 
 ## Session: 2026-04-29 09:08
-
-| Time | Action | File(s) | Outcome | ~Tokens |
-|------|--------|---------|---------|--------|
+> Consolidated session (0 actions)
 
 ## Session: 2026-04-29 09:08
+> Consolidated session (0 actions)
+
+## Session: 2026-05-20 08:23
 
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
-| 09:08 | Created .superpowers/brainstorm/83231-1777446435/content/month-layouts.html | — | ~4011 |
-| 09:08 | Session end: 1 writes across 1 files (month-layouts.html) | 0 reads | ~4297 tok |
-| 09:09 | Created .superpowers/brainstorm/83231-1777446435/content/waiting.html | — | ~39 |
-| 09:09 | Session end: 2 writes across 2 files (month-layouts.html, waiting.html) | 0 reads | ~4339 tok |
-| 09:10 | Session end: 2 writes across 2 files (month-layouts.html, waiting.html) | 0 reads | ~4339 tok |
-| 09:11 | Session end: 2 writes across 2 files (month-layouts.html, waiting.html) | 0 reads | ~4339 tok |
-| 09:11 | Session end: 2 writes across 2 files (month-layouts.html, waiting.html) | 0 reads | ~4339 tok |
-| 09:12 | Session end: 2 writes across 2 files (month-layouts.html, waiting.html) | 0 reads | ~4339 tok |
-| 09:13 | Session end: 2 writes across 2 files (month-layouts.html, waiting.html) | 0 reads | ~4339 tok |
-| 09:13 | Session end: 2 writes across 2 files (month-layouts.html, waiting.html) | 0 reads | ~4339 tok |
-| 09:15 | Session end: 2 writes across 2 files (month-layouts.html, waiting.html) | 0 reads | ~4339 tok |
-| 09:16 | Session end: 2 writes across 2 files (month-layouts.html, waiting.html) | 0 reads | ~4339 tok |
-| 09:16 | Session end: 2 writes across 2 files (month-layouts.html, waiting.html) | 0 reads | ~4339 tok |
-| 09:17 | Session end: 2 writes across 2 files (month-layouts.html, waiting.html) | 0 reads | ~4339 tok |
-| 09:18 | Created docs/superpowers/specs/2026-04-29-month-view-design.md | — | ~1819 |
-| 09:18 | Session end: 3 writes across 3 files (month-layouts.html, waiting.html, 2026-04-29-month-view-design.md) | 0 reads | ~6288 tok |
-| 09:25 | Session end: 3 writes across 3 files (month-layouts.html, waiting.html, 2026-04-29-month-view-design.md) | 0 reads | ~6288 tok |
-| 09:36 | Created docs/superpowers/plans/2026-04-29-month-view.md | — | ~15381 |
-| 09:36 | Edited docs/superpowers/plans/2026-04-29-month-view.md | 3→4 lines | ~70 |
-| 09:36 | Edited docs/superpowers/plans/2026-04-29-month-view.md | added 3 condition(s) | ~308 |
-| 09:36 | Edited docs/superpowers/plans/2026-04-29-month-view.md | modified if() | ~180 |
-| 09:37 | Session end: 7 writes across 4 files (month-layouts.html, waiting.html, 2026-04-29-month-view-design.md, 2026-04-29-month-view.md) | 10 reads | ~36591 tok |
-| 09:39 | Created apps/web/src/__tests__/useMonthTasks.test.ts | — | ~1799 |
-| 09:40 | Created apps/web/src/hooks/useMonthTasks.ts | — | ~1266 |
-| 09:40 | Created apps/web/src/__tests__/useMonthTasks.test.ts | — | ~1816 |
-| 09:40 | Created apps/web/src/__tests__/useMonthTasks.test.ts | — | ~1832 |
-| 09:40 | Created apps/web/src/__tests__/useMonthTasks.test.ts | — | ~1830 |
-| 09:40 | Created apps/web/src/components/month/MonthDayCell.tsx | — | ~473 |
-| 09:40 | Created apps/web/src/components/month/MonthGrid.tsx | — | ~331 |
-| 09:40 | Created apps/web/src/components/month/MonthTaskPanel.tsx | — | ~853 |
-| 09:40 | Created apps/web/src/components/month/MonthTopBar.tsx | — | ~1007 |
-| 09:40 | Created apps/web/src/components/week/WeekTopBar.tsx | — | ~1062 |
-| 09:41 | Created apps/web/src/components/layout/HintBar.tsx | — | ~922 |
-| 09:41 | Created apps/web/src/components/layout/HintBar.tsx | — | ~1099 |
-| 09:41 | Created apps/web/src/components/layout/HintBar.tsx | — | ~1140 |
-| 09:41 | Created apps/web/src/views/MonthView.tsx | — | ~3569 |
-| 09:41 | Created apps/web/src/views/MonthView.tsx | — | ~3570 |
-| 09:41 | Created apps/web/src/App.tsx | — | ~374 |
-| 09:41 | Created apps/web/src/components/layout/AppLayout.tsx | — | ~2053 |
-| 09:41 | Created apps/web/src/App.tsx | — | ~390 |
-| 09:41 | Created apps/web/src/components/layout/AppLayout.tsx | — | ~2243 |
-| 09:41 | Created apps/web/src/components/layout/Topbar.tsx | — | ~1983 |
-| 09:41 | Created apps/web/src/components/layout/Topbar.tsx | — | ~1983 |
-| 09:41 | Created apps/web/src/components/layout/Topbar.tsx | — | ~1982 |
-| 09:42 | Created apps/web/src/components/layout/Topbar.tsx | — | ~2020 |
-| 09:42 | Created apps/web/src/components/layout/Sidebar.tsx | — | ~2006 |
-| 09:42 | Created apps/web/src/components/layout/Sidebar.tsx | — | ~2022 |
-| 09:42 | Created apps/web/src/components/layout/Sidebar.tsx | — | ~2032 |
-| 09:42 | Created apps/web/src/__tests__/Topbar.test.tsx | — | ~762 |
-| 09:42 | Created apps/web/src/__tests__/Topbar.test.tsx | — | ~768 |
-| 09:42 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1615 |
-| 09:43 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1618 |
-| 09:43 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1624 |
-| 09:43 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1608 |
-| 09:43 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1602 |
-| 09:43 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1614 |
-| 09:44 | Session end: 41 writes across 19 files (month-layouts.html, waiting.html, 2026-04-29-month-view-design.md, 2026-04-29-month-view.md, useMonthTasks.test.ts) | 27 reads | ~121210 tok |
-| 09:48 | Created apps/web/src/views/MonthView.tsx | — | ~3570 |
-| 09:48 | Created apps/web/src/views/MonthView.tsx | — | ~3822 |
-| 09:48 | Created apps/web/src/views/MonthView.tsx | — | ~3862 |
-| 09:48 | Created apps/web/src/views/MonthView.tsx | — | ~3873 |
-| 09:48 | Created apps/web/src/views/MonthView.tsx | — | ~4010 |
-| 09:48 | Session end: 46 writes across 19 files (month-layouts.html, waiting.html, 2026-04-29-month-view-design.md, 2026-04-29-month-view.md, useMonthTasks.test.ts) | 27 reads | ~141261 tok |
-| 09:50 | Created apps/web/src/views/MonthView.tsx | — | ~4014 |
-| 09:50 | Created apps/web/src/views/MonthView.tsx | — | ~4160 |
-| 09:50 | Created apps/web/src/views/MonthView.tsx | — | ~4157 |
-| 09:50 | Created apps/web/src/views/MonthView.tsx | — | ~4103 |
-| 09:50 | Created apps/web/src/views/MonthView.tsx | — | ~4043 |
-| 09:50 | Created apps/web/src/views/MonthView.tsx | — | ~4140 |
-| 09:50 | Session end: 52 writes across 19 files (month-layouts.html, waiting.html, 2026-04-29-month-view-design.md, 2026-04-29-month-view.md, useMonthTasks.test.ts) | 27 reads | ~167177 tok |
-| 09:54 | Created apps/web/src/views/MonthView.tsx | — | ~4261 |
-| 09:54 | Created apps/web/src/views/MonthView.tsx | — | ~4282 |
-| 09:54 | Created apps/web/src/views/MonthView.tsx | — | ~4240 |
-| 09:54 | Created apps/web/src/views/MonthView.tsx | — | ~4245 |
-| 09:55 | Created apps/web/src/views/MonthView.tsx | — | ~4343 |
-| 09:55 | Created apps/web/src/views/MonthView.tsx | — | ~4308 |
-| 09:55 | Created apps/web/src/views/MonthView.tsx | — | ~4280 |
-| 09:55 | Created apps/web/src/views/MonthView.tsx | — | ~4101 |
-| 09:55 | Created apps/web/src/views/MonthView.tsx | — | ~4445 |
-| 09:55 | Created apps/web/src/views/MonthView.tsx | — | ~4440 |
-| 09:56 | Created apps/web/src/views/MonthView.tsx | — | ~4377 |
-| 09:56 | Created apps/web/src/views/MonthView.tsx | — | ~4370 |
-| 09:56 | Created apps/web/src/views/MonthView.tsx | — | ~4342 |
-| 09:56 | Created apps/web/src/views/MonthView.tsx | — | ~4336 |
-| 09:57 | Created apps/web/src/views/MonthView.tsx | — | ~4385 |
-| 09:57 | Created apps/web/src/views/MonthView.tsx | — | ~4393 |
-| 09:57 | Created apps/web/src/views/MonthView.tsx | — | ~4396 |
-| 09:57 | Created apps/web/src/views/MonthView.tsx | — | ~4409 |
-| 09:58 | Created apps/web/src/views/MonthView.tsx | — | ~4406 |
-| 09:58 | Created apps/web/src/views/MonthView.tsx | — | ~4409 |
-| 10:00 | Created apps/web/src/views/MonthView.tsx | — | ~4414 |
-| 10:00 | Created apps/web/src/views/MonthView.tsx | — | ~4554 |
-| 10:00 | Created apps/web/src/views/MonthView.tsx | — | ~4511 |
-| 10:00 | Created apps/web/src/views/MonthView.tsx | — | ~4568 |
-| 10:01 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1614 |
-| 10:04 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1616 |
-| 10:04 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1609 |
-| 10:04 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1613 |
-| 10:05 | Created apps/web/vite.config.ts | — | ~311 |
-| 10:06 | Created apps/web/src/views/MonthView.tsx | — | ~4564 |
-| 10:06 | Created apps/web/src/views/MonthView.tsx | — | ~4593 |
-| 10:06 | Created apps/web/src/views/MonthView.tsx | — | ~4582 |
-| 10:06 | Created apps/web/src/views/MonthView.tsx | — | ~4573 |
-| 10:06 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1627 |
-| 10:06 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1640 |
-| 10:09 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1719 |
-| 10:09 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1729 |
-| 10:09 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1731 |
-| 10:09 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1732 |
-| 10:09 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1741 |
-| 10:09 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1743 |
-| 10:10 | Created apps/web/src/views/MonthView.tsx | — | ~4585 |
-| 10:10 | Created apps/web/src/views/MonthView.tsx | — | ~4625 |
-| 10:10 | Created apps/web/src/views/MonthView.tsx | — | ~4600 |
-| 10:11 | Created apps/web/src/views/MonthView.tsx | — | ~4660 |
-| 10:12 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1824 |
-| 10:12 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1878 |
-| 10:13 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1701 |
-| 10:13 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1693 |
-| 10:13 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1642 |
-| 10:16 | Created apps/web/src/views/MonthView.tsx | — | ~4574 |
-| 10:17 | Created apps/web/src/views/MonthView.tsx | — | ~4594 |
-| 10:17 | Created apps/web/src/views/MonthView.tsx | — | ~4612 |
-| 10:17 | Created apps/web/vite.config.ts | — | ~277 |
-| 10:19 | Created apps/web/src/views/MonthView.tsx | — | ~4647 |
-| 10:19 | Created apps/web/src/views/MonthView.tsx | — | ~4650 |
-| 10:21 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1722 |
-| 10:21 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1648 |
-| 10:23 | Created apps/web/src/views/MonthView.tsx | — | ~4560 |
-| 10:25 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1651 |
-| 10:25 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1446 |
-| 10:25 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1473 |
-| 10:25 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1472 |
-| 10:25 | Created apps/web/src/views/MonthView.tsx | — | ~4624 |
-| 10:25 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1487 |
-| 10:25 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1488 |
-| 10:25 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1503 |
-| 10:25 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1502 |
-| 10:26 | Created apps/web/src/views/MonthView.tsx | — | ~4638 |
-| 10:26 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1500 |
-| 10:26 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1457 |
-| 10:28 | Created apps/web/src/views/MonthView.tsx | — | ~4649 |
-| 10:28 | Created apps/web/src/views/MonthView.tsx | — | ~4654 |
-| 10:28 | Created apps/web/src/views/MonthView.tsx | — | ~4659 |
-| 10:32 | Created apps/web/src/views/MonthView.tsx | — | ~4595 |
-| 10:33 | Created apps/web/src/views/MonthView.tsx | — | ~4641 |
-| 10:35 | Created apps/web/src/views/MonthView.tsx | — | ~4627 |
-| 10:35 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1147 |
-| 10:35 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1145 |
-| 10:35 | Created apps/web/src/views/MonthView.tsx | — | ~4616 |
-| 10:35 | Created apps/web/src/views/MonthView.tsx | — | ~4611 |
-| 10:35 | Created apps/web/src/views/MonthView.tsx | — | ~4606 |
-| 10:35 | Created apps/web/src/views/MonthView.tsx | — | ~4670 |
-| 10:35 | Created apps/web/src/views/MonthView.tsx | — | ~4653 |
-| 10:36 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1267 |
-| 10:37 | Session end: 133 writes across 20 files (month-layouts.html, waiting.html, 2026-04-29-month-view-design.md, 2026-04-29-month-view.md, useMonthTasks.test.ts) | 35 reads | ~433241 tok |
-| 10:40 | Created apps/web/src/views/MonthView.tsx | — | ~4788 |
-| 10:40 | Created apps/web/src/views/MonthView.tsx | — | ~4756 |
-| 10:40 | Created apps/web/src/views/MonthView.tsx | — | ~4753 |
-| 10:40 | Session end: 136 writes across 20 files (month-layouts.html, waiting.html, 2026-04-29-month-view-design.md, 2026-04-29-month-view.md, useMonthTasks.test.ts) | 35 reads | ~447852 tok |
-| 10:51 | Created apps/web/src/views/MonthView.tsx | — | ~5005 |
-| 10:51 | Created apps/web/src/views/MonthView.tsx | — | ~5132 |
-| 10:51 | Created apps/web/src/views/MonthView.tsx | — | ~5146 |
-| 10:51 | Created apps/web/src/views/MonthView.tsx | — | ~5131 |
-| 10:51 | Created apps/web/src/views/MonthView.tsx | — | ~5146 |
-| 10:51 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1488 |
-| 10:52 | Session end: 142 writes across 20 files (month-layouts.html, waiting.html, 2026-04-29-month-view-design.md, 2026-04-29-month-view.md, useMonthTasks.test.ts) | 35 reads | ~475397 tok |
-| 11:22 | Created apps/web/src/components/layout/AppLayout.tsx | — | ~2357 |
-| 11:22 | Created apps/web/src/views/MonthView.tsx | — | ~5219 |
-| 11:22 | Created apps/web/src/components/layout/AppLayout.tsx | — | ~2367 |
-| 11:22 | Created apps/web/src/__tests__/AppLayoutViewNav.test.tsx | — | ~385 |
-| 11:23 | Created apps/web/src/__tests__/AppLayoutViewNav.test.tsx | — | ~538 |
-| 11:23 | Created apps/web/src/__tests__/AppLayoutViewNav.test.tsx | — | ~534 |
-| 11:23 | Created apps/web/src/__tests__/AppLayoutViewNav.test.tsx | — | ~570 |
-| 11:23 | Created apps/web/src/__tests__/AppLayoutViewNav.test.tsx | — | ~593 |
-| 11:23 | Session end: 150 writes across 21 files (month-layouts.html, waiting.html, 2026-04-29-month-view-design.md, 2026-04-29-month-view.md, useMonthTasks.test.ts) | 36 reads | ~488922 tok |
-| 14:26 | Created apps/web/src/components/layout/AppLayout.tsx | — | ~2412 |
-| 14:26 | Created apps/web/src/components/layout/Topbar.tsx | — | ~2029 |
-| 14:26 | Created apps/web/src/components/layout/Sidebar.tsx | — | ~2053 |
-| 14:26 | Created apps/web/src/components/layout/AppLayout.tsx | — | ~2386 |
-| 14:27 | Created apps/web/src/__tests__/AppLayoutViewNav.test.tsx | — | ~591 |
-| 14:27 | Created apps/web/src/__tests__/AppLayoutViewNav.test.tsx | — | ~600 |
-| 14:27 | Created apps/web/src/__tests__/AppLayoutViewNav.test.tsx | — | ~959 |
-| 14:27 | Created apps/web/src/views/MonthView.tsx | — | ~5195 |
-| 14:27 | Session end: 158 writes across 21 files (month-layouts.html, waiting.html, 2026-04-29-month-view-design.md, 2026-04-29-month-view.md, useMonthTasks.test.ts) | 36 reads | ~505316 tok |
-| 14:39 | Created apps/web/src/components/month/MonthTopBar.tsx | — | ~1016 |
-| 14:39 | Created apps/web/src/views/MonthView.tsx | — | ~5200 |
-| 14:39 | Created apps/web/src/components/month/MonthTopBar.tsx | — | ~1024 |
-| 14:39 | Created apps/web/src/views/MonthView.tsx | — | ~5412 |
-| 14:39 | Created apps/web/src/views/MonthView.tsx | — | ~5404 |
-| 14:39 | Created apps/web/src/views/MonthView.tsx | — | ~5402 |
-| 14:39 | Created apps/web/src/views/MonthView.tsx | — | ~5514 |
-| 14:39 | Created apps/web/src/views/MonthView.tsx | — | ~5428 |
-| 14:39 | Created apps/web/src/views/MonthView.tsx | — | ~5576 |
-| 14:39 | Created apps/web/src/views/MonthView.tsx | — | ~5576 |
-| 14:39 | Created apps/web/src/views/MonthView.tsx | — | ~5579 |
-| 14:39 | Created apps/web/src/views/MonthView.tsx | — | ~5582 |
-| 14:40 | Created apps/web/src/views/MonthView.tsx | — | ~5589 |
-| 14:40 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1904 |
-| 14:40 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1930 |
-| 14:42 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1966 |
-| 14:42 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~1968 |
-| 14:42 | Session end: 175 writes across 21 files (month-layouts.html, waiting.html, 2026-04-29-month-view-design.md, 2026-04-29-month-view.md, useMonthTasks.test.ts) | 36 reads | ~576243 tok |
-| 14:54 | Session end: 175 writes across 21 files (month-layouts.html, waiting.html, 2026-04-29-month-view-design.md, 2026-04-29-month-view.md, useMonthTasks.test.ts) | 36 reads | ~576243 tok |
-| 14:54 | Session end: 175 writes across 21 files (month-layouts.html, waiting.html, 2026-04-29-month-view-design.md, 2026-04-29-month-view.md, useMonthTasks.test.ts) | 36 reads | ~576243 tok |
+
+## Session: 2026-05-20 08:24
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 08:34 | Created .superpowers/brainstorm/76994-1779258801/content/workspace-layouts.html | — | ~5137 |
+| 08:34 | Session end: 1 writes across 1 files (workspace-layouts.html) | 1 reads | ~5504 tok |
+| 09:21 | Created .superpowers/brainstorm/76994-1779258801/content/waiting-1.html | — | ~39 |
+| 09:21 | Session end: 2 writes across 2 files (workspace-layouts.html, waiting-1.html) | 1 reads | ~5546 tok |
+| 09:27 | Session end: 2 writes across 2 files (workspace-layouts.html, waiting-1.html) | 1 reads | ~5546 tok |
+| 09:28 | Session end: 2 writes across 2 files (workspace-layouts.html, waiting-1.html) | 1 reads | ~5546 tok |
+| 09:30 | Session end: 2 writes across 2 files (workspace-layouts.html, waiting-1.html) | 1 reads | ~5546 tok |
+| 09:31 | Session end: 2 writes across 2 files (workspace-layouts.html, waiting-1.html) | 1 reads | ~5546 tok |
+| 09:31 | Session end: 2 writes across 2 files (workspace-layouts.html, waiting-1.html) | 1 reads | ~5546 tok |
+| 09:32 | Session end: 2 writes across 2 files (workspace-layouts.html, waiting-1.html) | 1 reads | ~5546 tok |
+| 09:36 | Created .superpowers/brainstorm/76994-1779258801/content/right-panel-states.html | — | ~4352 |
+| 09:36 | Session end: 3 writes across 3 files (workspace-layouts.html, waiting-1.html, right-panel-states.html) | 1 reads | ~10209 tok |
+| 09:38 | Session end: 3 writes across 3 files (workspace-layouts.html, waiting-1.html, right-panel-states.html) | 1 reads | ~10209 tok |
+| 09:41 | Created .superpowers/brainstorm/4309-1779262729/content/right-panel-task-focus.html | — | ~3989 |
+| 09:41 | Session end: 4 writes across 4 files (workspace-layouts.html, waiting-1.html, right-panel-states.html, right-panel-task-focus.html) | 1 reads | ~14483 tok |
+| 09:45 | Created .superpowers/brainstorm/4309-1779262729/content/drawer-layout.html | — | ~3291 |
+| 09:45 | Session end: 5 writes across 5 files (workspace-layouts.html, waiting-1.html, right-panel-states.html, right-panel-task-focus.html, drawer-layout.html) | 1 reads | ~18009 tok |
+| 09:46 | Session end: 5 writes across 5 files (workspace-layouts.html, waiting-1.html, right-panel-states.html, right-panel-task-focus.html, drawer-layout.html) | 1 reads | ~18009 tok |
+| 09:49 | Session end: 5 writes across 5 files (workspace-layouts.html, waiting-1.html, right-panel-states.html, right-panel-task-focus.html, drawer-layout.html) | 1 reads | ~18009 tok |
+| 09:51 | Created docs/superpowers/specs/2026-05-20-productos-design.md | — | ~2242 |
+| 09:51 | Edited docs/superpowers/specs/2026-05-20-productos-design.md | 2→3 lines | ~53 |
+| 09:51 | Edited docs/superpowers/specs/2026-05-20-productos-design.md | 5→5 lines | ~88 |
+| 09:51 | Edited docs/superpowers/specs/2026-05-20-productos-design.md | inline fix | ~23 |
+| 09:52 | Session end: 9 writes across 6 files (workspace-layouts.html, waiting-1.html, right-panel-states.html, right-panel-task-focus.html, drawer-layout.html) | 2 reads | ~22687 tok |
+
+## Session: 2026-05-20 10:02
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 09:24 | Edited docs/superpowers/specs/2026-05-20-productos-design.md | inline fix | ~55 |
+| 09:25 | Edited docs/superpowers/specs/2026-05-20-productos-design.md | 7→9 lines | ~160 |
+| 09:25 | Session end: 2 writes across 1 files (2026-05-20-productos-design.md) | 0 reads | ~230 tok |
+| 09:28 | Edited docs/superpowers/specs/2026-05-20-productos-design.md | inline fix | ~67 |
+| 09:28 | Edited docs/superpowers/specs/2026-05-20-productos-design.md | 3→3 lines | ~47 |
+| 09:28 | Edited docs/superpowers/specs/2026-05-20-productos-design.md | "#F9F9FB" → "#FAFAFA" | ~35 |
+| 09:28 | Edited docs/superpowers/specs/2026-05-20-productos-design.md | expanded (+9 lines) | ~236 |
+| 09:28 | Edited docs/superpowers/specs/2026-05-20-productos-design.md | expanded (+10 lines) | ~81 |
+| 09:28 | Session end: 7 writes across 1 files (2026-05-20-productos-design.md) | 1 reads | ~2955 tok |
+| 09:35 | Created docs/superpowers/plans/2026-05-20-productos.md | — | ~21506 |
+| 09:35 | Session end: 8 writes across 2 files (2026-05-20-productos-design.md, 2026-05-20-productos.md) | 12 reads | ~48940 tok |
+
+## Session: 2026-05-21 09:38
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 09:39 | Edited packages/shared/src/types.ts | 12→13 lines | ~83 |
+| 09:39 | Edited packages/shared/src/types.ts | expanded (+20 lines) | ~227 |
+| 09:39 | Edited packages/shared/src/db.ts | inline fix | ~18 |
+| 09:39 | Edited packages/shared/src/db.ts | 4→5 lines | ~43 |
+| 09:40 | Edited packages/shared/src/db.ts | added 1 condition(s) | ~117 |
+| 09:40 | Edited packages/shared/src/db.ts | 12→13 lines | ~79 |
+| 09:40 | Edited packages/shared/src/db.ts | modified clearLocalDB() | ~74 |
+| 09:40 | Edited packages/shared/src/index.ts | inline fix | ~26 |
+| 09:40 | Edited apps/web/src/__tests__/SyncService.test.ts | inline fix | ~20 |
+| 09:40 | Edited apps/web/src/__tests__/SyncService.test.ts | modified makeProject() | ~90 |
+| 09:42 | Created supabase/migrations/20260520000000_productos.sql | — | ~844 |
+| 09:42 | Created packages/shared/src/__tests__/injectContext.test.ts | — | ~674 |
+| 09:43 | Created packages/shared/src/injectContext.ts | — | ~221 |
+| 09:43 | Edited packages/shared/src/index.ts | 2→3 lines | ~44 |
+| 09:44 | Created apps/web/src/__tests__/useArtifacts.test.ts | — | ~534 |
+| 09:44 | Created apps/web/src/hooks/useArtifacts.ts | — | ~193 |
+| 09:44 | Edited apps/web/src/__tests__/useArtifacts.test.ts | 3→3 lines | ~54 |
+| 09:45 | Edited apps/web/src/__tests__/useArtifacts.test.ts | 3→3 lines | ~52 |
+| 09:45 | created useArtifacts hook (TDD, 3 tests) | apps/web/src/hooks/useArtifacts.ts, apps/web/src/__tests__/useArtifacts.test.ts | 3/3 tests pass, committed 8fca505 | ~300 |
+| 09:46 | Edited apps/web/src/services/SyncService.ts | inline fix | ~20 |
+| 09:46 | Edited apps/web/src/services/SyncService.ts | modified projectToRow() | ~116 |
+| 09:46 | Edited apps/web/src/services/SyncService.ts | modified rowToProject() | ~174 |
+| 09:46 | Edited apps/web/src/services/SyncService.ts | added nullish coalescing | ~202 |
+| 09:46 | Edited apps/web/src/services/SyncService.ts | 5→6 lines | ~62 |
+| 09:47 | Edited apps/web/src/services/SyncService.ts | added 4 condition(s) | ~344 |
+| 09:47 | Edited apps/web/src/services/SyncService.ts | added 2 condition(s) | ~483 |
+| 09:47 | Edited apps/web/src/services/SyncService.ts | 6→11 lines | ~96 |
+| 09:47 | Edited apps/web/src/__tests__/SyncService.test.ts | 5→6 lines | ~46 |
+| 09:47 | Edited apps/web/src/__tests__/SyncService.test.ts | modified makeArtifact() | ~92 |
+| 09:47 | Edited apps/web/src/__tests__/SyncService.test.ts | expanded (+15 lines) | ~235 |
+| 09:47 | Edited apps/web/src/__tests__/SyncService.test.ts | 22→23 lines | ~224 |
+| 09:47 | Edited apps/web/src/__tests__/SyncService.test.ts | 22→23 lines | ~215 |
+| 09:48 | Edited apps/web/src/__tests__/SyncService.test.ts | 22→23 lines | ~212 |
+| 09:48 | Edited apps/web/src/__tests__/SyncService.test.ts | 11→11 lines | ~153 |
+| 09:48 | Edited apps/web/src/__tests__/SyncService.test.ts | 7→9 lines | ~103 |
+| 09:48 | Edited apps/web/src/__tests__/SyncService.test.ts | 11→12 lines | ~141 |
+| 09:49 | Created apps/web/src/contexts/SkillsContext.tsx | — | ~424 |
+| 09:49 | Created SkillsContext for fetching prompt_templates from Supabase | apps/web/src/contexts/SkillsContext.tsx | committed | ~250 |
+| 09:50 | Edited apps/web/src/views/ProjectsView.tsx | added 1 import(s) | ~66 |
+| 09:50 | Edited apps/web/src/views/ProjectsView.tsx | 2→3 lines | ~37 |
+| 09:50 | Edited apps/web/src/views/ProjectsView.tsx | added 1 condition(s) | ~148 |
+| 09:50 | Edited apps/web/src/components/layout/HintBar.tsx | modified buildProjectHints() | ~163 |
+| 09:50 | Edited apps/web/src/__tests__/HintBar.test.tsx | 1→2 lines | ~46 |
+| 09:50 | Edited apps/web/src/__tests__/HintBar.test.tsx | 5→5 lines | ~74 |
+| 09:53 | Created apps/web/src/components/ArtifactDrawer.tsx | — | ~1904 |
+| 09:55 | Created apps/web/src/views/ProjectWorkspaceView.tsx | — | ~4659 |
+| 09:57 | Created apps/web/src/components/SkillPicker.tsx | — | ~1458 |
+| 09:57 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | added 1 import(s) | ~48 |
+| 09:57 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | expanded (+14 lines) | ~126 |
+| 09:58 | Edited apps/web/src/components/layout/Topbar.tsx | inline fix | ~15 |
+| 09:58 | Edited apps/web/src/components/layout/Topbar.tsx | 3→5 lines | ~62 |
+| 09:58 | Edited apps/web/src/components/layout/Topbar.tsx | CSS: e, e | ~203 |
+| 09:58 | Edited apps/web/src/components/layout/Topbar.tsx | expanded (+21 lines) | ~450 |
+| 10:01 | Created apps/web/src/views/SkillsView.tsx | — | ~3562 |
+| 10:01 | Created apps/web/src/App.tsx | — | ~484 |
+| 10:05 | Edited apps/web/src/__tests__/MonthView.test.tsx | CSS: description | ~57 |
+| 10:05 | Edited apps/web/src/__tests__/TaskRow.test.tsx | CSS: description | ~46 |
+| 10:05 | Edited apps/web/src/__tests__/useMonthTasks.test.ts | modified makeTask() | ~58 |
+| 10:05 | Edited apps/web/src/__tests__/useKeyboardNav.test.ts | 7→8 lines | ~49 |
+| 10:05 | Edited apps/web/src/__tests__/useTasks.test.ts | 9→10 lines | ~46 |
+| 10:05 | Edited apps/web/src/__tests__/useWeekTasks.test.ts | 9→10 lines | ~46 |
+| 10:05 | Edited apps/web/src/components/ProjectEditPalette.tsx | CSS: description | ~89 |
+| 10:05 | Edited apps/web/src/components/TaskList.tsx | CSS: description | ~56 |
+| 10:05 | Edited apps/web/src/lib/createProjectForTask.ts | 6→7 lines | ~39 |
+| 10:05 | Edited apps/web/src/views/MonthView.tsx | CSS: description | ~56 |
+| 10:05 | Edited apps/web/src/views/WeekView.tsx | CSS: description | ~56 |
+| 10:06 | Edited apps/web/src/views/SkillsView.tsx | 6→7 lines | ~78 |
+| 10:07 | Session end: 65 writes across 31 files (types.ts, db.ts, index.ts, SyncService.test.ts, 20260520000000_productos.sql) | 32 reads | ~105757 tok |
+| 15:23 | Session end: 65 writes across 31 files (types.ts, db.ts, index.ts, SyncService.test.ts, 20260520000000_productos.sql) | 32 reads | ~105757 tok |
+| 15:23 | Session end: 65 writes across 31 files (types.ts, db.ts, index.ts, SyncService.test.ts, 20260520000000_productos.sql) | 32 reads | ~105757 tok |
+| 15:28 | Session end: 65 writes across 31 files (types.ts, db.ts, index.ts, SyncService.test.ts, 20260520000000_productos.sql) | 32 reads | ~105757 tok |
+| 15:28 | Edited apps/web/vite.config.ts | 5173 → 5174 | ~5 |
+| 15:28 | Session end: 66 writes across 32 files (types.ts, db.ts, index.ts, SyncService.test.ts, 20260520000000_productos.sql) | 33 reads | ~106039 tok |
+| 15:31 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | added 1 import(s) | ~80 |
+| 15:31 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | 1→2 lines | ~37 |
+| 15:31 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | added 2 condition(s) | ~168 |
+| 15:31 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | modified if() | ~15 |
+| 15:31 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | 5→5 lines | ~55 |
+| 15:31 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | expanded (+6 lines) | ~57 |
+| 15:31 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | 5→7 lines | ~87 |
+| 15:32 | Session end: 73 writes across 32 files (types.ts, db.ts, index.ts, SyncService.test.ts, 20260520000000_productos.sql) | 34 reads | ~108169 tok |
+| 15:52 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | added 2 import(s) | ~111 |
+| 15:52 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | 1→6 lines | ~65 |
+| 15:52 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | added nullish coalescing | ~332 |
+| 15:52 | Edited apps/web/src/components/SkillPicker.tsx | 6→7 lines | ~25 |
+| 15:52 | Edited apps/web/src/components/SkillPicker.tsx | expanded (+13 lines) | ~226 |
+| 15:52 | Edited apps/web/src/components/SkillPicker.tsx | onClose() → handleClose() | ~193 |
+| 15:53 | Edited apps/web/src/components/SkillPicker.tsx | CSS: sm, md, sm | ~853 |
+
+## Session: 2026-05-21 15:55
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 16:00 | Created apps/web/src/components/PaletteShell.tsx | — | ~530 |
+| 16:00 | Edited apps/web/src/components/CommandPalette.tsx | added 1 import(s) | ~162 |
+| 16:00 | Edited apps/web/src/components/CommandPalette.tsx | modified CommandPalette() | ~595 |
+| 16:00 | Edited apps/web/src/components/ProjectEditPalette.tsx | added 1 import(s) | ~41 |
+| 16:00 | Edited apps/web/src/components/ProjectEditPalette.tsx | reduced (-11 lines) | ~173 |
+| 16:00 | Edited apps/web/src/components/ProjectEditPalette.tsx | removed 19 lines | ~46 |
+| 16:00 | Edited apps/web/src/components/ProjectEditPalette.tsx | 12→11 lines | ~119 |
+| 16:01 | Edited apps/web/src/components/SkillPicker.tsx | added 1 import(s) | ~100 |
+| 16:01 | Edited apps/web/src/components/SkillPicker.tsx | 9→9 lines | ~96 |
+| 16:01 | Edited apps/web/src/components/SkillPicker.tsx | reduced (-8 lines) | ~95 |
+| 16:01 | Edited apps/web/src/components/SkillPicker.tsx | reduced (-15 lines) | ~603 |
+| 16:01 | Edited apps/web/src/components/SkillPicker.tsx | 5→7 lines | ~25 |
+| 16:02 | Session end: 12 writes across 4 files (PaletteShell.tsx, CommandPalette.tsx, ProjectEditPalette.tsx, SkillPicker.tsx) | 4 reads | ~10126 tok |
+| 16:07 | Created apps/web/src/components/PaletteInputRow.tsx | — | ~389 |
+| 16:07 | Edited apps/web/src/components/ProjectEditPalette.tsx | added 1 import(s) | ~32 |
+| 16:07 | Edited apps/web/src/components/ProjectEditPalette.tsx | 18→13 lines | ~119 |
+| 16:07 | Edited apps/web/src/components/ProjectEditPalette.tsx | 5→5 lines | ~32 |
+| 16:07 | Edited apps/web/src/components/SkillPicker.tsx | added 1 import(s) | ~32 |
+| 16:07 | Edited apps/web/src/components/SkillPicker.tsx | 10→8 lines | ~63 |
+| 16:08 | Session end: 18 writes across 5 files (PaletteShell.tsx, CommandPalette.tsx, ProjectEditPalette.tsx, SkillPicker.tsx, PaletteInputRow.tsx) | 5 reads | ~11963 tok |
+| 16:15 | Edited apps/web/src/components/PaletteShell.tsx | inline fix | ~72 |
+| 16:15 | Edited apps/web/src/components/PaletteInputRow.tsx | "flex items-center h-11 px" → "flex items-center h-11 px" | ~26 |
+| 16:15 | Session end: 20 writes across 5 files (PaletteShell.tsx, CommandPalette.tsx, ProjectEditPalette.tsx, SkillPicker.tsx, PaletteInputRow.tsx) | 5 reads | ~12061 tok |
+| 16:18 | Edited apps/web/src/components/PaletteInputRow.tsx | "flex items-center h-11 px" → "flex items-center h-11 px" | ~29 |
+| 16:18 | Session end: 21 writes across 5 files (PaletteShell.tsx, CommandPalette.tsx, ProjectEditPalette.tsx, SkillPicker.tsx, PaletteInputRow.tsx) | 6 reads | ~12462 tok |
+| 16:48 | Edited apps/web/src/components/PaletteShell.tsx | inline fix | ~82 |
+| 16:49 | Session end: 22 writes across 5 files (PaletteShell.tsx, CommandPalette.tsx, ProjectEditPalette.tsx, SkillPicker.tsx, PaletteInputRow.tsx) | 7 reads | ~13086 tok |
+| 16:50 | Edited apps/web/src/components/PaletteInputRow.tsx | CSS: outline | ~55 |
+| 16:50 | Edited apps/web/src/components/PaletteShell.tsx | inline fix | ~17 |
+| 16:50 | Session end: 24 writes across 5 files (PaletteShell.tsx, CommandPalette.tsx, ProjectEditPalette.tsx, SkillPicker.tsx, PaletteInputRow.tsx) | 7 reads | ~13158 tok |
+| 16:53 | Edited apps/web/src/components/PaletteInputRow.tsx | "flex items-center h-11 px" → "flex items-center h-11 px" | ~43 |
+| 16:53 | Session end: 25 writes across 5 files (PaletteShell.tsx, CommandPalette.tsx, ProjectEditPalette.tsx, SkillPicker.tsx, PaletteInputRow.tsx) | 7 reads | ~13201 tok |
