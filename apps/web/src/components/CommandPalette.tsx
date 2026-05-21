@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo, useState, useCallback } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import {
   SmartInput,
   type ProjectWithSpace,
@@ -13,6 +13,7 @@ import { db } from "../lib/db";
 import { requestSync } from "../lib/requestSync";
 import { resolveTaskProjectId } from "../lib/createProjectForTask";
 import { nanoid } from "nanoid";
+import PaletteShell, { usePaletteClose } from "./PaletteShell";
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -72,8 +73,7 @@ export default function CommandPalette({
   const { spacesWithProjects } = useSpacesProjects();
   const taskCounts = useTaskCounts();
   const inputRef = useRef<HTMLInputElement>(null);
-  const triggerRef = useRef<Element | null>(null);
-  const [isClosing, setIsClosing] = useState(false);
+  const { isClosing, handleClose, captureTrigger } = usePaletteClose(onClose);
 
   const projects: ProjectWithSpace[] = useMemo(
     () =>
@@ -83,22 +83,12 @@ export default function CommandPalette({
     [spacesWithProjects],
   );
 
-  const handleClose = useCallback(() => {
-    setIsClosing(true);
-    setTimeout(() => {
-      setIsClosing(false);
-      onClose();
-      (triggerRef.current as HTMLElement | null)?.focus();
-    }, 100);
-  }, [onClose]);
-
   useEffect(() => {
     if (isOpen) {
-      triggerRef.current = document.activeElement;
-      setIsClosing(false);
+      captureTrigger();
       requestAnimationFrame(() => inputRef.current?.focus());
     }
-  }, [isOpen]);
+  }, [isOpen, captureTrigger]);
 
   if (!isOpen && !isClosing) return null;
 
@@ -117,46 +107,33 @@ export default function CommandPalette({
       : undefined;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-[10vh] sm:pt-[14vh] md:pt-[18vh] px-3 sm:px-4 bg-text/30 backdrop-blur-scrim"
-      onPointerDown={(e) => {
-        if (e.target === e.currentTarget) handleClose();
-      }}
+    <PaletteShell
+      title={isEditing ? `Editing · ${editTask.title}` : "New task"}
+      isClosing={isClosing}
+      onClose={handleClose}
     >
-      <div
-        className={`${isClosing ? "animate-palette-out" : "animate-palette-in"} w-full max-w-[min(820px,calc(100vw-1.5rem))] border-[0.5px] border-border bg-bg/95 floating-panel shadow-panel`}
-      >
-        <div className="flex items-center px-3 py-1.5 border-b border-[0.5px] border-border">
-          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-dim">
-            {isEditing ? `Editing · ${editTask.title}` : "New task"}
-          </span>
-          <span className="ml-auto font-mono text-[9px] text-dim">
-            esc to close
-          </span>
-        </div>
-        <SmartInput
-          key={isEditing ? editTask.id : "new"}
-          projects={projects}
-          onTaskReady={async (partial: TaskDraftPayload) => {
-            const projectId = await resolveTaskProjectId(
-              partial,
-              spacesWithProjects,
-            );
-            const { newProjectName: _np, ...fields } = partial;
-            if (isEditing) {
-              await updateTask(editTask.id, { ...fields, projectId });
-            } else {
-              await createTask({ ...fields, projectId });
-            }
-            onClose();
-          }}
-          inputRef={inputRef}
-          initialValues={initialValues}
-          initialFocus={editChip ?? undefined}
-          dropdownPosition="inline"
-          taskCounts={taskCounts}
-        />
-      </div>
-    </div>
+      <SmartInput
+        key={isEditing ? editTask.id : "new"}
+        projects={projects}
+        onTaskReady={async (partial: TaskDraftPayload) => {
+          const projectId = await resolveTaskProjectId(
+            partial,
+            spacesWithProjects,
+          );
+          const { newProjectName: _np, ...fields } = partial;
+          if (isEditing) {
+            await updateTask(editTask.id, { ...fields, projectId });
+          } else {
+            await createTask({ ...fields, projectId });
+          }
+          onClose();
+        }}
+        inputRef={inputRef}
+        initialValues={initialValues}
+        initialFocus={editChip ?? undefined}
+        dropdownPosition="inline"
+        taskCounts={taskCounts}
+      />
+    </PaletteShell>
   );
 }
