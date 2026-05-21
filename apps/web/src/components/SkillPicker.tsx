@@ -3,6 +3,7 @@ import {
   useEffect,
   useRef,
   useState,
+  useMemo,
 } from "react";
 import { nanoid } from "nanoid";
 import { db } from "../lib/db";
@@ -28,21 +29,34 @@ export default function SkillPicker({
   const { skills } = useSkills();
   const [query, setQuery] = useState("");
   const [selectedIdx, setSelectedIdx] = useState(0);
+  const [isClosing, setIsClosing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     requestAnimationFrame(() => inputRef.current?.focus());
   }, []);
 
-  const filtered = skills.filter(
-    (s) =>
-      s.name.toLowerCase().includes(query.toLowerCase()) ||
-      s.description.toLowerCase().includes(query.toLowerCase()),
+  const filtered = useMemo(
+    () =>
+      skills.filter(
+        (s) =>
+          s.name.toLowerCase().includes(query.toLowerCase()) ||
+          s.description.toLowerCase().includes(query.toLowerCase()),
+      ),
+    [skills, query],
   );
 
   useEffect(() => {
     setSelectedIdx(0);
   }, [query]);
+
+  const handleClose = useCallback(() => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsClosing(false);
+      onClose();
+    }, 100);
+  }, [onClose]);
 
   const execute = useCallback(
     async (idx: number) => {
@@ -80,7 +94,7 @@ export default function SkillPicker({
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") {
-        onClose();
+        handleClose();
         return;
       }
       if (e.key === "ArrowDown") {
@@ -96,39 +110,46 @@ export default function SkillPicker({
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, filtered.length, selectedIdx, execute]);
+  }, [handleClose, filtered.length, selectedIdx, execute]);
 
   return (
-    <>
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center pt-[10vh] sm:pt-[14vh] md:pt-[18vh] px-3 sm:px-4 bg-text/30 backdrop-blur-scrim"
+      onPointerDown={(e) => {
+        if (e.target === e.currentTarget) handleClose();
+      }}
+    >
       <div
-        className="fixed inset-0 bg-text/20 backdrop-blur-[12px]"
-        style={{ zIndex: 60 }}
-        onClick={onClose}
-        aria-hidden
-      />
-      <div
-        className="fixed top-[20%] left-1/2 -translate-x-1/2 w-[480px] bg-bg border border-[0.5px] border-border flex flex-col"
-        style={{ zIndex: 70 }}
+        className={`${isClosing ? "animate-palette-out" : "animate-palette-in"} w-full max-w-[min(820px,calc(100vw-1.5rem))] border-[0.5px] border-border bg-bg/95 floating-panel shadow-panel`}
         role="dialog"
         aria-label="Skill picker"
       >
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-[0.5px] border-border">
-          <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-muted shrink-0">
-            SKILLS
+        {/* Header — same structure as CommandPalette */}
+        <div className="flex items-center px-3 py-1.5 border-b border-[0.5px] border-border">
+          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-dim">
+            Skills
           </span>
+          <span className="ml-auto font-mono text-[9px] text-dim">
+            esc to close
+          </span>
+        </div>
+
+        {/* Search input */}
+        <div className="flex items-center px-3 py-2 border-b border-[0.5px] border-border">
           <input
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Filter skills..."
-            className="flex-1 bg-transparent outline-none font-sans text-[13px] text-text placeholder:text-muted"
+            className="flex-1 bg-transparent outline-none font-sans text-sm text-text placeholder:text-dim"
           />
         </div>
 
-        <div className="flex flex-col max-h-64 overflow-y-auto">
+        {/* Skill list */}
+        <div className="flex flex-col max-h-72 overflow-y-auto">
           {filtered.length === 0 ? (
-            <div className="px-4 py-3 font-mono text-[10px] text-muted">
-              No skills yet. Add one via the avatar menu → Skills Library.
+            <div className="px-3 py-3 font-mono text-[10px] text-muted">
+              No skills yet — add one via the avatar menu → Skills Library.
             </div>
           ) : (
             filtered.map((skill, idx) => (
@@ -137,24 +158,24 @@ export default function SkillPicker({
                 type="button"
                 onClick={() => void execute(idx)}
                 onMouseEnter={() => setSelectedIdx(idx)}
-                className={`flex items-start gap-3 px-4 py-2.5 text-left transition-colors duration-100 border-b border-[0.5px] border-border/50 ${
-                  idx === selectedIdx ? "bg-accent/5" : "hover:bg-surface"
+                className={`flex items-center gap-3 px-3 min-h-task-row transition-colors duration-150 text-left ${
+                  idx === selectedIdx ? "bg-accent/5 laser-focus" : "hover:bg-surface-2"
                 }`}
               >
-                <span className="text-[14px] shrink-0">{skill.emoji}</span>
-                <div>
-                  <div className="font-sans text-[13px] font-medium text-text">
-                    {skill.name}
-                  </div>
-                  {skill.description && (
-                    <div className="font-mono text-[10px] text-muted mt-0.5">
-                      {skill.description}
-                    </div>
-                  )}
-                </div>
+                <span className="text-[13px] shrink-0 w-5 text-center leading-none">
+                  {skill.emoji}
+                </span>
+                <span className="flex-1 text-sm font-medium tracking-[-0.02em] text-text truncate">
+                  {skill.name}
+                </span>
+                {skill.description && (
+                  <span className="font-mono text-[10px] text-muted shrink-0 max-w-48 truncate">
+                    {skill.description}
+                  </span>
+                )}
                 {idx === selectedIdx && (
-                  <span className="ml-auto font-mono text-[9px] text-accent uppercase tracking-[0.06em] shrink-0 self-center">
-                    Enter ↵
+                  <span className="font-mono text-[9px] text-dim uppercase tracking-[0.2em] shrink-0">
+                    enter ↵
                   </span>
                 )}
               </button>
@@ -162,6 +183,6 @@ export default function SkillPicker({
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

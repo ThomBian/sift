@@ -11,7 +11,10 @@ import { db } from "../lib/db";
 import { useArtifacts } from "../hooks/useArtifacts";
 import ArtifactDrawer from "../components/ArtifactDrawer";
 import ConfirmModal from "../components/ConfirmModal";
+import CommandPalette from "../components/CommandPalette";
 import SkillPicker from "../components/SkillPicker";
+import TaskRow from "../components/TaskRow";
+import { useSpacesProjects } from "../hooks/useSpacesProjects";
 import type { Artifact, Task } from "@sift/shared";
 
 type FocusZone = "tasks" | "artifacts";
@@ -37,6 +40,11 @@ export default function ProjectWorkspaceView() {
   );
   const { artifacts, totalTokens } = useArtifacts(projectId ?? "");
 
+  const { spacesWithProjects } = useSpacesProjects();
+  const spaceMap = Object.fromEntries(
+    spacesWithProjects.map(({ space }) => [space.id, space])
+  );
+
   const [focusZone, setFocusZone] = useState<FocusZone>("tasks");
   const [focusedTaskIdx, setFocusedTaskIdx] = useState(0);
   const [focusedArtifactIdx, setFocusedArtifactIdx] = useState(0);
@@ -45,6 +53,7 @@ export default function ProjectWorkspaceView() {
   const [editingTitleId, setEditingTitleId] = useState<string | null>(null);
   const [deleteArtifact, setDeleteArtifact] = useState<Artifact | null>(null);
   const [skillPickerOpen, setSkillPickerOpen] = useState(false);
+  const [cmdPaletteOpen, setCmdPaletteOpen] = useState(false);
   const [skillHint, setSkillHint] = useState(false);
   const skillHintTimerRef = useRef<number | null>(null);
 
@@ -128,7 +137,13 @@ export default function ProjectWorkspaceView() {
         return;
       }
 
-      if (openArtifact || skillPickerOpen) return;
+      if (openArtifact || skillPickerOpen || cmdPaletteOpen) return;
+
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setCmdPaletteOpen(true);
+        return;
+      }
 
       if (e.key === "Escape") {
         navigate("/projects");
@@ -138,6 +153,12 @@ export default function ProjectWorkspaceView() {
       if (e.key === "s" || e.key === "S") {
         e.preventDefault();
         openSkillPicker();
+        return;
+      }
+
+      if (e.key === "n" || e.key === "N") {
+        setFocusZone("artifacts");
+        setNewArtifactTitle("");
         return;
       }
 
@@ -177,8 +198,6 @@ export default function ProjectWorkspaceView() {
           e.preventDefault();
           const a = artifacts[focusedArtifactIdx];
           if (a) setOpenArtifact(a);
-        } else if (e.key === "n" || e.key === "N") {
-          setNewArtifactTitle("");
         } else if (e.key === "e" || e.key === "E") {
           const a = artifacts[focusedArtifactIdx];
           if (a) setEditingTitleId(a.id);
@@ -192,7 +211,7 @@ export default function ProjectWorkspaceView() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [
-    openArtifact, skillPickerOpen, focusZone, tasks, artifacts,
+    openArtifact, skillPickerOpen, cmdPaletteOpen, focusZone, tasks, artifacts,
     focusedTaskIdx, focusedArtifactIdx,
     toggleTaskDone, archiveTask, navigate, openSkillPicker,
   ]);
@@ -222,6 +241,8 @@ export default function ProjectWorkspaceView() {
       ? [
           { key: "↑↓", label: "tasks" },
           { key: "Enter", label: "done" },
+          { key: "⌘K", label: "new task" },
+          { key: "N", label: "new artifact" },
           { key: "Tab", label: "artifacts" },
           { key: "S", label: "skills" },
           { key: "ESC", label: "back" },
@@ -264,36 +285,28 @@ export default function ProjectWorkspaceView() {
             TASKS ({taskList.length})
           </div>
           {taskList.length === 0 ? (
-            <p className="font-mono text-[10px] text-muted">
-              No tasks. Press Cmd+K to add one.
+            <p className="font-mono text-[10px] text-muted px-3">
+              No tasks. Press ⌘K to add one.
             </p>
           ) : (
-            <div className="flex flex-col">
+            <div role="list">
               {taskList.map((task, idx) => {
                 const focused = focusZone === "tasks" && idx === focusedTaskIdx;
-                const done = task.status === "done";
+                const now = new Date();
+                const fallbackSpace = { id: "__orphan__", name: "Unknown", color: "#888888", createdAt: now, updatedAt: now, synced: true };
+                const space = project ? (spaceMap[project.spaceId] ?? fallbackSpace) : fallbackSpace;
                 return (
-                  <div
+                  <TaskRow
                     key={task.id}
-                    onClick={() => { setFocusZone("tasks"); setFocusedTaskIdx(idx); }}
-                    className={`flex items-center gap-3 py-2 border-b border-[0.5px] border-border cursor-default transition-colors duration-100 ${
-                      focused ? "bg-accent/5" : ""
-                    }`}
-                    style={focused ? { boxShadow: "0 0 8px rgba(255,79,0,0.08)" } : undefined}
-                  >
-                    <span
-                      className={`w-1.5 h-1.5 shrink-0 ${
-                        focused ? "bg-accent" : done ? "bg-muted" : "border border-[0.5px] border-muted"
-                      }`}
-                    />
-                    <span
-                      className={`font-sans text-[14px] tracking-[-0.02em] ${
-                        done ? "line-through text-muted" : focused ? "text-text font-medium" : "text-text"
-                      }`}
-                    >
-                      {task.title}
-                    </span>
-                  </div>
+                    task={task}
+                    project={project!}
+                    space={space}
+                    isFocused={focused}
+                    onFocus={() => { setFocusZone("tasks"); setFocusedTaskIdx(idx); }}
+                    onToggle={() => void toggleTaskDone(task)}
+                    index={idx}
+                    showProject={false}
+                  />
                 );
               })}
             </div>
@@ -419,6 +432,12 @@ export default function ProjectWorkspaceView() {
           ))
         )}
       </footer>
+
+      <CommandPalette
+        isOpen={cmdPaletteOpen}
+        onClose={() => setCmdPaletteOpen(false)}
+        prefillProjectId={projectId}
+      />
 
       {skillPickerOpen && project && tasks && (
         <SkillPicker
