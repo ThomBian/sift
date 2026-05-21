@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTasks } from "../../hooks/useTasks";
@@ -101,8 +101,30 @@ export default function Topbar({
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const inboxTasks = useTasks("inbox");
   const todayTasks = useTasks("today");
+
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    function onPointerDown(e: PointerEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    window.addEventListener("pointerdown", onPointerDown);
+    return () => window.removeEventListener("pointerdown", onPointerDown);
+  }, [dropdownOpen]);
+
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setDropdownOpen(false);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [dropdownOpen]);
 
   useEffect(() => {
     const onCalendar =
@@ -208,16 +230,37 @@ export default function Topbar({
           <SyncStatus status={syncStatus} />
         </div>
         {user ? (
-          <button
-            type="button"
-            tabIndex={-1}
-            onClick={() => void signOut()}
-            className="min-w-11 min-h-11 w-11 h-11 md:min-w-7 md:min-h-7 md:w-7 md:h-7 bg-accent flex items-center justify-center text-bg text-[11px] font-mono font-medium hover:bg-accent/80 transition-colors duration-150"
-            title="Sign out"
-            aria-label="Sign out"
-          >
-            {(user.email ?? "U")[0].toUpperCase()}
-          </button>
+          <div ref={dropdownRef} className="relative">
+            <button
+              type="button"
+              onClick={() => setDropdownOpen((o) => !o)}
+              className="min-w-11 min-h-11 w-11 h-11 md:min-w-7 md:min-h-7 md:w-7 md:h-7 bg-accent flex items-center justify-center text-bg text-[11px] font-mono font-medium hover:bg-accent/80 transition-colors duration-150"
+              aria-label="User menu"
+              aria-expanded={dropdownOpen}
+            >
+              {(user.email ?? "U")[0].toUpperCase()}
+            </button>
+
+            {dropdownOpen && (
+              <div className="absolute right-0 top-full mt-1 w-40 bg-bg border border-[0.5px] border-border z-50 flex flex-col">
+                <button
+                  type="button"
+                  onClick={() => { setDropdownOpen(false); navigate("/skills"); }}
+                  className="px-3 py-2 text-left font-sans text-[13px] text-text hover:bg-surface transition-colors duration-100"
+                >
+                  Skills Library
+                </button>
+                <div className="border-t border-[0.5px] border-border" />
+                <button
+                  type="button"
+                  onClick={() => { setDropdownOpen(false); void signOut(); }}
+                  className="px-3 py-2 text-left font-sans text-[13px] text-muted hover:bg-surface hover:text-text transition-colors duration-100"
+                >
+                  Sign out
+                </button>
+              </div>
+            )}
+          </div>
         ) : null}
       </div>
     </header>
