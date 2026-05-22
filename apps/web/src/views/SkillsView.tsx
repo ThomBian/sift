@@ -10,6 +10,8 @@ import { supabase } from "../lib/supabase";
 import { useSkills } from "../contexts/SkillsContext";
 import { EmojiPicker } from "@sift/shared";
 import ConfirmModal from "../components/ConfirmModal";
+import { Input } from "../components/Input";
+import { Textarea } from "../components/Textarea";
 import type { PromptTemplate } from "@sift/shared";
 
 const VARIABLES = [
@@ -122,12 +124,12 @@ export default function SkillsView() {
   }, [form, skills, focusedIdx, navigate]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-surface">
+    <div className="flex flex-col min-h-screen bg-bg">
       <header className="flex items-center gap-3 h-12 px-6 border-b border-[0.5px] border-border bg-surface shrink-0">
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="font-mono text-[9px] uppercase tracking-[0.06em] text-muted border border-[0.5px] border-border px-1.5 py-0.5 hover:text-text transition-colors"
+          className="font-mono text-[9px] uppercase tracking-[0.06em] text-muted border-[0.5px] border-border px-1.5 py-0.5 hover:text-text transition-colors"
         >
           ← ESC
         </button>
@@ -137,7 +139,7 @@ export default function SkillsView() {
         <button
           type="button"
           onClick={() => setForm(emptyForm(null))}
-          className="ml-auto font-mono text-[9px] uppercase tracking-[0.06em] text-accent border border-[0.5px] border-accent px-2 py-0.5 hover:bg-accent/5 transition-colors"
+          className="ml-auto font-mono text-[9px] uppercase tracking-[0.06em] text-accent border-[0.5px] border-accent px-2 py-0.5 hover:bg-accent/5 transition-colors"
         >
           N — New Skill
         </button>
@@ -157,8 +159,8 @@ export default function SkillsView() {
               <div
                 key={skill.id}
                 onClick={() => setFocusedIdx(idx)}
-                className={`flex items-center gap-3 py-3 border-b border-[0.5px] border-border cursor-default transition-colors duration-100 ${
-                  focused ? "bg-accent/5" : ""
+                className={`flex items-center gap-3 py-3 min-h-[36px] border-b border-[0.5px] border-border cursor-default transition-colors duration-150 ${
+                  focused ? "bg-accent/5 laser-focus" : "hover:bg-surface"
                 }`}
               >
                 <span className="text-[16px] shrink-0">{skill.emoji}</span>
@@ -190,8 +192,8 @@ export default function SkillsView() {
         </div>
 
         {form && (
-          <div className="mt-4 border border-[0.5px] border-accent bg-bg p-6 flex flex-col gap-4">
-            <div className="font-mono text-[10px] uppercase tracking-[0.1em] text-accent">
+          <div className="mt-4 border-[0.5px] border-accent bg-bg p-6 flex flex-col gap-4 animate-palette-in">
+            <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
               {form.id ? "EDIT SKILL" : "NEW SKILL"}
             </div>
 
@@ -200,7 +202,7 @@ export default function SkillsView() {
                 <button
                   type="button"
                   onClick={() => setShowEmojiPicker((v) => !v)}
-                  className="text-[20px] w-9 h-9 border border-[0.5px] border-border flex items-center justify-center hover:border-accent transition-colors"
+                  className="text-[20px] w-9 h-9 border-[0.5px] border-border flex items-center justify-center hover:border-accent transition-colors"
                 >
                   {form.emoji}
                 </button>
@@ -216,45 +218,43 @@ export default function SkillsView() {
                   </div>
                 )}
               </div>
-              <input
+              <Input
                 value={form.name}
                 onChange={(e) => setForm((f) => f ? { ...f, name: e.target.value } : f)}
                 placeholder="Skill name..."
-                className="flex-1 border-b border-[0.5px] border-border bg-transparent font-sans text-[14px] text-text pb-1 outline-none placeholder:text-muted focus:border-accent transition-colors"
+                className="flex-1 font-sans text-[14px]"
               />
             </div>
 
-            <input
+            <Input
               value={form.description}
               onChange={(e) => setForm((f) => f ? { ...f, description: e.target.value } : f)}
               placeholder="Short description..."
-              className="border-b border-[0.5px] border-border bg-transparent font-sans text-[13px] text-text pb-1 outline-none placeholder:text-muted focus:border-accent transition-colors"
+              className="font-sans text-[13px]"
             />
 
             <div>
-              <div className="font-mono text-[9px] uppercase tracking-[0.1em] text-muted mb-1.5">
+              <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted mb-1.5">
                 SYSTEM PROMPT
               </div>
-              <textarea
+              <Textarea
                 value={form.systemPrompt}
                 onChange={(e) => setForm((f) => f ? { ...f, systemPrompt: e.target.value } : f)}
                 placeholder="You are an elite product strategist..."
                 rows={4}
-                className="w-full border border-[0.5px] border-border bg-surface font-mono text-[12px] text-text p-2 outline-none placeholder:text-muted resize-none focus:border-accent transition-colors"
               />
             </div>
 
             <div>
-              <div className="font-mono text-[9px] uppercase tracking-[0.1em] text-muted mb-1.5">
+              <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted mb-1.5">
                 USER PROMPT TEMPLATE
               </div>
-              <textarea
+              <Textarea
                 ref={userPromptRef}
                 value={form.userPromptTemplate}
                 onChange={(e) => setForm((f) => f ? { ...f, userPromptTemplate: e.target.value } : f)}
                 placeholder="Using the project '{{PROJECT_NAME}}'..."
                 rows={6}
-                className="w-full border border-[0.5px] border-border bg-surface font-mono text-[12px] text-text p-2 outline-none placeholder:text-muted resize-none focus:border-accent transition-colors"
               />
               <div className="flex flex-wrap gap-2 mt-2">
                 {VARIABLES.map((v) => (
@@ -262,7 +262,7 @@ export default function SkillsView() {
                     key={v}
                     type="button"
                     onClick={() => insertVariable(v)}
-                    className="font-mono text-[9px] text-muted border border-[0.5px] border-border px-1.5 py-0.5 hover:border-accent hover:text-accent transition-colors"
+                    className="font-mono text-[9px] text-muted border-[0.5px] border-border px-1.5 py-0.5 hover:border-accent hover:text-accent transition-colors"
                   >
                     {v}
                   </button>
