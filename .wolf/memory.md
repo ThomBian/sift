@@ -223,3 +223,44 @@
 | 16:50 | Session end: 24 writes across 5 files (PaletteShell.tsx, CommandPalette.tsx, ProjectEditPalette.tsx, SkillPicker.tsx, PaletteInputRow.tsx) | 7 reads | ~13158 tok |
 | 16:53 | Edited apps/web/src/components/PaletteInputRow.tsx | "flex items-center h-11 px" → "flex items-center h-11 px" | ~43 |
 | 16:53 | Session end: 25 writes across 5 files (PaletteShell.tsx, CommandPalette.tsx, ProjectEditPalette.tsx, SkillPicker.tsx, PaletteInputRow.tsx) | 7 reads | ~13201 tok |
+| 18:28 | Session end: 25 writes across 5 files (PaletteShell.tsx, CommandPalette.tsx, ProjectEditPalette.tsx, SkillPicker.tsx, PaletteInputRow.tsx) | 7 reads | ~13201 tok |
+| 18:31 | Session end: 25 writes across 5 files (PaletteShell.tsx, CommandPalette.tsx, ProjectEditPalette.tsx, SkillPicker.tsx, PaletteInputRow.tsx) | 7 reads | ~13201 tok |
+
+## Session: 2026-05-21 18:31
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 08:53 | Edited apps/web/src/views/SkillsView.tsx | 2→2 lines | ~19 |
+| 08:53 | Edited apps/web/src/views/SkillsView.tsx | "font-mono text-[9px] uppe" → "font-mono text-[9px] uppe" | ~46 |
+| 08:54 | Edited apps/web/src/views/SkillsView.tsx | "ml-auto font-mono text-[9" → "ml-auto font-mono text-[9" | ~48 |
+| 08:54 | Edited apps/web/src/views/SkillsView.tsx | CSS: hover | ~72 |
+| 08:54 | Edited apps/web/src/views/SkillsView.tsx | 3→3 lines | ~63 |
+| 08:54 | Edited apps/web/src/views/SkillsView.tsx | "text-[20px] w-9 h-9 borde" → "text-[20px] w-9 h-9 borde" | ~43 |
+| 08:54 | Edited apps/web/src/views/SkillsView.tsx | 3→3 lines | ~43 |
+| 08:54 | Edited apps/web/src/views/SkillsView.tsx | 3→3 lines | ~45 |
+| 08:54 | normalize SkillsView against design system | apps/web/src/views/SkillsView.tsx | 6 deviations fixed: bg-bg, laser-focus, border-[0.5px], section label text-[10px]/tracking-[0.2em], animate-palette-in | ~800 |
+| 08:54 | Session end: 8 writes across 1 files (SkillsView.tsx) | 7 reads | ~19119 tok |
+| 09:01 | Session end: 8 writes across 1 files (SkillsView.tsx) | 12 reads | ~21953 tok |
+| 09:09 | Edited packages/shared/src/EmojiPicker/EmojiPicker.module.css | CSS: background, border, box-shadow | ~49 |
+| 09:09 | Session end: 9 writes across 2 files (SkillsView.tsx, EmojiPicker.module.css) | 14 reads | ~23769 tok |
+| 09:49 | Session end: 9 writes across 2 files (SkillsView.tsx, EmojiPicker.module.css) | 15 reads | ~26563 tok |
+| 10:30 | Created apps/web/src/components/Input.tsx | — | ~238 |
+| 10:30 | Created apps/web/src/components/Textarea.tsx | — | ~166 |
+| 10:30 | Edited apps/web/src/views/SkillsView.tsx | added 2 import(s) | ~72 |
+| 10:31 | Edited apps/web/src/views/SkillsView.tsx | 6→6 lines | ~75 |
+| 10:31 | Edited apps/web/src/views/SkillsView.tsx | 6→6 lines | ~76 |
+| 10:31 | Edited apps/web/src/views/SkillsView.tsx | 7→6 lines | ~78 |
+| 10:31 | Edited apps/web/src/views/SkillsView.tsx | 8→7 lines | ~92 |
+| 10:31 | Edited apps/web/src/views/SkillsView.tsx | "font-mono text-[9px] text" → "font-mono text-[9px] text" | ~47 |
+| 10:31 | extract Input+Textarea components from SkillsView | apps/web/src/components/Input.tsx, Textarea.tsx | created; SkillsView migrated | ~400 |
+| 10:31 | Session end: 17 writes across 4 files (SkillsView.tsx, EmojiPicker.module.css, Input.tsx, Textarea.tsx) | 17 reads | ~32608 tok |
+| 10:46 | Edited apps/web/src/components/Input.tsx | 5→5 lines | ~107 |
+| 10:46 | Session end: 18 writes across 4 files (SkillsView.tsx, EmojiPicker.module.css, Input.tsx, Textarea.tsx) | 17 reads | ~32715 tok |
+| 10:50 | Edited apps/web/src/components/Textarea.tsx | "w-full border-[0.5px] bor" → "w-full border-[0.5px] bor" | ~52 |
+| 10:50 | Session end: 19 writes across 4 files (SkillsView.tsx, EmojiPicker.module.css, Input.tsx, Textarea.tsx) | 19 reads | ~33170 tok |
+| 10:52 | Edited apps/web/src/components/Input.tsx | 2→2 lines | ~50 |
+| 10:52 | Session end: 20 writes across 4 files (SkillsView.tsx, EmojiPicker.module.css, Input.tsx, Textarea.tsx) | 19 reads | ~33220 tok |
+| 10:53 | Session end: 20 writes across 4 files (SkillsView.tsx, EmojiPicker.module.css, Input.tsx, Textarea.tsx) | 19 reads | ~33220 tok |
+| 10:54 | Edited apps/web/src/components/layout/AppLayout.tsx | added 1 condition(s) | ~101 |
+| 10:54 | Edited apps/web/src/components/layout/HintBar.tsx | 5→6 lines | ~56 |
+| 10:54 | Session end: 22 writes across 6 files (SkillsView.tsx, EmojiPicker.module.css, Input.tsx, Textarea.tsx, AppLayout.tsx) | 22 reads | ~37403 tok |

@@ -16,6 +16,7 @@ const NONE_HINTS: Hint[] = [
   { keys: ["⌘K"], label: "New task" },
   { keys: ["↑", "↓"], label: "Navigate" },
   { keys: ["← →"], label: "Switch view" },
+  { keys: ["⌘S"], label: "Skills" },
 ];
 
 function buildProjectHints(

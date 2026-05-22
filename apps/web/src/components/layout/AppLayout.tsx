@@ -138,6 +138,12 @@ export default function AppLayout({ syncStatus }: AppLayoutProps) {
         return;
       }
 
+      if (e.key === "s" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        void navigate("/skills");
+        return;
+      }
+
       if (e.key === "Escape" && paletteOpen) {
         e.preventDefault();
         closePalette();

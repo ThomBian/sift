@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-21T16:00:00.454Z
-> Files: 233 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-22T08:54:27.864Z
+> Files: 235 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -196,6 +196,7 @@
 - `ArtifactDrawer.tsx` — ArtifactDrawer — uses useState, useEffect, useCallback (~1904 tok)
 - `CommandPalette.tsx` — createTask — uses useMemo, useEffect (~1118 tok)
 - `ConfirmModal.tsx` — EXIT_MS — uses useState, useRef, useCallback, useEffect (~1576 tok)
+- `Input.tsx` — VARIANTS (~239 tok)
 - `InputBar.tsx` — handleTaskReady — uses useMemo (~550 tok)
 - `PaletteInputRow.tsx` — Leading icon. Pass null to omit. Defaults to the "+" creation marker. (~394 tok)
 - `PaletteShell.tsx` — usePaletteClose — uses useState, useCallback (~547 tok)
@@ -203,11 +204,12 @@
 - `SkillPicker.tsx` — SkillPicker — uses useState, useEffect, useMemo, useCallback (~1357 tok)
 - `TaskList.tsx` — Shown when a task has no project or the project row is missing (e.g. sync race). (~1374 tok)
 - `TaskRow.tsx` — Narrow columns: title on first line, project + due stacked with truncation. (~2367 tok)
+- `Textarea.tsx` — BASE (~168 tok)
 
 ## apps/web/src/components/layout/
 
-- `AppLayout.tsx` — Linear ←/→ order; navigating from `/week` or `/month` lands on inbox/today/projects. (~2386 tok)
-- `HintBar.tsx` — NONE_HINTS (~1156 tok)
+- `AppLayout.tsx` — Linear ←/→ order; navigating from `/week` or `/month` lands on inbox/today/projects. (~2427 tok)
+- `HintBar.tsx` — NONE_HINTS (~1167 tok)
 - `Sidebar.tsx` — focusCalendarHeaderSoon (~2053 tok)
 - `Topbar.tsx` — SYNC_LABEL — uses useNavigate, useState, useEffect (~2558 tok)
 
@@ -263,7 +265,7 @@
 - `MonthView.tsx` — Index of the cell that shows local "today", including leading/trailing month cells. (~5634 tok)
 - `ProjectsView.tsx` — ProgressBar (~7537 tok)
 - `ProjectWorkspaceView.tsx` — ProjectWorkspaceView — uses useNavigate, useState, useEffect, useCallback (~4916 tok)
-- `SkillsView.tsx` — VARIABLES — renders form — uses useNavigate, useState, useCallback, useEffect (~3570 tok)
+- `SkillsView.tsx` — VARIABLES — renders form (~3406 tok)
 - `TodayView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1182 tok)
 - `WeekView.tsx` — Enter toggles done moves the row in the DOM; restore focus so keyboard nav keeps working. (~4043 tok)
 
@@ -330,7 +332,7 @@
 
 ## packages/shared/src/EmojiPicker/
 
-- `EmojiPicker.module.css` — Styles: 7 rules (~294 tok)
+- `EmojiPicker.module.css` — Styles: 7 rules (~314 tok)
 - `EmojiPicker.tsx` — EmojiPicker — uses useState, useMemo, useEffect, useRef (~1473 tok)
 - `gridNav.ts` — 8-column row-major grid per section (matches each category sub-grid in EmojiPicker). (~1036 tok)
 
