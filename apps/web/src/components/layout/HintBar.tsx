@@ -129,6 +129,10 @@ export default function HintBar({
           <span className="text-muted text-xs">{hint.label}</span>
         </div>
       ))}
+      <div className="flex items-center gap-1.5 shrink-0 ml-auto">
+        <Key label="?" />
+        <span className="text-muted text-xs">Shortcuts</span>
+      </div>
     </div>
   );
 }

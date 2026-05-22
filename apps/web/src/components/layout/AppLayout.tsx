@@ -158,6 +158,13 @@ export default function AppLayout({ syncStatus }: AppLayoutProps) {
 
       const tag = (e.target as HTMLElement).tagName;
       const isInput = tag === "INPUT" || tag === "TEXTAREA";
+
+      if (!isInput && (e.key === "?" || e.key === "/") && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        window.dispatchEvent(new Event("sift:shortcuts"));
+        return;
+      }
+
       if (
         !isInput &&
         !paletteOpen &&

@@ -95,6 +95,11 @@ export default function SkillsView() {
         navigate(-1);
         return;
       }
+      if (e.key === "?" || e.key === "/") {
+        e.preventDefault();
+        window.dispatchEvent(new Event("sift:shortcuts"));
+        return;
+      }
       if (form) return;
       if (e.key === "ArrowDown") {
         setFocusedIdx((i) => Math.min(i + 1, skills.length - 1));
@@ -303,6 +308,9 @@ export default function SkillsView() {
             <span className="text-accent">{key}</span> {label}
           </span>
         ))}
+        <span className="font-mono text-[9px] text-muted ml-auto">
+          <span className="text-muted">?</span> shortcuts
+        </span>
       </footer>
 
       {deleteSkill && (
