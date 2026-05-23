@@ -259,7 +259,7 @@ export default function ProjectWorkspaceView() {
   return (
     <div className="flex flex-col min-h-screen bg-surface">
       {/* Topbar */}
-      <header className="flex items-center gap-3 h-12 px-6 border-b border-[0.5px] border-border bg-surface shrink-0">
+      <header className="flex items-center gap-3 h-12 px-view-x border-b-[0.5px] border-border bg-surface shrink-0">
         <button
           type="button"
           onClick={() => navigate("/projects")}
@@ -278,7 +278,7 @@ export default function ProjectWorkspaceView() {
       </header>
 
       {/* Body */}
-      <main className="flex-1 px-8 py-6 flex flex-col gap-8">
+      <main className="flex-1 px-content-x py-6 flex flex-col gap-8">
         {/* Tasks */}
         <section>
           <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted mb-3">
@@ -419,7 +419,7 @@ export default function ProjectWorkspaceView() {
       </main>
 
       {/* Hintbar */}
-      <footer className="flex items-center gap-5 px-6 py-1.5 border-t border-[0.5px] border-border bg-surface shrink-0">
+      <footer className="flex items-center gap-5 px-view-x py-1.5 border-t-[0.5px] border-border bg-surface shrink-0">
         {skillHint ? (
           <span className="font-mono text-[9px] text-accent uppercase tracking-[0.06em]">
             COPIED TO CLIPBOARD — paste into your AI, then paste the response here

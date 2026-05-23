@@ -136,7 +136,7 @@ export default function SkillsView() {
 
   return (
     <div className="flex flex-col min-h-screen bg-bg">
-      <header className="flex items-center gap-3 h-12 px-4 sm:px-6 border-b-[0.5px] border-border bg-surface shrink-0">
+      <header className="flex items-center gap-3 h-12 px-view-x border-b-[0.5px] border-border bg-surface shrink-0">
         <button
           type="button"
           onClick={() => navigate(-1)}
@@ -156,7 +156,7 @@ export default function SkillsView() {
         </button>
       </header>
 
-      <main className="flex-1 px-4 py-4 sm:px-8 sm:py-6">
+      <main className="flex-1 px-content-x py-6">
         {skills.length === 0 && !form && (
           <p className="font-mono text-[10px] text-muted">
             No skills yet. Press <span className="text-accent">N</span> to add one.
@@ -305,7 +305,7 @@ export default function SkillsView() {
         )}
       </main>
 
-      <footer className="hidden sm:flex items-center gap-5 px-6 py-1.5 border-t-[0.5px] border-border bg-surface shrink-0">
+      <footer className="hidden sm:flex items-center gap-5 px-view-x py-1.5 border-t-[0.5px] border-border bg-surface shrink-0">
         {[
           { key: "↑↓", label: "navigate" },
           { key: "N", label: "new" },

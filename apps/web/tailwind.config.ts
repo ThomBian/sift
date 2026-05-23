@@ -25,6 +25,12 @@ const config: Config = {
       height: {
         "task-row": "36px",
       },
+      spacing: {
+        /** Horizontal padding for full-page view chrome: headers, footers (SkillsView, ProjectWorkspaceView) */
+        "view-x": "24px",
+        /** Horizontal padding for full-page view content areas */
+        "content-x": "32px",
+      },
       animation: {
         "task-enter": "task-enter 180ms cubic-bezier(0.34, 1.56, 0.64, 1) both",
         "task-exit": "task-exit 150ms cubic-bezier(0.23, 1, 0.32, 1) forwards",
