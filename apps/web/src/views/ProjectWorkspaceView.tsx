@@ -14,6 +14,7 @@ import ConfirmModal from "../components/ConfirmModal";
 import CommandPalette from "../components/CommandPalette";
 import SkillPicker from "../components/SkillPicker";
 import TaskRow from "../components/TaskRow";
+import { Textarea } from "../components/Textarea";
 import { listRowFocusClasses } from "../lib/listRowFocus";
 import { useSpacesProjects } from "../hooks/useSpacesProjects";
 import type { Artifact, Task } from "@sift/shared";
@@ -345,51 +346,42 @@ export default function ProjectWorkspaceView() {
           <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted mb-3">
             DESCRIPTION
           </div>
-          <div
-            onClick={() => {
-              setFocusZone("description");
-              if (!descEditing) {
+          {descEditing ? (
+            <Textarea
+              ref={descTextareaRef}
+              value={descDraft}
+              onChange={(e) => onDescChange(e.target.value)}
+              placeholder="Describe this project…"
+              rows={4}
+              className="font-sans text-[13px] leading-relaxed border-accent"
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  e.preventDefault();
+                  exitDescEdit();
+                }
+              }}
+            />
+          ) : (
+            <div
+              onClick={() => {
+                setFocusZone("description");
                 setDescDraft(project.description ?? "");
                 setDescEditing(true);
-              }
-            }}
-            className={`px-3 py-2.5 border-[0.5px] cursor-text ${
-              descEditing
-                ? "border-accent"
-                : listRowFocusClasses(focusZone === "description")
-            }`}
-          >
-            {descEditing ? (
-              <textarea
-                ref={descTextareaRef}
-                value={descDraft}
-                onChange={(e) => onDescChange(e.target.value)}
-                placeholder="Describe this project…"
-                rows={4}
-                className="w-full bg-transparent font-sans text-[13px] text-text placeholder:text-muted outline-none resize-none leading-relaxed"
-                onKeyDown={(e) => {
-                  if (e.key === "Escape") {
-                    e.preventDefault();
-                    exitDescEdit();
-                  }
-                }}
-                onClick={(e) => e.stopPropagation()}
-              />
-            ) : (
-              <>
-                <p className={`font-sans text-[13px] leading-relaxed whitespace-pre-wrap ${project.description ? "text-text" : "text-muted"}`}>
-                  {project.description || "No description yet."}
-                </p>
-                {focusZone === "description" && (
-                  <div className="mt-2 flex gap-3">
-                    <span className="font-mono text-[9px] text-muted">
-                      <span className="text-accent">E</span> edit
-                    </span>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
+              }}
+              className={`px-3 py-2.5 border-[0.5px] cursor-text ${listRowFocusClasses(focusZone === "description")}`}
+            >
+              <p className={`font-sans text-[13px] leading-relaxed whitespace-pre-wrap ${project.description ? "text-text" : "text-muted"}`}>
+                {project.description || "No description yet."}
+              </p>
+              {focusZone === "description" && (
+                <div className="mt-2 flex gap-3">
+                  <span className="font-mono text-[9px] text-muted">
+                    <span className="text-accent">E</span> edit
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
         </section>
 
         {/* Tasks */}

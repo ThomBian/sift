@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-23T07:28:31.935Z
-> Files: 238 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-23T08:03:40.927Z
+> Files: 240 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -180,6 +180,7 @@
 - `HintBar.test.tsx` — / <reference types="vitest" /> (~1090 tok)
 - `listRowFocus.test.ts` — Declares classes (~191 tok)
 - `MonthView.test.tsx` — @vitest-environment jsdom (~1974 tok)
+- `ProjectWorkspaceDescriptionZone.test.tsx` — cycleZone (~748 tok)
 - `setup.ts` (~81 tok)
 - `SyncService.test.ts` — @vitest-environment jsdom (~5313 tok)
 - `TaskRow.test.tsx` — @vitest-environment jsdom (~1814 tok)
@@ -267,7 +268,7 @@
 - `InboxView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1189 tok)
 - `MonthView.tsx` — Index of the cell that shows local "today", including leading/trailing month cells. (~5634 tok)
 - `ProjectsView.tsx` — ProgressBar (~7400 tok)
-- `ProjectWorkspaceView.tsx` — ProjectWorkspaceView (~4883 tok)
+- `ProjectWorkspaceView.tsx` — ProjectWorkspaceView (~5896 tok)
 - `SkillsView.tsx` — VARIABLES — renders form (~3730 tok)
 - `TodayView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1182 tok)
 - `WeekView.tsx` — Enter toggles done moves the row in the DOM; restore focus so keyboard nav keeps working. (~4043 tok)
@@ -295,6 +296,7 @@
 - `2026-04-22-week-overview.md` — Week Overview Implementation Plan (~8156 tok)
 - `2026-04-29-month-view.md` — Month View Implementation Plan (~14647 tok)
 - `2026-05-20-productos.md` — ProductOS Implementation Plan (~20162 tok)
+- `2026-05-23-project-description.md` — Project Description Section Implementation Plan (~4077 tok)
 
 ## docs/superpowers/specs/
 

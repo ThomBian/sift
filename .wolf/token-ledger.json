@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-04-22T20:23:27.547Z",
   "lifetime": {
-    "total_tokens_estimated": 7016184,
-    "total_reads": 1111,
-    "total_writes": 2981,
-    "total_sessions": 21,
-    "anatomy_hits": 897,
-    "anatomy_misses": 198,
-    "repeated_reads_blocked": 2808,
-    "estimated_savings_vs_bare_cli": 9350586
+    "total_tokens_estimated": 7192717,
+    "total_reads": 1158,
+    "total_writes": 3003,
+    "total_sessions": 22,
+    "anatomy_hits": 935,
+    "anatomy_misses": 204,
+    "repeated_reads_blocked": 2850,
+    "estimated_savings_vs_bare_cli": 9520471
   },
   "sessions": [
     {
@@ -23146,6 +23146,466 @@
         "writes_count": 4,
         "repeated_reads_blocked": 11,
         "anatomy_lookups": 12
+      }
+    },
+    {
+      "id": "session-2026-05-23-0926",
+      "started": "2026-05-23T07:26:02.565Z",
+      "ended": "2026-05-23T07:47:55.175Z",
+      "reads": [
+        {
+          "file": "/Users/tbianchini/.cursor/projects/Users-tbianchini-workspace-sift/agent-tools/0957fda5-2a44-4851-ae23-64a28e7d7ce5.txt",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/SkillPicker.tsx",
+          "tokens_estimated": 1347,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/packages/shared/src/injectContext.ts",
+          "tokens_estimated": 221,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/Textarea.tsx",
+          "tokens_estimated": 168,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/InboxView.tsx",
+          "tokens_estimated": 1189,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectsView.tsx",
+          "tokens_estimated": 7400,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 3734,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 4883,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/.impeccable.md",
+          "tokens_estimated": 4269,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/HintBar.tsx",
+          "tokens_estimated": 1215,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/TaskList.tsx",
+          "tokens_estimated": 1374,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/App.tsx",
+          "tokens_estimated": 621,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/AppLayout.tsx",
+          "tokens_estimated": 2484,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/Input.tsx",
+          "tokens_estimated": 239,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/.cursor/projects/Users-tbianchini-workspace-sift/agent-tools/3b57e5ea-b062-4878-a1b3-3efb52d4daf0.txt",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 142,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 3738,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 3734,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 3730,
+          "action": "create"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 29144,
+        "output_tokens_estimated": 11344,
+        "reads_count": 15,
+        "writes_count": 4,
+        "repeated_reads_blocked": 11,
+        "anatomy_lookups": 12
+      }
+    },
+    {
+      "id": "session-2026-05-23-0926",
+      "started": "2026-05-23T07:26:02.565Z",
+      "ended": "2026-05-23T07:51:30.446Z",
+      "reads": [
+        {
+          "file": "/Users/tbianchini/.cursor/projects/Users-tbianchini-workspace-sift/agent-tools/0957fda5-2a44-4851-ae23-64a28e7d7ce5.txt",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/SkillPicker.tsx",
+          "tokens_estimated": 1347,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/packages/shared/src/injectContext.ts",
+          "tokens_estimated": 221,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/Textarea.tsx",
+          "tokens_estimated": 168,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/InboxView.tsx",
+          "tokens_estimated": 1189,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectsView.tsx",
+          "tokens_estimated": 7400,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 3734,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 4883,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/.impeccable.md",
+          "tokens_estimated": 4269,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/HintBar.tsx",
+          "tokens_estimated": 1215,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/TaskList.tsx",
+          "tokens_estimated": 1374,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/App.tsx",
+          "tokens_estimated": 621,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/AppLayout.tsx",
+          "tokens_estimated": 2484,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/Input.tsx",
+          "tokens_estimated": 239,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/.cursor/projects/Users-tbianchini-workspace-sift/agent-tools/3b57e5ea-b062-4878-a1b3-3efb52d4daf0.txt",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 142,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 3738,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 3734,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 3730,
+          "action": "create"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 29144,
+        "output_tokens_estimated": 11344,
+        "reads_count": 15,
+        "writes_count": 4,
+        "repeated_reads_blocked": 12,
+        "anatomy_lookups": 12
+      }
+    },
+    {
+      "id": "session-2026-05-23-0926",
+      "started": "2026-05-23T07:26:02.565Z",
+      "ended": "2026-05-23T07:54:27.775Z",
+      "reads": [
+        {
+          "file": "/Users/tbianchini/.cursor/projects/Users-tbianchini-workspace-sift/agent-tools/0957fda5-2a44-4851-ae23-64a28e7d7ce5.txt",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/SkillPicker.tsx",
+          "tokens_estimated": 1347,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/packages/shared/src/injectContext.ts",
+          "tokens_estimated": 221,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/Textarea.tsx",
+          "tokens_estimated": 168,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/InboxView.tsx",
+          "tokens_estimated": 1189,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectsView.tsx",
+          "tokens_estimated": 7400,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 3734,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 4883,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/.impeccable.md",
+          "tokens_estimated": 4269,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/HintBar.tsx",
+          "tokens_estimated": 1215,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/TaskList.tsx",
+          "tokens_estimated": 1374,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/App.tsx",
+          "tokens_estimated": 621,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/AppLayout.tsx",
+          "tokens_estimated": 2484,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/Input.tsx",
+          "tokens_estimated": 239,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/.cursor/projects/Users-tbianchini-workspace-sift/agent-tools/3b57e5ea-b062-4878-a1b3-3efb52d4daf0.txt",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 142,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 3738,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 3734,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 3730,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/docs/superpowers/plans/2026-05-23-project-description.md",
+          "tokens_estimated": 4660,
+          "action": "create"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 29144,
+        "output_tokens_estimated": 16004,
+        "reads_count": 15,
+        "writes_count": 5,
+        "repeated_reads_blocked": 12,
+        "anatomy_lookups": 12
+      }
+    },
+    {
+      "id": "session-2026-05-23-0958",
+      "started": "2026-05-23T07:58:03.172Z",
+      "ended": "2026-05-23T08:00:13.402Z",
+      "reads": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5924,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/ProjectWorkspaceDescriptionZone.test.tsx",
+          "tokens_estimated": 170,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 4952,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5260,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5285,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5399,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5409,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5361,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5924,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5977,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/ProjectWorkspaceDescriptionZone.test.tsx",
+          "tokens_estimated": 748,
+          "action": "create"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 6094,
+        "output_tokens_estimated": 44315,
+        "reads_count": 2,
+        "writes_count": 9,
+        "repeated_reads_blocked": 7,
+        "anatomy_lookups": 2
       }
     }
   ],
