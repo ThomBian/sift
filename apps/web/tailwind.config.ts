@@ -30,6 +30,8 @@ const config: Config = {
         "view-x": "24px",
         /** Horizontal padding for full-page view content areas */
         "content-x": "32px",
+        /** Internal horizontal padding for card/row content (project cards, skill rows) */
+        "card-x": "16px",
       },
       animation: {
         "task-enter": "task-enter 180ms cubic-bezier(0.34, 1.56, 0.64, 1) both",

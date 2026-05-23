@@ -579,7 +579,7 @@ export default function ProjectsView() {
           }
         }}
       >
-        <div className="px-4 py-2 border-b border-[0.5px] border-border">
+        <div className="px-card-x py-2 border-b-[0.5px] border-border">
           <div className="flex items-center justify-between mb-1.5">
             <span
               className={`font-mono text-[11px] flex items-center gap-1.5 min-w-0 ${
@@ -639,7 +639,7 @@ export default function ProjectsView() {
 
         {isExpanded &&
           (activeTasks.length === 0 ? (
-            <p className="font-mono text-[10px] text-muted px-4 py-3 uppercase tracking-[0.1em]">
+            <p className="font-mono text-[10px] text-muted px-card-x py-3 uppercase tracking-[0.1em]">
               No tasks.
             </p>
           ) : (
@@ -694,7 +694,7 @@ export default function ProjectsView() {
       <div className="flex-1 overflow-y-auto min-h-0">
         {groups.map(({ space, projects: ps }) => (
           <div key={space.id} className="mb-6">
-            <div className="flex items-center gap-2 px-4 py-2 mt-2">
+            <div className="flex items-center gap-2 px-card-x py-2 mt-2">
               <span
                 className="w-1.5 h-1.5 shrink-0"
                 style={{ backgroundColor: space.color }}
@@ -714,7 +714,7 @@ export default function ProjectsView() {
           <button
             type="button"
             aria-expanded={showArchived}
-            className={`w-full text-left px-4 py-3 font-mono text-[11px] border-t border-[0.5px] border-border transition-[background-color,box-shadow] duration-150 ease-spring outline-none ${
+            className={`w-full text-left px-card-x py-3 font-mono text-[11px] border-t border-[0.5px] border-border transition-[background-color,box-shadow] duration-150 ease-spring outline-none ${
               focusedProjectId === SHOW_ARCHIVED_TOGGLE_ID
                 ? "bg-accent/5 shadow-laser"
                 : ""
@@ -756,7 +756,7 @@ export default function ProjectsView() {
           ? groups.map(({ space, archivedProjects: aps }) =>
               aps.length > 0 ? (
                 <div key={`${space.id}-archived`} className="mb-6">
-                  <div className="flex items-center gap-2 px-4 py-2 mt-2">
+                  <div className="flex items-center gap-2 px-card-x py-2 mt-2">
                     <span
                       className="w-1.5 h-1.5 shrink-0 opacity-40"
                       style={{ backgroundColor: space.color }}
@@ -778,7 +778,7 @@ export default function ProjectsView() {
           : null}
 
         {groups.length === 0 && (
-          <div className="flex flex-col items-center justify-center gap-1.5 px-4 py-16 text-center">
+          <div className="flex flex-col items-center justify-center gap-1.5 px-card-x py-16 text-center">
             <p className="font-mono text-[11px] text-muted uppercase tracking-[0.15em]">
               No projects.
             </p>

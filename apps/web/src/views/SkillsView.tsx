@@ -156,9 +156,9 @@ export default function SkillsView() {
         </button>
       </header>
 
-      <main className="flex-1 px-content-x py-6">
+      <main className="flex-1 py-6">
         {skills.length === 0 && !form && (
-          <p className="font-mono text-[10px] text-muted">
+          <p className="font-mono text-[10px] text-muted px-card-x">
             No skills yet. Press <span className="text-accent">N</span> to add one.
           </p>
         )}
@@ -170,7 +170,7 @@ export default function SkillsView() {
               <div
                 key={skill.id}
                 onClick={() => setFocusedIdx(idx)}
-                className={`flex items-center gap-3 h-11 sm:h-[36px] border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${
+                className={`flex items-center gap-3 h-11 sm:h-[36px] px-card-x border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${
                   focused ? "bg-accent/5 laser-focus" : "hover:bg-surface"
                 }`}
               >
@@ -203,7 +203,7 @@ export default function SkillsView() {
         </div>
 
         {form && (
-          <div className="mt-4 border-[0.5px] border-accent bg-bg p-4 sm:p-6 flex flex-col gap-4 animate-palette-in">
+          <div className="mt-4 mx-card-x border-[0.5px] border-accent bg-bg p-4 sm:p-6 flex flex-col gap-4 animate-palette-in">
             <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
               {form.id ? "EDIT SKILL" : "NEW SKILL"}
             </div>
