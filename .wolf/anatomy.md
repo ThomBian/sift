@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-23T08:11:35.841Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-23T08:13:32.810Z
 > Files: 240 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
@@ -268,7 +268,7 @@
 - `InboxView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1189 tok)
 - `MonthView.tsx` — Index of the cell that shows local "today", including leading/trailing month cells. (~5634 tok)
 - `ProjectsView.tsx` — ProgressBar (~7400 tok)
-- `ProjectWorkspaceView.tsx` — ProjectWorkspaceView (~5845 tok)
+- `ProjectWorkspaceView.tsx` — ProjectWorkspaceView (~6012 tok)
 - `SkillsView.tsx` — VARIABLES — renders form (~3730 tok)
 - `TodayView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1182 tok)
 - `WeekView.tsx` — Enter toggles done moves the row in the DOM; restore focus so keyboard nav keeps working. (~4043 tok)

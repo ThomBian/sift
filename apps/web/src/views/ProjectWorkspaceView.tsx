@@ -296,6 +296,16 @@ export default function ProjectWorkspaceView() {
   if (!project) return null;
 
   const taskList = tasks ?? [];
+  const now = new Date();
+  const fallbackSpace = {
+    id: "__orphan__",
+    name: "Unknown",
+    color: "#888888",
+    createdAt: now,
+    updatedAt: now,
+    synced: true,
+  };
+  const space = spaceMap[project.spaceId] ?? fallbackSpace;
 
   const hints =
     focusZone === "description"
@@ -324,33 +334,38 @@ export default function ProjectWorkspaceView() {
         ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-surface">
+    <div className="flex flex-col min-h-screen bg-bg">
       {/* Topbar */}
       <header className="flex items-center gap-3 h-12 px-view-x border-b-[0.5px] border-border bg-surface shrink-0">
         <button
           type="button"
           onClick={() => navigate("/projects")}
-          className="font-mono text-[9px] uppercase tracking-[0.06em] text-muted border border-[0.5px] border-border px-1.5 py-0.5 hover:text-text transition-colors"
+          aria-label="Back to projects"
+          className="font-mono text-[9px] uppercase tracking-[0.06em] text-muted border-[0.5px] border-border px-1.5 py-0.5 hover:text-text transition-colors duration-150"
         >
           ← ESC
         </button>
-        <span className="font-sans text-[15px] font-medium text-text tracking-[-0.02em]">
+        <h1 className="font-sans text-[15px] font-medium text-text tracking-[-0.02em]">
           {project.name}
-        </span>
+        </h1>
       </header>
 
       {/* Body */}
-      <main className="flex-1 px-view-x py-6 flex flex-col gap-8">
+      <main className="flex-1 px-view-x py-6 flex flex-col gap-6">
         {/* Description */}
-        <section>
-          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted mb-3">
-            DESCRIPTION
-          </div>
+        <section aria-labelledby="desc-heading">
+          <h2
+            id="desc-heading"
+            className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted mb-3"
+          >
+            Description
+          </h2>
           {descEditing ? (
             <Textarea
               ref={descTextareaRef}
               value={descDraft}
               onChange={(e) => onDescChange(e.target.value)}
+              onBlur={exitDescEdit}
               placeholder="Describe this project…"
               rows={4}
               className="font-sans text-[13px] leading-relaxed border-accent bg-bg"
@@ -370,39 +385,47 @@ export default function ProjectWorkspaceView() {
               }}
               className={`px-3 py-2 border-[0.5px] border-border cursor-text ${listRowFocusClasses(focusZone === "description")}`}
             >
-              <p className={`font-sans text-[13px] leading-relaxed whitespace-pre-wrap ${project.description ? "text-text" : "text-muted"}`}>
-                {project.description || (focusZone === "description"
-                  ? "Press E to describe this project."
-                  : "No description yet.")}
+              <p
+                className={`font-sans text-[13px] leading-relaxed whitespace-pre-wrap ${
+                  project.description ? "text-text" : "text-muted"
+                }`}
+              >
+                {project.description ||
+                  (focusZone === "description"
+                    ? "Press E to describe this project."
+                    : "No description yet.")}
               </p>
             </div>
           )}
         </section>
 
         {/* Tasks */}
-        <section>
-          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted mb-3">
-            TASKS ({taskList.length})
-          </div>
+        <section aria-labelledby="tasks-heading">
+          <h2
+            id="tasks-heading"
+            className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted mb-3"
+          >
+            Tasks ({taskList.length})
+          </h2>
           {taskList.length === 0 ? (
             <p className="font-mono text-[10px] text-muted px-3">
-              No tasks. Press ⌘K to add one.
+              No tasks. Press ⌘K to capture one.
             </p>
           ) : (
             <div role="list">
               {taskList.map((task, idx) => {
                 const focused = focusZone === "tasks" && idx === focusedTaskIdx;
-                const now = new Date();
-                const fallbackSpace = { id: "__orphan__", name: "Unknown", color: "#888888", createdAt: now, updatedAt: now, synced: true };
-                const space = project ? (spaceMap[project.spaceId] ?? fallbackSpace) : fallbackSpace;
                 return (
                   <TaskRow
                     key={task.id}
                     task={task}
-                    project={project!}
+                    project={project}
                     space={space}
                     isFocused={focused}
-                    onFocus={() => { setFocusZone("tasks"); setFocusedTaskIdx(idx); }}
+                    onFocus={() => {
+                      setFocusZone("tasks");
+                      setFocusedTaskIdx(idx);
+                    }}
                     onToggle={() => void toggleTaskDone(task)}
                     index={idx}
                     showProject={false}
@@ -414,35 +437,44 @@ export default function ProjectWorkspaceView() {
         </section>
 
         {/* Artifacts */}
-        <section>
-          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted mb-3">
-            ARTIFACTS ({artifacts.length})
+        <section aria-labelledby="artifacts-heading">
+          <h2
+            id="artifacts-heading"
+            className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted mb-3"
+          >
+            Artifacts ({artifacts.length})
             {totalTokens > 0 && (
-              <span className="ml-2 normal-case">· ~{totalTokens.toLocaleString()} tok</span>
+              <span className="ml-2 normal-case tracking-normal">
+                · ~{totalTokens.toLocaleString()} tok
+              </span>
             )}
-          </div>
+          </h2>
 
           {artifacts.length === 0 && newArtifactTitle === null ? (
             <p className="font-mono text-[10px] text-muted">
-              No artifacts yet. Press N to start writing, or S to generate one from a skill.
+              No artifacts yet. Press N to start, or S to generate from a skill.
             </p>
           ) : (
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {artifacts.map((artifact, idx) => {
-                const focused = focusZone === "artifacts" && idx === focusedArtifactIdx;
+                const focused =
+                  focusZone === "artifacts" && idx === focusedArtifactIdx;
                 const isEditingTitle = editingTitleId === artifact.id;
                 return (
                   <div
                     key={artifact.id}
-                    onClick={() => { setFocusZone("artifacts"); setFocusedArtifactIdx(idx); }}
+                    onClick={() => {
+                      setFocusZone("artifacts");
+                      setFocusedArtifactIdx(idx);
+                    }}
                     onDoubleClick={() => setOpenArtifact(artifact)}
-                    className={`border border-[0.5px] p-3 cursor-default bg-bg border-border ${listRowFocusClasses(focused)}`}
+                    className={`border-[0.5px] border-border p-3 cursor-default bg-bg ${listRowFocusClasses(focused)}`}
                   >
                     {isEditingTitle ? (
                       <input
                         ref={editTitleInputRef}
                         defaultValue={artifact.title}
-                        className="w-full font-sans text-[12px] font-medium bg-transparent outline-none border-b border-[0.5px] border-accent text-text pb-0.5"
+                        className="w-full font-sans text-[12px] font-medium bg-transparent outline-none border-b-[0.5px] border-accent text-text pb-0.5"
                         onBlur={async (e) => {
                           const val = e.target.value.trim();
                           if (val) {
@@ -473,7 +505,7 @@ export default function ProjectWorkspaceView() {
                         />
                       ))}
                     </div>
-                    <div className="font-mono text-[9px] text-muted">
+                    <div className="font-mono text-[9px] text-muted tabular-nums">
                       ~{Math.ceil(artifact.content.length / 4)} tok
                     </div>
                   </div>
@@ -481,12 +513,12 @@ export default function ProjectWorkspaceView() {
               })}
 
               {newArtifactTitle !== null ? (
-                <div className="border border-[0.5px] border-accent p-3 bg-bg">
+                <div className="border-[0.5px] border-accent p-3 bg-bg">
                   <input
                     ref={newTitleInputRef}
                     value={newArtifactTitle}
                     onChange={(e) => setNewArtifactTitle(e.target.value)}
-                    placeholder="Artifact title..."
+                    placeholder="Artifact title…"
                     className="w-full font-sans text-[12px] font-medium bg-transparent outline-none text-text placeholder:text-muted"
                     onBlur={async () => {
                       if (newArtifactTitle.trim()) {
@@ -503,7 +535,7 @@ export default function ProjectWorkspaceView() {
                 <button
                   type="button"
                   onClick={() => setNewArtifactTitle("")}
-                  className="border border-[0.5px] border-dashed border-muted p-3 bg-transparent flex items-center justify-center hover:border-text transition-colors"
+                  className="border-[0.5px] border-dashed border-muted p-3 bg-transparent flex items-center justify-center hover:border-text transition-colors duration-150"
                 >
                   <span className="font-mono text-[9px] text-muted">
                     <span className="text-accent">N</span> — new artifact
