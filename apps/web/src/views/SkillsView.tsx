@@ -135,7 +135,7 @@ export default function SkillsView() {
 
   return (
     <div className="flex flex-col min-h-screen bg-bg">
-      <header className="flex items-center gap-3 h-12 px-6 border-b border-[0.5px] border-border bg-surface shrink-0">
+      <header className="flex items-center gap-3 h-12 px-4 sm:px-6 border-b border-[0.5px] border-border bg-surface shrink-0">
         <button
           type="button"
           onClick={() => navigate(-1)}
@@ -151,11 +151,11 @@ export default function SkillsView() {
           onClick={() => setForm(emptyForm(null))}
           className="ml-auto font-mono text-[9px] uppercase tracking-[0.06em] text-accent border-[0.5px] border-accent px-2 py-0.5 hover:bg-accent/5 transition-colors"
         >
-          N — New Skill
+          <span className="hidden sm:inline">N — </span>New Skill
         </button>
       </header>
 
-      <main className="flex-1 px-8 py-6 max-w-3xl">
+      <main className="flex-1 px-4 py-4 sm:px-8 sm:py-6 max-w-3xl">
         {skills.length === 0 && !form && (
           <p className="font-mono text-[10px] text-muted">
             No skills yet. Press N to create your first prompt template.
@@ -169,7 +169,7 @@ export default function SkillsView() {
               <div
                 key={skill.id}
                 onClick={() => setFocusedIdx(idx)}
-                className={`flex items-center gap-3 h-[36px] border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${
+                className={`flex items-center gap-3 h-11 sm:h-[36px] border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${
                   focused ? "bg-accent/5 laser-focus" : "hover:bg-surface"
                 }`}
               >
@@ -185,7 +185,7 @@ export default function SkillsView() {
                   )}
                 </div>
                 {focused && (
-                  <div className="flex gap-3 shrink-0">
+                  <div className="hidden sm:flex gap-3 shrink-0">
                     {[
                       { key: "E", label: "edit" },
                       { key: "⌫", label: "delete" },
@@ -202,7 +202,7 @@ export default function SkillsView() {
         </div>
 
         {form && (
-          <div className="mt-4 border-[0.5px] border-accent bg-bg p-6 flex flex-col gap-4 animate-palette-in">
+          <div className="mt-4 border-[0.5px] border-accent bg-bg p-4 sm:p-6 flex flex-col gap-4 animate-palette-in">
             <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
               {form.id ? "EDIT SKILL" : "NEW SKILL"}
             </div>
@@ -217,7 +217,7 @@ export default function SkillsView() {
                   {form.emoji || "⚡"}
                 </button>
                 {showEmojiPicker && (
-                  <div className="absolute top-full left-0 mt-1 z-50">
+                  <div className="absolute top-full left-0 mt-1 z-50 max-w-[calc(100vw-2rem)]">
                     <EmojiPicker
                       query=""
                       onSelect={(emoji) => {
@@ -303,7 +303,7 @@ export default function SkillsView() {
         )}
       </main>
 
-      <footer className="flex items-center gap-5 px-6 py-1.5 border-t border-[0.5px] border-border bg-surface shrink-0">
+      <footer className="hidden sm:flex items-center gap-5 px-6 py-1.5 border-t border-[0.5px] border-border bg-surface shrink-0">
         {[
           { key: "↑↓", label: "navigate" },
           { key: "N", label: "new" },
