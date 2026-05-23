@@ -6,7 +6,7 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
-import { supabase } from "../lib/supabase";
+import { db } from "../lib/db";
 import type { PromptTemplate } from "@sift/shared";
 
 interface SkillsContextValue {
@@ -23,24 +23,8 @@ export function SkillsProvider({ children }: { children: ReactNode }) {
   const [skills, setSkills] = useState<PromptTemplate[]>([]);
 
   const fetch = useCallback(async () => {
-    if (!supabase) return;
-    const { data } = await supabase
-      .from("prompt_templates")
-      .select("*")
-      .order("created_at", { ascending: true });
-    if (data) {
-      setSkills(
-        (data as Record<string, unknown>[]).map((row) => ({
-          id: row.id as string,
-          name: row.name as string,
-          emoji: row.emoji as string,
-          description: (row.description as string) ?? "",
-          systemPrompt: (row.system_prompt as string) ?? "",
-          userPromptTemplate: (row.user_prompt_template as string) ?? "",
-          createdAt: row.created_at as string,
-        })),
-      );
-    }
+    const rows = await db.promptTemplates.orderBy("createdAt").toArray();
+    setSkills(rows);
   }, []);
 
   useEffect(() => {

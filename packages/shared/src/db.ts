@@ -1,7 +1,7 @@
 // packages/shared/src/db.ts
 import Dexie, { type Table } from "dexie";
 import { nanoid } from "nanoid";
-import type { Space, Project, Task, Artifact } from "./types";
+import type { Space, Project, Task, Artifact, PromptTemplate } from "./types";
 import { getRandomEmoji } from "./emojiPool";
 
 export class AppDatabase extends Dexie {
@@ -9,6 +9,7 @@ export class AppDatabase extends Dexie {
   projects!: Table<Project>;
   tasks!: Table<Task>;
   artifacts!: Table<Artifact>;
+  promptTemplates!: Table<PromptTemplate>;
 
   constructor(name = "speedy-tasks") {
     super(name);
@@ -86,6 +87,10 @@ export class AppDatabase extends Dexie {
           });
       });
 
+    this.version(7).stores({
+      promptTemplates: "id, createdAt",
+    });
+
     this.on("ready", () => this._seed());
   }
 
@@ -126,9 +131,13 @@ export const db = new AppDatabase();
 
 /** Wipes all local IndexedDB data. Call before bootstrap when user identity changes. */
 export async function clearLocalDB(): Promise<void> {
-  await db.transaction("rw", db.spaces, db.projects, db.tasks, db.artifacts, async () => {
-    await Promise.all([db.spaces.clear(), db.projects.clear(), db.tasks.clear(), db.artifacts.clear()]);
-  });
+  await Promise.all([
+    db.spaces.clear(),
+    db.projects.clear(),
+    db.tasks.clear(),
+    db.artifacts.clear(),
+    db.promptTemplates.clear(),
+  ]);
 }
 
 export async function archiveProject(projectId: string): Promise<void> {

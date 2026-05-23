@@ -6,7 +6,7 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { nanoid } from "nanoid";
-import { supabase } from "../lib/supabase";
+import { db } from "../lib/db";
 import { useSkills } from "../contexts/SkillsContext";
 import { EmojiPicker } from "@sift/shared";
 import ConfirmModal from "../components/ConfirmModal";
@@ -45,7 +45,7 @@ export default function SkillsView() {
   const userPromptRef = useRef<HTMLTextAreaElement>(null);
 
   const saveForm = useCallback(async () => {
-    if (!form || !supabase) return;
+    if (!form) return;
     if (!form.name.trim()) return;
     setSaving(true);
     const now = new Date().toISOString();
@@ -54,11 +54,11 @@ export default function SkillsView() {
       name: form.name.trim(),
       emoji: form.emoji,
       description: form.description.trim(),
-      system_prompt: form.systemPrompt,
-      user_prompt_template: form.userPromptTemplate,
-      created_at: now,
+      systemPrompt: form.systemPrompt,
+      userPromptTemplate: form.userPromptTemplate,
+      createdAt: now,
     };
-    await supabase.from("prompt_templates").upsert(row, { onConflict: "id" });
+    await db.promptTemplates.put(row);
     await refetch();
     setForm(null);
     setSaving(false);
@@ -87,6 +87,9 @@ export default function SkillsView() {
         if (e.key === "Escape") {
           setForm(null);
           setShowEmojiPicker(false);
+        } else if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && form) {
+          e.preventDefault();
+          void saveForm();
         }
         return;
       }
@@ -317,8 +320,7 @@ export default function SkillsView() {
         <ConfirmModal
           message={`Delete skill "${deleteSkill.name}"? This cannot be undone.`}
           onConfirm={async () => {
-            if (!supabase) return;
-            await supabase.from("prompt_templates").delete().eq("id", deleteSkill.id);
+            await db.promptTemplates.delete(deleteSkill.id);
             await refetch();
             setDeleteSkill(null);
             setFocusedIdx((i) => Math.max(0, i - 1));

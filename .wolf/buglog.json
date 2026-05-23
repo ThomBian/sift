@@ -512,6 +512,98 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-22T08:54:27.875Z"
+    },
+    {
+      "id": "bug-033",
+      "timestamp": "2026-05-22T09:04:57.235Z",
+      "error_message": "Type error",
+      "file": "apps/web/src/components/layout/AppLayout.tsx",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-22T09:04:57.235Z"
+    },
+    {
+      "id": "bug-034",
+      "timestamp": "2026-05-22T09:10:49.809Z",
+      "error_message": "Wrong condition in logic",
+      "file": "apps/web/src/views/SkillsView.tsx",
+      "root_cause": "Condition was: if (e.key === \"?\")",
+      "fix": "Changed to: if (e.key === \"?\" || e.key === \"/\")",
+      "tags": [
+        "auto-detected",
+        "logic-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-22T09:10:49.809Z"
+    },
+    {
+      "id": "bug-035",
+      "timestamp": "2026-05-22T09:10:53.798Z",
+      "error_message": "Wrong condition in logic",
+      "file": "apps/web/src/components/ShortcutsOverlay.tsx",
+      "root_cause": "Condition was: if (e.key === \"Escape\" || e.key === \"?\")",
+      "fix": "Changed to: if (e.key === \"Escape\" || e.key === \"?\" || e.key === \")",
+      "tags": [
+        "auto-detected",
+        "logic-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-22T09:10:53.798Z"
+    },
+    {
+      "id": "bug-036",
+      "timestamp": "2026-05-23T06:37:18.708Z",
+      "error_message": "Significant refactor of ",
+      "file": "apps/web/src/views/SkillsView.tsx",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 4→3 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-23T06:37:18.708Z"
+    },
+    {
+      "id": "bug-037",
+      "timestamp": "2026-05-23T06:37:52.918Z",
+      "error_message": "Significant refactor of ",
+      "file": "packages/shared/src/db.ts",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 5→9 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-23T06:37:52.918Z"
+    },
+    {
+      "id": "bug-038",
+      "timestamp": "2026-05-23T00:00:00.000Z",
+      "error_message": "Skills not saved — saving silently fails when Supabase is not configured",
+      "file": "apps/web/src/views/SkillsView.tsx, apps/web/src/contexts/SkillsContext.tsx",
+      "root_cause": "Skills were Supabase-only with no local IndexedDB storage. saveForm() had guard `if (!supabase) return` so all saves silently no-oped offline.",
+      "fix": "Added promptTemplates table to Dexie (version 7 schema). SkillsContext now reads from db.promptTemplates. saveForm() uses db.promptTemplates.put(). Delete uses db.promptTemplates.delete().",
+      "tags": ["skills", "local-first", "dexie", "supabase", "silent-failure"],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-23T00:00:00.000Z"
     }
   ]
 }
