@@ -50,6 +50,7 @@ export default function SkillsView() {
     if (!form.name.trim()) return;
     setSaving(true);
     const now = new Date().toISOString();
+    const existing = form.id ? await db.promptTemplates.get(form.id) : null;
     const row = {
       id: form.id ?? nanoid(),
       name: form.name.trim(),
@@ -57,7 +58,7 @@ export default function SkillsView() {
       description: form.description.trim(),
       systemPrompt: form.systemPrompt,
       userPromptTemplate: form.userPromptTemplate,
-      createdAt: now,
+      createdAt: existing?.createdAt ?? now,
       synced: false,
     };
     await db.promptTemplates.put(row);
@@ -135,7 +136,7 @@ export default function SkillsView() {
 
   return (
     <div className="flex flex-col min-h-screen bg-bg">
-      <header className="flex items-center gap-3 h-12 px-4 sm:px-6 border-b border-[0.5px] border-border bg-surface shrink-0">
+      <header className="flex items-center gap-3 h-12 px-4 sm:px-6 border-b-[0.5px] border-border bg-surface shrink-0">
         <button
           type="button"
           onClick={() => navigate(-1)}
@@ -158,7 +159,7 @@ export default function SkillsView() {
       <main className="flex-1 px-4 py-4 sm:px-8 sm:py-6">
         {skills.length === 0 && !form && (
           <p className="font-mono text-[10px] text-muted">
-            No skills yet. Press N to create your first prompt template.
+            No skills yet. Press <span className="text-accent">N</span> to add one.
           </p>
         )}
 
@@ -234,6 +235,7 @@ export default function SkillsView() {
                 placeholder="Skill name..."
                 className="flex-1 font-sans text-[14px]"
                 maxLength={80}
+                autoFocus
               />
             </div>
 
@@ -241,7 +243,7 @@ export default function SkillsView() {
               value={form.description}
               onChange={(e) => setForm((f) => f ? { ...f, description: e.target.value } : f)}
               placeholder="Short description..."
-              className="font-sans text-[13px]"
+              className="font-sans text-[14px]"
               maxLength={160}
             />
 
@@ -303,7 +305,7 @@ export default function SkillsView() {
         )}
       </main>
 
-      <footer className="hidden sm:flex items-center gap-5 px-6 py-1.5 border-t border-[0.5px] border-border bg-surface shrink-0">
+      <footer className="hidden sm:flex items-center gap-5 px-6 py-1.5 border-t-[0.5px] border-border bg-surface shrink-0">
         {[
           { key: "↑↓", label: "navigate" },
           { key: "N", label: "new" },
@@ -316,7 +318,7 @@ export default function SkillsView() {
           </span>
         ))}
         <span className="font-mono text-[9px] text-muted ml-auto">
-          <span className="text-muted">?</span> shortcuts
+          <span className="text-accent">?</span> shortcuts
         </span>
       </footer>
 
