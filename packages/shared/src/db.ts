@@ -91,6 +91,19 @@ export class AppDatabase extends Dexie {
       promptTemplates: "id, createdAt",
     });
 
+    this.version(8)
+      .stores({
+        promptTemplates: "id, createdAt, synced",
+      })
+      .upgrade((tx) => {
+        return tx
+          .table("promptTemplates")
+          .toCollection()
+          .modify((pt: any) => {
+            if (pt.synced === undefined) pt.synced = false;
+          });
+      });
+
     this.on("ready", () => this._seed());
   }
 

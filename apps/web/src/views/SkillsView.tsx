@@ -7,6 +7,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { nanoid } from "nanoid";
 import { db } from "../lib/db";
+import { supabase } from "../lib/supabase";
 import { useSkills } from "../contexts/SkillsContext";
 import { EmojiPicker } from "@sift/shared";
 import ConfirmModal from "../components/ConfirmModal";
@@ -57,6 +58,7 @@ export default function SkillsView() {
       systemPrompt: form.systemPrompt,
       userPromptTemplate: form.userPromptTemplate,
       createdAt: now,
+      synced: false,
     };
     await db.promptTemplates.put(row);
     await refetch();
@@ -321,6 +323,9 @@ export default function SkillsView() {
           message={`Delete skill "${deleteSkill.name}"? This cannot be undone.`}
           onConfirm={async () => {
             await db.promptTemplates.delete(deleteSkill.id);
+            if (supabase) {
+              await supabase.from("prompt_templates").delete().eq("id", deleteSkill.id);
+            }
             await refetch();
             setDeleteSkill(null);
             setFocusedIdx((i) => Math.max(0, i - 1));

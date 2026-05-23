@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { db } from "../lib/db";
 import { flushPendingProjectDeletes } from "../lib/syncDeletionOutbox";
-import type { Space, Project, Task, Artifact } from "@sift/shared";
+import type { Space, Project, Task, Artifact, PromptTemplate } from "@sift/shared";
 
 const LAST_SYNC_KEY = "speedy_last_synced_at";
 
@@ -117,6 +117,32 @@ function artifactToRow(artifact: Artifact, userId: string) {
   };
 }
 
+function promptTemplateToRow(pt: PromptTemplate, userId: string) {
+  return {
+    id: pt.id,
+    user_id: userId,
+    name: pt.name,
+    emoji: pt.emoji,
+    description: pt.description,
+    system_prompt: pt.systemPrompt,
+    user_prompt_template: pt.userPromptTemplate,
+    created_at: pt.createdAt,
+  };
+}
+
+function rowToPromptTemplate(row: Record<string, unknown>): PromptTemplate {
+  return {
+    id: row.id as string,
+    name: row.name as string,
+    emoji: row.emoji as string,
+    description: (row.description as string) ?? "",
+    systemPrompt: (row.system_prompt as string) ?? "",
+    userPromptTemplate: (row.user_prompt_template as string) ?? "",
+    createdAt: row.created_at as string,
+    synced: true,
+  };
+}
+
 function rowToArtifact(row: Record<string, unknown>): Artifact {
   return {
     id: row.id as string,
@@ -147,6 +173,7 @@ export class SyncService {
       this.syncProjects(userId, lastSyncedAt),
       this.syncTasks(userId, lastSyncedAt),
       this.syncArtifacts(userId, lastSyncedAt),
+      this.syncPromptTemplates(userId),
     ]);
 
     setLastSyncedAt(syncStartedAt);
@@ -246,6 +273,37 @@ export class SyncService {
     if (toUpsert.length > 0) await db.tasks.bulkPut(toUpsert);
   }
 
+  private async syncPromptTemplates(userId: string): Promise<void> {
+    const unsynced = await db.promptTemplates.filter((pt) => !pt.synced).toArray();
+    if (unsynced.length > 0) {
+      const { error } = await this.supabase.from("prompt_templates").upsert(
+        unsynced.map((pt) => promptTemplateToRow(pt, userId)),
+        { onConflict: "id" },
+      );
+      if (!error) {
+        await db.promptTemplates.bulkPut(unsynced.map((pt) => ({ ...pt, synced: true })));
+      }
+    }
+
+    // Full pull — prompt_templates has no updated_at, so always pull all
+    const { data, error: pullError } = await this.supabase
+      .from("prompt_templates")
+      .select("*")
+      .eq("user_id", userId);
+
+    if (pullError || !data) return;
+
+    const remoteTemplates = (data as Record<string, unknown>[]).map(rowToPromptTemplate);
+    const locals = await db.promptTemplates.bulkGet(remoteTemplates.map((pt) => pt.id));
+    const localMap = new Map(locals.filter(Boolean).map((pt) => [pt!.id, pt!]));
+    const toUpsert = remoteTemplates.filter((remote) => {
+      const local = localMap.get(remote.id);
+      // Only overwrite if local record is already synced (remote is authoritative over clean state)
+      return !local || local.synced;
+    });
+    if (toUpsert.length > 0) await db.promptTemplates.bulkPut(toUpsert);
+  }
+
   private async syncArtifacts(userId: string, lastSyncedAt: Date): Promise<void> {
     const unsynced = await db.artifacts.filter((a) => !a.synced).toArray();
     if (unsynced.length > 0) {
@@ -281,11 +339,12 @@ export class SyncService {
     await flushPendingProjectDeletes(this.supabase, userId);
 
     // Full pull — no updated_at filter, get everything for this user
-    const [spacesRes, projectsRes, tasksRes, artifactsRes] = await Promise.all([
+    const [spacesRes, projectsRes, tasksRes, artifactsRes, promptTemplatesRes] = await Promise.all([
       this.supabase.from("spaces").select("*").eq("user_id", userId),
       this.supabase.from("projects").select("*").eq("user_id", userId),
       this.supabase.from("tasks").select("*").eq("user_id", userId),
       this.supabase.from("artifacts").select("*").eq("user_id", userId),
+      this.supabase.from("prompt_templates").select("*").eq("user_id", userId),
     ]);
 
     // Error checks before any writes
@@ -293,6 +352,7 @@ export class SyncService {
     if (projectsRes.error) throw new Error(`bootstrap: projects — ${projectsRes.error.message}`);
     if (tasksRes.error) throw new Error(`bootstrap: tasks — ${tasksRes.error.message}`);
     if (artifactsRes.error) throw new Error(`bootstrap: artifacts — ${artifactsRes.error.message}`);
+    if (promptTemplatesRes.error) throw new Error(`bootstrap: prompt_templates — ${promptTemplatesRes.error.message}`);
 
     // Write cloud data to Dexie
     const cloudSpaces = spacesRes.data
@@ -308,10 +368,15 @@ export class SyncService {
       ? (artifactsRes.data as Record<string, unknown>[]).map(rowToArtifact)
       : [];
 
+    const cloudPromptTemplates = promptTemplatesRes.data
+      ? (promptTemplatesRes.data as Record<string, unknown>[]).map(rowToPromptTemplate)
+      : [];
+
     if (cloudSpaces.length > 0) await db.spaces.bulkPut(cloudSpaces);
     if (cloudProjects.length > 0) await db.projects.bulkPut(cloudProjects);
     if (cloudTasks.length > 0) await db.tasks.bulkPut(cloudTasks);
     if (cloudArtifacts.length > 0) await db.artifacts.bulkPut(cloudArtifacts);
+    if (cloudPromptTemplates.length > 0) await db.promptTemplates.bulkPut(cloudPromptTemplates);
 
     // Prune orphan seeds: unsynced projects with no tasks
     const unsyncedProjects = await db.projects.filter((p) => !p.synced).toArray();
@@ -372,6 +437,11 @@ export class SyncService {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "artifacts", filter: `user_id=eq.${userId}` },
+        onChange,
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "prompt_templates", filter: `user_id=eq.${userId}` },
         onChange,
       )
       .subscribe();

@@ -60,4 +60,5 @@ export interface PromptTemplate {
   systemPrompt: string;
   userPromptTemplate: string;
   createdAt: string;
+  synced: boolean;
 }
