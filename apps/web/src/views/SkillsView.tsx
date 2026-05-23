@@ -13,6 +13,7 @@ import { EmojiPicker } from "@sift/shared";
 import ConfirmModal from "../components/ConfirmModal";
 import { Input } from "../components/Input";
 import { Textarea } from "../components/Textarea";
+import { listRowFocusClasses } from "../lib/listRowFocus";
 import type { PromptTemplate } from "@sift/shared";
 
 const VARIABLES = [
@@ -156,11 +157,13 @@ export default function SkillsView() {
         </button>
       </header>
 
-      <main className="flex-1 py-6">
+      <main className="flex-1 overflow-y-auto min-h-0">
         {skills.length === 0 && !form && (
-          <p className="font-mono text-[10px] text-muted px-card-x">
-            No skills yet. Press <span className="text-accent">N</span> to add one.
-          </p>
+          <div className="flex flex-col items-center justify-center gap-1.5 px-3 py-16 text-center">
+            <p className="font-mono text-[11px] text-muted uppercase tracking-[0.15em]">
+              No skills yet. Press <span className="text-accent">N</span> to add one.
+            </p>
+          </div>
         )}
 
         <div className="flex flex-col">
@@ -170,13 +173,13 @@ export default function SkillsView() {
               <div
                 key={skill.id}
                 onClick={() => setFocusedIdx(idx)}
-                className={`flex items-center gap-3 h-11 sm:h-[36px] px-card-x border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${
-                  focused ? "bg-accent/5 laser-focus" : "hover:bg-surface"
-                }`}
+                className={`flex items-center gap-3 min-h-11 md:h-task-row md:min-h-0 px-3 border-b-[0.5px] border-border cursor-default ${listRowFocusClasses(focused)}`}
               >
-                <span className="text-[12px] shrink-0 leading-none font-sans">{skill.emoji || "⚡"}</span>
+                <span className="text-[13px] shrink-0 w-5 text-center leading-none">
+                  {skill.emoji || "⚡"}
+                </span>
                 <div className="flex-1 min-w-0 flex items-center gap-2 overflow-hidden">
-                  <span className="font-sans text-[14px] font-medium text-text tracking-[-0.02em] truncate min-w-0">
+                  <span className="text-sm font-medium tracking-[-0.02em] text-text truncate min-w-0">
                     {skill.name}
                   </span>
                   {skill.description && (
@@ -203,7 +206,7 @@ export default function SkillsView() {
         </div>
 
         {form && (
-          <div className="mt-4 mx-card-x border-[0.5px] border-accent bg-bg p-4 sm:p-6 flex flex-col gap-4 animate-palette-in">
+          <div className="mt-4 mx-3 border-[0.5px] border-accent bg-bg p-4 sm:p-6 flex flex-col gap-4 animate-palette-in">
             <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
               {form.id ? "EDIT SKILL" : "NEW SKILL"}
             </div>
@@ -233,7 +236,7 @@ export default function SkillsView() {
                 value={form.name}
                 onChange={(e) => setForm((f) => f ? { ...f, name: e.target.value } : f)}
                 placeholder="Skill name..."
-                className="flex-1 font-sans text-[14px]"
+                className="flex-1 text-sm"
                 maxLength={80}
                 autoFocus
               />
@@ -243,7 +246,7 @@ export default function SkillsView() {
               value={form.description}
               onChange={(e) => setForm((f) => f ? { ...f, description: e.target.value } : f)}
               placeholder="Short description..."
-              className="font-sans text-[14px]"
+              className="text-sm"
               maxLength={160}
             />
 
@@ -275,6 +278,7 @@ export default function SkillsView() {
                   <button
                     key={v}
                     type="button"
+                    onMouseDown={(e) => e.preventDefault()}
                     onClick={() => insertVariable(v)}
                     className="font-mono text-[9px] text-muted border-[0.5px] border-border px-1.5 py-0.5 hover:border-accent hover:text-accent transition-colors"
                   >
