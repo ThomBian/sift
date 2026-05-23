@@ -26,10 +26,8 @@ const config: Config = {
         "task-row": "36px",
       },
       spacing: {
-        /** Horizontal padding for full-page view chrome: headers, footers (SkillsView, ProjectWorkspaceView) */
+        /** Horizontal padding for full-page view chrome and content (headers, footers, body) */
         "view-x": "24px",
-        /** Horizontal padding for full-page view content areas */
-        "content-x": "32px",
         /** Internal horizontal padding for card/row content (project cards, skill rows) */
         "card-x": "16px",
       },

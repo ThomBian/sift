@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-23T08:09:04.519Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-23T08:11:35.841Z
 > Files: 240 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
@@ -162,7 +162,7 @@
 - `index.html` — Sift (~187 tok)
 - `package.json` — Node.js package manifest (~457 tok)
 - `postcss.config.js` — PostCSS configuration (~18 tok)
-- `tailwind.config.ts` — Palette hex values mirror `packages/shared/src/design-tokens.css` — update both when tokens change. (~1071 tok)
+- `tailwind.config.ts` — Palette hex values mirror `packages/shared/src/design-tokens.css` — update both when tokens change. (~1039 tok)
 - `tsconfig.json` — TypeScript configuration (~139 tok)
 - `vercel.json` (~60 tok)
 - `vite.config.ts` — Vite build configuration (~277 tok)
@@ -268,7 +268,7 @@
 - `InboxView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1189 tok)
 - `MonthView.tsx` — Index of the cell that shows local "today", including leading/trailing month cells. (~5634 tok)
 - `ProjectsView.tsx` — ProgressBar (~7400 tok)
-- `ProjectWorkspaceView.tsx` — ProjectWorkspaceView (~5846 tok)
+- `ProjectWorkspaceView.tsx` — ProjectWorkspaceView (~5845 tok)
 - `SkillsView.tsx` — VARIABLES — renders form (~3730 tok)
 - `TodayView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1182 tok)
 - `WeekView.tsx` — Enter toggles done moves the row in the DOM; restore focus so keyboard nav keeps working. (~4043 tok)
