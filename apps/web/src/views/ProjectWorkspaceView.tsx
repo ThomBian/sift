@@ -18,7 +18,7 @@ import { listRowFocusClasses } from "../lib/listRowFocus";
 import { useSpacesProjects } from "../hooks/useSpacesProjects";
 import type { Artifact, Task } from "@sift/shared";
 
-type FocusZone = "tasks" | "artifacts";
+type FocusZone = "description" | "tasks" | "artifacts";
 
 export default function ProjectWorkspaceView() {
   const { id: projectId } = useParams<{ id: string }>();
@@ -61,6 +61,11 @@ export default function ProjectWorkspaceView() {
   const newTitleInputRef = useRef<HTMLInputElement>(null);
   const editTitleInputRef = useRef<HTMLInputElement>(null);
 
+  const [descEditing, setDescEditing] = useState(false);
+  const [descDraft, setDescDraft] = useState("");
+  const descTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const descSaveTimerRef = useRef<number | null>(null);
+
   useEffect(() => {
     if (newArtifactTitle !== null) {
       requestAnimationFrame(() => newTitleInputRef.current?.focus());
@@ -81,6 +86,42 @@ export default function ProjectWorkspaceView() {
 
   const openSkillPicker = useCallback(() => {
     setSkillPickerOpen(true);
+  }, []);
+
+  const saveDescription = useCallback(async (val: string) => {
+    if (!projectId) return;
+    await db.projects.update(projectId, {
+      description: val.trim(),
+      updatedAt: new Date(),
+      synced: false,
+    });
+  }, [projectId]);
+
+  const onDescChange = useCallback((val: string) => {
+    setDescDraft(val);
+    if (descSaveTimerRef.current !== null) clearTimeout(descSaveTimerRef.current);
+    descSaveTimerRef.current = window.setTimeout(() => void saveDescription(val), 800);
+  }, [saveDescription]);
+
+  const exitDescEdit = useCallback(() => {
+    if (descSaveTimerRef.current !== null) {
+      clearTimeout(descSaveTimerRef.current);
+      descSaveTimerRef.current = null;
+    }
+    void saveDescription(descDraft);
+    setDescEditing(false);
+  }, [descDraft, saveDescription]);
+
+  useEffect(() => {
+    if (descEditing) {
+      requestAnimationFrame(() => descTextareaRef.current?.focus());
+    }
+  }, [descEditing]);
+
+  useEffect(() => {
+    return () => {
+      if (descSaveTimerRef.current !== null) clearTimeout(descSaveTimerRef.current);
+    };
   }, []);
 
   const createArtifact = useCallback(
@@ -131,6 +172,10 @@ export default function ProjectWorkspaceView() {
 
       if (inInput) {
         if (e.key === "Escape") {
+          if (descEditing) {
+            exitDescEdit();
+            return;
+          }
           setNewArtifactTitle(null);
           setEditingTitleId(null);
           (target as HTMLElement).blur();
@@ -165,8 +210,22 @@ export default function ProjectWorkspaceView() {
 
       if (e.key === "Tab") {
         e.preventDefault();
-        setFocusZone((z) => (z === "tasks" ? "artifacts" : "tasks"));
+        if (descEditing) exitDescEdit();
+        setFocusZone((z) => {
+          if (z === "tasks") return "artifacts";
+          if (z === "artifacts") return "description";
+          return "tasks";
+        });
         return;
+      }
+
+      if (focusZone === "description" && !descEditing) {
+        if (e.key === "e" || e.key === "E") {
+          e.preventDefault();
+          setDescDraft(project?.description ?? "");
+          setDescEditing(true);
+          return;
+        }
       }
 
       if (focusZone === "tasks") {
@@ -213,7 +272,7 @@ export default function ProjectWorkspaceView() {
     return () => window.removeEventListener("keydown", onKey);
   }, [
     openArtifact, skillPickerOpen, cmdPaletteOpen, focusZone, tasks, artifacts,
-    focusedTaskIdx, focusedArtifactIdx,
+    focusedTaskIdx, focusedArtifactIdx, descEditing, exitDescEdit, project,
     toggleTaskDone, archiveTask, navigate, openSkillPicker,
   ]);
 
@@ -238,7 +297,13 @@ export default function ProjectWorkspaceView() {
   const taskList = tasks ?? [];
 
   const hints =
-    focusZone === "tasks"
+    focusZone === "description"
+      ? [
+          { key: "E", label: "edit" },
+          { key: "Tab", label: "tasks" },
+          { key: "ESC", label: "back" },
+        ]
+      : focusZone === "tasks"
       ? [
           { key: "↑↓", label: "tasks" },
           { key: "Enter", label: "done" },
@@ -253,7 +318,7 @@ export default function ProjectWorkspaceView() {
           { key: "Space", label: "open" },
           { key: "N", label: "new" },
           { key: "E", label: "rename" },
-          { key: "Tab", label: "tasks" },
+          { key: "Tab", label: "description" },
           { key: "S", label: "skills" },
         ];
 
@@ -271,15 +336,62 @@ export default function ProjectWorkspaceView() {
         <span className="font-sans text-[15px] font-medium text-text tracking-[-0.02em]">
           {project.name}
         </span>
-        {project.description && (
-          <span className="font-sans text-[13px] text-muted truncate">
-            {project.description}
-          </span>
-        )}
       </header>
 
       {/* Body */}
       <main className="flex-1 px-content-x py-6 flex flex-col gap-8">
+        {/* Description */}
+        <section>
+          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted mb-3">
+            DESCRIPTION
+          </div>
+          <div
+            onClick={() => {
+              setFocusZone("description");
+              if (!descEditing) {
+                setDescDraft(project.description ?? "");
+                setDescEditing(true);
+              }
+            }}
+            className={`px-3 py-2.5 border-[0.5px] cursor-text ${
+              descEditing
+                ? "border-accent"
+                : listRowFocusClasses(focusZone === "description")
+            }`}
+          >
+            {descEditing ? (
+              <textarea
+                ref={descTextareaRef}
+                value={descDraft}
+                onChange={(e) => onDescChange(e.target.value)}
+                placeholder="Describe this project…"
+                rows={4}
+                className="w-full bg-transparent font-sans text-[13px] text-text placeholder:text-muted outline-none resize-none leading-relaxed"
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") {
+                    e.preventDefault();
+                    exitDescEdit();
+                  }
+                }}
+                onClick={(e) => e.stopPropagation()}
+              />
+            ) : (
+              <>
+                <p className={`font-sans text-[13px] leading-relaxed whitespace-pre-wrap ${project.description ? "text-text" : "text-muted"}`}>
+                  {project.description || "No description yet."}
+                </p>
+                {focusZone === "description" && (
+                  <div className="mt-2 flex gap-3">
+                    <span className="font-mono text-[9px] text-muted">
+                      <span className="text-accent">E</span> edit
+                    </span>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </section>
+
         {/* Tasks */}
         <section>
           <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted mb-3">
