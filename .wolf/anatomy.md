@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-22T08:54:27.864Z
-> Files: 235 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-23T07:28:31.935Z
+> Files: 238 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -162,14 +162,14 @@
 - `index.html` — Sift (~187 tok)
 - `package.json` — Node.js package manifest (~457 tok)
 - `postcss.config.js` — PostCSS configuration (~18 tok)
-- `tailwind.config.ts` — Tailwind CSS configuration (~963 tok)
+- `tailwind.config.ts` — Palette hex values mirror `packages/shared/src/design-tokens.css` — update both when tokens change. (~1071 tok)
 - `tsconfig.json` — TypeScript configuration (~139 tok)
 - `vercel.json` (~60 tok)
 - `vite.config.ts` — Vite build configuration (~277 tok)
 
 ## apps/web/src/
 
-- `App.tsx` — App (~484 tok)
+- `App.tsx` — App — uses useState, useEffect (~621 tok)
 - `index.css` — Styles: 8 rules, 2 media queries (~542 tok)
 - `main.tsx` (~123 tok)
 - `vite-env.d.ts` — / <reference types="vite/client" /> (~11 tok)
@@ -178,6 +178,7 @@
 
 - `AppLayoutViewNav.test.tsx` — @vitest-environment jsdom (~959 tok)
 - `HintBar.test.tsx` — / <reference types="vitest" /> (~1090 tok)
+- `listRowFocus.test.ts` — Declares classes (~191 tok)
 - `MonthView.test.tsx` — @vitest-environment jsdom (~1974 tok)
 - `setup.ts` (~81 tok)
 - `SyncService.test.ts` — @vitest-environment jsdom (~5313 tok)
@@ -200,16 +201,17 @@
 - `InputBar.tsx` — handleTaskReady — uses useMemo (~550 tok)
 - `PaletteInputRow.tsx` — Leading icon. Pass null to omit. Defaults to the "+" creation marker. (~394 tok)
 - `PaletteShell.tsx` — usePaletteClose — uses useState, useCallback (~547 tok)
-- `ProjectEditPalette.tsx` — formatDate — uses useState, useEffect (~2774 tok)
-- `SkillPicker.tsx` — SkillPicker — uses useState, useEffect, useMemo, useCallback (~1357 tok)
+- `ProjectEditPalette.tsx` — formatDate — uses useState, useEffect (~2812 tok)
+- `ShortcutsOverlay.tsx` — EXIT_MS — uses useState, useRef, useCallback, useEffect (~1581 tok)
+- `SkillPicker.tsx` — SkillPicker (~1347 tok)
 - `TaskList.tsx` — Shown when a task has no project or the project row is missing (e.g. sync race). (~1374 tok)
-- `TaskRow.tsx` — Narrow columns: title on first line, project + due stacked with truncation. (~2367 tok)
+- `TaskRow.tsx` — Narrow columns: title on first line, project + due stacked with truncation. (~2345 tok)
 - `Textarea.tsx` — BASE (~168 tok)
 
 ## apps/web/src/components/layout/
 
-- `AppLayout.tsx` — Linear ←/→ order; navigating from `/week` or `/month` lands on inbox/today/projects. (~2427 tok)
-- `HintBar.tsx` — NONE_HINTS (~1167 tok)
+- `AppLayout.tsx` — Linear ←/→ order; navigating from `/week` or `/month` lands on inbox/today/projects. (~2484 tok)
+- `HintBar.tsx` — NONE_HINTS (~1215 tok)
 - `Sidebar.tsx` — focusCalendarHeaderSoon (~2053 tok)
 - `Topbar.tsx` — SYNC_LABEL — uses useNavigate, useState, useEffect (~2558 tok)
 
@@ -229,7 +231,7 @@
 ## apps/web/src/contexts/
 
 - `AuthContext.tsx` — False until the first getSession finishes so OAuth hash is not stripped by a child <Navigate> first. (~736 tok)
-- `SkillsContext.tsx` — SkillsContext — uses useCallback, useEffect, useContext (~424 tok)
+- `SkillsContext.tsx` — SkillsContext (~268 tok)
 
 ## apps/web/src/hooks/
 
@@ -247,6 +249,7 @@
 
 - `createProjectForTask.ts` — Returns project id for the task, creating a project first when `newProjectName` is set. (~297 tok)
 - `db.ts` (~14 tok)
+- `listRowFocus.ts` — Canonical keyboard-focus highlight for list rows (tasks, projects, skills, artifacts). (~103 tok)
 - `requestSync.ts` — Registered from App when the user is signed in and Supabase is configured. (~110 tok)
 - `supabase.ts` — Null when env vars are missing — app stays local-first without throwing at import. (~155 tok)
 - `syncDeletionOutbox.ts` — Replace any prior entry for the same project, then append (idempotent re-enqueue). (~757 tok)
@@ -257,15 +260,15 @@
 
 ## apps/web/src/services/
 
-- `SyncService.ts` — Exports SyncService (~3746 tok)
+- `SyncService.ts` — Exports SyncService (~4532 tok)
 
 ## apps/web/src/views/
 
 - `InboxView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1189 tok)
 - `MonthView.tsx` — Index of the cell that shows local "today", including leading/trailing month cells. (~5634 tok)
-- `ProjectsView.tsx` — ProgressBar (~7537 tok)
-- `ProjectWorkspaceView.tsx` — ProjectWorkspaceView — uses useNavigate, useState, useEffect, useCallback (~4916 tok)
-- `SkillsView.tsx` — VARIABLES — renders form (~3406 tok)
+- `ProjectsView.tsx` — ProgressBar (~7400 tok)
+- `ProjectWorkspaceView.tsx` — ProjectWorkspaceView (~4883 tok)
+- `SkillsView.tsx` — VARIABLES — renders form (~3730 tok)
 - `TodayView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1182 tok)
 - `WeekView.tsx` — Enter toggles done moves the row in the DOM; restore focus so keyboard nav keeps working. (~4043 tok)
 
@@ -316,13 +319,13 @@
 
 ## packages/shared/src/
 
-- `db.ts` — Wipes all local IndexedDB data. Call before bootstrap when user identity changes. (~1516 tok)
+- `db.ts` — Wipes all local IndexedDB data. Call before bootstrap when user identity changes. (~1633 tok)
 - `design-tokens.css` — Styles: 32 vars (~502 tok)
 - `emojiPool.ts` — Exports EmojiCategory, EMOJI_POOL, ALL_EMOJIS, getRandomEmoji, searchEmojis (~990 tok)
 - `index.ts` (~276 tok)
 - `injectContext.ts` — Exports injectContext (~221 tok)
 - `parseLooseDate.ts` — Detects an explicit calendar year in typed date strings (4-digit year, or m/d/y with a year segment). (~534 tok)
-- `types.ts` — null = unassigned (inbox/today only until user picks a project) (~414 tok)
+- `types.ts` — null = unassigned (inbox/today only until user picks a project) (~420 tok)
 - `vite-env.d.ts` — / <reference types="vite/client" /> (~11 tok)
 
 ## packages/shared/src/Calendar/

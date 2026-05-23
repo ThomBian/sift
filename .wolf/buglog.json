@@ -600,10 +600,160 @@
       "file": "apps/web/src/views/SkillsView.tsx, apps/web/src/contexts/SkillsContext.tsx",
       "root_cause": "Skills were Supabase-only with no local IndexedDB storage. saveForm() had guard `if (!supabase) return` so all saves silently no-oped offline.",
       "fix": "Added promptTemplates table to Dexie (version 7 schema). SkillsContext now reads from db.promptTemplates. saveForm() uses db.promptTemplates.put(). Delete uses db.promptTemplates.delete().",
-      "tags": ["skills", "local-first", "dexie", "supabase", "silent-failure"],
+      "tags": [
+        "skills",
+        "local-first",
+        "dexie",
+        "supabase",
+        "silent-failure"
+      ],
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-23T00:00:00.000Z"
+    },
+    {
+      "id": "bug-039",
+      "timestamp": "2026-05-23T06:42:48.636Z",
+      "error_message": "Incorrect value in code",
+      "file": "apps/web/src/views/SkillsView.tsx",
+      "root_cause": "Had \"../contexts/SkillsContext\"",
+      "fix": "Changed to \"../lib/supabase\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-23T06:42:48.636Z"
+    },
+    {
+      "id": "bug-040",
+      "timestamp": "2026-05-23T06:43:09.031Z",
+      "error_message": "Null/undefined access in ",
+      "file": "apps/web/src/services/SyncService.ts",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-23T06:43:09.031Z"
+    },
+    {
+      "id": "bug-041",
+      "timestamp": "2026-05-23T06:43:22.706Z",
+      "error_message": "Missing guard clause",
+      "file": "apps/web/src/services/SyncService.ts",
+      "root_cause": "No early return/throw for edge case: unsynced.length > 0",
+      "fix": "Added guard clause: if (unsynced.length > 0)",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-23T06:43:22.706Z"
+    },
+    {
+      "id": "bug-042",
+      "timestamp": "2026-05-23T06:43:36.455Z",
+      "error_message": "Type error",
+      "file": "apps/web/src/services/SyncService.ts",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-23T06:43:36.455Z"
+    },
+    {
+      "id": "bug-043",
+      "timestamp": "2026-05-23T06:53:48.221Z",
+      "error_message": "Incorrect value in code",
+      "file": "apps/web/src/views/SkillsView.tsx",
+      "root_cause": "Had \"flex items-center gap-3 h-12 px-6 border-b border",
+      "fix": "Changed to \"flex items-center gap-3 h-12 px-4 sm:px-6 border-",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 13,
+      "last_seen": "2026-05-23T07:06:55.877Z"
+    },
+    {
+      "id": "bug-044",
+      "timestamp": "2026-05-23T07:02:30.642Z",
+      "error_message": "Null/undefined access in ",
+      "file": "apps/web/src/views/SkillsView.tsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-23T07:02:30.642Z"
+    },
+    {
+      "id": "bug-045",
+      "timestamp": "2026-05-23T07:07:26.167Z",
+      "error_message": "Incorrect value in code",
+      "file": "apps/web/src/views/ProjectWorkspaceView.tsx",
+      "root_cause": "Had \"flex items-center gap-3 h-12 px-6 border-b border",
+      "fix": "Changed to \"flex items-center gap-3 h-12 px-view-x border-b-[",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 3,
+      "last_seen": "2026-05-23T07:07:32.463Z"
+    },
+    {
+      "id": "bug-046",
+      "timestamp": "2026-05-23T07:12:23.634Z",
+      "error_message": "Incorrect value in code",
+      "file": "apps/web/src/views/SkillsView.tsx",
+      "root_cause": "Had \"flex-1 px-content-x py-6\"",
+      "fix": "Changed to \"flex-1 py-6\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 3,
+      "last_seen": "2026-05-23T07:12:35.550Z"
+    },
+    {
+      "id": "bug-047",
+      "timestamp": "2026-05-23T07:12:28.019Z",
+      "error_message": "CSS fix: sm",
+      "file": "apps/web/src/views/SkillsView.tsx",
+      "root_cause": "sm: h-[36px] border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${ → h-[36px] px-card-x border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${",
+      "fix": "Changed sm: h-[36px] border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${ → h-[36px] px-card-x border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-23T07:12:28.019Z"
     }
   ]
 }

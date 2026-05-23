@@ -264,3 +264,153 @@
 | 10:54 | Edited apps/web/src/components/layout/AppLayout.tsx | added 1 condition(s) | ~101 |
 | 10:54 | Edited apps/web/src/components/layout/HintBar.tsx | 5→6 lines | ~56 |
 | 10:54 | Session end: 22 writes across 6 files (SkillsView.tsx, EmojiPicker.module.css, Input.tsx, Textarea.tsx, AppLayout.tsx) | 22 reads | ~37403 tok |
+| 11:04 | Created apps/web/src/components/ShortcutsOverlay.tsx | — | ~1576 |
+| 11:04 | Edited apps/web/src/App.tsx | CSS: sift, sift | ~407 |
+| 11:04 | Edited apps/web/src/components/layout/AppLayout.tsx | CSS: sift | ~115 |
+| 11:05 | Edited apps/web/src/views/SkillsView.tsx | CSS: sift | ~75 |
+| 11:05 | Edited apps/web/src/components/layout/HintBar.tsx | 14→18 lines | ~220 |
+| 11:05 | Edited apps/web/src/views/SkillsView.tsx | 13→16 lines | ~198 |
+| 11:05 | Session end: 28 writes across 8 files (SkillsView.tsx, EmojiPicker.module.css, Input.tsx, Textarea.tsx, AppLayout.tsx) | 23 reads | ~41570 tok |
+| 11:10 | Edited apps/web/src/components/layout/AppLayout.tsx | removed 8 lines | ~14 |
+| 11:10 | Edited apps/web/src/components/layout/AppLayout.tsx | CSS: sift | ~127 |
+| 11:10 | Edited apps/web/src/views/SkillsView.tsx | modified if() | ~44 |
+| 11:10 | Edited apps/web/src/components/ShortcutsOverlay.tsx | inline fix | ~19 |
+| 11:10 | Session end: 32 writes across 8 files (SkillsView.tsx, EmojiPicker.module.css, Input.tsx, Textarea.tsx, AppLayout.tsx) | 23 reads | ~41890 tok |
+| 11:13 | Session end: 32 writes across 8 files (SkillsView.tsx, EmojiPicker.module.css, Input.tsx, Textarea.tsx, AppLayout.tsx) | 23 reads | ~41890 tok |
+| 11:19 | Session end: 32 writes across 8 files (SkillsView.tsx, EmojiPicker.module.css, Input.tsx, Textarea.tsx, AppLayout.tsx) | 23 reads | ~41890 tok |
+| 11:22 | Session end: 32 writes across 8 files (SkillsView.tsx, EmojiPicker.module.css, Input.tsx, Textarea.tsx, AppLayout.tsx) | 23 reads | ~41890 tok |
+| 11:25 | Edited apps/web/src/views/SkillsView.tsx | added 1 condition(s) | ~81 |
+| 11:25 | Edited apps/web/src/components/ProjectEditPalette.tsx | added 1 condition(s) | ~85 |
+| 11:25 | Session end: 34 writes across 9 files (SkillsView.tsx, EmojiPicker.module.css, Input.tsx, Textarea.tsx, AppLayout.tsx) | 24 reads | ~43086 tok |
+
+## Session: 2026-05-22 11:42
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-05-22 13:59
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-05-22 14:00
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-05-22 14:01
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-05-23 08:35
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 08:36 | Edited packages/shared/src/db.ts | 8→9 lines | ~91 |
+| 08:36 | Edited packages/shared/src/db.ts | 4→8 lines | ~51 |
+| 08:36 | Edited packages/shared/src/db.ts | modified clearLocalDB() | ~88 |
+| 08:37 | Created apps/web/src/contexts/SkillsContext.tsx | — | ~268 |
+| 08:37 | Edited apps/web/src/views/SkillsView.tsx | 4→4 lines | ~48 |
+| 08:37 | Edited apps/web/src/views/SkillsView.tsx | CSS: systemPrompt, userPromptTemplate, createdAt | ~159 |
+| 08:37 | Edited apps/web/src/views/SkillsView.tsx | 4→3 lines | ~36 |
+| 08:37 | Edited packages/shared/src/db.ts | modified if() | ~127 |
+| 08:37 | Edited packages/shared/src/db.ts | modified clearLocalDB() | ~61 |
+| 08:38 | Session end: 9 writes across 3 files (db.ts, SkillsContext.tsx, SkillsView.tsx) | 4 reads | ~6865 tok |
+| 08:41 | Session end: 9 writes across 3 files (db.ts, SkillsContext.tsx, SkillsView.tsx) | 4 reads | ~6865 tok |
+| 08:42 | Edited packages/shared/src/types.ts | 9→10 lines | ~57 |
+| 08:42 | Edited packages/shared/src/db.ts | added 1 condition(s) | ~113 |
+| 08:42 | Edited apps/web/src/views/SkillsView.tsx | added 1 import(s) | ~38 |
+| 08:42 | Edited apps/web/src/views/SkillsView.tsx | CSS: synced | ~94 |
+| 08:42 | Edited apps/web/src/views/SkillsView.tsx | added 1 condition(s) | ~73 |
+| 08:43 | Edited apps/web/src/services/SyncService.ts | inline fix | ~24 |
+| 08:43 | Edited apps/web/src/services/SyncService.ts | added nullish coalescing | ~227 |
+| 08:43 | Edited apps/web/src/services/SyncService.ts | 6→7 lines | ~73 |
+| 08:43 | Edited apps/web/src/services/SyncService.ts | added 4 condition(s) | ~403 |
+| 08:43 | Edited apps/web/src/services/SyncService.ts | added 1 condition(s) | ~309 |
+| 08:43 | Edited apps/web/src/services/SyncService.ts | added 1 condition(s) | ~156 |
+| 08:43 | Edited apps/web/src/services/SyncService.ts | 6→11 lines | ~99 |
+| 08:44 | Session end: 21 writes across 5 files (db.ts, SkillsContext.tsx, SkillsView.tsx, types.ts, SyncService.ts) | 5 reads | ~12277 tok |
+| 08:44 | Session end: 21 writes across 5 files (db.ts, SkillsContext.tsx, SkillsView.tsx, types.ts, SyncService.ts) | 5 reads | ~12277 tok |
+| 08:47 | Edited apps/web/src/views/SkillsView.tsx | 18→18 lines | ~267 |
+| 08:47 | Edited apps/web/src/views/SkillsView.tsx | inline fix | ~40 |
+| 08:47 | Session end: 23 writes across 5 files (db.ts, SkillsContext.tsx, SkillsView.tsx, types.ts, SyncService.ts) | 5 reads | ~12584 tok |
+| 08:50 | Edited apps/web/src/views/SkillsView.tsx | 13→13 lines | ~205 |
+| 08:50 | Edited apps/web/src/views/SkillsView.tsx | 2→2 lines | ~18 |
+| 08:50 | Edited apps/web/src/views/SkillsView.tsx | 14→16 lines | ~174 |
+| 08:50 | Session end: 26 writes across 5 files (db.ts, SkillsContext.tsx, SkillsView.tsx, types.ts, SyncService.ts) | 5 reads | ~13036 tok |
+| 08:53 | Edited apps/web/src/views/SkillsView.tsx | "flex items-center gap-3 h" → "flex items-center gap-3 h" | ~36 |
+| 08:53 | Edited apps/web/src/views/SkillsView.tsx | inline fix | ~19 |
+| 08:53 | Edited apps/web/src/views/SkillsView.tsx | "flex-1 px-8 py-6 max-w-3x" → "flex-1 px-4 py-4 sm:px-8 " | ~20 |
+| 08:53 | Edited apps/web/src/views/SkillsView.tsx | inline fix | ~43 |
+| 08:54 | Edited apps/web/src/views/SkillsView.tsx | CSS: sm | ~28 |
+| 08:54 | Edited apps/web/src/views/SkillsView.tsx | "mt-4 border-[0.5px] borde" → "mt-4 border-[0.5px] borde" | ~34 |
+| 08:54 | Edited apps/web/src/views/SkillsView.tsx | "flex items-center gap-5 p" → "hidden sm:flex items-cent" | ~38 |
+| 08:54 | Edited apps/web/src/views/SkillsView.tsx | "absolute top-full left-0 " → "absolute top-full left-0 " | ~28 |
+| 08:54 | Session end: 34 writes across 5 files (db.ts, SkillsContext.tsx, SkillsView.tsx, types.ts, SyncService.ts) | 5 reads | ~13302 tok |
+| 08:57 | Edited apps/web/src/views/SkillsView.tsx | "flex-1 px-4 py-4 sm:px-8 " → "flex-1 px-4 py-4 sm:px-8 " | ~17 |
+| 08:58 | Session end: 35 writes across 5 files (db.ts, SkillsContext.tsx, SkillsView.tsx, types.ts, SyncService.ts) | 5 reads | ~13319 tok |
+| 09:02 | Edited apps/web/src/views/SkillsView.tsx | "flex items-center gap-3 h" → "flex items-center gap-3 h" | ~34 |
+| 09:02 | Edited apps/web/src/views/SkillsView.tsx | "hidden sm:flex items-cent" → "hidden sm:flex items-cent" | ~36 |
+| 09:02 | Edited apps/web/src/views/SkillsView.tsx | 3→3 lines | ~41 |
+| 09:02 | Edited apps/web/src/views/SkillsView.tsx | 7→8 lines | ~91 |
+| 09:02 | Edited apps/web/src/views/SkillsView.tsx | 7→7 lines | ~84 |
+| 09:02 | Edited apps/web/src/views/SkillsView.tsx | added optional chaining | ~194 |
+| 09:02 | Edited apps/web/src/views/SkillsView.tsx | 3→3 lines | ~45 |
+| 09:02 | Session end: 42 writes across 5 files (db.ts, SkillsContext.tsx, SkillsView.tsx, types.ts, SyncService.ts) | 5 reads | ~13877 tok |
+| 09:06 | Edited apps/web/tailwind.config.ts | expanded (+6 lines) | ~90 |
+| 09:06 | Edited apps/web/src/views/SkillsView.tsx | "flex items-center gap-3 h" → "flex items-center gap-3 h" | ~34 |
+| 09:06 | Edited apps/web/src/views/SkillsView.tsx | "flex-1 px-4 py-4 sm:px-8 " → "flex-1 px-content-x py-6" | ~14 |
+| 09:06 | Edited apps/web/src/views/SkillsView.tsx | "hidden sm:flex items-cent" → "hidden sm:flex items-cent" | ~37 |
+| 09:07 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | "flex items-center gap-3 h" → "flex items-center gap-3 h" | ~34 |
+| 09:07 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | "flex-1 px-8 py-6 flex fle" → "flex-1 px-content-x py-6 " | ~20 |
+| 09:07 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | "flex items-center gap-5 p" → "flex items-center gap-5 p" | ~34 |
+| 09:07 | Session end: 49 writes across 7 files (db.ts, SkillsContext.tsx, SkillsView.tsx, types.ts, SyncService.ts) | 7 reads | ~20019 tok |
+| 09:12 | Edited apps/web/tailwind.config.ts | 4→6 lines | ~101 |
+| 09:12 | Edited apps/web/src/views/SkillsView.tsx | "flex-1 px-content-x py-6" → "flex-1 py-6" | ~11 |
+| 09:12 | Edited apps/web/src/views/SkillsView.tsx | inline fix | ~46 |
+| 09:12 | Edited apps/web/src/views/SkillsView.tsx | "font-mono text-[10px] tex" → "font-mono text-[10px] tex" | ~20 |
+| 09:12 | Edited apps/web/src/views/SkillsView.tsx | "mt-4 border-[0.5px] borde" → "mt-4 mx-card-x border-[0." | ~37 |
+| 09:12 | Session end: 54 writes across 7 files (db.ts, SkillsContext.tsx, SkillsView.tsx, types.ts, SyncService.ts) | 8 reads | ~27771 tok |
+| 09:15 | Session end: 54 writes across 7 files (db.ts, SkillsContext.tsx, SkillsView.tsx, types.ts, SyncService.ts) | 8 reads | ~27771 tok |
+
+## Session: 2026-05-23 09:24
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-05-23 09:24
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 09:25 | Created apps/web/src/lib/listRowFocus.ts | — | ~103 |
+| 09:25 | Created apps/web/src/__tests__/listRowFocus.test.ts | — | ~191 |
+| 09:25 | Created apps/web/src/components/TaskRow.tsx | — | ~2384 |
+| 09:25 | Created apps/web/src/components/TaskRow.tsx | — | ~2345 |
+| 09:25 | Created apps/web/src/views/ProjectsView.tsx | — | ~7560 |
+| 09:25 | Created apps/web/src/views/ProjectsView.tsx | — | ~7521 |
+| 09:25 | Created apps/web/src/views/SkillsView.tsx | — | ~3692 |
+| 09:25 | Created apps/web/src/components/SkillPicker.tsx | — | ~1374 |
+| 09:25 | Created apps/web/src/views/ProjectsView.tsx | — | ~7512 |
+| 09:25 | Created apps/web/src/views/ProjectsView.tsx | — | ~7500 |
+| 09:25 | Created apps/web/src/views/ProjectsView.tsx | — | ~7469 |
+| 09:25 | Created apps/web/src/views/ProjectsView.tsx | — | ~7450 |
+| 09:25 | Created apps/web/src/views/ProjectsView.tsx | — | ~7400 |
+| 09:25 | Created apps/web/src/views/SkillsView.tsx | — | ~3665 |
+| 09:25 | Created apps/web/src/components/SkillPicker.tsx | — | ~1347 |
+| 09:25 | Created apps/web/src/views/ProjectWorkspaceView.tsx | — | ~4934 |
+| 09:25 | Created apps/web/src/views/ProjectWorkspaceView.tsx | — | ~4883 |
+
+## Session: 2026-05-23 09:26
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 09:28 | Edited apps/web/src/views/SkillsView.tsx | 10→11 lines | ~142 |
+| 09:28 | Session end: 1 writes across 1 files (SkillsView.tsx) | 10 reads | ~24499 tok |
+| 09:28 | Created apps/web/src/views/SkillsView.tsx | — | ~3740 |
+| 09:28 | Created apps/web/src/views/SkillsView.tsx | — | ~3738 |
+| 09:28 | Created apps/web/src/views/SkillsView.tsx | — | ~3734 |
+| 09:28 | Created apps/web/src/views/SkillsView.tsx | — | ~3730 |
+| 09:28 | Session end: 4 writes across 1 files (SkillsView.tsx) | 14 reads | ~40488 tok |
+| 09:32 | Session end: 4 writes across 1 files (SkillsView.tsx) | 14 reads | ~40488 tok |
+| 09:33 | Session end: 4 writes across 1 files (SkillsView.tsx) | 15 reads | ~40488 tok |

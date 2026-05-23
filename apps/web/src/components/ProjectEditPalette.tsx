@@ -158,6 +158,11 @@ export default function ProjectEditPalette({
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      void handleConfirm();
+      return;
+    }
     if (e.key === "Escape") {
       e.preventDefault();
       handleClose();
