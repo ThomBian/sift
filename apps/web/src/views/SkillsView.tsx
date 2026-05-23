@@ -169,19 +169,19 @@ export default function SkillsView() {
               <div
                 key={skill.id}
                 onClick={() => setFocusedIdx(idx)}
-                className={`flex items-center gap-3 py-3 min-h-[36px] border-b border-[0.5px] border-border cursor-default transition-colors duration-150 ${
+                className={`flex items-center gap-3 h-[36px] border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${
                   focused ? "bg-accent/5 laser-focus" : "hover:bg-surface"
                 }`}
               >
-                <span className="text-[16px] shrink-0">{skill.emoji}</span>
-                <div className="flex-1 min-w-0">
-                  <div className="font-sans text-[14px] font-medium text-text">
+                <span className="text-[12px] shrink-0 leading-none font-sans">{skill.emoji}</span>
+                <div className="flex-1 min-w-0 flex items-center gap-2">
+                  <span className="font-sans text-[14px] font-medium text-text tracking-[-0.02em] truncate">
                     {skill.name}
-                  </div>
+                  </span>
                   {skill.description && (
-                    <div className="font-mono text-[10px] text-muted mt-0.5">
+                    <span className="font-mono text-[10px] text-muted truncate">
                       {skill.description}
-                    </div>
+                    </span>
                   )}
                 </div>
                 {focused && (
