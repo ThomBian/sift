@@ -353,7 +353,7 @@ export default function ProjectWorkspaceView() {
               onChange={(e) => onDescChange(e.target.value)}
               placeholder="Describe this project…"
               rows={4}
-              className="font-sans text-[13px] leading-relaxed border-accent"
+              className="font-sans text-[13px] leading-relaxed border-accent bg-bg"
               onKeyDown={(e) => {
                 if (e.key === "Escape") {
                   e.preventDefault();
@@ -368,18 +368,13 @@ export default function ProjectWorkspaceView() {
                 setDescDraft(project.description ?? "");
                 setDescEditing(true);
               }}
-              className={`px-3 py-2.5 border-[0.5px] cursor-text ${listRowFocusClasses(focusZone === "description")}`}
+              className={`px-3 py-2 border-[0.5px] border-border cursor-text ${listRowFocusClasses(focusZone === "description")}`}
             >
               <p className={`font-sans text-[13px] leading-relaxed whitespace-pre-wrap ${project.description ? "text-text" : "text-muted"}`}>
-                {project.description || "No description yet."}
+                {project.description || (focusZone === "description"
+                  ? "Press E to describe this project."
+                  : "No description yet.")}
               </p>
-              {focusZone === "description" && (
-                <div className="mt-2 flex gap-3">
-                  <span className="font-mono text-[9px] text-muted">
-                    <span className="text-accent">E</span> edit
-                  </span>
-                </div>
-              )}
             </div>
           )}
         </section>
