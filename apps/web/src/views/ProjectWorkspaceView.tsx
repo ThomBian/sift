@@ -14,6 +14,7 @@ import ConfirmModal from "../components/ConfirmModal";
 import CommandPalette from "../components/CommandPalette";
 import SkillPicker from "../components/SkillPicker";
 import TaskRow from "../components/TaskRow";
+import { listRowFocusClasses } from "../lib/listRowFocus";
 import { useSpacesProjects } from "../hooks/useSpacesProjects";
 import type { Artifact, Task } from "@sift/shared";
 
@@ -336,10 +337,7 @@ export default function ProjectWorkspaceView() {
                     key={artifact.id}
                     onClick={() => { setFocusZone("artifacts"); setFocusedArtifactIdx(idx); }}
                     onDoubleClick={() => setOpenArtifact(artifact)}
-                    className={`border border-[0.5px] p-3 cursor-default transition-colors duration-100 ${
-                      focused ? "border-accent bg-bg" : "border-border bg-bg"
-                    }`}
-                    style={focused ? { boxShadow: "0 0 12px rgba(255,79,0,0.08)" } : undefined}
+                    className={`border border-[0.5px] p-3 cursor-default bg-bg border-border ${listRowFocusClasses(focused)}`}
                   >
                     {isEditingTitle ? (
                       <input

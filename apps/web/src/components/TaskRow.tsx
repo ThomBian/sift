@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { Task, Project, Space } from "@sift/shared";
+import { listRowFocusClasses } from "../lib/listRowFocus";
 
 export interface TaskRowProps {
   task: Task;
@@ -71,15 +72,13 @@ export default function TaskRow({
         ${exiting ? "animate-task-exit" : "animate-task-enter"}
         flex min-h-11 h-auto px-3 gap-3 cursor-pointer select-none min-w-0 w-full max-w-full
         items-start py-1.5
-        transition-colors duration-150
-        ${isFocused ? "bg-accent/5 laser-focus" : "hover:bg-surface-2"}
+        ${listRowFocusClasses(isFocused)}
       `
       : `
         ${exiting ? "animate-task-exit" : "animate-task-enter"}
         flex min-h-11 h-auto md:h-task-row md:min-h-0 px-3 gap-3 cursor-pointer select-none min-w-0 w-full max-w-full
         items-center
-        transition-colors duration-150
-        ${isFocused ? "bg-accent/5 laser-focus" : "hover:bg-surface-2"}
+        ${listRowFocusClasses(isFocused)}
       `;
 
   const titleClass = `text-sm font-medium tracking-[-0.02em] truncate min-w-0 ${

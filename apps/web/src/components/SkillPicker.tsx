@@ -12,6 +12,7 @@ import { useSkills } from "../contexts/SkillsContext";
 import type { Project, Task, Artifact } from "@sift/shared";
 import PaletteShell, { usePaletteClose } from "./PaletteShell";
 import PaletteInputRow from "./PaletteInputRow";
+import { listRowFocusClasses } from "../lib/listRowFocus";
 
 export interface SkillPickerProps {
   project: Project;
@@ -136,9 +137,7 @@ export default function SkillPicker({
               type="button"
               onClick={() => void execute(idx)}
               onMouseEnter={() => setSelectedIdx(idx)}
-              className={`flex items-center gap-3 px-3 min-h-task-row transition-colors duration-150 text-left ${
-                idx === selectedIdx ? "bg-accent/5 laser-focus" : "hover:bg-surface-2"
-              }`}
+              className={`flex items-center gap-3 px-3 min-h-task-row text-left ${listRowFocusClasses(idx === selectedIdx)}`}
             >
               <span className="text-[13px] shrink-0 w-5 text-center leading-none">
                 {skill.emoji}

@@ -18,6 +18,7 @@ import HintBar from "../components/layout/HintBar";
 import ConfirmModal from "../components/ConfirmModal";
 import { db } from "../lib/db";
 import { requestSync } from "../lib/requestSync";
+import { listRowFocusClasses } from "../lib/listRowFocus";
 import type { Task, Project, Space, ChipFocus } from "@sift/shared";
 import type { SpaceGroup } from "../hooks/useTasks";
 
@@ -546,12 +547,7 @@ export default function ProjectsView() {
     const isExpanded = expandedProjectId === project.id;
     const exiting = exitingProjectIds.has(project.id);
 
-    const focusShadowClass = isFocusedProject
-      ? archived
-        ? "shadow-laser-archive"
-        : "shadow-laser-soft"
-      : "";
-    // When focused, raise opacity so the glow and accent text are clearly visible
+    // When focused, raise opacity so the glow is clearly visible on archived rows
     const archivedRowClass = archived
       ? isFocusedProject
         ? "opacity-70"
@@ -567,7 +563,7 @@ export default function ProjectsView() {
         key={project.id}
         role="button"
         tabIndex={archived ? -1 : 0}
-        className={`mb-4 transition-[opacity,box-shadow] duration-150 ease-spring ${focusShadowClass} ${archivedRowClass} ${
+        className={`mb-4 transition-opacity duration-150 ease-spring ${archivedRowClass} ${
           exiting ? "animate-task-exit" : archived ? "animate-task-enter" : ""
         }`}
         style={enterDelay}
@@ -579,13 +575,11 @@ export default function ProjectsView() {
           }
         }}
       >
-        <div className="px-card-x py-2 border-b-[0.5px] border-border">
+        <div
+          className={`px-card-x py-2 border-b-[0.5px] border-border ${listRowFocusClasses(isFocusedProject)}`}
+        >
           <div className="flex items-center justify-between mb-1.5">
-            <span
-              className={`font-mono text-[11px] flex items-center gap-1.5 min-w-0 ${
-                isFocusedProject ? "text-accent" : "text-text"
-              }`}
-            >
+            <span className="font-mono text-[11px] flex items-center gap-1.5 min-w-0 text-text">
               {project.emoji ? (
                 <span
                   className="shrink-0 text-sm leading-none"
@@ -714,18 +708,16 @@ export default function ProjectsView() {
           <button
             type="button"
             aria-expanded={showArchived}
-            className={`w-full text-left px-card-x py-3 font-mono text-[11px] border-t border-[0.5px] border-border transition-[background-color,box-shadow] duration-150 ease-spring outline-none ${
-              focusedProjectId === SHOW_ARCHIVED_TOGGLE_ID
-                ? "bg-accent/5 shadow-laser"
-                : ""
-            }`}
+            className={`w-full text-left px-card-x py-3 font-mono text-[11px] border-t border-[0.5px] border-border outline-none ${listRowFocusClasses(
+              focusedProjectId === SHOW_ARCHIVED_TOGGLE_ID,
+            )}`}
             onClick={() => setShowArchived((v) => !v)}
           >
             <span className="flex items-center gap-2">
               <svg
                 className={`shrink-0 size-3 transition-transform duration-150 ease-spring ${
                   showArchived ? "rotate-90" : "rotate-0"
-                } ${focusedProjectId === SHOW_ARCHIVED_TOGGLE_ID ? "text-accent" : "text-muted"}`}
+                } text-muted`}
                 viewBox="0 0 12 12"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -739,13 +731,7 @@ export default function ProjectsView() {
                   strokeLinejoin="miter"
                 />
               </svg>
-              <span
-                className={
-                  focusedProjectId === SHOW_ARCHIVED_TOGGLE_ID
-                    ? "text-accent"
-                    : "text-text"
-                }
-              >
+              <span className="text-text">
                 Show archived ({archivedCount})
               </span>
             </span>
