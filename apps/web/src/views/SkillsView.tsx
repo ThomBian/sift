@@ -155,7 +155,7 @@ export default function SkillsView() {
         </button>
       </header>
 
-      <main className="flex-1 px-4 py-4 sm:px-8 sm:py-6 max-w-3xl">
+      <main className="flex-1 px-4 py-4 sm:px-8 sm:py-6">
         {skills.length === 0 && !form && (
           <p className="font-mono text-[10px] text-muted">
             No skills yet. Press N to create your first prompt template.
