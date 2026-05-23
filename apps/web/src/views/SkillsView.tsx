@@ -173,19 +173,19 @@ export default function SkillsView() {
                   focused ? "bg-accent/5 laser-focus" : "hover:bg-surface"
                 }`}
               >
-                <span className="text-[12px] shrink-0 leading-none font-sans">{skill.emoji}</span>
-                <div className="flex-1 min-w-0 flex items-center gap-2">
-                  <span className="font-sans text-[14px] font-medium text-text tracking-[-0.02em] truncate">
+                <span className="text-[12px] shrink-0 leading-none font-sans">{skill.emoji || "⚡"}</span>
+                <div className="flex-1 min-w-0 flex items-center gap-2 overflow-hidden">
+                  <span className="font-sans text-[14px] font-medium text-text tracking-[-0.02em] truncate min-w-0">
                     {skill.name}
                   </span>
                   {skill.description && (
-                    <span className="font-mono text-[10px] text-muted truncate">
+                    <span className="font-mono text-[10px] text-muted truncate shrink-0 max-w-[200px]">
                       {skill.description}
                     </span>
                   )}
                 </div>
                 {focused && (
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 shrink-0">
                     {[
                       { key: "E", label: "edit" },
                       { key: "⌫", label: "delete" },
@@ -214,7 +214,7 @@ export default function SkillsView() {
                   onClick={() => setShowEmojiPicker((v) => !v)}
                   className="text-[20px] w-9 h-9 border-[0.5px] border-border flex items-center justify-center hover:border-accent transition-colors"
                 >
-                  {form.emoji}
+                  {form.emoji || "⚡"}
                 </button>
                 {showEmojiPicker && (
                   <div className="absolute top-full left-0 mt-1 z-50">
@@ -233,6 +233,7 @@ export default function SkillsView() {
                 onChange={(e) => setForm((f) => f ? { ...f, name: e.target.value } : f)}
                 placeholder="Skill name..."
                 className="flex-1 font-sans text-[14px]"
+                maxLength={80}
               />
             </div>
 
@@ -241,6 +242,7 @@ export default function SkillsView() {
               onChange={(e) => setForm((f) => f ? { ...f, description: e.target.value } : f)}
               placeholder="Short description..."
               className="font-sans text-[13px]"
+              maxLength={160}
             />
 
             <div>
