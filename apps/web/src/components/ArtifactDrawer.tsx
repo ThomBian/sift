@@ -4,9 +4,79 @@ import {
   useRef,
   useState,
 } from "react";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { type Components } from "react-markdown";
 import { db } from "../lib/db";
 import type { Artifact } from "@sift/shared";
+
+/**
+ * Explicit element map — Tailwind's preflight strips default heading/list styling,
+ * so each tag is restyled with the design tokens (zero-radius, Geist, JetBrains mono).
+ */
+const markdownComponents: Components = {
+  h1: ({ children }) => (
+    <h1 className="font-sans font-medium text-text text-[22px] tracking-[-0.02em] mt-6 mb-3 first:mt-0">
+      {children}
+    </h1>
+  ),
+  h2: ({ children }) => (
+    <h2 className="font-sans font-medium text-text text-[18px] tracking-[-0.02em] mt-5 mb-2 first:mt-0">
+      {children}
+    </h2>
+  ),
+  h3: ({ children }) => (
+    <h3 className="font-sans font-medium text-text text-[15px] tracking-[-0.02em] mt-4 mb-1.5 first:mt-0">
+      {children}
+    </h3>
+  ),
+  p: ({ children }) => (
+    <p className="text-text leading-relaxed my-2.5">{children}</p>
+  ),
+  ul: ({ children }) => (
+    <ul className="list-disc pl-5 my-2.5 space-y-1">{children}</ul>
+  ),
+  ol: ({ children }) => (
+    <ol className="list-decimal pl-5 my-2.5 space-y-1">{children}</ol>
+  ),
+  li: ({ children }) => <li className="text-text leading-relaxed">{children}</li>,
+  a: ({ children, href }) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="text-accent underline underline-offset-2 hover:opacity-80"
+    >
+      {children}
+    </a>
+  ),
+  strong: ({ children }) => (
+    <strong className="font-semibold text-text">{children}</strong>
+  ),
+  em: ({ children }) => <em className="italic">{children}</em>,
+  blockquote: ({ children }) => (
+    <blockquote className="border-l-2 border-accent pl-3 my-3 text-muted italic">
+      {children}
+    </blockquote>
+  ),
+  hr: () => <hr className="border-0 border-t border-[0.5px] border-border my-5" />,
+  code: ({ className, children }) => {
+    const isBlock = (className ?? "").includes("language-");
+    if (isBlock) {
+      return (
+        <code className="font-mono text-[12px] text-text">{children}</code>
+      );
+    }
+    return (
+      <code className="font-mono text-[12px] bg-surface-2 text-text px-1 py-0.5">
+        {children}
+      </code>
+    );
+  },
+  pre: ({ children }) => (
+    <pre className="bg-surface-2 border border-[0.5px] border-border p-3 my-3 overflow-auto">
+      {children}
+    </pre>
+  ),
+};
 
 export interface ArtifactDrawerProps {
   artifact: Artifact;
@@ -155,12 +225,14 @@ export default function ArtifactDrawer({
         <div className="flex-1 overflow-auto">
           {mode === "view" ? (
             <div
-              className="h-full px-6 py-5 bg-surface cursor-text prose prose-sm max-w-none"
+              className="h-full px-6 py-5 bg-surface cursor-text max-w-none"
               style={{ fontFamily: "Geist, Inter, system-ui", fontSize: 15 }}
               onClick={enterEdit}
             >
               {content ? (
-                <ReactMarkdown>{content}</ReactMarkdown>
+                <ReactMarkdown components={markdownComponents}>
+                  {content}
+                </ReactMarkdown>
               ) : (
                 <p
                   className="font-mono text-[10px] text-muted"
