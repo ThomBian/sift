@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-04-22T20:23:27.547Z",
   "lifetime": {
-    "total_tokens_estimated": 7542083,
-    "total_reads": 1185,
-    "total_writes": 3062,
-    "total_sessions": 22,
-    "anatomy_hits": 960,
-    "anatomy_misses": 206,
-    "repeated_reads_blocked": 2906,
-    "estimated_savings_vs_bare_cli": 9853052
+    "total_tokens_estimated": 7748681,
+    "total_reads": 1212,
+    "total_writes": 3102,
+    "total_sessions": 30,
+    "anatomy_hits": 985,
+    "anatomy_misses": 208,
+    "repeated_reads_blocked": 2940,
+    "estimated_savings_vs_bare_cli": 10049442
   },
   "sessions": [
     {
@@ -24149,12 +24149,710 @@
         "repeated_reads_blocked": 14,
         "anatomy_lookups": 9
       }
+    },
+    {
+      "id": "session-2026-05-23-0958",
+      "started": "2026-05-23T07:58:03.172Z",
+      "ended": "2026-05-23T08:14:03.932Z",
+      "reads": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5914,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/ProjectWorkspaceDescriptionZone.test.tsx",
+          "tokens_estimated": 170,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/Textarea.tsx",
+          "tokens_estimated": 168,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/.agents/skills/normalize/SKILL.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/tailwind.config.ts",
+          "tokens_estimated": 1071,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/lib/listRowFocus.ts",
+          "tokens_estimated": 103,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/.impeccable.md",
+          "tokens_estimated": 4269,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 1904,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/InboxView.tsx",
+          "tokens_estimated": 1189,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/AppLayout.tsx",
+          "tokens_estimated": 2484,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 4952,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5260,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5285,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5399,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5409,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5361,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5924,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5977,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/ProjectWorkspaceDescriptionZone.test.tsx",
+          "tokens_estimated": 748,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5992,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5896,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5846,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5845,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/tailwind.config.ts",
+          "tokens_estimated": 1039,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5914,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 6012,
+          "action": "create"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 17272,
+        "output_tokens_estimated": 80859,
+        "reads_count": 10,
+        "writes_count": 16,
+        "repeated_reads_blocked": 17,
+        "anatomy_lookups": 9
+      }
+    },
+    {
+      "id": "session-2026-05-23-0958",
+      "started": "2026-05-23T07:58:03.172Z",
+      "ended": "2026-05-23T08:15:22.067Z",
+      "reads": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5914,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/ProjectWorkspaceDescriptionZone.test.tsx",
+          "tokens_estimated": 170,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/Textarea.tsx",
+          "tokens_estimated": 168,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/.agents/skills/normalize/SKILL.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/tailwind.config.ts",
+          "tokens_estimated": 1071,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/lib/listRowFocus.ts",
+          "tokens_estimated": 103,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/.impeccable.md",
+          "tokens_estimated": 4269,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 1904,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/InboxView.tsx",
+          "tokens_estimated": 1189,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/AppLayout.tsx",
+          "tokens_estimated": 2484,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 4952,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5260,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5285,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5399,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5409,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5361,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5924,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5977,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/__tests__/ProjectWorkspaceDescriptionZone.test.tsx",
+          "tokens_estimated": 748,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5992,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5896,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5846,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5845,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/tailwind.config.ts",
+          "tokens_estimated": 1039,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 5914,
+          "action": "create"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 6012,
+          "action": "create"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 17272,
+        "output_tokens_estimated": 80859,
+        "reads_count": 10,
+        "writes_count": 16,
+        "repeated_reads_blocked": 17,
+        "anatomy_lookups": 9
+      }
+    },
+    {
+      "id": "session-2026-06-11-0950",
+      "started": "2026-06-11T07:50:54.187Z",
+      "ended": "2026-06-11T07:52:37.863Z",
+      "reads": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 1904,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/tailwind.config.ts",
+          "tokens_estimated": 1039,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/package.json",
+          "tokens_estimated": 221,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/index.css",
+          "tokens_estimated": 542,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 680,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 112,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 3706,
+        "output_tokens_estimated": 792,
+        "reads_count": 4,
+        "writes_count": 2,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 4
+      }
+    },
+    {
+      "id": "session-2026-06-11-0952",
+      "started": "2026-06-11T07:52:55.871Z",
+      "ended": "2026-06-11T07:53:13.999Z",
+      "reads": [
+        {
+          "file": "/Users/tbianchini/.claude/CLAUDE.md",
+          "tokens_estimated": 1800,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/tbianchini/.claude/CLAUDE.md",
+          "tokens_estimated": 12,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/.claude/launch.json",
+          "tokens_estimated": 134,
+          "action": "create"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 1800,
+        "output_tokens_estimated": 146,
+        "reads_count": 1,
+        "writes_count": 2,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 1
+      }
+    },
+    {
+      "id": "session-2026-06-11-0952",
+      "started": "2026-06-11T07:52:55.871Z",
+      "ended": "2026-06-11T07:53:29.141Z",
+      "reads": [
+        {
+          "file": "/Users/tbianchini/.claude/CLAUDE.md",
+          "tokens_estimated": 1800,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/tbianchini/.claude/CLAUDE.md",
+          "tokens_estimated": 12,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/.claude/launch.json",
+          "tokens_estimated": 134,
+          "action": "create"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 1800,
+        "output_tokens_estimated": 146,
+        "reads_count": 1,
+        "writes_count": 2,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 1
+      }
+    },
+    {
+      "id": "session-2026-06-11-0952",
+      "started": "2026-06-11T07:52:55.871Z",
+      "ended": "2026-06-11T07:55:29.422Z",
+      "reads": [
+        {
+          "file": "/Users/tbianchini/.claude/CLAUDE.md",
+          "tokens_estimated": 1800,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/tbianchini/.claude/CLAUDE.md",
+          "tokens_estimated": 12,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/.claude/launch.json",
+          "tokens_estimated": 134,
+          "action": "create"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 1800,
+        "output_tokens_estimated": 146,
+        "reads_count": 1,
+        "writes_count": 2,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 1
+      }
     }
   ],
   "daemon_usage": [],
-  "waste_flags": [],
+  "waste_flags": [
+    {
+      "pattern": "memory_bloat",
+      "description": "memory.md is ~9186 tokens",
+      "tokens_wasted": 4186,
+      "suggestion": "memory.md is growing large. Consolidation should run more frequently.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "41% of file lookups missed anatomy in session session-2026-04-29-0908",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "41% of file lookups missed anatomy in session session-2026-04-29-0908",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "41% of file lookups missed anatomy in session session-2026-04-29-0908",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "43% of file lookups missed anatomy in session session-2026-04-29-0908",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "43% of file lookups missed anatomy in session session-2026-04-29-0908",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "43% of file lookups missed anatomy in session session-2026-04-29-0908",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "44% of file lookups missed anatomy in session session-2026-04-29-0908",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "44% of file lookups missed anatomy in session session-2026-04-29-0908",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "44% of file lookups missed anatomy in session session-2026-04-29-0908",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "44% of file lookups missed anatomy in session session-2026-04-29-0908",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "44% of file lookups missed anatomy in session session-2026-04-29-0908",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "44% of file lookups missed anatomy in session session-2026-04-29-0908",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "100% of file lookups missed anatomy in session session-2026-05-20-0824",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "100% of file lookups missed anatomy in session session-2026-05-20-0824",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "100% of file lookups missed anatomy in session session-2026-05-20-0824",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "100% of file lookups missed anatomy in session session-2026-05-20-0824",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "100% of file lookups missed anatomy in session session-2026-05-20-0824",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "100% of file lookups missed anatomy in session session-2026-05-20-0824",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "100% of file lookups missed anatomy in session session-2026-05-20-0824",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "100% of file lookups missed anatomy in session session-2026-05-20-0824",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "100% of file lookups missed anatomy in session session-2026-05-20-0824",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "100% of file lookups missed anatomy in session session-2026-05-20-0824",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "100% of file lookups missed anatomy in session session-2026-05-20-0824",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "100% of file lookups missed anatomy in session session-2026-05-20-0824",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "100% of file lookups missed anatomy in session session-2026-05-20-0824",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "100% of file lookups missed anatomy in session session-2026-05-20-0824",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "50% of file lookups missed anatomy in session session-2026-05-20-0824",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    },
+    {
+      "pattern": "anatomy_miss_rate",
+      "description": "100% of file lookups missed anatomy in session session-2026-05-23-0926",
+      "tokens_wasted": 0,
+      "suggestion": "Run openwolf scan to refresh anatomy.md.",
+      "detected_at": "2026-05-24T22:00:00.898Z"
+    }
+  ],
   "optimization_report": {
-    "last_generated": null,
-    "patterns": []
+    "last_generated": "2026-05-24T22:00:00.913Z",
+    "patterns": [
+      "memory_bloat",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate",
+      "anatomy_miss_rate"
+    ]
   }
 }

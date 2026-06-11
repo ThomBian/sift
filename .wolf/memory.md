@@ -447,3 +447,54 @@
 | 10:11 | Session end: 14 writes across 3 files (ProjectWorkspaceView.tsx, ProjectWorkspaceDescriptionZone.test.tsx, tailwind.config.ts) | 10 reads | ~86137 tok |
 | 10:12 | Created apps/web/src/views/ProjectWorkspaceView.tsx | — | ~5914 |
 | 10:13 | Created apps/web/src/views/ProjectWorkspaceView.tsx | — | ~6012 |
+| 10:14 | Session end: 16 writes across 3 files (ProjectWorkspaceView.tsx, ProjectWorkspaceDescriptionZone.test.tsx, tailwind.config.ts) | 10 reads | ~98131 tok |
+| 10:15 | Session end: 16 writes across 3 files (ProjectWorkspaceView.tsx, ProjectWorkspaceDescriptionZone.test.tsx, tailwind.config.ts) | 10 reads | ~98131 tok |
+
+## Session: 2026-05-24 03:00
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-05-27 09:08
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-05 11:37
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-07 08:23
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-07 08:23
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-11 09:49
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-11 09:50
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 09:51 | Edited apps/web/src/components/ArtifactDrawer.tsx | added nullish coalescing | ~680 |
+| 09:52 | Edited apps/web/src/components/ArtifactDrawer.tsx | 8→10 lines | ~112 |
+| --:-- | artifact view rendered markdown as plain text — added explicit ReactMarkdown components map (prose classes were no-op, no typography plugin) | apps/web/src/components/ArtifactDrawer.tsx | fixed, tsc clean | ~900 |
+| 09:52 | Session end: 2 writes across 1 files (ArtifactDrawer.tsx) | 4 reads | ~4498 tok |
+
+## Session: 2026-06-11 09:52
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 09:53 | Edited ../../.claude/CLAUDE.md | 3→2 lines | ~11 |
+| 09:53 | Created .claude/launch.json | — | ~134 |
+| 09:53 | Session end: 2 writes across 2 files (CLAUDE.md, launch.json) | 1 reads | ~1946 tok |
+| 09:53 | Session end: 2 writes across 2 files (CLAUDE.md, launch.json) | 1 reads | ~1946 tok |
+| 09:55 | Session end: 2 writes across 2 files (CLAUDE.md, launch.json) | 1 reads | ~1946 tok |

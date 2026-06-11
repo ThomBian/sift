@@ -1,7 +1,11 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-23T08:13:32.810Z
-> Files: 240 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-06-11T07:53:13.593Z
+> Files: 242 tracked | Anatomy hits: 0 | Misses: 0
+
+## ../../.claude/
+
+- `CLAUDE.md` — My Development Preferences (~248 tok)
 
 ## ./
 
@@ -25,6 +29,7 @@
 
 ## .claude/
 
+- `launch.json` (~134 tok)
 - `settings.json` (~441 tok)
 - `settings.local.json` (~433 tok)
 
@@ -162,7 +167,7 @@
 - `index.html` — Sift (~187 tok)
 - `package.json` — Node.js package manifest (~457 tok)
 - `postcss.config.js` — PostCSS configuration (~18 tok)
-- `tailwind.config.ts` — Palette hex values mirror `packages/shared/src/design-tokens.css` — update both when tokens change. (~1039 tok)
+- `tailwind.config.ts` — Tailwind CSS configuration (~1039 tok)
 - `tsconfig.json` — TypeScript configuration (~139 tok)
 - `vercel.json` (~60 tok)
 - `vite.config.ts` — Vite build configuration (~277 tok)
@@ -180,7 +185,7 @@
 - `HintBar.test.tsx` — / <reference types="vitest" /> (~1090 tok)
 - `listRowFocus.test.ts` — Declares classes (~191 tok)
 - `MonthView.test.tsx` — @vitest-environment jsdom (~1974 tok)
-- `ProjectWorkspaceDescriptionZone.test.tsx` — cycleZone (~748 tok)
+- `ProjectWorkspaceDescriptionZone.test.tsx` — @vitest-environment jsdom (~748 tok)
 - `setup.ts` (~81 tok)
 - `SyncService.test.ts` — @vitest-environment jsdom (~5313 tok)
 - `TaskRow.test.tsx` — @vitest-environment jsdom (~1814 tok)
@@ -195,7 +200,7 @@
 
 ## apps/web/src/components/
 
-- `ArtifactDrawer.tsx` — ArtifactDrawer — uses useState, useEffect, useCallback (~1904 tok)
+- `ArtifactDrawer.tsx` — Explicit element map — Tailwind's preflight strips default heading/list styling, (~2564 tok)
 - `CommandPalette.tsx` — createTask — uses useMemo, useEffect (~1118 tok)
 - `ConfirmModal.tsx` — EXIT_MS — uses useState, useRef, useCallback, useEffect (~1576 tok)
 - `Input.tsx` — VARIANTS (~239 tok)
@@ -204,7 +209,7 @@
 - `PaletteShell.tsx` — usePaletteClose — uses useState, useCallback (~547 tok)
 - `ProjectEditPalette.tsx` — formatDate — uses useState, useEffect (~2812 tok)
 - `ShortcutsOverlay.tsx` — EXIT_MS — uses useState, useRef, useCallback, useEffect (~1581 tok)
-- `SkillPicker.tsx` — SkillPicker (~1347 tok)
+- `SkillPicker.tsx` — SkillPicker — uses useState, useEffect, useMemo, useCallback (~1347 tok)
 - `TaskList.tsx` — Shown when a task has no project or the project row is missing (e.g. sync race). (~1374 tok)
 - `TaskRow.tsx` — Narrow columns: title on first line, project + due stacked with truncation. (~2345 tok)
 - `Textarea.tsx` — BASE (~168 tok)
@@ -232,7 +237,7 @@
 ## apps/web/src/contexts/
 
 - `AuthContext.tsx` — False until the first getSession finishes so OAuth hash is not stripped by a child <Navigate> first. (~736 tok)
-- `SkillsContext.tsx` — SkillsContext (~268 tok)
+- `SkillsContext.tsx` — SkillsContext — uses useCallback, useEffect, useContext (~268 tok)
 
 ## apps/web/src/hooks/
 
@@ -268,8 +273,8 @@
 - `InboxView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1189 tok)
 - `MonthView.tsx` — Index of the cell that shows local "today", including leading/trailing month cells. (~5634 tok)
 - `ProjectsView.tsx` — ProgressBar (~7400 tok)
-- `ProjectWorkspaceView.tsx` — ProjectWorkspaceView (~6012 tok)
-- `SkillsView.tsx` — VARIABLES — renders form (~3730 tok)
+- `ProjectWorkspaceView.tsx` — ProjectWorkspaceView — uses useNavigate, useState, useEffect, useCallback (~6012 tok)
+- `SkillsView.tsx` — VARIABLES — renders form — uses useNavigate, useState, useCallback, useEffect (~3730 tok)
 - `TodayView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1182 tok)
 - `WeekView.tsx` — Enter toggles done moves the row in the DOM; restore focus so keyboard nav keeps working. (~4043 tok)
 
