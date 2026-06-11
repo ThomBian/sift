@@ -54,6 +54,7 @@ export default function ProjectWorkspaceView() {
   const [newArtifactTitle, setNewArtifactTitle] = useState<string | null>(null);
   const [editingTitleId, setEditingTitleId] = useState<string | null>(null);
   const [deleteArtifact, setDeleteArtifact] = useState<Artifact | null>(null);
+  const [copiedArtifactId, setCopiedArtifactId] = useState<string | null>(null);
   const [skillPickerOpen, setSkillPickerOpen] = useState(false);
   const [cmdPaletteOpen, setCmdPaletteOpen] = useState(false);
   const [skillHint, setSkillHint] = useState(false);
@@ -143,6 +144,27 @@ export default function ProjectWorkspaceView() {
     },
     [projectId],
   );
+
+  const copyTimeoutRef = useRef<number | null>(null);
+  const copyArtifact = useCallback(async (artifact: Artifact) => {
+    try {
+      await navigator.clipboard.writeText(artifact.content);
+      setCopiedArtifactId(artifact.id);
+      if (copyTimeoutRef.current !== null) clearTimeout(copyTimeoutRef.current);
+      copyTimeoutRef.current = window.setTimeout(
+        () => setCopiedArtifactId(null),
+        1500,
+      );
+    } catch {
+      // Clipboard unavailable (insecure context / denied permission) — fail silently.
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current !== null) clearTimeout(copyTimeoutRef.current);
+    };
+  }, []);
 
   const toggleTaskDone = useCallback(async (task: Task) => {
     const now = new Date();
@@ -262,6 +284,9 @@ export default function ProjectWorkspaceView() {
         } else if (e.key === "e" || e.key === "E") {
           const a = artifacts[focusedArtifactIdx];
           if (a) setEditingTitleId(a.id);
+        } else if (e.key === "c" || e.key === "C") {
+          const a = artifacts[focusedArtifactIdx];
+          if (a) void copyArtifact(a);
         } else if (e.key === "Backspace") {
           const a = artifacts[focusedArtifactIdx];
           if (a) setDeleteArtifact(a);
@@ -274,7 +299,7 @@ export default function ProjectWorkspaceView() {
   }, [
     openArtifact, skillPickerOpen, cmdPaletteOpen, focusZone, tasks, artifacts,
     focusedTaskIdx, focusedArtifactIdx, descEditing, exitDescEdit, project,
-    toggleTaskDone, archiveTask, navigate, openSkillPicker,
+    toggleTaskDone, archiveTask, navigate, openSkillPicker, copyArtifact,
   ]);
 
   useEffect(() => {
@@ -329,6 +354,7 @@ export default function ProjectWorkspaceView() {
           { key: "Space", label: "open" },
           { key: "N", label: "new" },
           { key: "E", label: "rename" },
+          { key: "C", label: "copy" },
           { key: "Tab", label: "description" },
           { key: "S", label: "skills" },
         ];
@@ -505,8 +531,15 @@ export default function ProjectWorkspaceView() {
                         />
                       ))}
                     </div>
-                    <div className="font-mono text-[9px] text-muted tabular-nums">
-                      ~{Math.ceil(artifact.content.length / 4)} tok
+                    <div className="flex items-center justify-between">
+                      <div className="font-mono text-[9px] text-muted tabular-nums">
+                        ~{Math.ceil(artifact.content.length / 4)} tok
+                      </div>
+                      {copiedArtifactId === artifact.id && (
+                        <div className="font-mono text-[9px] uppercase tracking-[0.06em] text-green-600">
+                          copied
+                        </div>
+                      )}
                     </div>
                   </div>
                 );

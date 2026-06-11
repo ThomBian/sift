@@ -92,7 +92,9 @@ export default function ArtifactDrawer({
   const [mode, setMode] = useState<"view" | "edit">("view");
   const [content, setContent] = useState(artifact.content);
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "cached">("saved");
+  const [copied, setCopied] = useState(false);
   const debounceRef = useRef<number | null>(null);
+  const copyTimeoutRef = useRef<number | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -131,6 +133,17 @@ export default function ArtifactDrawer({
     requestAnimationFrame(() => textareaRef.current?.focus());
   }, []);
 
+  const copyContent = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopied(true);
+      if (copyTimeoutRef.current !== null) clearTimeout(copyTimeoutRef.current);
+      copyTimeoutRef.current = window.setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Clipboard unavailable (insecure context / denied permission) — fail silently.
+    }
+  }, [content]);
+
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
@@ -153,14 +166,19 @@ export default function ArtifactDrawer({
         e.preventDefault();
         onSkill();
       }
+      if (e.key === "c" || e.key === "C") {
+        e.preventDefault();
+        void copyContent();
+      }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, onSkill, enterEdit, mode]);
+  }, [onClose, onSkill, enterEdit, copyContent, mode]);
 
   useEffect(() => {
     return () => {
       if (debounceRef.current !== null) clearTimeout(debounceRef.current);
+      if (copyTimeoutRef.current !== null) clearTimeout(copyTimeoutRef.current);
     };
   }, []);
 
@@ -204,6 +222,17 @@ export default function ArtifactDrawer({
             {artifact.title}
           </span>
           <div className="flex gap-1">
+            <button
+              type="button"
+              onClick={() => void copyContent()}
+              className={`font-mono text-[9px] uppercase tracking-[0.06em] px-2 py-0.5 border border-[0.5px] transition-colors duration-150 ${
+                copied
+                  ? "border-green-600 text-green-600"
+                  : "border-border text-muted hover:text-text"
+              }`}
+            >
+              {copied ? "copied" : "copy"}
+            </button>
             {(["edit", "view"] as const).map((m) => (
               <button
                 key={m}
@@ -270,6 +299,7 @@ export default function ArtifactDrawer({
             { key: "ESC", label: mode === "edit" ? "exit edit" : "close" },
             { key: "S", label: "skills" },
             { key: "E", label: "edit" },
+            { key: "C", label: copied ? "copied" : "copy" },
           ].map(({ key, label }) => (
             <span key={key} className="font-mono text-[9px] text-muted">
               <span className="text-accent">{key}</span> {label}
