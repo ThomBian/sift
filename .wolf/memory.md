@@ -498,3 +498,28 @@
 | 09:53 | Session end: 2 writes across 2 files (CLAUDE.md, launch.json) | 1 reads | ~1946 tok |
 | 09:53 | Session end: 2 writes across 2 files (CLAUDE.md, launch.json) | 1 reads | ~1946 tok |
 | 09:55 | Session end: 2 writes across 2 files (CLAUDE.md, launch.json) | 1 reads | ~1946 tok |
+
+## Session: 2026-06-11 09:56
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-11 10:00
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 10:01 | Edited apps/web/src/components/ArtifactDrawer.tsx | 5→7 lines | ~120 |
+| 10:01 | Edited apps/web/src/components/ArtifactDrawer.tsx | added error handling | ~158 |
+| 10:01 | Edited apps/web/src/components/ArtifactDrawer.tsx | added 2 condition(s) | ~169 |
+| 10:01 | Edited apps/web/src/components/ArtifactDrawer.tsx | CSS: hover | ~163 |
+| 10:01 | Edited apps/web/src/components/ArtifactDrawer.tsx | 3→4 lines | ~63 |
+| 10:01 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | 1→2 lines | ~46 |
+| 10:01 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | added error handling | ~222 |
+| 10:02 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | added 2 condition(s) | ~95 |
+| 10:02 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | 3→3 lines | ~45 |
+| 10:02 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | 6→7 lines | ~75 |
+| 10:02 | Edited apps/web/src/views/ProjectWorkspaceView.tsx | expanded (+7 lines) | ~154 |
+| 10:05 | add copy-content shortcut (C key + button) to artifacts in project + drawer views | ArtifactDrawer.tsx, ProjectWorkspaceView.tsx | done, verified in preview | ~9k |
+| 10:05 | Session end: 11 writes across 2 files (ArtifactDrawer.tsx, ProjectWorkspaceView.tsx) | 2 reads | ~9910 tok |
+| 10:39 | Session end: 11 writes across 2 files (ArtifactDrawer.tsx, ProjectWorkspaceView.tsx) | 2 reads | ~9910 tok |
+| 10:40 | Session end: 11 writes across 2 files (ArtifactDrawer.tsx, ProjectWorkspaceView.tsx) | 2 reads | ~9910 tok |

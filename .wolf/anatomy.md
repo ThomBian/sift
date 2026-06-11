@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-06-11T07:53:13.593Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-06-11T08:02:25.193Z
 > Files: 242 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../.claude/
@@ -200,7 +200,7 @@
 
 ## apps/web/src/components/
 
-- `ArtifactDrawer.tsx` — Explicit element map — Tailwind's preflight strips default heading/list styling, (~2564 tok)
+- `ArtifactDrawer.tsx` — Explicit element map — Tailwind's preflight strips default heading/list styling, (~2924 tok)
 - `CommandPalette.tsx` — createTask — uses useMemo, useEffect (~1118 tok)
 - `ConfirmModal.tsx` — EXIT_MS — uses useState, useRef, useCallback, useEffect (~1576 tok)
 - `Input.tsx` — VARIANTS (~239 tok)
@@ -273,7 +273,7 @@
 - `InboxView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1189 tok)
 - `MonthView.tsx` — Index of the cell that shows local "today", including leading/trailing month cells. (~5634 tok)
 - `ProjectsView.tsx` — ProgressBar (~7400 tok)
-- `ProjectWorkspaceView.tsx` — ProjectWorkspaceView — uses useNavigate, useState, useEffect, useCallback (~6012 tok)
+- `ProjectWorkspaceView.tsx` — ProjectWorkspaceView (~6390 tok)
 - `SkillsView.tsx` — VARIABLES — renders form — uses useNavigate, useState, useCallback, useEffect (~3730 tok)
 - `TodayView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1182 tok)
 - `WeekView.tsx` — Enter toggles done moves the row in the DOM; restore focus so keyboard nav keeps working. (~4043 tok)

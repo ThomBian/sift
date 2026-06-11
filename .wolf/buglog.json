@@ -23,7 +23,7 @@
       "error_message": "Significant refactor of ",
       "file": "docs/superpowers/specs/2026-05-20-productos-design.md",
       "root_cause": "3 lines replaced/restructured",
-      "fix": "Rewrote 7\u21929 lines (3 removed) | Also: Follows the existing Sift design system:; - `#FF4F00` \u2014 focus accent, active borders, key hi",
+      "fix": "Rewrote 7→9 lines (3 removed) | Also: Follows the existing Sift design system:; - `#FF4F00` — focus accent, active borders, key hi",
       "tags": [
         "auto-detected",
         "refactor",
@@ -102,8 +102,8 @@
       "timestamp": "2026-05-21T07:50:49.838Z",
       "error_message": "CSS fix: keys",
       "file": "apps/web/src/components/layout/HintBar.tsx",
-      "root_cause": "keys: [\"Space\"], label: projectExpanded ? \"Close\" : \"Open\", hot: true \u2192 [\"Space\"], label: projectExpanded ? \"Close\" : \"Expand\", hot: true",
-      "fix": "Changed keys: [\"Space\"], label: projectExpanded ? \"Close\" : \"Open\", hot: true \u2192 [\"Space\"], label: projectExpanded ? \"Close\" : \"Expand\", hot: true",
+      "root_cause": "keys: [\"Space\"], label: projectExpanded ? \"Close\" : \"Open\", hot: true → [\"Space\"], label: projectExpanded ? \"Close\" : \"Expand\", hot: true",
+      "fix": "Changed keys: [\"Space\"], label: projectExpanded ? \"Close\" : \"Open\", hot: true → [\"Space\"], label: projectExpanded ? \"Close\" : \"Expand\", hot: true",
       "tags": [
         "auto-detected",
         "style-fix",
@@ -151,7 +151,7 @@
       "error_message": "Significant refactor of ",
       "file": "apps/web/src/components/layout/Topbar.tsx",
       "root_cause": "4 lines replaced/restructured",
-      "fix": "Rewrote 12\u219233 lines (4 removed)",
+      "fix": "Rewrote 12→33 lines (4 removed)",
       "tags": [
         "auto-detected",
         "refactor",
@@ -167,7 +167,7 @@
       "error_message": "Wrong reference: 5173 should be 5174",
       "file": "apps/web/vite.config.ts",
       "root_cause": "Used \"5173\" instead of \"5174\"",
-      "fix": "Changed 5173 \u2192 5174",
+      "fix": "Changed 5173 → 5174",
       "tags": [
         "auto-detected",
         "wrong-reference",
@@ -231,7 +231,7 @@
       "error_message": "Significant refactor of ",
       "file": "apps/web/src/components/CommandPalette.tsx",
       "root_cause": "28 lines replaced/restructured",
-      "fix": "Rewrote 98\u219274 lines (28 removed)",
+      "fix": "Rewrote 98→74 lines (28 removed)",
       "tags": [
         "auto-detected",
         "refactor",
@@ -247,7 +247,7 @@
       "error_message": "Significant refactor of ",
       "file": "apps/web/src/components/ProjectEditPalette.tsx",
       "root_cause": "13 lines replaced/restructured",
-      "fix": "Rewrote 27\u219216 lines (13 removed) | Also: <div; className=\"fixed inset-0 z-50 flex items-start jus",
+      "fix": "Rewrote 27→16 lines (13 removed) | Also: <div; className=\"fixed inset-0 z-50 flex items-start jus",
       "tags": [
         "auto-detected",
         "refactor",
@@ -263,7 +263,7 @@
       "error_message": "Significant refactor of ",
       "file": "apps/web/src/components/SkillPicker.tsx",
       "root_cause": "7 lines replaced/restructured",
-      "fix": "Rewrote 23\u219215 lines (7 removed)",
+      "fix": "Rewrote 23→15 lines (7 removed)",
       "tags": [
         "auto-detected",
         "refactor",
@@ -279,7 +279,7 @@
       "error_message": "Significant refactor of ",
       "file": "apps/web/src/components/ProjectEditPalette.tsx",
       "root_cause": "8 lines replaced/restructured",
-      "fix": "Rewrote 18\u219213 lines (8 removed)",
+      "fix": "Rewrote 18→13 lines (8 removed)",
       "tags": [
         "auto-detected",
         "refactor",
@@ -295,7 +295,7 @@
       "error_message": "Significant refactor of ",
       "file": "apps/web/src/components/SkillPicker.tsx",
       "root_cause": "5 lines replaced/restructured",
-      "fix": "Rewrote 10\u21928 lines (5 removed)",
+      "fix": "Rewrote 10→8 lines (5 removed)",
       "tags": [
         "auto-detected",
         "refactor",
@@ -358,8 +358,8 @@
       "timestamp": "2026-05-21T14:50:21.254Z",
       "error_message": "CSS fix: letterSpacing",
       "file": "apps/web/src/components/PaletteInputRow.tsx",
-      "root_cause": "letterSpacing: \"-0.1px\" \u2192 \"-0.1px\", outline: \"none\"",
-      "fix": "Changed letterSpacing: \"-0.1px\" \u2192 \"-0.1px\", outline: \"none\"",
+      "root_cause": "letterSpacing: \"-0.1px\" → \"-0.1px\", outline: \"none\"",
+      "fix": "Changed letterSpacing: \"-0.1px\" → \"-0.1px\", outline: \"none\"",
       "tags": [
         "auto-detected",
         "style-fix",
@@ -374,8 +374,8 @@
       "timestamp": "2026-05-21T14:50:25.690Z",
       "error_message": "CSS fix: focus-within",
       "file": "apps/web/src/components/PaletteShell.tsx",
-      "root_cause": "focus-within: border-accent transition-colors duration-150 [&_input:focus-visible]:outline-none` \u2192 border-accent transition-colors duration-150`",
-      "fix": "Changed focus-within: border-accent transition-colors duration-150 [&_input:focus-visible]:outline-none` \u2192 border-accent transition-colors duration-150`",
+      "root_cause": "focus-within: border-accent transition-colors duration-150 [&_input:focus-visible]:outline-none` → border-accent transition-colors duration-150`",
+      "fix": "Changed focus-within: border-accent transition-colors duration-150 [&_input:focus-visible]:outline-none` → border-accent transition-colors duration-150`",
       "tags": [
         "auto-detected",
         "style-fix",
@@ -423,7 +423,7 @@
       "error_message": "Significant refactor of ",
       "file": "apps/web/src/views/SkillsView.tsx",
       "root_cause": "2 lines replaced/restructured",
-      "fix": "Rewrote 6\u21926 lines (2 removed) | Also: <input; className=\"border-b border-[0.5px] border-border b | Also: <textarea; className=\"w-full border border-[0.5px] border-bor",
+      "fix": "Rewrote 6→6 lines (2 removed) | Also: <input; className=\"border-b border-[0.5px] border-border b | Also: <textarea; className=\"w-full border border-[0.5px] border-bor",
       "tags": [
         "auto-detected",
         "refactor",
@@ -454,8 +454,8 @@
       "timestamp": "2026-05-22T08:46:27.261Z",
       "error_message": "CSS fix: underline, box",
       "file": "apps/web/src/components/Input.tsx",
-      "root_cause": "underline: \"w-full border-b border-[0.5px] border-border bg-transparent text-text pb-1 outline-none placeholder:text-muted focus:border-accent transition-colors\", \u2192 \"w-full h-9 border-b border-[0.5px] border-border bg-transparent text-text outline-none placeholder:text-muted focus:border-accent transition-colors\",; box: \"w-full border-[0.5px] border-border-2 bg-surface-2 text-text px-3 py-2 outline-none placeholder:text-muted focus:border-accent transition-colors disabled:opacity-40\", \u2192 \"w-full h-9 border-[0.5px] border-border-2 bg-surface-2 text-text px-3 outline-none placeholder:text-muted focus:border-accent transition-colors disabled:opacity-40\",",
-      "fix": "Changed underline: \"w-full border-b border-[0.5px] border-border bg-transparent text-text pb-1 outline-none placeholder:text-muted focus:border-accent transition-colors\", \u2192 \"w-full h-9 border-b border-[0.5px] border-border bg-transparent text-text outline-none placeholder:text-muted focus:border-accent transition-colors\",; box: \"w-full border-[0.5px] border-border-2 bg-surface-2 text-text px-3 py-2 outline-none placeholder:text-muted focus:border-accent transition-colors disabled:opacity-40\", \u2192 \"w-full h-9 border-[0.5px] border-border-2 bg-surface-2 text-text px-3 outline-none placeholder:text-muted focus:border-accent transition-colors disabled:opacity-40\",",
+      "root_cause": "underline: \"w-full border-b border-[0.5px] border-border bg-transparent text-text pb-1 outline-none placeholder:text-muted focus:border-accent transition-colors\", → \"w-full h-9 border-b border-[0.5px] border-border bg-transparent text-text outline-none placeholder:text-muted focus:border-accent transition-colors\",; box: \"w-full border-[0.5px] border-border-2 bg-surface-2 text-text px-3 py-2 outline-none placeholder:text-muted focus:border-accent transition-colors disabled:opacity-40\", → \"w-full h-9 border-[0.5px] border-border-2 bg-surface-2 text-text px-3 outline-none placeholder:text-muted focus:border-accent transition-colors disabled:opacity-40\",",
+      "fix": "Changed underline: \"w-full border-b border-[0.5px] border-border bg-transparent text-text pb-1 outline-none placeholder:text-muted focus:border-accent transition-colors\", → \"w-full h-9 border-b border-[0.5px] border-border bg-transparent text-text outline-none placeholder:text-muted focus:border-accent transition-colors\",; box: \"w-full border-[0.5px] border-border-2 bg-surface-2 text-text px-3 py-2 outline-none placeholder:text-muted focus:border-accent transition-colors disabled:opacity-40\", → \"w-full h-9 border-[0.5px] border-border-2 bg-surface-2 text-text px-3 outline-none placeholder:text-muted focus:border-accent transition-colors disabled:opacity-40\",",
       "tags": [
         "auto-detected",
         "style-fix",
@@ -502,8 +502,8 @@
       "timestamp": "2026-05-22T08:54:27.875Z",
       "error_message": "CSS fix: keys",
       "file": "apps/web/src/components/layout/HintBar.tsx",
-      "root_cause": "keys: [\"\u2190 \u2192\"], label: \"Switch view\" \u2192 [\"\u2318S\"], label: \"Skills\"",
-      "fix": "Changed keys: [\"\u2190 \u2192\"], label: \"Switch view\" \u2192 [\"\u2318S\"], label: \"Skills\"",
+      "root_cause": "keys: [\"← →\"], label: \"Switch view\" → [\"⌘S\"], label: \"Skills\"",
+      "fix": "Changed keys: [\"← →\"], label: \"Switch view\" → [\"⌘S\"], label: \"Skills\"",
       "tags": [
         "auto-detected",
         "style-fix",
@@ -567,7 +567,7 @@
       "error_message": "Significant refactor of ",
       "file": "apps/web/src/views/SkillsView.tsx",
       "root_cause": "2 lines replaced/restructured",
-      "fix": "Rewrote 4\u21923 lines (2 removed)",
+      "fix": "Rewrote 4→3 lines (2 removed)",
       "tags": [
         "auto-detected",
         "refactor",
@@ -583,7 +583,7 @@
       "error_message": "Significant refactor of ",
       "file": "packages/shared/src/db.ts",
       "root_cause": "3 lines replaced/restructured",
-      "fix": "Rewrote 5\u21929 lines (3 removed)",
+      "fix": "Rewrote 5→9 lines (3 removed)",
       "tags": [
         "auto-detected",
         "refactor",
@@ -596,7 +596,7 @@
     {
       "id": "bug-038",
       "timestamp": "2026-05-23T00:00:00.000Z",
-      "error_message": "Skills not saved \u2014 saving silently fails when Supabase is not configured",
+      "error_message": "Skills not saved — saving silently fails when Supabase is not configured",
       "file": "apps/web/src/views/SkillsView.tsx, apps/web/src/contexts/SkillsContext.tsx",
       "root_cause": "Skills were Supabase-only with no local IndexedDB storage. saveForm() had guard `if (!supabase) return` so all saves silently no-oped offline.",
       "fix": "Added promptTemplates table to Dexie (version 7 schema). SkillsContext now reads from db.promptTemplates. saveForm() uses db.promptTemplates.put(). Delete uses db.promptTemplates.delete().",
@@ -744,8 +744,8 @@
       "timestamp": "2026-05-23T07:12:28.019Z",
       "error_message": "CSS fix: sm",
       "file": "apps/web/src/views/SkillsView.tsx",
-      "root_cause": "sm: h-[36px] border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${ \u2192 h-[36px] px-card-x border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${",
-      "fix": "Changed sm: h-[36px] border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${ \u2192 h-[36px] px-card-x border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${",
+      "root_cause": "sm: h-[36px] border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${ → h-[36px] px-card-x border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${",
+      "fix": "Changed sm: h-[36px] border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${ → h-[36px] px-card-x border-b-[0.5px] border-border cursor-default transition-colors duration-150 ${",
       "tags": [
         "auto-detected",
         "style-fix",
@@ -788,6 +788,70 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-06-11"
+    },
+    {
+      "id": "bug-050",
+      "timestamp": "2026-06-11T08:01:23.655Z",
+      "error_message": "Missing error handling in unknown",
+      "file": "apps/web/src/components/ArtifactDrawer.tsx",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-11T08:01:23.655Z"
+    },
+    {
+      "id": "bug-051",
+      "timestamp": "2026-06-11T08:01:34.414Z",
+      "error_message": "Type error",
+      "file": "apps/web/src/components/ArtifactDrawer.tsx",
+      "root_cause": "Missing or incorrect type annotation",
+      "fix": "Added type assertion/annotation",
+      "tags": [
+        "auto-detected",
+        "type-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-11T08:01:34.414Z"
+    },
+    {
+      "id": "bug-052",
+      "timestamp": "2026-06-11T08:01:38.226Z",
+      "error_message": "CSS fix: key",
+      "file": "apps/web/src/components/ArtifactDrawer.tsx",
+      "root_cause": "key: \"E\", label: \"edit\" → \"C\", label: copied ? \"copied\" : \"copy\"",
+      "fix": "Changed key: \"E\", label: \"edit\" → \"C\", label: copied ? \"copied\" : \"copy\"",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-11T08:01:38.226Z"
+    },
+    {
+      "id": "bug-053",
+      "timestamp": "2026-06-11T08:01:59.231Z",
+      "error_message": "Missing error handling in unknown",
+      "file": "apps/web/src/views/ProjectWorkspaceView.tsx",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-11T08:01:59.231Z"
     }
   ]
 }

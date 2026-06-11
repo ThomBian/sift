@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-04-22T20:23:27.547Z",
   "lifetime": {
-    "total_tokens_estimated": 7748681,
-    "total_reads": 1212,
-    "total_writes": 3102,
-    "total_sessions": 30,
-    "anatomy_hits": 985,
+    "total_tokens_estimated": 7844831,
+    "total_reads": 1244,
+    "total_writes": 3135,
+    "total_sessions": 32,
+    "anatomy_hits": 1017,
     "anatomy_misses": 208,
-    "repeated_reads_blocked": 2940,
-    "estimated_savings_vs_bare_cli": 10049442
+    "repeated_reads_blocked": 2955,
+    "estimated_savings_vs_bare_cli": 10146382
   },
   "sessions": [
     {
@@ -24612,6 +24612,446 @@
         "writes_count": 2,
         "repeated_reads_blocked": 0,
         "anatomy_lookups": 1
+      }
+    },
+    {
+      "id": "session-2026-06-11-0956",
+      "started": "2026-06-11T07:56:48.662Z",
+      "ended": "2026-06-11T07:59:16.124Z",
+      "reads": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/hooks/useKeyboardNav.ts",
+          "tokens_estimated": 1133,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/hooks/useProjectNav.ts",
+          "tokens_estimated": 658,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/AppLayout.tsx",
+          "tokens_estimated": 2484,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/CommandPalette.tsx",
+          "tokens_estimated": 1118,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ProjectEditPalette.tsx",
+          "tokens_estimated": 2812,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ShortcutsOverlay.tsx",
+          "tokens_estimated": 1581,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 2564,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/SkillPicker.tsx",
+          "tokens_estimated": 1347,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectsView.tsx",
+          "tokens_estimated": 7400,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 6012,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/InboxView.tsx",
+          "tokens_estimated": 1189,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/TodayView.tsx",
+          "tokens_estimated": 1182,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 3730,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 33210,
+        "output_tokens_estimated": 0,
+        "reads_count": 13,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 13
+      }
+    },
+    {
+      "id": "session-2026-06-11-0956",
+      "started": "2026-06-11T07:56:48.662Z",
+      "ended": "2026-06-11T07:59:19.479Z",
+      "reads": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/hooks/useKeyboardNav.ts",
+          "tokens_estimated": 1133,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/hooks/useProjectNav.ts",
+          "tokens_estimated": 658,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/layout/AppLayout.tsx",
+          "tokens_estimated": 2484,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/CommandPalette.tsx",
+          "tokens_estimated": 1118,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ProjectEditPalette.tsx",
+          "tokens_estimated": 2812,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ShortcutsOverlay.tsx",
+          "tokens_estimated": 1581,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 2564,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/SkillPicker.tsx",
+          "tokens_estimated": 1347,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectsView.tsx",
+          "tokens_estimated": 7400,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 6012,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/InboxView.tsx",
+          "tokens_estimated": 1189,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/TodayView.tsx",
+          "tokens_estimated": 1182,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/SkillsView.tsx",
+          "tokens_estimated": 3730,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 33210,
+        "output_tokens_estimated": 0,
+        "reads_count": 13,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 13
+      }
+    },
+    {
+      "id": "session-2026-06-11-1000",
+      "started": "2026-06-11T08:00:33.096Z",
+      "ended": "2026-06-11T08:05:56.769Z",
+      "reads": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 2564,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 6036,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 120,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 158,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 169,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 163,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 63,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 46,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 222,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 95,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 45,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 75,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 154,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 8600,
+        "output_tokens_estimated": 1310,
+        "reads_count": 2,
+        "writes_count": 11,
+        "repeated_reads_blocked": 5,
+        "anatomy_lookups": 2
+      }
+    },
+    {
+      "id": "session-2026-06-11-1000",
+      "started": "2026-06-11T08:00:33.096Z",
+      "ended": "2026-06-11T08:39:12.240Z",
+      "reads": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 2564,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 6036,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 120,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 158,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 169,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 163,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 63,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 46,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 222,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 95,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 45,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 75,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 154,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 8600,
+        "output_tokens_estimated": 1310,
+        "reads_count": 2,
+        "writes_count": 11,
+        "repeated_reads_blocked": 5,
+        "anatomy_lookups": 2
+      }
+    },
+    {
+      "id": "session-2026-06-11-1000",
+      "started": "2026-06-11T08:00:33.096Z",
+      "ended": "2026-06-11T08:40:01.310Z",
+      "reads": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 2564,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 6036,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 120,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 158,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 169,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 163,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/components/ArtifactDrawer.tsx",
+          "tokens_estimated": 63,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 46,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 222,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 95,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 45,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 75,
+          "action": "edit"
+        },
+        {
+          "file": "/Users/tbianchini/workspace/sift/apps/web/src/views/ProjectWorkspaceView.tsx",
+          "tokens_estimated": 154,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 8600,
+        "output_tokens_estimated": 1310,
+        "reads_count": 2,
+        "writes_count": 11,
+        "repeated_reads_blocked": 5,
+        "anatomy_lookups": 2
       }
     }
   ],
