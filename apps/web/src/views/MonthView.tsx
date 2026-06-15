@@ -126,6 +126,8 @@ export default function MonthView() {
   );
   const [focusedTaskId, setFocusedTaskId] = useState<string | null>(null);
   const taskRefocusId = useRef<string | null>(null);
+  const focusedTaskIdRef = useRef<string | null>(null);
+  focusedTaskIdRef.current = focusedTaskId;
 
   /** Always points at the latest anchored month — used by keyboard navigators called in one tick. */
   const anchorMonthRef = useRef(anchorMonth);
@@ -468,7 +470,51 @@ export default function MonthView() {
       const taskWrap = (active as HTMLElement | null)?.closest(
         "[data-month-task-id]",
       );
-      if (!(taskWrap instanceof HTMLElement)) return;
+      if (!(taskWrap instanceof HTMLElement)) {
+        const selectedId = focusedTaskIdRef.current;
+        if (selectedId) {
+          const selected = tasksByDayRef.current.find((t) => t.id === selectedId);
+          if (selected) {
+            if (e.metaKey && e.key === "o") {
+              e.preventDefault();
+              if (selected.url)
+                window.open(selected.url, "_blank", "noopener,noreferrer");
+              return;
+            }
+            const isSelectedEditKey =
+              e.key === "d" ||
+              e.key === "D" ||
+              e.key === "w" ||
+              e.key === "W" ||
+              e.key === "p" ||
+              e.key === "P" ||
+              e.key === "e" ||
+              e.key === "E" ||
+              e.key === "u" ||
+              e.key === "U";
+            if (isSelectedEditKey) {
+              e.preventDefault();
+              const chip =
+                e.key === "d" || e.key === "D"
+                  ? "dueDate"
+                  : e.key === "w" || e.key === "W"
+                    ? "workingDate"
+                    : e.key === "p" || e.key === "P"
+                      ? "project"
+                      : e.key === "u" || e.key === "U"
+                        ? "url"
+                        : null;
+              window.dispatchEvent(
+                new CustomEvent("sift:edit-task", {
+                  detail: { task: selected, chip },
+                }),
+              );
+              return;
+            }
+          }
+        }
+        return;
+      }
       const taskId = taskWrap.dataset.monthTaskId;
       const taskIdxRaw = taskWrap.dataset.monthTaskIndex;
       if (!taskId || taskIdxRaw == null) return;
@@ -530,6 +576,13 @@ export default function MonthView() {
         updateTask(task, { status: "archived" });
         return;
       }
+      if (e.metaKey && e.key === "o") {
+        e.preventDefault();
+        if (task.url)
+          window.open(task.url, "_blank", "noopener,noreferrer");
+        return;
+      }
+
       const isEditKey =
         e.key === "d" ||
         e.key === "D" ||

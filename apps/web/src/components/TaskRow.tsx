@@ -231,7 +231,10 @@ export default function TaskRow({
       role="listitem"
       tabIndex={0}
       aria-label={rowLabel}
-      onClick={onFocus}
+      onClick={() => {
+        rowRef.current?.focus();
+        onFocus();
+      }}
       onKeyDown={(e) => {
         if (e.target !== e.currentTarget) return;
         if (e.key === "Enter" || e.key === " ") {

@@ -47,6 +47,8 @@ export default function WeekView() {
   const [focusedTaskId, setFocusedTaskId] = useState<string | null>(null);
   const weekRootRef = useRef<HTMLDivElement>(null);
   const weekTaskRefocusId = useRef<string | null>(null);
+  const focusedTaskIdRef = useRef<string | null>(null);
+  focusedTaskIdRef.current = focusedTaskId;
   const { spacesWithProjects, spacesProjectsReady } = useSpacesProjects();
   const { days } = useWeekTasks(anchorMonday, mode);
 
@@ -299,7 +301,51 @@ export default function WeekView() {
         }
       }
 
-      if (!(taskWrapper instanceof HTMLElement)) return;
+      if (!(taskWrapper instanceof HTMLElement)) {
+        const selectedId = focusedTaskIdRef.current;
+        if (selectedId) {
+          const selected = tasksById.get(selectedId);
+          if (selected) {
+            if (e.metaKey && e.key === "o") {
+              e.preventDefault();
+              if (selected.url)
+                window.open(selected.url, "_blank", "noopener,noreferrer");
+              return;
+            }
+            const isSelectedEditKey =
+              e.key === "d" ||
+              e.key === "D" ||
+              e.key === "w" ||
+              e.key === "W" ||
+              e.key === "p" ||
+              e.key === "P" ||
+              e.key === "e" ||
+              e.key === "E" ||
+              e.key === "u" ||
+              e.key === "U";
+            if (isSelectedEditKey) {
+              e.preventDefault();
+              const chip =
+                e.key === "d" || e.key === "D"
+                  ? "dueDate"
+                  : e.key === "w" || e.key === "W"
+                    ? "workingDate"
+                    : e.key === "p" || e.key === "P"
+                      ? "project"
+                      : e.key === "u" || e.key === "U"
+                        ? "url"
+                        : null;
+              window.dispatchEvent(
+                new CustomEvent("sift:edit-task", {
+                  detail: { task: selected, chip },
+                }),
+              );
+              return;
+            }
+          }
+        }
+        return;
+      }
       const taskId = taskWrapper.dataset.weekTaskId;
       const dayIndexRaw = taskWrapper.dataset.weekDayIndex;
       if (!taskId || dayIndexRaw == null) return;
@@ -356,6 +402,13 @@ export default function WeekView() {
       if (e.key === "Backspace" || e.key === "Delete") {
         e.preventDefault();
         updateTask(task, { status: "archived" });
+        return;
+      }
+
+      if (e.metaKey && e.key === "o") {
+        e.preventDefault();
+        if (task.url)
+          window.open(task.url, "_blank", "noopener,noreferrer");
         return;
       }
 

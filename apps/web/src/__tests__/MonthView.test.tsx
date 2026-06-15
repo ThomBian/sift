@@ -234,4 +234,26 @@ describe("MonthView", () => {
       expect(document.querySelector("[data-month-panel]")).not.toBeNull(),
     );
   });
+
+  it("Cmd+O opens the focused task url from the month panel", async () => {
+    const openSpy = vi.spyOn(window, "open").mockImplementation(() => null);
+    await db.tasks.add(
+      makeTask({
+        id: "linked-task",
+        status: "todo",
+        workingDate: new Date(2026, 3, 15, 10, 0, 0),
+        url: "https://example.com/task",
+      }),
+    );
+    renderMonth();
+    const row = await screen.findByRole("listitem", { name: /Test task/i });
+    row.focus();
+    fireEvent.keyDown(window, { key: "o", metaKey: true });
+    expect(openSpy).toHaveBeenCalledWith(
+      "https://example.com/task",
+      "_blank",
+      "noopener,noreferrer",
+    );
+    openSpy.mockRestore();
+  });
 });
