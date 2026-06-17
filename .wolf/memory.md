@@ -523,3 +523,48 @@
 | 10:05 | Session end: 11 writes across 2 files (ArtifactDrawer.tsx, ProjectWorkspaceView.tsx) | 2 reads | ~9910 tok |
 | 10:39 | Session end: 11 writes across 2 files (ArtifactDrawer.tsx, ProjectWorkspaceView.tsx) | 2 reads | ~9910 tok |
 | 10:40 | Session end: 11 writes across 2 files (ArtifactDrawer.tsx, ProjectWorkspaceView.tsx) | 2 reads | ~9910 tok |
+
+## Session: 2026-06-12 13:39
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-12 13:39
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-15 08:36
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-15 12:07
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 12:08 | Created apps/web/src/views/WeekView.tsx | — | ~4094 |
+| 12:08 | Created apps/web/src/views/MonthView.tsx | — | ~5685 |
+| 12:10 | Created apps/web/src/components/TaskRow.tsx | — | ~2362 |
+| 12:10 | Created apps/web/src/views/WeekView.tsx | — | ~4123 |
+| 12:10 | Created apps/web/src/views/WeekView.tsx | — | ~4537 |
+| 12:10 | Created apps/web/src/views/MonthView.tsx | — | ~5714 |
+| 12:10 | Created apps/web/src/views/MonthView.tsx | — | ~6136 |
+| 12:10 | Created apps/web/src/__tests__/MonthView.test.tsx | — | ~2172 |
+| 12:10 | Session end: 8 writes across 4 files (WeekView.tsx, MonthView.tsx, TaskRow.tsx, MonthView.test.tsx) | 11 reads | ~57505 tok |
+| 12:11 | Session end: 8 writes across 4 files (WeekView.tsx, MonthView.tsx, TaskRow.tsx, MonthView.test.tsx) | 11 reads | ~57505 tok |
+
+## Session: 2026-06-16 11:48
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-16 11:48
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-17 08:47
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|

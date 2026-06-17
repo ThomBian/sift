@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-06-11T08:02:25.193Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-06-15T10:10:29.851Z
 > Files: 242 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../.claude/
@@ -184,7 +184,7 @@
 - `AppLayoutViewNav.test.tsx` — @vitest-environment jsdom (~959 tok)
 - `HintBar.test.tsx` — / <reference types="vitest" /> (~1090 tok)
 - `listRowFocus.test.ts` — Declares classes (~191 tok)
-- `MonthView.test.tsx` — @vitest-environment jsdom (~1974 tok)
+- `MonthView.test.tsx` — makeSpace (~2172 tok)
 - `ProjectWorkspaceDescriptionZone.test.tsx` — @vitest-environment jsdom (~748 tok)
 - `setup.ts` (~81 tok)
 - `SyncService.test.ts` — @vitest-environment jsdom (~5313 tok)
@@ -211,7 +211,7 @@
 - `ShortcutsOverlay.tsx` — EXIT_MS — uses useState, useRef, useCallback, useEffect (~1581 tok)
 - `SkillPicker.tsx` — SkillPicker — uses useState, useEffect, useMemo, useCallback (~1347 tok)
 - `TaskList.tsx` — Shown when a task has no project or the project row is missing (e.g. sync race). (~1374 tok)
-- `TaskRow.tsx` — Narrow columns: title on first line, project + due stacked with truncation. (~2345 tok)
+- `TaskRow.tsx` — Narrow columns: title on first line, project + due stacked with truncation. (~2362 tok)
 - `Textarea.tsx` — BASE (~168 tok)
 
 ## apps/web/src/components/layout/
@@ -271,12 +271,12 @@
 ## apps/web/src/views/
 
 - `InboxView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1189 tok)
-- `MonthView.tsx` — Index of the cell that shows local "today", including leading/trailing month cells. (~5634 tok)
+- `MonthView.tsx` — Index of the cell that shows local "today", including leading/trailing month cells. (~6136 tok)
 - `ProjectsView.tsx` — ProgressBar (~7400 tok)
 - `ProjectWorkspaceView.tsx` — ProjectWorkspaceView (~6390 tok)
 - `SkillsView.tsx` — VARIABLES — renders form — uses useNavigate, useState, useCallback, useEffect (~3730 tok)
 - `TodayView.tsx` — dispatchEditTask — uses useState, useCallback, useEffect (~1182 tok)
-- `WeekView.tsx` — Enter toggles done moves the row in the DOM; restore focus so keyboard nav keeps working. (~4043 tok)
+- `WeekView.tsx` — Enter toggles done moves the row in the DOM; restore focus so keyboard nav keeps working. (~4537 tok)
 
 ## docs/
 
