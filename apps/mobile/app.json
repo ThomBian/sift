@@ -6,13 +6,18 @@
     "scheme": "siftmobile",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false
     },
     "android": {},
     "web": {
       "bundler": "metro"
-    }
+    },
+    "plugins": [
+      "expo-web-browser"
+    ]
   }
 }

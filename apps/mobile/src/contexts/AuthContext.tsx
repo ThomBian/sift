@@ -7,8 +7,12 @@ import {
   type ReactNode,
 } from "react";
 import * as Linking from "expo-linking";
+import * as WebBrowser from "expo-web-browser";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
+
+// Lets the in-app browser auth session dismiss itself cleanly after redirect.
+WebBrowser.maybeCompleteAuthSession();
 
 // Where Supabase sends the magic link back to. Resolves to
 // `siftmobile://auth-callback` in a dev/standalone build and
@@ -33,6 +37,7 @@ interface AuthContextValue {
   user: User | null;
   loading: boolean;
   signInWithMagicLink: (email: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -91,6 +96,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           options: { emailRedirectTo: redirectTo },
         });
         if (error) throw error;
+      },
+      async signInWithGoogle() {
+        if (!supabase) throw new Error("Supabase is not configured");
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: { redirectTo, skipBrowserRedirect: true },
+        });
+        if (error) throw error;
+        if (!data?.url) throw new Error("No OAuth URL returned");
+
+        // Open Google's consent flow in an in-app browser and capture the
+        // redirect back to our deep link, then exchange the ?code= for a
+        // session (PKCE — same path as the magic link).
+        const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
+        if (result.type === "success" && result.url) {
+          await exchangeUrlForSession(result.url);
+        }
       },
       async signOut() {
         if (!supabase) return;

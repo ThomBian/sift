@@ -23,7 +23,7 @@ import { isSupabaseConfigured } from "./src/lib/supabase";
 import { requestSync } from "./src/lib/requestSync";
 
 function AppContent() {
-  const { user, loading, signInWithMagicLink, signOut } = useAuth();
+  const { user, loading, signInWithMagicLink, signInWithGoogle, signOut } = useAuth();
   const syncStatus = useSync(user);
   const [tasks, setTasks] = useState<MobileTask[]>([]);
   const [title, setTitle] = useState("");
@@ -106,6 +106,24 @@ function AppContent() {
           style={styles.button}
         >
           <Text style={styles.buttonText}>Send magic link</Text>
+        </Pressable>
+
+        <View style={styles.dividerRow}>
+          <View style={styles.dividerLine} />
+          <Text style={styles.muted}>or</Text>
+          <View style={styles.dividerLine} />
+        </View>
+
+        <Pressable
+          onPress={() => {
+            setAuthMessage(null);
+            void signInWithGoogle().catch((err: unknown) =>
+              setAuthMessage(err instanceof Error ? err.message : "Google sign-in failed"),
+            );
+          }}
+          style={styles.googleButton}
+        >
+          <Text style={styles.googleButtonText}>Continue with Google</Text>
         </Pressable>
         {authMessage ? <Text style={styles.muted}>{authMessage}</Text> : null}
       </SafeAreaView>
@@ -193,6 +211,22 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   buttonText: { color: "#fff", fontWeight: "600" },
+  dividerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingVertical: 4,
+  },
+  dividerLine: { flex: 1, height: 1, backgroundColor: "#eee" },
+  googleButton: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 6,
+    alignItems: "center",
+  },
+  googleButtonText: { color: "#111", fontWeight: "600" },
   task: {
     flexDirection: "row",
     alignItems: "center",
