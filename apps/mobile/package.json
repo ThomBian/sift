@@ -1,0 +1,27 @@
+{
+  "name": "mobile",
+  "private": true,
+  "version": "0.0.1",
+  "main": "expo/AppEntry",
+  "scripts": {
+    "dev": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-native-community/netinfo": "^11.4.1",
+    "@supabase/supabase-js": "^2.103.0",
+    "expo": "^53.0.17",
+    "expo-status-bar": "^2.2.3",
+    "react": "^19.0.0",
+    "react-native": "^0.79.5",
+    "react-native-url-polyfill": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.14",
+    "typescript": "^6.0.2"
+  }
+}

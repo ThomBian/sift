@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "Sift Mobile",
+    "slug": "sift-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {},
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
