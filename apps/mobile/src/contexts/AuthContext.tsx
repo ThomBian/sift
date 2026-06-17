@@ -6,8 +6,27 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import * as Linking from "expo-linking";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
+
+// Where Supabase sends the magic link back to. Resolves to
+// `siftmobile://auth-callback` in a dev/standalone build and
+// `exp://HOST:PORT/--/auth-callback` inside Expo Go.
+const redirectTo = Linking.createURL("/auth-callback");
+
+// The PKCE magic link returns to the app with a `?code=` we trade for a
+// session. onAuthStateChange then propagates the new session to the UI.
+async function exchangeUrlForSession(url: string): Promise<void> {
+  if (!supabase) return;
+  const { queryParams } = Linking.parse(url);
+  const errorDescription = queryParams?.error_description ?? queryParams?.error;
+  if (errorDescription) throw new Error(String(errorDescription));
+  const code = queryParams?.code;
+  if (typeof code !== "string") return;
+  const { error } = await supabase.auth.exchangeCodeForSession(code);
+  if (error) throw error;
+}
 
 interface AuthContextValue {
   session: Session | null;
@@ -43,9 +62,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(newSession);
     });
 
+    // Cold start: app was launched by tapping the magic link.
+    void Linking.getInitialURL().then((url) => {
+      if (url) exchangeUrlForSession(url).catch((err) => console.warn("[auth] deep-link exchange failed:", err));
+    });
+
+    // Warm: link tapped while the app is already running.
+    const linkSub = Linking.addEventListener("url", ({ url }) => {
+      exchangeUrlForSession(url).catch((err) => console.warn("[auth] deep-link exchange failed:", err));
+    });
+
     return () => {
       cancelled = true;
       subscription.unsubscribe();
+      linkSub.remove();
     };
   }, []);
 
@@ -56,7 +86,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loading,
       async signInWithMagicLink(email: string) {
         if (!supabase) throw new Error("Supabase is not configured");
-        const { error } = await supabase.auth.signInWithOtp({ email });
+        const { error } = await supabase.auth.signInWithOtp({
+          email,
+          options: { emailRedirectTo: redirectTo },
+        });
         if (error) throw error;
       },
       async signOut() {

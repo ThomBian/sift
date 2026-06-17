@@ -13,7 +13,11 @@ export const supabase: SupabaseClient | null = isSupabaseConfigured
         storage: AsyncStorage,
         autoRefreshToken: true,
         persistSession: true,
+        // Native deep-link auth: the magic link returns a `?code=` that we
+        // exchange for a session ourselves (see AuthContext), so the client
+        // must not try to parse a session from a URL on its own.
         detectSessionInUrl: false,
+        flowType: "pkce",
       },
     })
   : null;

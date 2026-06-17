@@ -3,6 +3,7 @@
     "name": "Sift Mobile",
     "slug": "sift-mobile",
     "version": "1.0.0",
+    "scheme": "siftmobile",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "assetBundlePatterns": ["**/*"],
