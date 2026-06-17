@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
-import { isSupabaseConfigured, supabase } from "../lib/supabase";
+import { supabase } from "../lib/supabase";
 
 interface AuthContextValue {
   session: Session | null;
@@ -67,7 +67,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [loading, session],
   );
 
-  if (!isSupabaseConfigured) return <>{children}</>;
+  // Always provide context — AppContent calls useAuth() before its own
+  // isSupabaseConfigured check, and `value` already degrades gracefully when
+  // Supabase is absent (loading=false, signIn throws, signOut no-ops).
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

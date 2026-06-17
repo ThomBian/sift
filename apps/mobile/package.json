@@ -2,7 +2,7 @@
   "name": "mobile",
   "private": true,
   "version": "0.0.1",
-  "main": "expo/AppEntry",
+  "main": "index.js",
   "scripts": {
     "dev": "expo start",
     "android": "expo run:android",
