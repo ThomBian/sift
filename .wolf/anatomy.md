@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-06-18T07:12:50.453Z
-> Files: 251 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-06-18T12:53:11.542Z
+> Files: 252 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../.claude/
 
@@ -185,6 +185,10 @@
 ## .superset/
 
 - `config.json` (~17 tok)
+
+## apps/mobile/
+
+- `eas.json` (~161 tok)
 
 ## apps/web/
 
