@@ -568,3 +568,78 @@
 
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
+
+## Session: 2026-06-17 08:49
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 09:03 | Created ../../.cursor/worktrees/sift/e8g9/apps/mobile/index.js | — | ~97 |
+| 09:03 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/package.json | inline fix | ~6 |
+| 09:04 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/contexts/AuthContext.tsx | 2→4 lines | ~86 |
+| 09:05 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/contexts/AuthContext.tsx | inline fix | ~13 |
+| 09:06 | Session end: 4 writes across 3 files (index.js, package.json, AuthContext.tsx) | 7 reads | ~423 tok |
+| 09:13 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/app.json | 4→5 lines | ~39 |
+| 09:14 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/lib/supabase.ts | 6→10 lines | ~113 |
+| 09:14 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/contexts/AuthContext.tsx | added optional chaining | ~312 |
+| 09:14 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/contexts/AuthContext.tsx | added 1 condition(s) | ~212 |
+| 09:15 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/contexts/AuthContext.tsx | CSS: options, emailRedirectTo | ~87 |
+| 09:17 | Session end: 9 writes across 5 files (index.js, package.json, AuthContext.tsx, app.json, supabase.ts) | 12 reads | ~1186 tok |
+| 09:18 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/contexts/AuthContext.tsx | 3→7 lines | ~89 |
+| 09:18 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/contexts/AuthContext.tsx | CSS: signInWithGoogle | ~37 |
+| 09:18 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/contexts/AuthContext.tsx | added optional chaining | ~286 |
+| 09:18 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/App.tsx | inline fix | ~25 |
+| 09:18 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/App.tsx | CSS: err, message | ~232 |
+| 09:18 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/App.tsx | expanded (+16 lines) | ~129 |
+| 09:20 | Session end: 15 writes across 6 files (index.js, package.json, AuthContext.tsx, app.json, supabase.ts) | 15 reads | ~1984 tok |
+
+## Session: 2026-06-17 09:59
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 10:03 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/app.json | 3→4 lines | ~27 |
+| 10:05 | Session end: 1 writes across 1 files (app.json) | 2 reads | ~27 tok |
+| 10:07 | Session end: 1 writes across 1 files (app.json) | 2 reads | ~27 tok |
+| 10:07 | Session end: 1 writes across 1 files (app.json) | 2 reads | ~27 tok |
+| 10:08 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/ios/Podfile | modified is() | ~136 |
+
+## Session: 2026-06-17 13:59
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-17 17:02
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-18 08:24
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-06-18 08:27
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 08:34 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/ios/Podfile | modified is() | ~413 |
+| 08:35 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/ios/Podfile | modified FMT_USE_CONSTEVAL() | ~30 |
+| 08:36 | Session end: 2 writes across 1 files (Podfile) | 3 reads | ~474 tok |
+| 08:51 | Session end: 2 writes across 1 files (Podfile) | 8 reads | ~474 tok |
+| 09:00 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/lib/taskStore.ts | 10→12 lines | ~76 |
+| 09:00 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/lib/taskStore.ts | modified newInboxTask() | ~107 |
+| 09:01 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/services/SyncService.ts | modified taskToRow() | ~276 |
+| 09:02 | Created ../../.cursor/worktrees/sift/e8g9/apps/mobile/App.tsx | — | ~3999 |
+| 09:03 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/App.tsx | 6→4 lines | ~82 |
+| 09:03 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/App.tsx | 5→5 lines | ~61 |
+| 09:06 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/services/SyncService.ts | added optional chaining | ~48 |
+| 09:06 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/App.tsx | modified formatSectionDate() | ~81 |
+| 09:06 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/App.tsx | modified for() | ~71 |
+
+| $(date +%H:%M) | mobile app: grouped tasks by workingDate (OVERDUE/TODAY/future/INBOX), impeccable.md design pass — no border-radius, #FF4F00 accent, Menlo mono headers, hairline borders, 36px rows | apps/mobile/App.tsx, src/lib/taskStore.ts, src/services/SyncService.ts | working on iPhone 17 sim | ~4000 |
+| 09:08 | Session end: 11 writes across 4 files (Podfile, taskStore.ts, SyncService.ts, App.tsx) | 15 reads | ~5275 tok |
+| 09:12 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/App.tsx | 6→3 lines | ~29 |
+| 09:12 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/App.tsx | CSS: minHeight, paddingVertical | ~69 |
+| 09:12 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/App.tsx | CSS: marginTop, flexShrink | ~61 |
+| 09:12 | Edited ../../.cursor/worktrees/sift/e8g9/apps/mobile/App.tsx | CSS: marginTop, flexShrink | ~41 |
+| 09:13 | Session end: 15 writes across 4 files (Podfile, taskStore.ts, SyncService.ts, App.tsx) | 16 reads | ~5475 tok |
+| 09:16 | Session end: 15 writes across 4 files (Podfile, taskStore.ts, SyncService.ts, App.tsx) | 16 reads | ~5475 tok |

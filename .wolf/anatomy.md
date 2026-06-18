@@ -1,11 +1,35 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-06-15T10:10:29.851Z
-> Files: 242 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-06-18T07:12:50.453Z
+> Files: 251 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ../../.claude/
 
 - `CLAUDE.md` — My Development Preferences (~248 tok)
+
+## ../../.cursor/worktrees/sift/e8g9/apps/mobile/
+
+- `app.json` (~130 tok)
+- `App.tsx` — C (~4096 tok)
+- `index.js` — Explicit local entry: in this Turborepo workspace `expo` is hoisted to the (~97 tok)
+- `package.json` — Node.js package manifest (~192 tok)
+
+## ../../.cursor/worktrees/sift/e8g9/apps/mobile/ios/
+
+- `Podfile` — Declares is (~1079 tok)
+
+## ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/contexts/
+
+- `AuthContext.tsx` — redirectTo (~1316 tok)
+
+## ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/lib/
+
+- `supabase.ts` — Exports isSupabaseConfigured, supabase (~264 tok)
+- `taskStore.ts` — Exports MobileTaskStatus, MobileTask, getTasks, saveTasks + 4 more (~585 tok)
+
+## ../../.cursor/worktrees/sift/e8g9/apps/mobile/src/services/
+
+- `SyncService.ts` — Exports SyncService (~1246 tok)
 
 ## ./
 

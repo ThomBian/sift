@@ -852,6 +852,211 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-06-11T08:01:59.231Z"
+    },
+    {
+      "id": "bug-054",
+      "timestamp": "2026-06-17T07:03:24.943Z",
+      "error_message": "Incorrect value in code",
+      "file": "../../.cursor/worktrees/sift/e8g9/apps/mobile/package.json",
+      "root_cause": "Had \"expo/AppEntry\"",
+      "fix": "Changed to \"index.js\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "json"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T07:03:24.943Z"
+    },
+    {
+      "id": "bug-055",
+      "timestamp": "2026-06-17T07:04:40.730Z",
+      "error_message": "Wrong return value",
+      "file": "../../.cursor/worktrees/sift/e8g9/apps/mobile/src/contexts/AuthContext.tsx",
+      "root_cause": "Was returning: <>{children}</>;",
+      "fix": "Now returns: <AuthContext.Provider value={value}>{children}</Au",
+      "tags": [
+        "auto-detected",
+        "return-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T07:04:40.730Z"
+    },
+    {
+      "id": "bug-056",
+      "timestamp": "2026-06-17T07:14:43.239Z",
+      "error_message": "Null/undefined access in ",
+      "file": "../../.cursor/worktrees/sift/e8g9/apps/mobile/src/contexts/AuthContext.tsx",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check) | Also: async signInWithGoogle() {; if (!supabase) throw new Error(\"Supabase is not configured\")",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-06-17T07:18:21.986Z"
+    },
+    {
+      "id": "bug-057",
+      "timestamp": "2026-06-17T07:14:55.701Z",
+      "error_message": "Missing error handling in unknown",
+      "file": "../../.cursor/worktrees/sift/e8g9/apps/mobile/src/contexts/AuthContext.tsx",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T07:14:55.701Z"
+    },
+    {
+      "id": "bug-058",
+      "timestamp": "2026-06-17T07:18:12.827Z",
+      "error_message": "Wrong reference: signOut should be signInWithGoogle",
+      "file": "../../.cursor/worktrees/sift/e8g9/apps/mobile/src/contexts/AuthContext.tsx",
+      "root_cause": "Used \"signOut\" instead of \"signInWithGoogle\"",
+      "fix": "Changed signOut → signInWithGoogle",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T07:18:12.827Z"
+    },
+    {
+      "id": "bug-059",
+      "timestamp": "2026-06-17T07:18:42.842Z",
+      "error_message": "Missing error handling in unknown",
+      "file": "../../.cursor/worktrees/sift/e8g9/apps/mobile/App.tsx",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-17T07:18:42.842Z"
+    },
+    {
+      "id": "bug-060",
+      "timestamp": "2026-06-18T06:34:25.930Z",
+      "error_message": "Significant refactor of ",
+      "file": "../../.cursor/worktrees/sift/e8g9/apps/mobile/ios/Podfile",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 10→29 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "unknown"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-18T06:34:25.930Z"
+    },
+    {
+      "id": "bug-061",
+      "timestamp": "2026-06-18T06:36:29.547515+00:00",
+      "error_message": "xcodebuild error code 65: ios/Pods/fmt/include/fmt/format-inl.h: call to consteval function 'fmt::basic_format_string<...>::basic_format_string<FMT_COMPILE_STRING,0>' is not a constant expression (apps/mobile expo run:ios)",
+      "file": "apps/mobile/ios/Podfile",
+      "root_cause": "fmt 11.0.2 (bundled via RN 0.79 RCT-Folly) computes FMT_USE_CONSTEVAL from its own compiler detection in fmt/base.h with NO #ifndef guard. Under Xcode 26 clang __cpp_consteval is set so fmt forces consteval=1, and Xcode 26's stricter consteval checking rejects fmt's internal FMT_STRING usage. A Podfile -DFMT_USE_CONSTEVAL=0 alone is ignored because base.h unconditionally redefines the macro.",
+      "fix": "In ios/Podfile post_install, after injecting GCC_PREPROCESSOR_DEFINITIONS FMT_USE_CONSTEVAL=0, chmod 0644 and patch Pods/fmt/include/fmt/base.h to wrap the FMT_USE_CONSTEVAL detection block in #ifndef FMT_USE_CONSTEVAL ... #endif so the external define wins. Idempotent (guarded by checking for '#ifndef FMT_USE_CONSTEVAL'). Then re-run pod install + npx expo run:ios. Note: pod install on Ruby 3.4 needs LANG/LC_ALL=en_US.UTF-8 to avoid 'Unicode Normalization not appropriate for ASCII-8BIT'.",
+      "tags": [
+        "ios",
+        "expo",
+        "react-native",
+        "fmt",
+        "cocoapods",
+        "xcode26",
+        "consteval",
+        "build",
+        "simulator",
+        "ruby-3.4-encoding"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-18T06:36:29.547515+00:00"
+    },
+    {
+      "id": "bug-062",
+      "timestamp": "2026-06-18T07:03:15.622Z",
+      "error_message": "Significant refactor of ",
+      "file": "../../.cursor/worktrees/sift/e8g9/apps/mobile/App.tsx",
+      "root_cause": "5 lines replaced/restructured",
+      "fix": "Rewrote 6→4 lines (5 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-18T07:03:15.622Z"
+    },
+    {
+      "id": "bug-063",
+      "timestamp": "2026-06-18T07:06:16.831Z",
+      "error_message": "Null/undefined access in ",
+      "file": "../../.cursor/worktrees/sift/e8g9/apps/mobile/src/services/SyncService.ts",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-18T07:06:16.831Z"
+    },
+    {
+      "id": "bug-064",
+      "timestamp": "2026-06-18T07:08:24.590738+00:00",
+      "error_message": "formatSectionDate shows 'undefined NaN JUN': Supabase working_date arrives as '2026-06-10T00:00:00' (with time component), split('-') gives ['2026','06','10T00:00:00'], Number('10T00:00:00')=NaN",
+      "file": "apps/mobile/App.tsx, apps/mobile/src/services/SyncService.ts",
+      "root_cause": "Supabase returns date columns as ISO datetime strings with time component. formatSectionDate and buildSections assumed YYYY-MM-DD format. Also existing AsyncStorage tasks from before workingDate field existed have undefined (not null) for that field.",
+      "fix": "(1) In SyncService.rowToTask: workingDate = row.working_date?.slice(0,10) to normalize at storage layer. (2) In App.tsx formatSectionDate: clean = iso.slice(0,10) before splitting. (3) buildSections: k = t.workingDate ? t.workingDate.slice(0,10) : '__inbox__'. (4) TaskRow overdue/showDate: use != null (loose) not !== null to cover undefined from pre-migration AsyncStorage entries.",
+      "tags": [
+        "mobile",
+        "react-native",
+        "supabase",
+        "date-format",
+        "working_date",
+        "async-storage",
+        "migration"
+      ],
+      "related_bugs": [
+        "bug-061"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-06-18T07:08:24.590738+00:00"
+    },
+    {
+      "id": "bug-065",
+      "timestamp": "2026-06-18T07:12:37.403Z",
+      "error_message": "CSS fix: alignItems",
+      "file": "../../.cursor/worktrees/sift/e8g9/apps/mobile/App.tsx",
+      "root_cause": "alignItems: \"center\", → \"flex-start\",",
+      "fix": "Changed alignItems: \"center\", → \"flex-start\",",
+      "tags": [
+        "auto-detected",
+        "style-fix",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-06-18T07:12:37.403Z"
     }
   ]
 }
