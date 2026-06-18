@@ -7,6 +7,8 @@ export interface MobileTask {
   title: string;
   status: MobileTaskStatus;
   projectId: string | null;
+  workingDate: string | null;
+  dueDate: string | null;
   createdAt: string;
   updatedAt: string;
   completedAt: string | null;
@@ -68,6 +70,8 @@ export function newInboxTask(title: string): MobileTask {
     title: title.trim(),
     status: "inbox",
     projectId: null,
+    workingDate: null,
+    dueDate: null,
     createdAt: now,
     updatedAt: now,
     completedAt: null,
