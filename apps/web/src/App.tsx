@@ -5,6 +5,7 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 
 import { useAuth } from './contexts/AuthContext';
 import { useSync } from './hooks/useSync';
+import { useFaviconBadge } from './hooks/useFaviconBadge';
 import { SkillsProvider } from './contexts/SkillsContext';
 import AppLayout from './components/layout/AppLayout';
 import AuthPage from './pages/AuthPage';
@@ -20,6 +21,7 @@ import ShortcutsOverlay from './components/ShortcutsOverlay';
 export default function App() {
   const { user } = useAuth();
   const syncStatus = useSync(user);
+  useFaviconBadge();
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
 
   useEffect(() => {
